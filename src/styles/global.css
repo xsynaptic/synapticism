@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/typography';
+
+@import './theme/fonts.css';
+
+/* Spacing */
+@theme {
+	--spacing-small: 1rem;
+	--spacing-medium: 2rem;
+	--spacing-content: 58rem;
+}
+
+/** These custom properties are defined outside Tailwind's system */
+:root {
+	--content-bar: '|';
+	--content-bullet: '\2022';
+	--content-chevron: '\203A';
+	--content-dot: '\00B7';
+	--content-slash: '/';
+}
+
+html {
+	scrollbar-gutter: stable;
+}

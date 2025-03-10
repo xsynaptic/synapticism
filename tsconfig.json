@@ -1,5 +1,12 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+	"extends": "astro/tsconfigs/strictest",
+	"include": [".astro/types.d.ts", "**/*"],
+	"exclude": [".vscode", "dist"],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"rootDir": ".",
+		"outDir": "./dist",
+		"strictNullChecks": true,
+		"checkJs": true // `allowJs` already set upstream
+	}
 }

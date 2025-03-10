@@ -1,0 +1,61 @@
+{
+	"cSpell.enabledFileTypes": {
+		"css": true,
+		"git-commit": true,
+		"html": true,
+		"javascript": true,
+		"javascriptract": true,
+		"json": true,
+		"jsonc": true,
+		"markdown": true,
+		"mdx": true,
+		"plaintext": true,
+		"scss": true,
+		"text": true,
+		"typescript": true,
+		"typescriptreact": true,
+		"yaml": true,
+		"yml": true
+	},
+	"cSpell.words": ["fontsource", "remeda", "synapticism", "xsynaptic"],
+	"cSpell.ignorePaths": [".vscode", "pnpm*.yaml", "node_modules", "tsconfig.json"],
+	"cssVariables.blacklistFolders": [
+		"**/.git",
+		"**/.svn",
+		"**/.hg",
+		"**/CVS",
+		"**/.DS_Store",
+		"**/node_modules",
+		"**/bower_components",
+		"**/tmp",
+		"**/dist",
+		"**/tests",
+		"content"
+	],
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"astro",
+		"markdown",
+		"mdx"
+	],
+	"editor.codeActionsOnSave": {
+		"source.fixAll": "always",
+		"source.fixAll.eslint": "always"
+	},
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.formatOnSave": true,
+	"editor.quickSuggestions": {
+		"strings": true
+	},
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"workbench.editor.labelFormat": "short",
+	"[astro]": {
+		"editor.defaultFormatter": "astro-build.astro-vscode"
+	},
+	"astro.content-intellisense": true
+}

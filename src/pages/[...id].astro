@@ -1,0 +1,19 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+
+import PageEntry from '#layouts/page-entry.astro';
+import { getPagesCollection } from '#lib/collections/pages/data.js';
+
+export const getStaticPaths = (async () => {
+	const { pages } = await getPagesCollection();
+
+	return pages.map((entry) => ({
+		params: { id: entry.id },
+		props: { entry },
+	}));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+---
+
+<PageEntry {...Astro.props} />
