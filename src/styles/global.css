@@ -1,15 +1,19 @@
-@import 'tailwindcss';
+@import 'tailwindcss' source(none);
 
-@plugin '@tailwindcss/typography';
+/** 
+ * Tailwind usually scans everything for class names
+ * For performance reasons we're explicitly naming paths and file types here:
+ * 1) CSS files, for which we need to check @apply rules and CSS variable names
+ * 2) Astro files
+ */
+@source './**/*.css';
+@source '../**/*.astro';
 
+/** Theme styling */
+@import './theme/config.css';
+@import './theme/colors.css';
 @import './theme/fonts.css';
-
-/* Spacing */
-@theme {
-	--spacing-small: 1rem;
-	--spacing-medium: 2rem;
-	--spacing-content: 58rem;
-}
+@import './theme/typography.css';
 
 /** These custom properties are defined outside Tailwind's system */
 :root {

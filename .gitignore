@@ -26,3 +26,5 @@ pnpm-debug.log*
 # LLM helper files
 .claude/
 .cursor/
+
+packages/content

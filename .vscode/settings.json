@@ -17,21 +17,8 @@
 		"yaml": true,
 		"yml": true
 	},
-	"cSpell.words": ["fontsource", "remeda", "synapticism", "xsynaptic"],
+	"cSpell.words": ["fontsource", "remeda", "synapticism", "umami", "xsynaptic"],
 	"cSpell.ignorePaths": [".vscode", "pnpm*.yaml", "node_modules", "tsconfig.json"],
-	"cssVariables.blacklistFolders": [
-		"**/.git",
-		"**/.svn",
-		"**/.hg",
-		"**/CVS",
-		"**/.DS_Store",
-		"**/node_modules",
-		"**/bower_components",
-		"**/tmp",
-		"**/dist",
-		"**/tests",
-		"content"
-	],
 	"eslint.validate": [
 		"javascript",
 		"javascriptreact",
