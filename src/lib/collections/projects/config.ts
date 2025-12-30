@@ -1,14 +1,15 @@
 import { glob } from 'astro/loaders';
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'zod';
 
 import { CONTENT_COLLECTIONS_PATH } from '#constants.js';
-import { DateStringSchema, DescriptionSchema, TitleSchema } from '#lib/schemas/content.js';
+import { DateStringSchema, DescriptionSchema, StylizedTextSchema } from '#lib/schemas/content.js';
 
 export const projects = defineCollection({
 	loader: glob({ base: `${CONTENT_COLLECTIONS_PATH}/projects`, pattern: '**/[^_]*.(md|mdx)' }),
 	schema: z
 		.object({
-			title: TitleSchema,
+			title: StylizedTextSchema,
 			description: DescriptionSchema,
 			dateCreated: DateStringSchema,
 			dateUpdated: DateStringSchema.optional(),

@@ -1,0 +1,17 @@
+---
+import MainBase from '#components/main/main-base.astro';
+import '#styles/global.css';
+
+import '@fontsource-variable/ibm-plex-sans';
+
+import MainFooter from '#components/main/main-footer.astro';
+import MainHeader from '#components/main/main-header.astro';
+---
+
+<MainBase>
+	<MainHeader />
+	<main class="flex-1" id="content">
+		<slot />
+	</main>
+	<MainFooter />
+</MainBase>

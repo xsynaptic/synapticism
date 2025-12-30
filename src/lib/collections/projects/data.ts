@@ -22,7 +22,7 @@ async function generateCollection() {
 	const projects = await getCollection('projects');
 
 	console.log(
-		`[Projects] Collection data generated in ${Number(performance.now() - startTime).toFixed(5)}ms`,
+		`[Projects] Collection data generated in ${(performance.now() - startTime).toFixed(5)}ms`,
 	);
 
 	return { projects };

@@ -1,0 +1,32 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import { renderSlot } from '#lib/utils/astro.ts';
+
+const LinkColorEnum = {
+	Primary: 'primary',
+	Secondary: 'secondary',
+} as const;
+
+type LinkColor = (typeof LinkColorEnum)[keyof typeof LinkColorEnum];
+
+interface Props extends HTMLAttributes<'a'> {
+	linkColor?: LinkColor | undefined;
+}
+
+const { class: className, href, linkColor = LinkColorEnum.Primary, ...props } = Astro.props;
+
+const children = await renderSlot(Astro.slots, 'default');
+---
+
+<a
+	href={href}
+	class:list={[
+		'cursor-pointer transition-colors ease-linear',
+		linkColor === LinkColorEnum.Primary
+			? 'text-primary-800 hover:text-primary-600'
+			: 'text-secondary-800 hover:text-secondary-600',
+		className,
+	]}
+	{...props}><Fragment set:html={children} /></a
+>
