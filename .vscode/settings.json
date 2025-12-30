@@ -53,6 +53,7 @@
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
+	"typescript.preferences.importModuleSpecifier": "non-relative", // Prefer import mapped paths
 	"workbench.editor.labelFormat": "short",
 	"[astro]": {
 		"editor.defaultFormatter": "astro-build.astro-vscode"
