@@ -1,13 +1,11 @@
 @import 'tailwindcss' source(none);
 
-/** 
- * Tailwind usually scans everything for class names
- * For performance reasons we're explicitly naming paths and file types here:
- * 1) CSS files, for which we need to check @apply rules and CSS variable names
- * 2) Astro files
+/**
+ * Explicit source paths for Tailwind class detection
  */
 @source './**/*.css';
 @source '../**/*.astro';
+@source '../**/*.tsx';
 
 /** Theme styling */
 @import './theme/config.css';

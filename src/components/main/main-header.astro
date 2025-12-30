@@ -6,14 +6,21 @@ import { getSiteUrl } from '#lib/utils/routing.ts';
 const siteUrl = getSiteUrl();
 ---
 
-<header class:list={['transition-colors', 'z-40', 'bg-primary-100 dark:bg-primary-800']}>
-	<Container
-		as="div"
-		class="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 pt-2 sm:pb-1"
-		><h2 class="flex grow items-center gap-1">
-			<Link href={siteUrl} class="text-xl font-semibold md:text-2xl lg:text-3xl" linkColor="primary"
-				>Synapticism</Link
+<header class:list={['transition-colors', 'z-40', 'bg-zinc-100 dark:bg-zinc-800']}>
+	<div class="pt-2 pb-1">
+		<Container as="h2" class="flex flex-wrap items-center justify-between gap-2">
+			<Link
+				href={siteUrl}
+				class="font-sans text-xl font-semibold md:text-2xl lg:text-3xl"
+				linkColor="primary">Synapticism</Link
 			>
-		</h2>
-	</Container>
+		</Container>
+	</div>
+	<nav class="py-1">
+		<Container as="ul" class="flex items-end gap-2">
+			<li><Link href="/posts" linkColor="secondary">Posts</Link></li>
+			<li><Link href="/projects" linkColor="secondary">Projects</Link></li>
+			<li><Link href="/about" linkColor="secondary">About</Link></li>
+		</Container>
+	</nav>
 </header>

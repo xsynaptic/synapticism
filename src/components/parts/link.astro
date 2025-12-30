@@ -24,8 +24,8 @@ const children = await renderSlot(Astro.slots, 'default');
 	class:list={[
 		'cursor-pointer transition-colors ease-linear',
 		linkColor === LinkColorEnum.Primary
-			? 'text-primary-800 hover:text-primary-600'
-			: 'text-secondary-800 hover:text-secondary-600',
+			? 'text-zinc-800 hover:text-zinc-600'
+			: 'text-zinc-800 hover:text-zinc-600',
 		className,
 	]}
 	{...props}><Fragment set:html={children} /></a
