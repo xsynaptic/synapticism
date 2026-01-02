@@ -76,29 +76,29 @@ const { basics, skills, work, projects, education } = resume;
 ---
 
 <MainBase>
-	<Container as="article" class="my-10">
-		<header class="flex items-center justify-between gap-2 py-1">
-			<div>
+	<Container as="article" class="my-8">
+		<header class="flex flex-col gap-1 py-1">
+			<div class="flex items-center justify-between gap-2">
 				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
-				<div class="flex flex-col gap-1 text-sm text-zinc-500">
-					<p class="sr-only">{basics.label}</p>
-					<a href={`mailto:${basics.email}`}>{basics.email}</a>
-					<a class="sr-only" href={basics.website}>{basics.website}</a>
+				<div class="flex items-center gap-2 text-sm text-zinc-500">
+					{
+						basics.profiles.map((profile) => (
+							<a class="print:hidden" href={profile.url}>
+								{profile.network}
+							</a>
+						))
+					}
 				</div>
 			</div>
-			<div>
-				<p class="sr-only">
-					{basics.location.city}, {basics.location.region}
-				</p>
-				<div class="flex items-center gap-2 text-sm text-zinc-500">
-					{basics.profiles.map((profile) => <a href={profile.url}>{profile.network}</a>)}
-				</div>
+			<div>{basics.location.city}, {basics.location.region}</div>
+			<div class="flex flex-col gap-1 text-sm text-zinc-500">
+				<a href={`mailto:${basics.email}`}>{basics.email}</a>
 			</div>
 		</header>
-		<section class="py-1 text-base">
+		<section class="pt-1 pb-2 text-base">
 			<p>{basics.summary}</p>
 		</section>
-		<section class="py-1 text-base">
+		<section class="pt-1 pb-2 text-base">
 			<h2 class="text-lg font-bold">Skills</h2>
 			<ul>
 				{
@@ -111,7 +111,7 @@ const { basics, skills, work, projects, education } = resume;
 				}
 			</ul>
 		</section>
-		<section class="py-1 text-base">
+		<section class="pt-1 pb-2 text-base">
 			<h2 class="text-lg font-bold">Experience</h2>
 			{
 				work.map((job) => (
@@ -145,20 +145,27 @@ const { basics, skills, work, projects, education } = resume;
 				))
 			}
 		</section>
-		<section class="py-1 text-base">
+		<section class="pt-1 pb-2 text-base">
 			<h2 class="text-lg font-bold">Projects</h2>
 			{
 				projects.map((project) => (
 					<div class="flex flex-col gap-2">
-						<div class="flex items-center justify-between gap-2">
-							<h3 class="font-semibold">
-								<a href={project.url}>{project.name}</a>:{' '}
-								<span class="italic">{project.description}</span>
-							</h3>
-							{project.repo ? (
-								<a class="text-sm text-zinc-500" href={project.repo}>
-									GitHub
-								</a>
+						<div class="flex flex-col gap-1">
+							<div class="flex items-center justify-between gap-2">
+								<h3 class="font-semibold">
+									<a href={project.url}>{project.name}</a>:{' '}
+									<span class="italic">{project.description}</span>
+								</h3>
+								{project.repo ? (
+									<a class="text-sm text-zinc-500 print:hidden" href={project.repo}>
+										GitHub
+									</a>
+								) : undefined}
+							</div>
+							{project.url ? (
+								<div class="flex flex-col gap-1 text-sm text-zinc-500">
+									<a href={project.url}>{project.url}</a>
+								</div>
 							) : undefined}
 						</div>
 						<ul>
@@ -172,7 +179,7 @@ const { basics, skills, work, projects, education } = resume;
 				))
 			}
 		</section>
-		<section class="py-1 text-base">
+		<section class="pt-1 pb-2 text-base">
 			<h2 class="text-lg font-bold">Education</h2>
 			{
 				education.map((edu) => (
