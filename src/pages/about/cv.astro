@@ -1,0 +1,189 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import yaml from 'yaml';
+import { z } from 'zod';
+
+import MainBase from '#components/main/main-base.astro';
+import Container from '#components/parts/container.astro';
+
+const ResumeDataSchema = z.object({
+	basics: z.object({
+		name: z.string(),
+		label: z.string(),
+		location: z.object({
+			city: z.string(),
+			region: z.string(),
+			countryCode: z.string(),
+		}),
+		email: z.email(),
+		website: z.url(),
+		summary: z.string(),
+		profiles: z
+			.object({
+				network: z.string(),
+				url: z.url(),
+			})
+			.array(),
+	}),
+	skills: z
+		.object({
+			category: z.string(),
+			items: z.array(z.string()),
+		})
+		.array(),
+	work: z
+		.object({
+			company: z.string(),
+			position: z.string(),
+			location: z.string(),
+			startDate: z.string(),
+			endDate: z.string().optional(),
+			highlights: z.array(z.string()),
+		})
+		.array(),
+	projects: z
+		.object({
+			name: z.string(),
+			url: z.url(),
+			repo: z.url().optional(),
+			description: z.string(),
+			highlights: z.array(z.string()),
+		})
+		.array(),
+	education: z
+		.object({
+			institution: z.string(),
+			area: z.string(),
+			degree: z.string(),
+		})
+		.array(),
+});
+
+type Resume = z.infer<typeof ResumeDataSchema>;
+
+function getResume(): Resume {
+	const filePath = path.resolve('packages/content/data/resume.yaml');
+	const fileContents = fs.readFileSync(filePath, 'utf8');
+	const data = yaml.parse(fileContents);
+
+	return ResumeDataSchema.parse(data);
+}
+
+const resume = getResume();
+
+const { basics, skills, work, projects, education } = resume;
+---
+
+<MainBase>
+	<Container as="article" class="my-10">
+		<header class="flex items-center justify-between gap-2 py-1">
+			<div>
+				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
+				<div class="flex flex-col gap-1 text-sm text-zinc-500">
+					<p class="sr-only">{basics.label}</p>
+					<a href={`mailto:${basics.email}`}>{basics.email}</a>
+					<a class="sr-only" href={basics.website}>{basics.website}</a>
+				</div>
+			</div>
+			<div>
+				<p class="sr-only">
+					{basics.location.city}, {basics.location.region}
+				</p>
+				<div class="flex items-center gap-2 text-sm text-zinc-500">
+					{basics.profiles.map((profile) => <a href={profile.url}>{profile.network}</a>)}
+				</div>
+			</div>
+		</header>
+		<section class="py-1 text-base">
+			<p>{basics.summary}</p>
+		</section>
+		<section class="py-1 text-base">
+			<h2 class="text-lg font-bold">Skills</h2>
+			<ul>
+				{
+					skills.map((skill) => (
+						<li class="mb-1 ml-4 list-disc text-sm text-zinc-400">
+							<span class="sr-only">{skill.category}:</span>
+							<span class="text-zinc-700">{skill.items.join(', ')}</span>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+		<section class="py-1 text-base">
+			<h2 class="text-lg font-bold">Experience</h2>
+			{
+				work.map((job) => (
+					<div class="flex flex-col gap-2">
+						<div class="flex items-center justify-between gap-2">
+							<h3 class="font-semibold">
+								{job.company}, <span class="italic">{job.position}</span>
+							</h3>
+							<span class="text-sm text-zinc-500">
+								{new Date(job.startDate).toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'long',
+								})}
+								&ndash;
+								{job.endDate
+									? new Date(job.endDate).toLocaleDateString('en-US', {
+											year: 'numeric',
+											month: 'long',
+										})
+									: 'Present'}
+							</span>
+						</div>
+						<ul>
+							{job.highlights.map((highlight) => (
+								<li class="mb-1 ml-4 list-disc text-sm text-zinc-400">
+									<span class="text-zinc-700">{highlight}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</section>
+		<section class="py-1 text-base">
+			<h2 class="text-lg font-bold">Projects</h2>
+			{
+				projects.map((project) => (
+					<div class="flex flex-col gap-2">
+						<div class="flex items-center justify-between gap-2">
+							<h3 class="font-semibold">
+								<a href={project.url}>{project.name}</a>:{' '}
+								<span class="italic">{project.description}</span>
+							</h3>
+							{project.repo ? (
+								<a class="text-sm text-zinc-500" href={project.repo}>
+									GitHub
+								</a>
+							) : undefined}
+						</div>
+						<ul>
+							{project.highlights.map((highlight) => (
+								<li class="mb-1 ml-4 list-disc text-sm text-zinc-400">
+									<span class="text-zinc-700">{highlight}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</section>
+		<section class="py-1 text-base">
+			<h2 class="text-lg font-bold">Education</h2>
+			{
+				education.map((edu) => (
+					<div>
+						<span class="font-semibold">{edu.institution}</span>:{' '}
+						<span>
+							{edu.degree}, {edu.area}
+						</span>
+					</div>
+				))
+			}
+		</section>
+	</Container>
+</MainBase>
