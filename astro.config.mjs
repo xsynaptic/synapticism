@@ -16,6 +16,7 @@ export default defineConfig({
 		schema: {
 			UMAMI_DOMAIN: envField.string({ context: 'client', access: 'public', optional: true }),
 			UMAMI_ID: envField.string({ context: 'client', access: 'public', optional: true }),
+			WEBMENTION_DOMAIN: envField.string({ context: 'client', access: 'public', optional: true }),
 		},
 	},
 	vite: {

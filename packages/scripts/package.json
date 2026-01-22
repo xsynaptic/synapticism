@@ -5,7 +5,7 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
-		"deploy": "tsx ./src/deploy/deploy.ts",
+		"deploy-site": "tsx ./src/deploy/deploy.ts",
 		"deploy-app": "tsx ./src/deploy/deploy-app.ts"
 	},
 	"devDependencies": {

@@ -17,8 +17,8 @@
 		"yaml": true,
 		"yml": true
 	},
-	"cSpell.words": ["fontsource", "remeda", "synapticism", "umami", "xsynaptic"],
 	"cSpell.ignorePaths": [".vscode", "pnpm*.yaml", "node_modules", "tsconfig.json"],
+	"cSpell.words": ["fontsource", "remeda", "synapticism", "umami", "xsynaptic"],
 	"eslint.validate": [
 		"javascript",
 		"javascriptreact",
@@ -32,14 +32,18 @@
 		"source.fixAll": "always",
 		"source.fixAll.eslint": "always"
 	},
+	"editor.colorDecorators": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
 	"editor.quickSuggestions": {
 		"strings": true
 	},
 	"files.associations": {
-		"*.css": "tailwindcss"
+		"*.css": "tailwindcss",
+		"*.conf.template": "nginx",
+		"*.caddy": "caddyfile"
 	},
+	"npm.packageManager": "pnpm",
 	"typescript.preferences.importModuleSpecifier": "non-relative", // Prefer import mapped paths
 	"workbench.editor.labelFormat": "short",
 	"[astro]": {
