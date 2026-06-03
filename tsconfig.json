@@ -3,8 +3,6 @@
 	"include": [".astro/types.d.ts", "**/*"],
 	"exclude": [".vscode", "dist"],
 	"compilerOptions": {
-		"baseUrl": ".",
-		"rootDir": ".",
 		"outDir": "./dist",
 		"strictNullChecks": true,
 		"erasableSyntaxOnly": true

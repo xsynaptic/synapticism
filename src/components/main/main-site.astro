@@ -12,9 +12,9 @@ import SkipLink from '#components/main/main-skip-link.astro';
 import Stylesheet from '#components/main/main-stylesheet.astro';
 import MenuFooter from '#components/menu/menu-footer.astro';
 import MenuHeader from '#components/menu/menu-header.astro';
-import ProgressReading from '#components/progress/progress-reading.astro';
 import Container from '#components/parts/container.astro';
 import Link from '#components/parts/link.astro';
+import ProgressReading from '#components/progress/progress-reading.astro';
 import { getSiteUrl } from '#lib/utils/routing.ts';
 import { serializeGraph } from '#lib/utils/structured-data.ts';
 
@@ -39,7 +39,6 @@ const siteUrl = getSiteUrl();
 		<Font cssVariable="--font-aleo" preload />
 		<Font cssVariable="--font-geist" preload />
 		<Font cssVariable="--font-geist-mono" preload />
-		<Font cssVariable="--font-ibm-plex-sans" />
 		<Meta {...meta} />
 		<Analytics isViewTransitionsEnabled={true} />
 		<ClientRouter />

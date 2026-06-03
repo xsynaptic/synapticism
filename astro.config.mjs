@@ -1,12 +1,25 @@
 // @ts-check
+import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { remarkAutoImport } from '@xsynaptic/remark-auto-import';
+import expressiveCode from 'astro-expressive-code';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 
 export default defineConfig({
 	site: import.meta.env.PROD ? 'https://synapticism.com/' : 'http://localhost:4321/',
-	integrations: [mdx(), sitemap()],
+	integrations: [expressiveCode(), mdx(), sitemap()],
+	markdown: {
+		processor: unified({
+			remarkPlugins: [
+				remarkAutoImport({
+					imports: [{ './src/components/mdx/more.astro': [['default', 'More']] }],
+				}),
+			],
+			remarkRehype: { footnoteLabelTagName: 'h3' },
+		}),
+	},
 	env: {
 		schema: {
 			UMAMI_DOMAIN: envField.string({ context: 'client', access: 'public', optional: true }),
@@ -27,16 +40,6 @@ export default defineConfig({
 	},
 	// Note: fallback fonts are handled in `styles/themes/fonts.css`
 	fonts: [
-		{
-			provider: fontProviders.fontsource(),
-			name: 'IBM Plex Sans',
-			cssVariable: '--font-ibm-plex-sans',
-			weights: ['300 700'],
-			styles: ['normal'],
-			subsets: ['latin'],
-			fallbacks: [],
-			optimizedFallbacks: false,
-		},
 		{
 			provider: fontProviders.fontsource(),
 			name: 'Aleo',

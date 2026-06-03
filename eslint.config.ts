@@ -1,5 +1,6 @@
 import { getConfig } from '@xsynaptic/eslint-config';
 import astroPlugin from 'eslint-plugin-astro';
+import { configs as wcConfigs } from 'eslint-plugin-wc';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -12,9 +13,10 @@ export default getConfig(
 				'node_modules/**/*',
 				'**/.astro/**/*',
 				'**/.astro-cache/**/*',
+				'**/.cache/**/*',
 				'**/dist/**/*',
 				'deploy/**/*',
-				'content/**/*',
+				'packages/content/**/*',
 				'**/temp/**/*',
 			],
 		},
@@ -22,6 +24,8 @@ export default getConfig(
 			rules: {
 				// Conflicts with Remeda's sort function
 				'unicorn/no-array-sort': 'off',
+				// Conflicts with Prettier, which always uppercases hex digits and is not configurable
+				'unicorn/number-literal-case': 'off',
 				// Expensive type-aware rules; only run in strict mode
 				'@typescript-eslint/no-deprecated': isStrictLint ? 'error' : 'off',
 				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
@@ -47,7 +51,7 @@ export default getConfig(
 		},
 		// These files run in the browser and might need the browser globals
 		{
-			files: ['src/components/**/*', 'src/components/**/*/*.ts'],
+			files: ['src/components/**/*'],
 			languageOptions: {
 				globals: {
 					...Object.fromEntries(Object.entries(globals.node).map(([key]) => [key, 'off'])),
@@ -57,6 +61,24 @@ export default getConfig(
 			rules: {
 				// This conflicts with how some client-side code is handled
 				'unicorn/prefer-global-this': 'off',
+			},
+		},
+		/**
+		 * Native web components
+		 */
+		{
+			...wcConfigs['flat/best-practice'],
+			files: ['src/components/**/*.ts'],
+			rules: {
+				...wcConfigs['flat/best-practice'].rules,
+				'wc/define-tag-after-class-definition': 'error',
+				'wc/guard-define-call': 'error',
+				'wc/max-elements-per-file': 'error',
+				'wc/no-constructor': 'error',
+				'wc/no-exports-with-element': 'error',
+				'wc/no-method-prefixed-with-on': 'error',
+				// Redundant under strict TS; the project avoids custom-element inheritance entirely
+				'wc/guard-super-call': 'off',
 			},
 		},
 		/**

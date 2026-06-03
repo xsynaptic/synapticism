@@ -21,22 +21,6 @@ const {
 } = Astro.props;
 ---
 
-<Tag
-	class:list={[
-		'divider-after inline last:after:content-none sm:inline-flex sm:gap-1',
-		dividerColor === DividerColorEnum.Default ? 'after:text-primary-400' : undefined,
-		dividerColor === DividerColorEnum.Darker ? 'after:text-primary-500' : undefined,
-		dividerColor === DividerColorEnum.Lighter ? 'after:text-primary-300' : undefined,
-		dividerContent === 'bar' ? 'after:content-(--content-bar)' : undefined,
-		dividerContent === 'bullet' ? 'after:content-(--content-bullet)' : undefined,
-		dividerContent === 'chevron'
-			? 'after:-translate-y-px after:content-(--content-chevron)'
-			: undefined,
-		dividerContent === 'dot' ? 'after:content-(--content-dot)' : undefined,
-		dividerContent === 'slash' ? 'after:content-(--content-slash)' : undefined,
-		className,
-	]}
-	{...props}
->
+<Tag class:list={['d-all', `d-${dividerColor}`, `d-${dividerContent}`, className]} {...props}>
 	<slot />
 </Tag>

@@ -1,0 +1,38 @@
+/* Divider styles; extracted here to avoid repetition in the divided-item component */
+.d-all {
+	display: inline;
+	@media (width >= 40rem) {
+		display: inline-flex;
+		gap: calc(var(--spacing) * 1);
+	}
+	&:last-child::after {
+		content: none;
+	}
+}
+.d-default::after {
+	color: var(--color-primary-400);
+}
+.d-darker::after {
+	color: var(--color-primary-500);
+}
+.d-lighter::after {
+	color: var(--color-primary-300);
+}
+
+/** Divider content styles */
+.d-bar::after {
+	content: var(--content-bar);
+}
+.d-bullet::after {
+	content: var(--content-bullet);
+}
+.d-chevron::after {
+	content: var(--content-chevron);
+	translate: 0 -1px;
+}
+.d-dot::after {
+	content: var(--content-dot);
+}
+.d-slash::after {
+	content: var(--content-slash);
+}

@@ -21,8 +21,7 @@ export function sortByContentCount<T extends CollectionEntryWithContentCount>(
 }
 
 export function filterWithContent(entry: CollectionEntryWithContentCount) {
-	if (entry.data._postCount && entry.data._postCount > 0) return true;
-	return false;
+	return (entry.data._postCount ?? 0) > 0;
 }
 
 export interface CollectionResult<K extends CollectionKey> {

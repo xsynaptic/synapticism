@@ -1,7 +1,6 @@
 import { stylizeText } from '@xsynaptic/unified-tools';
 import { z } from 'zod';
 
-// Stylized text schema; apply SmartyPants to arbitrary strings
 export const StylizedTextSchema = z.string().transform((value) => stylizeText(value).trim());
 
 // Descriptions should meet basic SEO requirements
@@ -15,5 +14,4 @@ export const DescriptionSchema = z
 	})
 	.transform((value) => value.trim());
 
-// Date schema
 export const DateStringSchema = z.string().transform((value) => new Date(value));

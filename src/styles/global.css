@@ -14,8 +14,11 @@
 
 /** Component and feature styling */
 @import './content.css';
+@import './divider.css';
+@import './link.css';
 @import './loading.css';
 @import './pagefind.css';
+@import './progress.css';
 
 /** These custom properties are defined outside Tailwind's system */
 :root {

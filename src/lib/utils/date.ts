@@ -29,5 +29,5 @@ export function sortByDateReverseChronological(
 	if (aDate && bDate) {
 		return bDate.getTime() - aDate.getTime();
 	}
-	return -1;
+	return 0;
 }

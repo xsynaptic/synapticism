@@ -23,29 +23,6 @@ const { class: className, href, linkColor = LinkColorEnum.Primary, ...props } = 
 const children = await renderSlot(Astro.slots, 'default');
 ---
 
-<a
-	href={href}
-	class:list={[
-		'cursor-pointer transition-colors ease-linear',
-		linkColor === LinkColorEnum.Primary
-			? 'text-primary-800 hover:text-primary-600'
-			: undefined,
-		linkColor === LinkColorEnum.PrimaryBright
-			? 'text-primary-600 hover:text-primary-400'
-			: undefined,
-		linkColor === LinkColorEnum.Highlight
-			? 'text-highlight-700 hover:text-highlight-500'
-			: undefined,
-		linkColor === LinkColorEnum.HighlightBright
-			? 'text-highlight-500 hover:text-highlight-300'
-			: undefined,
-		linkColor === LinkColorEnum.Accent
-			? 'text-accent-700 hover:text-accent-500'
-			: undefined,
-		linkColor === LinkColorEnum.AccentBright
-			? 'text-accent-500 hover:text-accent-300'
-			: undefined,
-		className,
-	]}
-	{...props}><Fragment set:html={children} /></a
+<a href={href} class:list={['l-all', `l-${linkColor}`, className]} {...props}
+	><Fragment set:html={children} /></a
 >
