@@ -1,8 +1,8 @@
 ---
-import TagIndexLayout from '#layouts/tag-index.astro';
+import TagListLayout from '#layouts/tag-list.astro';
 import { queryTagsIndex } from '#lib/collections/tags/tags-utils.ts';
 
 const tags = await queryTagsIndex();
 ---
 
-<TagIndexLayout tags={tags} />
+<TagListLayout tags={tags} />

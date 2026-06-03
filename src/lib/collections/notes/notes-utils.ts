@@ -4,11 +4,8 @@ import * as R from 'remeda';
 
 import type { Thing } from '#lib/utils/structured-data.ts';
 
-import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
-import {
-	createContentMetadataItems,
-	sortContentMetadataByDate,
-} from '#lib/metadata/metadata-utils.ts';
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
+import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
 import { buildArticleSchema, buildAuthorSchema } from '#lib/utils/structured-data.ts';
 import { getEntryDescription } from '#lib/utils/text.ts';
 
@@ -30,7 +27,7 @@ export function getNoteSchema(
 }
 
 export async function queryNotesIndex() {
-	const { entries } = await getNotesCollection();
+	const catalog = await getCatalog();
 
-	return R.pipe(entries, createContentMetadataItems, R.sort(sortContentMetadataByDate));
+	return R.pipe(catalog.byCollection('notes'), R.sort(sortCatalogByDate));
 }

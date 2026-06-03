@@ -3,7 +3,7 @@ import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import * as R from 'remeda';
 
-import NoteIndex from '#layouts/notes-index.astro';
+import NoteList from '#layouts/notes-list.astro';
 import { getNotesCollection } from '#lib/collections/notes/notes-data.js';
 import { sortByDateReverseChronological } from '#lib/utils/date.ts';
 
@@ -16,4 +16,4 @@ export const getStaticPaths = (async ({ paginate }) => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 ---
 
-<NoteIndex {...Astro.props} />
+<NoteList {...Astro.props} />

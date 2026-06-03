@@ -14,7 +14,12 @@ export default defineConfig({
 		processor: unified({
 			remarkPlugins: [
 				remarkAutoImport({
-					imports: [{ './src/components/mdx/more.astro': [['default', 'More']] }],
+					imports: [
+						{
+							'./src/components/mdx/link.astro': [['default', 'Link']],
+							'./src/components/mdx/more.astro': [['default', 'More']],
+						},
+					],
 				}),
 			],
 			remarkRehype: { footnoteLabelTagName: 'h3' },

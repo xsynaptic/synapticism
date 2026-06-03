@@ -1,10 +1,11 @@
 ---
-import type { ContentMetadataCollectionKey } from '#lib/metadata/metadata-types.ts';
+import type { CatalogCollectionKey } from '#lib/catalog/catalog-types.ts';
 
 import Link from '#components/parts/link.astro';
 import { getSiteUrl } from '#lib/utils/routing.ts';
 
-const collectionLabels: Record<ContentMetadataCollectionKey, string> = {
+const collectionLabels: Record<CatalogCollectionKey, string> = {
+	notes: 'Notes',
 	pages: 'Pages',
 	posts: 'Posts',
 	projects: 'Projects',
@@ -12,7 +13,7 @@ const collectionLabels: Record<ContentMetadataCollectionKey, string> = {
 };
 
 interface Props {
-	collection: ContentMetadataCollectionKey;
+	collection: CatalogCollectionKey;
 }
 
 const { collection, ...props } = Astro.props;

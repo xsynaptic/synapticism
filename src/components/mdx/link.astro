@@ -1,0 +1,31 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
+import { renderSlot } from '#lib/utils/astro.ts';
+
+interface Props extends HTMLAttributes<'a'> {
+	id: string | undefined;
+}
+
+const { id, ...props } = Astro.props;
+
+const content = await renderSlot(Astro.slots, 'default');
+
+if (!id) {
+	throw new Error(`Link component requires an ID; rendering path: ${Astro.url.pathname}`);
+}
+
+const catalog = await getCatalog();
+const catalogItem = catalog.getById(id);
+---
+
+{
+	catalogItem?.url ? (
+		<a href={catalogItem.url} {...props}>
+			<Fragment set:html={content} />
+		</a>
+	) : (
+		<Fragment set:html={content} />
+	)
+}

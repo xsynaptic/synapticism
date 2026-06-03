@@ -1,5 +1,5 @@
 ---
-import type { ContentMetadataItem } from '#lib/metadata/metadata-types.ts';
+import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
@@ -10,8 +10,8 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
 
 interface Props {
-	recentPosts: Array<ContentMetadataItem>;
-	recentProjects: Array<ContentMetadataItem>;
+	recentPosts: Array<CatalogItem>;
+	recentProjects: Array<CatalogItem>;
 }
 
 const { recentPosts, recentProjects } = Astro.props;

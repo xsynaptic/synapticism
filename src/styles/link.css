@@ -1,4 +1,3 @@
-/* Link styles; extracted here to avoid repetition in the link component */
 .l-all {
 	@apply transition-colors ease-linear;
 	cursor: pointer;

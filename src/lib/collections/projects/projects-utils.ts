@@ -1,13 +1,10 @@
 import * as R from 'remeda';
 
-import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
-import {
-	createContentMetadataItems,
-	sortContentMetadataByDate,
-} from '#lib/metadata/metadata-utils.ts';
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
+import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
 
 export async function queryProjectsIndex() {
-	const { entries } = await getProjectsCollection();
+	const catalog = await getCatalog();
 
-	return R.pipe(entries, createContentMetadataItems, R.sort(sortContentMetadataByDate));
+	return R.pipe(catalog.byCollection('projects'), R.sort(sortCatalogByDate));
 }

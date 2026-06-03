@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
-import TagEntryLayout from '#layouts/tag-entry.astro';
+import TagDetailLayout from '#layouts/tag-detail.astro';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import { queryTagsEntryPosts } from '#lib/collections/tags/tags-utils.ts';
 
@@ -26,4 +26,4 @@ export const getStaticPaths = (async ({ paginate }) => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 ---
 
-<TagEntryLayout {...Astro.props} />
+<TagDetailLayout {...Astro.props} />

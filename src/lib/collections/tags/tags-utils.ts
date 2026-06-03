@@ -2,12 +2,10 @@ import type { CollectionEntry } from 'astro:content';
 
 import * as R from 'remeda';
 
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
+import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
-import {
-	createContentMetadataItems,
-	sortContentMetadataByDate,
-} from '#lib/metadata/metadata-utils.ts';
 import {
 	createCollectionLookupByIds,
 	filterWithContent,
@@ -32,8 +30,9 @@ export async function queryTagsIndex() {
 
 export async function queryTagsEntryPosts(entry: CollectionEntry<'tags'>) {
 	const getPostsByTag = await createPostsByTagFunction();
+	const catalog = await getCatalog();
 
 	const posts = getPostsByTag(entry);
 
-	return R.pipe(posts, createContentMetadataItems, R.sort(sortContentMetadataByDate));
+	return R.pipe(catalog.resolve(posts), R.sort(sortCatalogByDate));
 }

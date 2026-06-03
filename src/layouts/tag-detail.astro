@@ -2,7 +2,7 @@
 import type { Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
-import type { ContentMetadataItem } from '#lib/metadata/metadata-types.ts';
+import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentDescription from '#components/content/content-description.astro';
 import ContentHeader from '#components/content/content-header.astro';
@@ -16,7 +16,7 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 
 interface Props {
 	entry: CollectionEntry<'tags'>;
-	page: Page<ContentMetadataItem>;
+	page: Page<CatalogItem>;
 }
 
 const { entry, page } = Astro.props;
