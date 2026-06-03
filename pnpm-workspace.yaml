@@ -1,5 +1,5 @@
 packages:
-  - 'packages/**'
+  - packages/**
 
 minimumReleaseAge: 1440
 
@@ -13,4 +13,7 @@ minimumReleaseAgeExclude:
   - '@astrojs/sitemap'
   - '@xsynaptic/eslint-config'
   - '@xsynaptic/unified-tools'
-  - 'rehype-wrap-cjk'
+  - rehype-wrap-cjk
+
+onlyBuiltDependencies:
+  - esbuild

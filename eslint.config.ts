@@ -3,25 +3,49 @@ import astroPlugin from 'eslint-plugin-astro';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+const isStrictLint = process.env.ESLINT_STRICT === '1';
+
 export default getConfig(
 	[
 		{
 			ignores: [
-				'**/.astro',
-				'**/.astro-cache',
+				'node_modules/**/*',
+				'**/.astro/**/*',
+				'**/.astro-cache/**/*',
+				'**/dist/**/*',
 				'deploy/**/*',
-				'dist/**/*',
 				'content/**/*',
-				'temp/**/*',
+				'**/temp/**/*',
 			],
 		},
 		{
 			rules: {
 				// Conflicts with Remeda's sort function
 				'unicorn/no-array-sort': 'off',
+				// Expensive type-aware rules; only run in strict mode
+				'@typescript-eslint/no-deprecated': isStrictLint ? 'error' : 'off',
+				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
+				'@typescript-eslint/no-misused-promises': isStrictLint ? 'error' : 'off',
 			},
 		},
-		// Those files run in the browser and need the browser globals
+		/**
+		 * JSX
+		 */
+		{
+			files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts', '**/*.astro'],
+			rules: {
+				'no-restricted-syntax': [
+					'error',
+					{
+						message:
+							'Use a ternary returning undefined (condition ? <Element /> : undefined) instead of && for conditional rendering.',
+						selector:
+							':matches(JSXElement, JSXFragment) > JSXExpressionContainer > LogicalExpression[operator="&&"]',
+					},
+				],
+			},
+		},
+		// These files run in the browser and might need the browser globals
 		{
 			files: ['src/components/**/*', 'src/components/**/*/*.ts'],
 			languageOptions: {
@@ -36,11 +60,11 @@ export default getConfig(
 			},
 		},
 		/**
-		 * Astro support; with some help from...
-		 * @reference - https://github.com/Princesseuh/erika.florist/blob/main/eslint.config.js
+		 * Astro
 		 */
 		...astroPlugin.configs['flat/recommended'],
 		...astroPlugin.configs['jsx-a11y-strict'],
+		// Split into two blocks so disableTypeChecked doesn't clobber our parserOptions
 		{
 			files: ['**/*.astro'],
 			languageOptions: {
@@ -49,28 +73,15 @@ export default getConfig(
 					extraFileExtensions: ['.astro'],
 				},
 			},
-
-			// Remove some safety rules around `any` for various reasons
-			// Astro.props isn't typed correctly in some contexts, so a bunch of things ends up being `any`
-			rules: {
-				'@typescript-eslint/no-unsafe-argument': 'off',
-				'@typescript-eslint/no-unsafe-assignment': 'off',
-				'@typescript-eslint/no-unsafe-call': 'off',
-				'@typescript-eslint/no-unsafe-member-access': 'off',
-				'@typescript-eslint/no-unsafe-return': 'off',
-			},
 		},
-		// Disable typed rules for scripts inside Astro files
+		// Type-aware rules can't properly resolve types in .astro files; `astro check` handles this
+		// Keep frontmatter thin and push logic into .ts files for full lint coverage
 		{
-			files: ['**/*.astro/*.ts', '*.astro/*.ts'],
+			files: ['**/*.astro'],
 			...tseslint.configs.disableTypeChecked,
 		},
 	],
 	{
 		customGlobals: { mode: 'readonly' },
-		// Note: Astro's TypeScript linting support is incompatible with the newer `projectService` option
-		parserOptions: {
-			project: './tsconfig.json',
-		},
 	},
 );

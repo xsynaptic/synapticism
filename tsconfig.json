@@ -7,7 +7,6 @@
 		"rootDir": ".",
 		"outDir": "./dist",
 		"strictNullChecks": true,
-		"erasableSyntaxOnly": true,
-		"checkJs": true // `allowJs` already set upstream
+		"erasableSyntaxOnly": true
 	}
 }

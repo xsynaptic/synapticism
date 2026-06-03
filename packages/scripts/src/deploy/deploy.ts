@@ -20,7 +20,7 @@ const dryRun = values['dry-run'];
 const skipBuild = values['skip-build'];
 
 // Load and validate deploy configuration
-const config = loadDeployConfig(rootPath);
+const config = loadDeployConfig();
 
 printDeployConfig(config);
 

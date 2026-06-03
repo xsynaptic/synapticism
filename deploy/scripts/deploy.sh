@@ -10,6 +10,10 @@ if [ -f "$PROJECT_ROOT/.env" ]; then
   source "$PROJECT_ROOT/.env"
 fi
 
+if [ -f "$DEPLOY_DIR/.env" ]; then
+  source "$DEPLOY_DIR/.env"
+fi
+
 if [ -z "$DEPLOY_REMOTE_HOST" ]; then
   echo "ERROR: DEPLOY_REMOTE_HOST environment variable is required"
   echo "Example: DEPLOY_REMOTE_HOST=deploy@your-server.com"

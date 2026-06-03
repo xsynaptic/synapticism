@@ -1,6 +1,4 @@
 import chalk from 'chalk';
-import dotenv from 'dotenv';
-import path from 'node:path';
 
 interface DeployConfig {
 	remoteHost: string;
@@ -8,16 +6,11 @@ interface DeployConfig {
 	sitePath: string;
 }
 
-export function loadDeployConfig(rootPath: string): DeployConfig {
-	// Load env files
-	dotenv.config({ path: path.join(rootPath, '.env') });
-	dotenv.config({ path: path.join(rootPath, 'deploy/.env') });
-
+export function loadDeployConfig(): DeployConfig {
 	const remoteHost = process.env.DEPLOY_REMOTE_HOST;
 	const sshKeyPath = process.env.DEPLOY_SSH_KEY_PATH;
 	const sitePath = process.env.DEPLOY_SITE_PATH;
 
-	// Validate required vars
 	const missing: Array<string> = [];
 
 	if (!remoteHost) missing.push('DEPLOY_REMOTE_HOST');
@@ -26,10 +19,7 @@ export function loadDeployConfig(rootPath: string): DeployConfig {
 
 	if (!remoteHost || !sshKeyPath || !sitePath) {
 		console.error(chalk.red(`Missing required environment variables: ${missing.join(', ')}`));
-		console.error(chalk.gray('\nExample .env configuration:'));
-		console.error(chalk.gray('  DEPLOY_REMOTE_HOST=deploy@your-server.com'));
-		console.error(chalk.gray('  DEPLOY_SSH_KEY_PATH=/path/to/ssh/key'));
-		console.error(chalk.gray('  DEPLOY_SITE_PATH=/var/www/synapticism'));
+		console.error(chalk.gray('\nCheck deploy/.env or deploy/.env.example for required vars.'));
 		throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
 	}
 
