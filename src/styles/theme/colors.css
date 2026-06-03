@@ -1,0 +1,65 @@
+@theme {
+	--color-blue-chill-50: #f0fafb;
+	--color-blue-chill-100: #d9f3f4;
+	--color-blue-chill-200: #b7e6ea;
+	--color-blue-chill-300: #85d3db;
+	--color-blue-chill-400: #4cb6c4;
+	--color-blue-chill-500: #2d8f9d;
+	--color-blue-chill-600: #2b7e8f;
+	--color-blue-chill-700: #296775;
+	--color-blue-chill-800: #295561;
+	--color-blue-chill-900: #264853;
+	--color-blue-chill-950: #142f38;
+
+	/* Primary colors */
+	--color-primary-50: var(--color-zinc-50);
+	--color-primary-100: var(--color-zinc-100);
+	--color-primary-200: var(--color-zinc-200);
+	--color-primary-300: var(--color-zinc-300);
+	--color-primary-400: var(--color-zinc-400);
+	--color-primary-500: var(--color-zinc-500);
+	--color-primary-600: var(--color-zinc-600);
+	--color-primary-700: var(--color-zinc-700);
+	--color-primary-800: var(--color-zinc-800);
+	--color-primary-900: var(--color-zinc-900);
+	--color-primary-950: var(--color-zinc-950);
+
+	/* Accent colors */
+	--color-accent-50: var(--color-calypso-50);
+	--color-accent-100: var(--color-calypso-100);
+	--color-accent-200: var(--color-calypso-200);
+	--color-accent-300: var(--color-calypso-300);
+	--color-accent-400: var(--color-calypso-400);
+	--color-accent-500: var(--color-calypso-500);
+	--color-accent-600: var(--color-calypso-600);
+	--color-accent-700: var(--color-calypso-700);
+	--color-accent-800: var(--color-calypso-800);
+	--color-accent-900: var(--color-calypso-900);
+	--color-accent-950: var(--color-calypso-950);
+
+	/* Highlight colors */
+	--color-highlight-50: var(--color-cumin-50);
+	--color-highlight-100: var(--color-cumin-100);
+	--color-highlight-200: var(--color-cumin-200);
+	--color-highlight-300: var(--color-cumin-300);
+	--color-highlight-400: var(--color-cumin-400);
+	--color-highlight-500: var(--color-cumin-500);
+	--color-highlight-600: var(--color-cumin-600);
+	--color-highlight-700: var(--color-cumin-700);
+	--color-highlight-800: var(--color-cumin-800);
+	--color-highlight-900: var(--color-cumin-900);
+	--color-highlight-950: var(--color-cumin-950);
+
+	/* Alternate colors */
+	--color-alternate-50: var(--color-lima-50);
+	--color-alternate-100: var(--color-lima-100);
+	--color-alternate-200: var(--color-lima-200);
+	--color-alternate-300: var(--color-lima-300);
+	--color-alternate-400: var(--color-lima-400);
+	--color-alternate-500: var(--color-lima-500);
+	--color-alternate-600: var(--color-lima-600);
+	--color-alternate-700: var(--color-lima-700);
+	--color-alternate-800: var(--color-lima-800);
+	--color-alternate-900: var(--color-lima-900);
+	--color-alternate-950: var(--color-lima-950);
+}

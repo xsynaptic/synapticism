@@ -1,0 +1,42 @@
+---
+import type { HTMLTag, Polymorphic } from 'astro/types';
+
+import type { DividerColor, DividerContent } from '#components/types.ts';
+
+import { DividerColorEnum, DividerContentEnum } from '#components/types.ts';
+
+type Props<Tag extends HTMLTag = HTMLTag> = Polymorphic<{
+	as: Tag;
+	class?: string | undefined;
+	dividerColor?: DividerColor | undefined;
+	dividerContent?: DividerContent | undefined;
+}>;
+
+const {
+	as: Tag = 'div',
+	class: className,
+	dividerColor = DividerColorEnum.Default,
+	dividerContent = DividerContentEnum.Slash,
+	...props
+} = Astro.props;
+---
+
+<Tag
+	class:list={[
+		'divider-after inline last:after:content-none sm:inline-flex sm:gap-1',
+		dividerColor === DividerColorEnum.Default ? 'after:text-primary-400' : undefined,
+		dividerColor === DividerColorEnum.Darker ? 'after:text-primary-500' : undefined,
+		dividerColor === DividerColorEnum.Lighter ? 'after:text-primary-300' : undefined,
+		dividerContent === 'bar' ? 'after:content-(--content-bar)' : undefined,
+		dividerContent === 'bullet' ? 'after:content-(--content-bullet)' : undefined,
+		dividerContent === 'chevron'
+			? 'after:-translate-y-px after:content-(--content-chevron)'
+			: undefined,
+		dividerContent === 'dot' ? 'after:content-(--content-dot)' : undefined,
+		dividerContent === 'slash' ? 'after:content-(--content-slash)' : undefined,
+		className,
+	]}
+	{...props}
+>
+	<slot />
+</Tag>

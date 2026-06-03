@@ -1,0 +1,59 @@
+---
+import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+
+import type { ContentMetadataItem } from '#lib/metadata/metadata-types.ts';
+
+import ContentDescription from '#components/content/content-description.astro';
+import ContentHeader from '#components/content/content-header.astro';
+import ContentSection from '#components/content/content-section.astro';
+import MainSite from '#components/main/main-site.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import Link from '#components/parts/link.astro';
+import PaginationCounter from '#components/parts/pagination-counter.astro';
+import Pagination from '#components/parts/pagination.astro';
+import { DatePresetEnum } from '#lib/utils/date.ts';
+
+interface Props {
+	entry: CollectionEntry<'tags'>;
+	page: Page<ContentMetadataItem>;
+}
+
+const { entry, page } = Astro.props;
+---
+
+<MainSite
+	meta={{
+		title: entry.data.title,
+		description: entry.data.description,
+		noIndex: page.currentPage > 1,
+	}}
+>
+	<ContentHeader>
+		<Fragment slot="header-title">{entry.data.title}</Fragment>
+		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
+	</ContentHeader>
+	<ContentDescription entry={entry} />
+	<ContentSection>
+		<ul class="flex flex-col gap-4">
+			{
+				page.data.map((item) => (
+					<li class="flex flex-col gap-1">
+						<h2 class="text-lg font-semibold md:text-xl">
+							<Link href={item.url}>{item.title}</Link>
+						</h2>
+						<DateDisplay
+							class="text-xs text-primary-400"
+							date={item.dateCreated}
+							datePreset={DatePresetEnum.Medium}
+						/>
+						{item.description ? (
+							<p class="text-sm text-primary-500">{item.description}</p>
+						) : undefined}
+					</li>
+				))
+			}
+		</ul>
+		<Pagination class="mt-small md:mt-medium" page={page} />
+	</ContentSection>
+</MainSite>

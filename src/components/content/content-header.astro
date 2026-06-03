@@ -1,0 +1,30 @@
+---
+import Container from '#components/parts/container.astro';
+import { renderSlot } from '#lib/utils/astro.ts';
+
+interface Props {
+	class?: string | undefined;
+}
+
+const { class: className } = Astro.props;
+
+const title = await renderSlot(Astro.slots, 'header-title');
+const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
+---
+
+<Container as="div" class:list={['mb-2 pt-small', className]}>
+	<h1
+		class="mb-0 pb-2 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 sm:-mb-2 md:text-3xl lg:text-4xl"
+		style={{ marginLeft: '-0.125rem' }}
+		data-pagefind-weight="3"
+	>
+		{title ? <Fragment set:html={title} /> : undefined}
+	</h1>
+	{
+		subtitle ? (
+			<div class="items-start gap-1 pb-2 text-sm text-primary-500 sm:flex sm:flex-wrap" data-pagefind-ignore>
+				<Fragment set:html={subtitle} />
+			</div>
+		) : undefined
+	}
+</Container>

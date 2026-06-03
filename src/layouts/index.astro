@@ -1,0 +1,78 @@
+---
+import type { ContentMetadataItem } from '#lib/metadata/metadata-types.ts';
+
+import ContentSection from '#components/content/content-section.astro';
+import MainSite from '#components/main/main-site.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import Link from '#components/parts/link.astro';
+import ProseDescription from '#components/parts/prose-description.astro';
+import { DatePresetEnum } from '#lib/utils/date.ts';
+import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
+
+interface Props {
+	recentPosts: Array<ContentMetadataItem>;
+	recentProjects: Array<ContentMetadataItem>;
+}
+
+const { recentPosts, recentProjects } = Astro.props;
+---
+
+<MainSite
+	schemas={[
+		buildWebSiteSchema({
+			name: 'Synapticism',
+			description: 'A technical blog about web development, design, and creative coding.',
+		}),
+	]}
+>
+	<ContentSection class="mt-small">
+		<ProseDescription>
+			<p>
+				Welcome to Synapticism, a technical blog about web development, design, and creative coding.
+			</p>
+		</ProseDescription>
+	</ContentSection>
+	{
+		recentPosts.length > 0 ? (
+			<ContentSection>
+				<Fragment slot="section-title">Recent Posts</Fragment>
+				<ul class="flex flex-col gap-3">
+					{recentPosts.map((item) => (
+						<li class="flex flex-col gap-1">
+							<h3 class="text-lg font-semibold">
+								<Link href={item.url}>{item.title}</Link>
+							</h3>
+							<DateDisplay
+								class="text-xs text-primary-400"
+								date={item.dateCreated}
+								datePreset={DatePresetEnum.Medium}
+							/>
+							{item.description ? (
+								<p class="text-sm text-primary-500">{item.description}</p>
+							) : undefined}
+						</li>
+					))}
+				</ul>
+			</ContentSection>
+		) : undefined
+	}
+	{
+		recentProjects.length > 0 ? (
+			<ContentSection>
+				<Fragment slot="section-title">Projects</Fragment>
+				<ul class="flex flex-col gap-3">
+					{recentProjects.map((item) => (
+						<li class="flex flex-col gap-1">
+							<h3 class="text-lg font-semibold">
+								<Link href={item.url}>{item.title}</Link>
+							</h3>
+							{item.description ? (
+								<p class="text-sm text-primary-500">{item.description}</p>
+							) : undefined}
+						</li>
+					))}
+				</ul>
+			</ContentSection>
+		) : undefined
+	}
+</MainSite>

@@ -1,0 +1,60 @@
+---
+import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+
+import ContentHeader from '#components/content/content-header.astro';
+import ContentSection from '#components/content/content-section.astro';
+import MainSite from '#components/main/main-site.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import Link from '#components/parts/link.astro';
+import PaginationCounter from '#components/parts/pagination-counter.astro';
+import Pagination from '#components/parts/pagination.astro';
+import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
+
+interface Props {
+	page: Page<CollectionEntry<'posts'>>;
+}
+
+const { page } = Astro.props;
+---
+
+<MainSite
+	meta={{
+		title: 'Posts',
+		description: 'Articles about web development, design, and creative coding.',
+		noIndex: page.currentPage > 1,
+	}}
+>
+	<ContentHeader>
+		<Fragment slot="header-title">Posts</Fragment>
+		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
+	</ContentHeader>
+	<ContentSection>
+		<ul class="flex flex-col gap-4">
+			{
+				page.data.map((entry) => {
+					const dateCreated = parseContentDate(entry.data.dateCreated);
+
+					return (
+						<li class="flex flex-col gap-1">
+							<h2 class="text-lg font-semibold md:text-xl">
+								<Link href={`/posts/${entry.id}/`}>{entry.data.title}</Link>
+							</h2>
+							{dateCreated ? (
+								<DateDisplay
+									class="text-xs text-primary-400"
+									date={dateCreated}
+									datePreset={DatePresetEnum.Medium}
+								/>
+							) : undefined}
+							{entry.data.description ? (
+								<p class="text-sm text-primary-500">{entry.data.description}</p>
+							) : undefined}
+						</li>
+					);
+				})
+			}
+		</ul>
+		<Pagination class="mt-small md:mt-medium" page={page} />
+	</ContentSection>
+</MainSite>

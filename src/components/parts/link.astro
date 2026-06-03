@@ -5,7 +5,11 @@ import { renderSlot } from '#lib/utils/astro.ts';
 
 const LinkColorEnum = {
 	Primary: 'primary',
-	Secondary: 'secondary',
+	PrimaryBright: 'primary-bright',
+	Highlight: 'highlight',
+	HighlightBright: 'highlight-bright',
+	Accent: 'accent',
+	AccentBright: 'accent-bright',
 } as const;
 
 type LinkColor = (typeof LinkColorEnum)[keyof typeof LinkColorEnum];
@@ -24,8 +28,23 @@ const children = await renderSlot(Astro.slots, 'default');
 	class:list={[
 		'cursor-pointer transition-colors ease-linear',
 		linkColor === LinkColorEnum.Primary
-			? 'text-zinc-800 hover:text-zinc-600'
-			: 'text-zinc-800 hover:text-zinc-600',
+			? 'text-primary-800 hover:text-primary-600'
+			: undefined,
+		linkColor === LinkColorEnum.PrimaryBright
+			? 'text-primary-600 hover:text-primary-400'
+			: undefined,
+		linkColor === LinkColorEnum.Highlight
+			? 'text-highlight-700 hover:text-highlight-500'
+			: undefined,
+		linkColor === LinkColorEnum.HighlightBright
+			? 'text-highlight-500 hover:text-highlight-300'
+			: undefined,
+		linkColor === LinkColorEnum.Accent
+			? 'text-accent-700 hover:text-accent-500'
+			: undefined,
+		linkColor === LinkColorEnum.AccentBright
+			? 'text-accent-500 hover:text-accent-300'
+			: undefined,
 		className,
 	]}
 	{...props}><Fragment set:html={children} /></a

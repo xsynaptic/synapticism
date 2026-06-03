@@ -1,5 +1,5 @@
 import { glob } from 'astro/loaders';
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import { z } from 'zod';
 
 import { CONTENT_COLLECTIONS_PATH } from '#constants.js';
@@ -15,6 +15,7 @@ export const posts = defineCollection({
 			dateUpdated: DateStringSchema.optional(),
 			imageFeatured: z.string().optional(),
 			imageHero: z.string().optional(),
+			tags: reference('tags').array().optional(),
 		})
 		.strict(),
 });

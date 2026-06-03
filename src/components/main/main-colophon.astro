@@ -1,0 +1,24 @@
+---
+import DividedItem from '#components/parts/divided-item.astro';
+import Link from '#components/parts/link.astro';
+import { SITE_YEAR_FOUNDED } from '#constants.ts';
+import { getSiteUrl } from '#lib/utils/routing.ts';
+
+const currentYear = new Date().getFullYear();
+const copyrightYears =
+	currentYear > SITE_YEAR_FOUNDED
+		? `${String(SITE_YEAR_FOUNDED)}\u2013${String(currentYear)}`
+		: String(SITE_YEAR_FOUNDED);
+---
+
+<div class="flex flex-wrap items-center gap-x-1 text-xs text-primary-400">
+	<DividedItem as="span" dividerContent="slash">
+		&copy;{copyrightYears} A. Synaptic.
+	</DividedItem>
+	<DividedItem as="span" dividerContent="slash">
+		Built with <Link href="https://astro.build" linkColor="primary-bright">Astro</Link>
+	</DividedItem>
+	<DividedItem as="span" dividerContent="slash">
+		<Link href={`${getSiteUrl()}rss.xml`} linkColor="primary-bright">RSS</Link>
+	</DividedItem>
+</div>

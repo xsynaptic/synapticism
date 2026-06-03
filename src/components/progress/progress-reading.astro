@@ -1,0 +1,14 @@
+---
+interface Props {
+	class?: string | undefined;
+	height?: string | undefined;
+}
+
+const { class: className, height = '1px', ...props } = Astro.props;
+---
+
+<progress-reading class:list={[className]} style={{ height }} {...props}></progress-reading>
+
+<script>
+	import '#components/progress/progress-reading.ts';
+</script>

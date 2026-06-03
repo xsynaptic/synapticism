@@ -1,0 +1,8 @@
+---
+import TagIndexLayout from '#layouts/tag-index.astro';
+import { queryTagsIndex } from '#lib/collections/tags/utils.ts';
+
+const tags = await queryTagsIndex();
+---
+
+<TagIndexLayout tags={tags} />

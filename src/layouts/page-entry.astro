@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import { render } from 'astro:content';
+
+import ContentDate from '#components/content/content-date.astro';
+import ContentHeader from '#components/content/content-header.astro';
+import MainSite from '#components/main/main-site.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import ProseBody from '#components/parts/prose-body.astro';
+import { DatePresetEnum } from '#lib/utils/date.ts';
+import { MicroformatClassNames } from '#lib/utils/microformats.ts';
+import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
+import { getSeoHideSearch } from '#lib/utils/seo.ts';
+
+interface Props {
+	entry: CollectionEntry<'pages'>;
+}
+
+const { entry } = Astro.props;
+
+const { Content } = await render(entry);
+---
+
+<MainSite
+	meta={{
+		title: entry.data.title,
+		description: entry.data.description,
+		...getSeoHideSearch(entry.data.hideSearch),
+	}}
+	hasReadingBar={true}
+>
+	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp(entry.data.hideSearch)}>
+		<ContentHeader>
+			<Fragment slot="header-title">{entry.data.title}</Fragment>
+			<Fragment slot="header-subtitle">
+				<DividedItem>
+					<ContentDate
+						date={entry.data.dateCreated}
+						datePreset={DatePresetEnum.Medium}
+						showMicroformats={true}
+					/>
+				</DividedItem>
+				{
+					entry.data.dateUpdated ? (
+						<DividedItem>
+							<ContentDate
+								date={entry.data.dateUpdated}
+								datePreset={DatePresetEnum.Medium}
+								showMicroformats={true}
+								showUpdated={true}
+							/>
+						</DividedItem>
+					) : undefined
+				}
+			</Fragment>
+		</ContentHeader>
+		<ProseBody class:list={['content', 'e-content', 'pb-small']} data-reading-frame>
+			<Content />
+		</ProseBody>
+	</article>
+</MainSite>

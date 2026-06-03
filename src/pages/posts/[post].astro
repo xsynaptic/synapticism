@@ -5,9 +5,9 @@ import PostEntry from '#layouts/post-entry.astro';
 import { getPostsCollection } from '#lib/collections/posts/data.js';
 
 export const getStaticPaths = (async () => {
-	const { posts } = await getPostsCollection();
+	const { entries } = await getPostsCollection();
 
-	return posts.map((entry) => ({
+	return entries.map((entry) => ({
 		params: { post: entry.id },
 		props: { entry },
 	}));

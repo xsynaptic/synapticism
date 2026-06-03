@@ -1,0 +1,23 @@
+---
+import ContentHeader from '#components/content/content-header.astro';
+import ContentSection from '#components/content/content-section.astro';
+import MainSite from '#components/main/main-site.astro';
+import { getSeoHideSearch } from '#lib/utils/seo.ts';
+---
+
+<MainSite
+	meta={{
+		title: 'Page Not Found',
+		description: 'The page you were looking for could not be found.',
+		...getSeoHideSearch(true),
+	}}
+>
+	<ContentHeader>
+		<Fragment slot="header-title">Page Not Found</Fragment>
+	</ContentHeader>
+	<ContentSection>
+		<Fragment slot="section-description">
+			<p>The page you were looking for could not be found. It may have been moved or deleted.</p>
+		</Fragment>
+	</ContentSection>
+</MainSite>

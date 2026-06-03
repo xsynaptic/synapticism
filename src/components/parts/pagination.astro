@@ -1,0 +1,184 @@
+---
+import type { Page } from 'astro';
+import type { HTMLAttributes } from 'astro/types';
+
+import * as R from 'remeda';
+import urlJoin from 'url-join';
+
+import Link from '#components/parts/link.astro';
+import { getSiteUrl } from '#lib/utils/routing.ts';
+
+interface Props extends HTMLAttributes<'nav'> {
+	page: Page;
+}
+
+const { class: className, page, ...props } = Astro.props;
+
+type PaginationItem =
+	| { type: 'page'; pageNumber: number; isCollapsible: boolean }
+	| { type: 'current'; pageNumber: number }
+	| { type: 'divider' };
+
+function getPageNumberArray({
+	currentPage,
+	pageCount,
+	pagesShown,
+	minimumPagesShown = 5,
+}: {
+	currentPage: number;
+	pageCount: number;
+	pagesShown: number;
+	minimumPagesShown?: number;
+}) {
+	let delta: number;
+
+	const centerPagesShown = pagesShown - 5;
+	const boundaryPagesShown = pagesShown - 3;
+
+	const clampedCurrentPage = R.clamp(currentPage, { min: 1, max: pageCount });
+	const clampedPagesShown = R.clamp(pagesShown, { min: minimumPagesShown, max: pageCount });
+
+	if (pageCount <= clampedPagesShown) {
+		delta = clampedPagesShown;
+	} else {
+		delta =
+			clampedCurrentPage < boundaryPagesShown ||
+			clampedCurrentPage > pageCount - boundaryPagesShown
+				? boundaryPagesShown
+				: centerPagesShown;
+	}
+
+	const range = {
+		start: Math.round(clampedCurrentPage - delta / 2),
+		end: Math.round(clampedCurrentPage + delta / 2),
+	};
+
+	if (range.start - 1 === 1 || range.end + 1 === pageCount) {
+		range.start += 1;
+		range.end += 1;
+	}
+
+	let pages =
+		clampedCurrentPage > delta
+			? R.range(Math.min(range.start, pageCount - delta), Math.min(range.end, pageCount) + 1)
+			: R.range(1, Math.min(pageCount, delta + 1) + 1);
+
+	if (clampedCurrentPage > pageCount - boundaryPagesShown && pageCount > clampedPagesShown) {
+		pages = R.range(pageCount - delta, pageCount + 1);
+	}
+
+	const withDots = (value: number, pair: Array<number>) =>
+		pages.length + 1 === pageCount ? [value] : pair;
+
+	const lastPage = pages.at(-1);
+
+	if (pages.at(0) !== 1) {
+		pages = [...withDots(1, [1, -1]), ...pages];
+	}
+
+	if (lastPage && lastPage < pageCount) {
+		pages = [...pages, ...withDots(pageCount, [-1, pageCount])];
+	}
+
+	return pages;
+}
+
+const pageCountMax = 12;
+const { currentPage, lastPage: pageCount, url } = page;
+
+const pageBasePath = getSiteUrl(url.current.replace(new RegExp(`/${String(currentPage)}$`), ''));
+
+const getPageNumberLink = (pageNumber: number) =>
+	pageNumber === 1 ? pageBasePath : urlJoin(pageBasePath, String(pageNumber), '/');
+
+const rawPages =
+	pageCount <= pageCountMax
+		? R.range(1, pageCount + 1)
+		: getPageNumberArray({ currentPage, pageCount, pagesShown: pageCountMax });
+
+let isCollapsible = false;
+
+const pageArray: Array<PaginationItem> = rawPages.map((pageNumber) => {
+	if (pageNumber === -1) {
+		isCollapsible = !isCollapsible;
+		return { type: 'divider' };
+	}
+
+	if (pageNumber === currentPage) {
+		return { type: 'current', pageNumber };
+	}
+
+	const isAdjacentToCurrent = pageNumber === currentPage - 1 || pageNumber === currentPage + 1;
+
+	return { type: 'page', pageNumber, isCollapsible: isCollapsible && !isAdjacentToCurrent };
+});
+
+const pagePrevLink = url.prev ?? undefined;
+const pageNextLink = url.next ?? undefined;
+---
+
+{
+	pagePrevLink || pageNextLink ? (
+		<nav class:list={[className]} aria-label="Pagination" {...props}>
+			<ul
+				class:list={[
+					'flex flex-wrap gap-4 text-base font-medium tabular-nums select-none md:gap-1 md:text-sm',
+					page.lastPage >= 10 ? 'justify-between' : undefined,
+				]}
+			>
+				{pagePrevLink ? (
+					<li class="flex flex-wrap gap-1 pr-2">
+						<span class="select-none text-accent-300">&lsaquo;</span>
+						<Link href={pagePrevLink} aria-label="Previous page">
+							Previous
+						</Link>
+					</li>
+				) : undefined}
+				{pageArray.map((item) => {
+					switch (item.type) {
+						case 'divider': {
+							return (
+								<li class="text-primary-300" aria-hidden="true">
+									&#x22EF;
+								</li>
+							);
+						}
+						case 'current': {
+							return (
+								<li class="px-2 font-bold first:pl-0 last:pr-0" aria-current="page">
+									{String(item.pageNumber)}
+								</li>
+							);
+						}
+						case 'page': {
+							return (
+								<li
+									class:list={[
+										'first:-ml-2 last:-mr-2',
+										item.isCollapsible ? 'hidden md:block' : undefined,
+									]}
+								>
+									<Link
+										href={getPageNumberLink(item.pageNumber)}
+										class="px-2"
+										aria-label={`Go to page ${String(item.pageNumber)}`}
+									>
+										{String(item.pageNumber)}
+									</Link>
+								</li>
+							);
+						}
+					}
+				})}
+				{pageNextLink ? (
+					<li class="flex flex-wrap gap-1 pl-2">
+						<Link href={pageNextLink} aria-label="Next page">
+							Next
+						</Link>
+						<span class="select-none text-accent-300">&rsaquo;</span>
+					</li>
+				) : undefined}
+			</ul>
+		</nav>
+	) : undefined
+}

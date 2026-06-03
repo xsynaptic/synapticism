@@ -5,9 +5,9 @@ import PostArchive from '#layouts/post-index.astro';
 import { getPostsCollection } from '#lib/collections/posts/data.js';
 
 export const getStaticPaths = (async ({ paginate }) => {
-	const { posts } = await getPostsCollection();
+	const { entries } = await getPostsCollection();
 
-	return paginate(posts, { pageSize: 20 });
+	return paginate(entries, { pageSize: 20 });
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;

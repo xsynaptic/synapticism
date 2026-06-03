@@ -1,0 +1,34 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import Link from '#components/parts/link.astro';
+import { menuHeaderItems } from '#components/menu/menu-header.ts';
+import { isActiveMenuItem } from '#components/menu/menu-utils.ts';
+
+type Props = HTMLAttributes<'nav'>;
+
+const props = Astro.props;
+
+const { pathname } = Astro.url;
+---
+
+<nav class="py-1 bg-highlight-500" aria-label="Main navigation" {...props}>
+	<ul class="mx-auto flex max-w-content items-end gap-3 px-small md:px-medium">
+		{
+			menuHeaderItems.map((item) => (
+				<li>
+					<Link
+						linkColor="highlight-bright"
+						class:list={[
+							'text-sm font-medium sm:text-base',
+							isActiveMenuItem(item, pathname) ? 'font-semibold' : undefined,
+						]}
+						href={item.url}
+					>
+						{item.title}
+					</Link>
+				</li>
+			))
+		}
+	</ul>
+</nav>

@@ -1,4 +1,11 @@
 import type { AstroGlobal } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+
+export function getHasContent(
+	entry: CollectionEntry<'pages' | 'posts' | 'projects' | 'tags'>,
+) {
+	return 'body' in entry && typeof entry.body === 'string' && entry.body.trim().length > 0;
+}
 
 /**
  * Safely renders an Astro slot, returning undefined if the content is empty or whitespace-only

@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+
+import TagEntryLayout from '#layouts/tag-entry.astro';
+import { getTagsCollection } from '#lib/collections/tags/data.ts';
+import { queryTagsEntryPosts } from '#lib/collections/tags/utils.ts';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const { entries } = await getTagsCollection();
+
+	const paths = await Promise.all(
+		entries.map(async (entry) => {
+			const posts = await queryTagsEntryPosts(entry);
+
+			return paginate(posts, {
+				params: { id: entry.id },
+				props: { entry },
+				pageSize: 20,
+			});
+		}),
+	);
+
+	return paths.flat();
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+---
+
+<TagEntryLayout {...Astro.props} />

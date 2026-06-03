@@ -1,0 +1,42 @@
+---
+import ContentSection from '#components/content/content-section.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import Link from '#components/parts/link.astro';
+import ListRow from '#components/parts/list-row.astro';
+import { createTagsByIdsFunction } from '#lib/collections/tags/utils.ts';
+import { sortByContentCount } from '#lib/utils/collections.ts';
+import { MicroformatClassNames } from '#lib/utils/microformats.ts';
+import { getContentUrl } from '#lib/utils/routing.ts';
+
+interface Props {
+	tagIds: Array<string> | undefined;
+}
+
+const { tagIds, ...props } = Astro.props;
+
+const getTagsByIds = await createTagsByIdsFunction();
+
+const tags = tagIds ? getTagsByIds(tagIds).sort(sortByContentCount) : undefined;
+---
+
+{
+	tags && tags.length > 0 ? (
+		<ContentSection data-pagefind-ignore data-nosnippet {...props}>
+			<Fragment slot="section-title">Tags</Fragment>
+			<ListRow>
+				{tags.map((item) => (
+					<DividedItem
+						as="li"
+						class:list={[
+							'font-serif text-sm after:text-sm after:font-light',
+							MicroformatClassNames.Category,
+						]}
+						data-pagefind-filter="tag"
+					>
+						<Link href={getContentUrl(item.collection, item.id)}>{item.data.title}</Link>
+					</DividedItem>
+				))}
+			</ListRow>
+		</ContentSection>
+	) : undefined
+}

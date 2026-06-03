@@ -5,9 +5,9 @@ import ProjectEntry from '#layouts/project-entry.astro';
 import { getProjectsCollection } from '#lib/collections/projects/data.js';
 
 export const getStaticPaths = (async () => {
-	const { projects } = await getProjectsCollection();
+	const { entries } = await getProjectsCollection();
 
-	return projects.map((entry) => ({
+	return entries.map((entry) => ({
 		params: { project: entry.id },
 		props: { entry },
 	}));

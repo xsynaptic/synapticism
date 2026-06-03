@@ -11,7 +11,11 @@
 @import './theme/config.css';
 @import './theme/colors.css';
 @import './theme/fonts.css';
-@import './theme/typography.css';
+
+/** Component and feature styling */
+@import './content.css';
+@import './loading.css';
+@import './pagefind.css';
 
 /** These custom properties are defined outside Tailwind's system */
 :root {

@@ -1,0 +1,58 @@
+---
+import Container from '#components/parts/container.astro';
+import Link from '#components/parts/link.astro';
+import ProseBody from '#components/parts/prose-body.astro';
+import ProseDescription from '#components/parts/prose-description.astro';
+import { CONTENT_EXCERPT_IDENTIFIER } from '#constants.ts';
+import { renderSlot } from '#lib/utils/astro.ts';
+
+interface Props {
+	class?: string | undefined;
+	entryUrl: string;
+}
+
+const { class: className, entryUrl } = Astro.props;
+
+const subtitle = await renderSlot(Astro.slots, 'excerpt-subtitle');
+const description = await renderSlot(Astro.slots, 'excerpt-description');
+const content = await renderSlot(Astro.slots, 'default');
+
+const excerptSplit = content?.split(`<!-- ${CONTENT_EXCERPT_IDENTIFIER} -->`) ?? [];
+const excerptContent = excerptSplit[0];
+const hasExcerpt = excerptSplit.length > 1;
+---
+
+<article class={className}>
+	<Container as="header" class:list={[description ? undefined : 'mb-2']}>
+		<h2 class="mb-1 text-2xl font-bold lg:text-3xl">
+			<a
+				href={entryUrl}
+				class="text-primary-700 transition-colors ease-in hover:text-accent-500"
+			>
+				<slot name="excerpt-title" />
+			</a>
+		</h2>
+		{
+			subtitle ? (
+				<h3 class="mb-1 text-xs font-medium text-primary-400 md:text-sm">
+					<Fragment set:html={subtitle} />
+				</h3>
+			) : undefined
+		}
+		{
+			description ? (
+				<ProseDescription>
+					<Fragment set:html={description} />
+				</ProseDescription>
+			) : undefined
+		}
+	</Container>
+	<ProseBody class:list={['content', 'pb-small']}><Fragment set:html={excerptContent} /></ProseBody>
+	{
+		hasExcerpt ? (
+			<Container as="div" class="text-right font-serif font-medium italic">
+				<Link href={entryUrl}>Continue reading</Link>&nbsp;&raquo;
+			</Container>
+		) : undefined
+	}
+</article>

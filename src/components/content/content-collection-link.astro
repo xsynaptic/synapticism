@@ -1,0 +1,25 @@
+---
+import type { ContentMetadataCollectionKey } from '#lib/metadata/metadata-types.ts';
+
+import Link from '#components/parts/link.astro';
+import { getSiteUrl } from '#lib/utils/routing.ts';
+
+const collectionLabels: Record<ContentMetadataCollectionKey, string> = {
+	pages: 'Pages',
+	posts: 'Posts',
+	projects: 'Projects',
+	tags: 'Tags',
+};
+
+interface Props {
+	collection: ContentMetadataCollectionKey;
+}
+
+const { collection, ...props } = Astro.props;
+
+const collectionUrl = getSiteUrl(collection);
+---
+
+<Link class="font-semibold" href={collectionUrl} linkColor="highlight" {...props}>
+	{collectionLabels[collection]}
+</Link>

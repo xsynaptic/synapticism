@@ -1,0 +1,43 @@
+/* Content wrapper: constrain non-image elements within the content area */
+.content > *:not(.content-image):not(.figure-group) {
+	@apply mx-auto max-w-content px-small md:px-medium;
+}
+.content > .content-image,
+.content > .content-image + p {
+	margin-top: 0;
+}
+
+/* Footnotes */
+.content > .footnotes ol {
+	@apply max-w-content;
+}
+.content > .footnotes ol li::marker {
+	@apply text-xs;
+	font-style: italic;
+	margin-top: -5px;
+}
+.content .footnotes li p {
+	margin: 0;
+}
+.content [data-footnote-ref]::before,
+.content [data-footnote-ref]::after {
+	@apply font-light text-accent-300;
+}
+
+.content [data-footnote-ref]::before {
+	content: '[';
+	margin-inline-start: 1px;
+}
+.content [data-footnote-ref]::after {
+	content: ']';
+}
+.content [data-footnote-ref],
+.content [data-footnote-backref] {
+	@apply font-medium select-none;
+	text-decoration-line: none;
+}
+
+/** Inserted by remark-rehype for use with the footnotes label */
+.sr-only {
+	@apply sr-only;
+}

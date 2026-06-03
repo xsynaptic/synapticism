@@ -1,0 +1,18 @@
+---
+import type { Page } from 'astro';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+	page: Page;
+}
+
+const { class: className, page, ...props } = Astro.props;
+---
+
+{
+	page.currentPage > 1 ? (
+		<div class:list={[className, 'text-sm text-primary-500']} {...props}>
+			{`Page ${String(page.currentPage)} of ${String(page.lastPage)}`}
+		</div>
+	) : undefined
+}

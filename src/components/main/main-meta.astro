@@ -1,0 +1,87 @@
+---
+import { SEO } from 'astro-seo';
+import { WEBMENTION_DOMAIN } from 'astro:env/client';
+
+import type { MetaProps } from '#components/types.ts';
+
+import { getSiteUrl } from '#lib/utils/routing.ts';
+import { getSeoImageFallback } from '#lib/utils/seo.ts';
+import { sanitizeAltAttribute, sanitizeDescription } from '#lib/utils/text.ts';
+
+type Props = MetaProps;
+
+const {
+	title: contentTitle,
+	description: descriptionRaw,
+	ogType,
+	image,
+	imageAlt,
+	article,
+	prefetchUrls,
+	noIndex,
+	noFollow,
+} = Astro.props;
+
+const siteTitle = 'Synapticism';
+const siteDescription = 'A technical blog about web development, design, and creative coding.';
+
+const description = sanitizeDescription(descriptionRaw) ?? siteDescription;
+
+const openGraphImageUrl = image?.url ? new URL(image.url, Astro.site).href : getSeoImageFallback();
+
+const openGraphImage = {
+	url: openGraphImageUrl,
+	type: 'image/jpeg',
+	alt: sanitizeAltAttribute(image?.alt ?? imageAlt ?? description),
+};
+---
+
+<SEO
+	title={contentTitle ?? siteTitle}
+	titleTemplate={!!contentTitle && contentTitle !== siteTitle ? `%s - ${siteTitle}` : '%s'}
+	titleDefault={siteTitle}
+	description={description}
+	openGraph={{
+		basic: {
+			title: contentTitle ? `${contentTitle} - ${siteTitle}` : siteTitle,
+			type: ogType ?? 'website',
+			image: openGraphImage.url,
+		},
+		optional: {
+			description,
+		},
+		image: openGraphImage,
+		...(ogType === 'article' && article !== undefined ? { article } : {}),
+	}}
+	twitter={{
+		card: 'summary_large_image',
+		title: contentTitle ?? siteTitle,
+		description,
+		...(openGraphImage.url
+			? {
+					image: openGraphImage.url,
+					imageAlt: openGraphImage.alt,
+				}
+			: {}),
+	}}
+	extend={{
+		...(prefetchUrls && prefetchUrls.length > 0
+			? { link: prefetchUrls.map((prefetchUrl) => ({ rel: 'prefetch', href: prefetchUrl })) }
+			: {}),
+		meta: [{ name: 'generator', content: Astro.generator }],
+	}}
+	{...noIndex ? { noindex: noIndex } : {}}
+	{...noFollow ? { nofollow: noFollow } : {}}
+/>
+<link
+	rel="alternate"
+	type="application/rss+xml"
+	title={siteTitle}
+	href={`${getSiteUrl()}rss.xml`}
+/>
+<link rel="sitemap" href={`${getSiteUrl()}sitemap-index.xml`} />
+{
+	WEBMENTION_DOMAIN ? (
+		<link rel="webmention" href={`https://webmention.io/${WEBMENTION_DOMAIN}/webmention`} />
+	) : undefined
+}

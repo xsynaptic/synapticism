@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import ContentHeader from '#components/content/content-header.astro';
+import ContentSection from '#components/content/content-section.astro';
+import MainSite from '#components/main/main-site.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import Link from '#components/parts/link.astro';
+import ListRow from '#components/parts/list-row.astro';
+import { getContentUrl } from '#lib/utils/routing.ts';
+
+interface Props {
+	tags: Array<CollectionEntry<'tags'>>;
+}
+
+const { tags } = Astro.props;
+---
+
+<MainSite
+	meta={{
+		title: 'Tags',
+		description: 'Browse all tags on Synapticism.',
+	}}
+>
+	<ContentHeader>
+		<Fragment slot="header-title">Tags</Fragment>
+	</ContentHeader>
+	<ContentSection>
+		{
+			tags.length > 0 ? (
+				<ListRow>
+					{tags.map((tag) => (
+						<DividedItem as="li" class="font-serif text-sm after:text-sm after:font-light">
+							<Link href={getContentUrl(tag.collection, tag.id)}>
+								{tag.data.title}
+								{tag.data._postCount ? (
+									<span class="text-xs text-primary-400">({String(tag.data._postCount)})</span>
+								) : undefined}
+							</Link>
+						</DividedItem>
+					))}
+				</ListRow>
+			) : (
+				<p class="text-sm text-primary-500">No tags yet.</p>
+			)
+		}
+	</ContentSection>
+</MainSite>
