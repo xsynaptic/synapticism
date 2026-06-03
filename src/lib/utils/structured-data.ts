@@ -120,10 +120,7 @@ export function buildAuthorSchema(name: string): Person {
 	};
 }
 
-export function buildWebSiteSchema(props: {
-	name: string;
-	description: string;
-}): WebSite {
+export function buildWebSiteSchema(props: { name: string; description: string }): WebSite {
 	const siteUrl = getSiteUrl();
 
 	return {

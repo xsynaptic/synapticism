@@ -2,8 +2,8 @@
 import * as R from 'remeda';
 
 import IndexLayout from '#layouts/index.astro';
-import { queryPostsIndex } from '#lib/collections/posts/utils.ts';
-import { queryProjectsIndex } from '#lib/collections/projects/utils.ts';
+import { queryPostsIndex } from '#lib/collections/posts/posts-utils.ts';
+import { queryProjectsIndex } from '#lib/collections/projects/projects-utils.ts';
 
 const recentPosts = R.pipe(await queryPostsIndex(), R.take(5));
 const recentProjects = await queryProjectsIndex();

@@ -1,9 +1,7 @@
 import type { AstroGlobal } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
-export function getHasContent(
-	entry: CollectionEntry<'pages' | 'posts' | 'projects' | 'tags'>,
-) {
+export function getHasContent(entry: CollectionEntry<'pages' | 'posts' | 'projects' | 'tags'>) {
 	return 'body' in entry && typeof entry.body === 'string' && entry.body.trim().length > 0;
 }
 

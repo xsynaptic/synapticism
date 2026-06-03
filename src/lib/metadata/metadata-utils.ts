@@ -7,6 +7,7 @@ import type {
 
 import { parseContentDate } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
+import { getEntryDescription } from '#lib/utils/text.ts';
 
 export function createContentMetadataItems<
 	T extends ContentMetadataCollectionKey = ContentMetadataCollectionKey,
@@ -15,11 +16,13 @@ export function createContentMetadataItems<
 		collection: entry.collection as T,
 		id: entry.id,
 		title: entry.data.title,
-		description: 'description' in entry.data ? entry.data.description : undefined,
+		description: getEntryDescription(entry),
 		url: getContentUrl(entry.collection, entry.id),
 		dateCreated: parseContentDate(entry.data.dateCreated) ?? new Date(),
 		dateUpdated: parseContentDate(
-			'dateUpdated' in entry.data ? (entry.data.dateUpdated as string | Date | undefined) : undefined,
+			'dateUpdated' in entry.data
+				? (entry.data.dateUpdated as string | Date | undefined)
+				: undefined,
 		),
 	}));
 }

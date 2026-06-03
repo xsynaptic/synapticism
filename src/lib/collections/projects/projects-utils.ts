@@ -1,6 +1,6 @@
 import * as R from 'remeda';
 
-import { getProjectsCollection } from '#lib/collections/projects/data.ts';
+import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
 import {
 	createContentMetadataItems,
 	sortContentMetadataByDate,

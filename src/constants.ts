@@ -30,3 +30,5 @@ export const TAILWIND_CONTENT_PADDING_MD = '4rem';
  * Various settings
  */
 export const SITE_YEAR_FOUNDED = 2024;
+
+export const SITE_AUTHOR_NAME = 'Alexander Synaptic';

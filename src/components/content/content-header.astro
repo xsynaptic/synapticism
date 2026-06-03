@@ -22,7 +22,10 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 	</h1>
 	{
 		subtitle ? (
-			<div class="items-start gap-1 pb-2 text-sm text-primary-500 sm:flex sm:flex-wrap" data-pagefind-ignore>
+			<div
+				class="items-start gap-1 pb-2 text-sm text-primary-500 sm:flex sm:flex-wrap"
+				data-pagefind-ignore
+			>
 				<Fragment set:html={subtitle} />
 			</div>
 		) : undefined

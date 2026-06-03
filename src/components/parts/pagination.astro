@@ -42,8 +42,7 @@ function getPageNumberArray({
 		delta = clampedPagesShown;
 	} else {
 		delta =
-			clampedCurrentPage < boundaryPagesShown ||
-			clampedCurrentPage > pageCount - boundaryPagesShown
+			clampedCurrentPage < boundaryPagesShown || clampedCurrentPage > pageCount - boundaryPagesShown
 				? boundaryPagesShown
 				: centerPagesShown;
 	}
@@ -128,7 +127,7 @@ const pageNextLink = url.next ?? undefined;
 			>
 				{pagePrevLink ? (
 					<li class="flex flex-wrap gap-1 pr-2">
-						<span class="select-none text-accent-300">&lsaquo;</span>
+						<span class="text-accent-300 select-none">&lsaquo;</span>
 						<Link href={pagePrevLink} aria-label="Previous page">
 							Previous
 						</Link>
@@ -175,7 +174,7 @@ const pageNextLink = url.next ?? undefined;
 						<Link href={pageNextLink} aria-label="Next page">
 							Next
 						</Link>
-						<span class="select-none text-accent-300">&rsaquo;</span>
+						<span class="text-accent-300 select-none">&rsaquo;</span>
 					</li>
 				) : undefined}
 			</ul>

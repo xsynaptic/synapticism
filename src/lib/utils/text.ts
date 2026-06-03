@@ -64,6 +64,13 @@ export function sanitizeDescription(description: string | undefined) {
 		: undefined;
 }
 
+export function getEntryDescription(entry: {
+	data: { description?: string | undefined };
+	body?: string | undefined;
+}): string | undefined {
+	return entry.data.description ?? sanitizeDescription(entry.body);
+}
+
 export function sanitizeAltAttribute(input: string): string {
 	return encodeHtmlEntities(stripTags(input));
 }

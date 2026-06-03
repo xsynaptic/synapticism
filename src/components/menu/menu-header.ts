@@ -8,6 +8,10 @@ export const menuHeaderItems = [
 		url: getSiteUrl('posts'),
 	},
 	{
+		title: 'Notes',
+		url: getSiteUrl('notes'),
+	},
+	{
 		title: 'Projects',
 		url: getSiteUrl('projects'),
 	},

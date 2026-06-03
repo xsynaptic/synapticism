@@ -2,7 +2,7 @@ import type { CollectionKey } from 'astro:content';
 
 export type ContentMetadataCollectionKey = Extract<
 	CollectionKey,
-	'pages' | 'posts' | 'projects' | 'tags'
+	'notes' | 'pages' | 'posts' | 'projects' | 'tags'
 >;
 
 export interface ContentMetadataItem<

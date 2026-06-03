@@ -2,8 +2,8 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import TagEntryLayout from '#layouts/tag-entry.astro';
-import { getTagsCollection } from '#lib/collections/tags/data.ts';
-import { queryTagsEntryPosts } from '#lib/collections/tags/utils.ts';
+import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
+import { queryTagsEntryPosts } from '#lib/collections/tags/tags-utils.ts';
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const { entries } = await getTagsCollection();

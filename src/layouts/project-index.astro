@@ -14,7 +14,7 @@ import { getContentUrl } from '#lib/utils/routing.ts';
 import { getEntryDescription } from '#lib/utils/text.ts';
 
 interface Props {
-	page: Page<CollectionEntry<'posts'>>;
+	page: Page<CollectionEntry<'projects'>>;
 }
 
 const { page } = Astro.props;
@@ -22,13 +22,13 @@ const { page } = Astro.props;
 
 <MainSite
 	meta={{
-		title: 'Posts',
-		description: 'Articles about web development, design, and creative coding.',
+		title: 'Projects',
+		description: 'Things I have designed, built, and worked on.',
 		noIndex: page.currentPage > 1,
 	}}
 >
 	<ContentHeader>
-		<Fragment slot="header-title">Posts</Fragment>
+		<Fragment slot="header-title">Projects</Fragment>
 		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
 	</ContentHeader>
 	<ContentSection>

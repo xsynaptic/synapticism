@@ -3,13 +3,18 @@ import type { ContainerRenderOptions } from 'astro/container';
 import type { CollectionEntry } from 'astro:content';
 
 import mdxRenderer from '@astrojs/mdx/server.js';
-import { defaultSchema, sanitizeHtml, stripTags, transformMarkdown } from '@xsynaptic/unified-tools';
+import {
+	defaultSchema,
+	sanitizeHtml,
+	stripTags,
+	transformMarkdown,
+} from '@xsynaptic/unified-tools';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { render } from 'astro:content';
 import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
-import { getPostsCollection } from '#lib/collections/posts/data.ts';
+import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
@@ -26,10 +31,7 @@ async function createRenderMdxFunction() {
 
 	container.addServerRenderer({ name: 'mdx', renderer: mdxRenderer });
 
-	return async function (
-		entry: CollectionEntry<'posts'>,
-		options?: ContainerRenderOptions,
-	) {
+	return async function (entry: CollectionEntry<'posts'>, options?: ContainerRenderOptions) {
 		const { Content } = await render(entry);
 
 		return await container.renderToString(Content, options);
@@ -94,14 +96,8 @@ export async function generateFeedItems({
 	const { entries: posts } = await getPostsCollection();
 
 	return R.pipe(
-		await R.pipe(
-			[...posts],
-			R.sort(sortByDateReverseChronological),
-			R.take(itemCount),
-			(items) =>
-				Promise.all(
-					items.map((item) => generateFeedItem({ entry: item, excludeFootnotes, debug })),
-				),
+		await R.pipe([...posts], R.sort(sortByDateReverseChronological), R.take(itemCount), (items) =>
+			Promise.all(items.map((item) => generateFeedItem({ entry: item, excludeFootnotes, debug }))),
 		),
 		R.sort((a, b) => (a.pubDate && b.pubDate ? b.pubDate.getTime() - a.pubDate.getTime() : -1)),
 		R.take(itemCount),

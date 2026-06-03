@@ -2,22 +2,24 @@ import type { CollectionEntry } from 'astro:content';
 
 import * as R from 'remeda';
 
-import { getPostsCollection } from '#lib/collections/posts/data.ts';
-import { getTagsCollection } from '#lib/collections/tags/data.ts';
+import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
+import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import {
 	createContentMetadataItems,
 	sortContentMetadataByDate,
 } from '#lib/metadata/metadata-utils.ts';
-import { createCollectionLookupByIds, filterWithContent, sortByContentCount } from '#lib/utils/collections.ts';
+import {
+	createCollectionLookupByIds,
+	filterWithContent,
+	sortByContentCount,
+} from '#lib/utils/collections.ts';
 
 export const createTagsByIdsFunction = createCollectionLookupByIds('Tags', getTagsCollection);
 
 export async function createPostsByTagFunction() {
 	const { entries } = await getPostsCollection();
 
-	return function getPostsByTag(
-		entry: CollectionEntry<'tags'>,
-	): Array<CollectionEntry<'posts'>> {
+	return function getPostsByTag(entry: CollectionEntry<'tags'>): Array<CollectionEntry<'posts'>> {
 		return entries.filter(({ data }) => data.tags?.find(({ id }) => id === entry.id));
 	};
 }

@@ -11,9 +11,6 @@ export const getBaseUrl = (...routeParts: Array<string>): string =>
 export const getSiteUrl = (...routeParts: Array<string>): string =>
 	urlJoin(PROD ? SITE : BASE_URL, ...routeParts, '/');
 
-// Example: /base/{collection}/{routeParts}
+// Pages are flat (URL mirrors the file system); every other collection is sectioned under /{collection}/
 export const getContentUrl = (collection: CollectionKey, ...routeParts: Array<string>): string =>
-	getSiteUrl(
-		['pages', 'posts', 'projects'].includes(collection) ? '' : collection,
-		...routeParts,
-	);
+	getSiteUrl(collection === 'pages' ? '' : collection, ...routeParts);

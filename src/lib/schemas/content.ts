@@ -15,3 +15,17 @@ export const DescriptionSchema = z
 	.transform((value) => value.trim());
 
 export const DateStringSchema = z.string().transform((value) => new Date(value));
+
+// entryQuality: 1-5 maturity/completeness signal; be sparing above 3
+export const NumericScaleSchema = z.number().int().min(1).max(5);
+
+// Fields shared by all long-form content collections (posts, projects, pages, notes)
+export const contentBaseSchema = z.object({
+	title: StylizedTextSchema,
+	description: DescriptionSchema.optional(),
+	dateCreated: DateStringSchema,
+	dateUpdated: DateStringSchema.optional(),
+	imageFeatured: z.string().optional(),
+	imageHero: z.string().optional(),
+	entryQuality: NumericScaleSchema,
+});
