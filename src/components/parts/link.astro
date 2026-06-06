@@ -10,6 +10,8 @@ const LinkColorEnum = {
 	HighlightBright: 'highlight-bright',
 	Accent: 'accent',
 	AccentBright: 'accent-bright',
+	OnDark: 'on-dark',
+	OnAccent: 'on-accent',
 } as const;
 
 type LinkColor = (typeof LinkColorEnum)[keyof typeof LinkColorEnum];
@@ -23,6 +25,6 @@ const { class: className, href, linkColor = LinkColorEnum.Primary, ...props } = 
 const children = await renderSlot(Astro.slots, 'default');
 ---
 
-<a href={href} class:list={['l-all', `l-${linkColor}`, className]} {...props}
+<a href={href} class:list={['link', `link-${linkColor}`, className]} {...props}
 	><Fragment set:html={children} /></a
 >

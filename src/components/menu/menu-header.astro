@@ -12,23 +12,30 @@ const props = Astro.props;
 const { pathname } = Astro.url;
 ---
 
-<nav class="bg-highlight-500 py-1" aria-label="Main navigation" {...props}>
-	<ul class="mx-auto flex max-w-content items-end gap-3 px-small md:px-medium">
+<nav class="bg-accent-600 py-2" aria-label="Main navigation" {...props}>
+	<ul class="mx-auto flex max-w-content items-center gap-4 px-small md:px-medium">
 		{
-			menuHeaderItems.map((item) => (
-				<li>
-					<Link
-						linkColor="highlight-bright"
-						class:list={[
-							'text-sm font-medium sm:text-base',
-							isActiveMenuItem(item, pathname) ? 'font-semibold' : undefined,
-						]}
-						href={item.url}
-					>
-						{item.title}
-					</Link>
-				</li>
-			))
+			menuHeaderItems.map((item) => {
+				const isActive = isActiveMenuItem(item, pathname);
+
+				return (
+					<li>
+						<Link
+							linkColor="on-accent"
+							class:list={[
+								'text-sm sm:text-base',
+								isActive
+									? 'font-semibold underline decoration-2 underline-offset-4'
+									: 'font-medium',
+							]}
+							href={item.url}
+							aria-current={isActive ? 'page' : undefined}
+						>
+							{item.title}
+						</Link>
+					</li>
+				);
+			})
 		}
 	</ul>
 </nav>

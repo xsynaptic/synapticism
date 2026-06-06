@@ -21,6 +21,14 @@ const {
 } = Astro.props;
 ---
 
-<Tag class:list={['d-all', `d-${dividerColor}`, `d-${dividerContent}`, className]} {...props}>
+<Tag
+	class:list={[
+		'divided',
+		dividerContent === DividerContentEnum.Slash ? undefined : `divided-${dividerContent}`,
+		dividerColor === DividerColorEnum.Default ? undefined : `divided-${dividerColor}`,
+		className,
+	]}
+	{...props}
+>
 	<slot />
 </Tag>

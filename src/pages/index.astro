@@ -6,7 +6,7 @@ import { queryPostsIndex } from '#lib/collections/posts/posts-utils.ts';
 import { queryProjectsIndex } from '#lib/collections/projects/projects-utils.ts';
 
 const recentPosts = R.pipe(await queryPostsIndex(), R.take(5));
-const recentProjects = await queryProjectsIndex();
+const selectedProjects = R.pipe(await queryProjectsIndex(), R.take(4));
 ---
 
-<IndexLayout recentPosts={recentPosts} recentProjects={recentProjects} />
+<IndexLayout recentPosts={recentPosts} selectedProjects={selectedProjects} />

@@ -1,20 +1,18 @@
 ---
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
-import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
+import Container from '#components/parts/container.astro';
 import DateDisplay from '#components/parts/date-display.astro';
-import Link from '#components/parts/link.astro';
-import ProseDescription from '#components/parts/prose-description.astro';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
 
 interface Props {
 	recentPosts: Array<CatalogItem>;
-	recentProjects: Array<CatalogItem>;
+	selectedProjects: Array<CatalogItem>;
 }
 
-const { recentPosts, recentProjects } = Astro.props;
+const { recentPosts, selectedProjects } = Astro.props;
 ---
 
 <MainSite
@@ -25,54 +23,104 @@ const { recentPosts, recentProjects } = Astro.props;
 		}),
 	]}
 >
-	<ContentSection class="mt-small">
-		<ProseDescription>
-			<p>
-				Welcome to Synapticism, a technical blog about web development, design, and creative coding.
-			</p>
-		</ProseDescription>
-	</ContentSection>
+	<Container as="section" class="pt-8 pb-2 md:pt-14">
+		<h1
+			class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]"
+		>
+			I&rsquo;m Alexander Synaptic, a web developer and designer.
+		</h1>
+		<p class="mt-4 max-w-[60ch] text-base leading-relaxed text-pretty text-primary-600 md:text-lg">
+			Synapticism is my notebook in the open: field notes from real projects, experiments with
+			typography and creative code, and longer pieces when an idea earns the room.
+		</p>
+		<p class="mt-5 font-mono text-xs text-primary-600">
+			<span class="text-accent-700" aria-hidden="true">//</span> web development, design, creative
+			coding
+		</p>
+	</Container>
+
 	{
 		recentPosts.length > 0 ? (
-			<ContentSection>
-				<Fragment slot="section-title">Recent Posts</Fragment>
-				<ul class="flex flex-col gap-3">
-					{recentPosts.map((item) => (
-						<li class="flex flex-col gap-1">
-							<h3 class="text-lg font-semibold">
-								<Link href={item.url}>{item.title}</Link>
-							</h3>
-							<DateDisplay
-								class="text-xs text-primary-400"
-								date={item.dateCreated}
-								datePreset={DatePresetEnum.Medium}
-							/>
-							{item.description ? (
-								<p class="text-sm text-primary-500">{item.description}</p>
-							) : undefined}
+			<Container as="section" class="mt-14 md:mt-20">
+				<div class="flex items-center gap-4">
+					<h2 class="font-mono text-sm font-medium text-primary-600">Recent posts</h2>
+					<span class="h-px flex-1 bg-primary-200" aria-hidden="true" />
+				</div>
+				<ul class="mt-6 flex flex-col">
+					{recentPosts.map((item, index) => (
+						<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
+							<article class="flex flex-col gap-2">
+								<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
+									<a
+										href={item.url}
+										class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
+									>
+										{item.title}
+									</a>
+								</h3>
+								<DateDisplay
+									class="font-mono text-xs text-primary-600"
+									date={item.dateCreated}
+									datePreset={DatePresetEnum.Medium}
+								/>
+								{item.description ? (
+									<p class="max-w-[68ch] leading-relaxed text-pretty text-primary-600">
+										{item.description}
+									</p>
+								) : undefined}
+							</article>
 						</li>
 					))}
 				</ul>
-			</ContentSection>
+				<p class="mt-7 font-mono text-sm">
+					<a
+						href="/posts"
+						class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
+					>
+						All posts <span aria-hidden="true">&rarr;</span>
+					</a>
+				</p>
+			</Container>
 		) : undefined
 	}
+
 	{
-		recentProjects.length > 0 ? (
-			<ContentSection>
-				<Fragment slot="section-title">Projects</Fragment>
-				<ul class="flex flex-col gap-3">
-					{recentProjects.map((item) => (
-						<li class="flex flex-col gap-1">
-							<h3 class="text-lg font-semibold">
-								<Link href={item.url}>{item.title}</Link>
-							</h3>
-							{item.description ? (
-								<p class="text-sm text-primary-500">{item.description}</p>
-							) : undefined}
+		selectedProjects.length > 0 ? (
+			<Container as="section" class="mt-14 pb-16 md:mt-20 md:pb-24">
+				<div class="flex items-center gap-4">
+					<h2 class="font-mono text-sm font-medium text-primary-600">Selected work</h2>
+					<span class="h-px flex-1 bg-primary-200" aria-hidden="true" />
+				</div>
+				<ul class="mt-6 flex flex-col gap-5">
+					{selectedProjects.map((item) => (
+						<li>
+							<article class="grid gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-baseline">
+								<h3 class="font-mono text-base font-medium">
+									<a
+										href={item.url}
+										class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
+									>
+										{item.title}
+									</a>
+								</h3>
+								{item.description ? (
+									<p class="max-w-[60ch] text-sm leading-relaxed text-pretty text-primary-600">
+										{item.description}
+									</p>
+								) : undefined}
+							</article>
 						</li>
 					))}
 				</ul>
-			</ContentSection>
+				<p class="mt-7 font-mono text-sm">
+					<a
+						href="/projects"
+						class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
+					>
+						All projects <span aria-hidden="true">&rarr;</span>
+					</a>
+				</p>
+			</Container>
 		) : undefined
 	}
 </MainSite>
