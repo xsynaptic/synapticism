@@ -27,6 +27,9 @@
 	--content-chevron: '\203A';
 	--content-dot: '\00B7';
 	--content-slash: '/';
+
+	/* Reading line-length for long-form prose; media breaks out wider */
+	--content-measure: 38rem;
 }
 
 html {

@@ -25,6 +25,7 @@ deploy/.env
 # LLM helper files
 .claude/
 .cursor/
+.impeccable/
 
 # content
 packages/content

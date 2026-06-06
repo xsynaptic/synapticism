@@ -15,8 +15,10 @@ minimumReleaseAgeExclude:
   - '@astrojs/rss'
   - '@astrojs/sitemap'
   - '@xsynaptic/eslint-config'
+  - '@xsynaptic/rehype-wrap-cjk'
+  - '@xsynaptic/remark-auto-import'
+  - '@xsynaptic/stylelint-config'
   - '@xsynaptic/unified-tools'
-  - rehype-wrap-cjk
 
 allowBuilds:
   esbuild: true
