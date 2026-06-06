@@ -1,4 +1,5 @@
 @theme {
+	/* Teal primitive */
 	--color-blue-chill-50: #f0fafb;
 	--color-blue-chill-100: #d9f3f4;
 	--color-blue-chill-200: #b7e6ea;
@@ -11,7 +12,20 @@
 	--color-blue-chill-900: #264853;
 	--color-blue-chill-950: #142f38;
 
-	/* Primary colors */
+	/* Burnt-orange primitive */
+	--color-cumin-50: #fdf5f0;
+	--color-cumin-100: #f9e6d8;
+	--color-cumin-200: #f2c9ad;
+	--color-cumin-300: #e8a578;
+	--color-cumin-400: #dd8048;
+	--color-cumin-500: #cf6526;
+	--color-cumin-600: #b9531f;
+	--color-cumin-700: #98421d;
+	--color-cumin-800: #7b381d;
+	--color-cumin-900: #66301b;
+	--color-cumin-950: #38180c;
+
+	/* Primary: neutral steel */
 	--color-primary-50: var(--color-zinc-50);
 	--color-primary-100: var(--color-zinc-100);
 	--color-primary-200: var(--color-zinc-200);
@@ -24,20 +38,20 @@
 	--color-primary-900: var(--color-zinc-900);
 	--color-primary-950: var(--color-zinc-950);
 
-	/* Accent colors */
-	--color-accent-50: var(--color-calypso-50);
-	--color-accent-100: var(--color-calypso-100);
-	--color-accent-200: var(--color-calypso-200);
-	--color-accent-300: var(--color-calypso-300);
-	--color-accent-400: var(--color-calypso-400);
-	--color-accent-500: var(--color-calypso-500);
-	--color-accent-600: var(--color-calypso-600);
-	--color-accent-700: var(--color-calypso-700);
-	--color-accent-800: var(--color-calypso-800);
-	--color-accent-900: var(--color-calypso-900);
-	--color-accent-950: var(--color-calypso-950);
+	/* Accent: teal */
+	--color-accent-50: var(--color-blue-chill-50);
+	--color-accent-100: var(--color-blue-chill-100);
+	--color-accent-200: var(--color-blue-chill-200);
+	--color-accent-300: var(--color-blue-chill-300);
+	--color-accent-400: var(--color-blue-chill-400);
+	--color-accent-500: var(--color-blue-chill-500);
+	--color-accent-600: var(--color-blue-chill-600);
+	--color-accent-700: var(--color-blue-chill-700);
+	--color-accent-800: var(--color-blue-chill-800);
+	--color-accent-900: var(--color-blue-chill-900);
+	--color-accent-950: var(--color-blue-chill-950);
 
-	/* Highlight colors */
+	/* Highlight: burnt orange */
 	--color-highlight-50: var(--color-cumin-50);
 	--color-highlight-100: var(--color-cumin-100);
 	--color-highlight-200: var(--color-cumin-200);
@@ -49,17 +63,4 @@
 	--color-highlight-800: var(--color-cumin-800);
 	--color-highlight-900: var(--color-cumin-900);
 	--color-highlight-950: var(--color-cumin-950);
-
-	/* Alternate colors */
-	--color-alternate-50: var(--color-lima-50);
-	--color-alternate-100: var(--color-lima-100);
-	--color-alternate-200: var(--color-lima-200);
-	--color-alternate-300: var(--color-lima-300);
-	--color-alternate-400: var(--color-lima-400);
-	--color-alternate-500: var(--color-lima-500);
-	--color-alternate-600: var(--color-lima-600);
-	--color-alternate-700: var(--color-lima-700);
-	--color-alternate-800: var(--color-lima-800);
-	--color-alternate-900: var(--color-lima-900);
-	--color-alternate-950: var(--color-lima-950);
 }

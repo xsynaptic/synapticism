@@ -1,36 +1,46 @@
-.d-all {
+/* Divider styles; extracted here to avoid repetition in the divided-item component */
+.divided {
 	display: inline;
+
 	@media (width >= 40rem) {
 		display: inline-flex;
 		gap: calc(var(--spacing) * 1);
 	}
-	&:last-child::after {
-		content: none;
-	}
-}
-.d-default::after {
-	color: var(--color-primary-400);
-}
-.d-darker::after {
-	color: var(--color-primary-500);
-}
-.d-lighter::after {
-	color: var(--color-primary-300);
 }
 
-.d-bar::after {
-	content: var(--content-bar);
+.divided::after {
+	color: var(--divider-color, var(--color-primary-400));
+	content: var(--divider-glyph, var(--content-slash));
 }
-.d-bullet::after {
-	content: var(--content-bullet);
+
+.divided:last-child::after {
+	content: none;
 }
-.d-chevron::after {
-	content: var(--content-chevron);
+
+.divided-bar {
+	--divider-glyph: var(--content-bar);
+}
+
+.divided-bullet {
+	--divider-glyph: var(--content-bullet);
+}
+
+.divided-chevron {
+	--divider-glyph: var(--content-chevron);
+}
+
+.divided-chevron::after {
 	translate: 0 -1px;
 }
-.d-dot::after {
-	content: var(--content-dot);
+
+.divided-dot {
+	--divider-glyph: var(--content-dot);
 }
-.d-slash::after {
-	content: var(--content-slash);
+
+.divided-lighter {
+	--divider-color: var(--color-primary-300);
+}
+
+.divided-darker {
+	--divider-color: var(--color-primary-500);
 }
