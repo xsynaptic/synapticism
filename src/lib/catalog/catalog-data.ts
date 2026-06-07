@@ -25,21 +25,6 @@ function getLinksCount(entry: CollectionEntry<CollectionKey>): number {
 
 const backlinkLinkPattern = /<Link id="([^"]+)"/g;
 
-function generateContentBacklinksFromMdxComponents(
-	entry: CollectionEntry<CollectionKey>,
-	catalogItemsById: Map<string, CatalogItem>,
-) {
-	if (!entry.body?.includes('<Link ')) return;
-
-	for (const [, backlinkId] of entry.body.matchAll(backlinkLinkPattern)) {
-		if (!backlinkId || backlinkId === entry.id) continue;
-
-		const backlinkSet = catalogItemsById.get(backlinkId)?.backlinks;
-
-		if (backlinkSet) backlinkSet.add(entry.id);
-	}
-}
-
 async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	const startTime = performance.now();
 
@@ -60,22 +45,22 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 			}
 
 			catalogItemsById.set(entry.id, {
-				collection: entry.collection,
-				id: entry.id,
-				title: entry.data.title,
-				description: getEntryDescription(entry),
-				url: getContentUrl(entry.collection, entry.id),
-				imageId: 'imageFeatured' in entry.data ? entry.data.imageFeatured : undefined,
-				postCount: '_postCount' in entry.data ? entry.data._postCount : undefined,
-				wordCount: getWordCount(entry),
-				linksCount: getLinksCount(entry),
 				backlinks: new Set<string>(),
+				collection: entry.collection,
 				dateCreated:
 					parseContentDate(entry.data.dateCreated) ?? new Date(String(SITE_YEAR_FOUNDED)),
 				dateUpdated: parseContentDate(
 					'dateUpdated' in entry.data ? entry.data.dateUpdated : undefined,
 				),
+				description: getEntryDescription(entry),
 				entryQuality: 'entryQuality' in entry.data ? entry.data.entryQuality : undefined,
+				id: entry.id,
+				imageId: 'imageFeatured' in entry.data ? entry.data.imageFeatured : undefined,
+				linksCount: getLinksCount(entry),
+				postCount: '_postCount' in entry.data ? entry.data._postCount : undefined,
+				title: entry.data.title,
+				url: getContentUrl(entry.collection, entry.id),
+				wordCount: getWordCount(entry),
 			});
 		}
 	}
@@ -89,6 +74,21 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	console.log(`[Catalog] Generated in ${(performance.now() - startTime).toFixed(4)}ms`);
 
 	return [...catalogItemsById.values()];
+}
+
+function generateContentBacklinksFromMdxComponents(
+	entry: CollectionEntry<CollectionKey>,
+	catalogItemsById: Map<string, CatalogItem>,
+) {
+	if (!entry.body?.includes('<Link ')) return;
+
+	for (const [, backlinkId] of entry.body.matchAll(backlinkLinkPattern)) {
+		if (!backlinkId || backlinkId === entry.id) continue;
+
+		const backlinkSet = catalogItemsById.get(backlinkId)?.backlinks;
+
+		if (backlinkSet) backlinkSet.add(entry.id);
+	}
 }
 
 let catalogInstance: Promise<Catalog> | undefined;

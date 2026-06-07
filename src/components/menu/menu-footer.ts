@@ -4,9 +4,9 @@ import { getSiteUrl } from '#lib/utils/routing.ts';
 
 export const menuFooterItems = [
 	{
+		rel: 'me',
 		title: 'GitHub',
 		url: 'https://github.com/xsynaptic',
-		rel: 'me',
 	},
 	{
 		title: 'About',

@@ -15,28 +15,28 @@ interface Props extends HTMLAttributes<'nav'> {
 const { class: className, page, ...props } = Astro.props;
 
 type PaginationItem =
-	| { type: 'page'; pageNumber: number; isCollapsible: boolean }
-	| { type: 'current'; pageNumber: number }
+	| { isCollapsible: boolean; pageNumber: number; type: 'page' }
+	| { pageNumber: number; type: 'current' }
 	| { type: 'divider' };
 
 function getPageNumberArray({
 	currentPage,
+	minimumPagesShown = 5,
 	pageCount,
 	pagesShown,
-	minimumPagesShown = 5,
 }: {
 	currentPage: number;
+	minimumPagesShown?: number;
 	pageCount: number;
 	pagesShown: number;
-	minimumPagesShown?: number;
 }) {
 	let delta: number;
 
 	const centerPagesShown = pagesShown - 5;
 	const boundaryPagesShown = pagesShown - 3;
 
-	const clampedCurrentPage = R.clamp(currentPage, { min: 1, max: pageCount });
-	const clampedPagesShown = R.clamp(pagesShown, { min: minimumPagesShown, max: pageCount });
+	const clampedCurrentPage = R.clamp(currentPage, { max: pageCount, min: 1 });
+	const clampedPagesShown = R.clamp(pagesShown, { max: pageCount, min: minimumPagesShown });
 
 	if (pageCount <= clampedPagesShown) {
 		delta = clampedPagesShown;
@@ -48,8 +48,8 @@ function getPageNumberArray({
 	}
 
 	const range = {
-		start: Math.round(clampedCurrentPage - delta / 2),
 		end: Math.round(clampedCurrentPage + delta / 2),
+		start: Math.round(clampedCurrentPage - delta / 2),
 	};
 
 	if (range.start - 1 === 1 || range.end + 1 === pageCount) {
@@ -104,12 +104,12 @@ const pageArray: Array<PaginationItem> = rawPages.map((pageNumber) => {
 	}
 
 	if (pageNumber === currentPage) {
-		return { type: 'current', pageNumber };
+		return { pageNumber, type: 'current' };
 	}
 
 	const isAdjacentToCurrent = pageNumber === currentPage - 1 || pageNumber === currentPage + 1;
 
-	return { type: 'page', pageNumber, isCollapsible: isCollapsible && !isAdjacentToCurrent };
+	return { isCollapsible: isCollapsible && !isAdjacentToCurrent, pageNumber, type: 'page' };
 });
 
 const pagePrevLink = url.prev ?? undefined;
@@ -118,7 +118,7 @@ const pageNextLink = url.next ?? undefined;
 
 {
 	pagePrevLink || pageNextLink ? (
-		<nav class:list={[className]} aria-label="Pagination" {...props}>
+		<nav aria-label="Pagination" class:list={[className]} {...props}>
 			<ul
 				class:list={[
 					'flex flex-wrap gap-4 text-base font-medium tabular-nums select-none md:gap-1 md:text-sm',
@@ -128,24 +128,24 @@ const pageNextLink = url.next ?? undefined;
 				{pagePrevLink ? (
 					<li class="flex flex-wrap gap-1 pr-2">
 						<span class="text-accent-300 select-none">&lsaquo;</span>
-						<Link href={pagePrevLink} aria-label="Previous page">
+						<Link aria-label="Previous page" href={pagePrevLink}>
 							Previous
 						</Link>
 					</li>
 				) : undefined}
 				{pageArray.map((item) => {
 					switch (item.type) {
-						case 'divider': {
+						case 'current': {
 							return (
-								<li class="text-primary-300" aria-hidden="true">
-									&#x22EF;
+								<li aria-current="page" class="px-2 font-bold first:pl-0 last:pr-0">
+									{String(item.pageNumber)}
 								</li>
 							);
 						}
-						case 'current': {
+						case 'divider': {
 							return (
-								<li class="px-2 font-bold first:pl-0 last:pr-0" aria-current="page">
-									{String(item.pageNumber)}
+								<li aria-hidden="true" class="text-primary-300">
+									&#x22EF;
 								</li>
 							);
 						}
@@ -158,9 +158,9 @@ const pageNextLink = url.next ?? undefined;
 									]}
 								>
 									<Link
-										href={getPageNumberLink(item.pageNumber)}
-										class="px-2"
 										aria-label={`Go to page ${String(item.pageNumber)}`}
+										class="px-2"
+										href={getPageNumberLink(item.pageNumber)}
 									>
 										{String(item.pageNumber)}
 									</Link>
@@ -171,7 +171,7 @@ const pageNextLink = url.next ?? undefined;
 				})}
 				{pageNextLink ? (
 					<li class="flex flex-wrap gap-1 pl-2">
-						<Link href={pageNextLink} aria-label="Next page">
+						<Link aria-label="Next page" href={pageNextLink}>
 							Next
 						</Link>
 						<span class="text-accent-300 select-none">&rsaquo;</span>

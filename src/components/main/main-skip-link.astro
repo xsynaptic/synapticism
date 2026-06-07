@@ -2,21 +2,21 @@
 import type { HTMLAttributes } from 'astro/types';
 
 interface Props extends HTMLAttributes<'div'> {
+	label: string;
 	parentClass?: string | undefined;
 	target?: string | undefined;
-	label: string;
 }
 
-const { class: className, parentClass, target = '#main-content', label, ...props } = Astro.props;
+const { class: className, label, parentClass, target = '#main-content', ...props } = Astro.props;
 ---
 
 <div class:list={['skip-link', parentClass]} {...props}>
 	<a
-		href={target}
 		class:list={[
 			'absolute z-9999 hover:outline-2 hover:outline-current focus-visible:outline-2 focus-visible:outline-current',
 			className,
-		]}>{label}</a
+		]}
+		href={target}>{label}</a
 	>
 </div>
 

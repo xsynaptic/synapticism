@@ -17,12 +17,21 @@ export function getSeoArticleProps({
 	const modifiedTime = parseContentDate(dateUpdated)?.toISOString();
 
 	return {
-		ogType: 'article' as const,
 		article: {
 			publishedTime,
 			...(modifiedTime ? { modifiedTime } : {}),
 		},
+		ogType: 'article' as const,
 	};
+}
+
+export function getSeoHideSearch(shouldHide: boolean | undefined) {
+	return shouldHide
+		? {
+				noFollow: true,
+				noIndex: true,
+			}
+		: undefined;
 }
 
 export function getSeoImageFallback() {
@@ -30,13 +39,4 @@ export function getSeoImageFallback() {
 		PROD ? SITE : BASE_URL,
 		`${OPEN_GRAPH_IMAGE_FALLBACK_PREFIX}-${String(R.randomInteger(1, OPEN_GRAPH_IMAGE_FALLBACK_COUNT))}.jpg`,
 	);
-}
-
-export function getSeoHideSearch(shouldHide: boolean | undefined) {
-	return shouldHide
-		? {
-				noIndex: true,
-				noFollow: true,
-			}
-		: undefined;
 }

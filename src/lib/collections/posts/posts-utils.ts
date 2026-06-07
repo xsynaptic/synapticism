@@ -15,16 +15,16 @@ export const createPostsByIdsFunction = createCollectionLookupByIds('Posts', get
 
 export function getPostSchema(
 	entry: CollectionEntry<'posts'>,
-	props: { url: string; authorName: string },
+	props: { authorName: string; url: string },
 ): Array<Thing> {
 	return [
 		buildArticleSchema({
-			title: entry.data.title,
-			description: getEntryDescription(entry),
 			dateCreated: entry.data.dateCreated,
 			dateUpdated: entry.data.dateUpdated,
-			url: props.url,
+			description: getEntryDescription(entry),
 			imageUrl: undefined,
+			title: entry.data.title,
+			url: props.url,
 		}),
 		buildAuthorSchema(props.authorName),
 	];

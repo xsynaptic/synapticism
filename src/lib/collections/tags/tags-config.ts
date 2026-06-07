@@ -9,13 +9,13 @@ export const tags = defineCollection({
 	loader: glob({ base: `${CONTENT_COLLECTIONS_PATH}/tags`, pattern: '**/[^_]*.(md|mdx)' }),
 	schema: z
 		.object({
-			title: StylizedTextSchema,
-			description: z.string().optional(),
+			_postCount: z.number().int().optional(),
 			dateCreated: DateStringSchema,
 			dateUpdated: DateStringSchema.optional(),
-			imageFeatured: z.string().optional(),
+			description: z.string().optional(),
 			hideSearch: z.boolean().optional(),
-			_postCount: z.number().int().optional(),
+			imageFeatured: z.string().optional(),
+			title: StylizedTextSchema,
 		})
 		.strict(),
 });

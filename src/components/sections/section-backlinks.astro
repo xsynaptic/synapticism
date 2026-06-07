@@ -13,10 +13,10 @@ const { backlinks } = Astro.props;
 
 {
 	backlinks && backlinks.length > 0 ? (
-		<ContentSection data-pagefind-ignore data-nosnippet>
+		<ContentSection data-nosnippet data-pagefind-ignore>
 			<Fragment slot="section-title">Backlinks</Fragment>
 			<ul class="flex flex-col gap-1 text-sm">
-				{backlinks.map(({ url, title }) => (
+				{backlinks.map(({ title, url }) => (
 					<li>
 						<Link href={url}>{title}</Link>
 					</li>

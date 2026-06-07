@@ -11,7 +11,7 @@ export const getStaticPaths = (async () => {
 
 	return entries.map((entry) => ({
 		params: { project: entry.id },
-		props: { entry, backlinks: catalog.backlinksOf(entry.id) },
+		props: { backlinks: catalog.backlinksOf(entry.id), entry },
 	}));
 }) satisfies GetStaticPaths;
 

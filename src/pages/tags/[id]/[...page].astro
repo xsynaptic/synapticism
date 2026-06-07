@@ -13,9 +13,9 @@ export const getStaticPaths = (async ({ paginate }) => {
 			const posts = await queryTagsEntryPosts(entry);
 
 			return paginate(posts, {
+				pageSize: 20,
 				params: { id: entry.id },
 				props: { entry },
-				pageSize: 20,
 			});
 		}),
 	);

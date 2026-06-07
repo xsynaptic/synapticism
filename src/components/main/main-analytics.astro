@@ -13,9 +13,9 @@ const { isViewTransitionsEnabled, ...props } = Astro.props;
 {
 	import.meta.env.PROD && UMAMI_ID && UMAMI_DOMAIN ? (
 		<script
+			data-website-id={UMAMI_ID}
 			defer
 			src={`${UMAMI_DOMAIN}/script.js`}
-			data-website-id={UMAMI_ID}
 			{...props}
 			{...(isViewTransitionsEnabled ? { 'data-astro-rerun': '' } : {})}
 			is:inline

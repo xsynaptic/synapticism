@@ -2,10 +2,6 @@
  * @type {import('prettier').Config}
  */
 export default {
-	printWidth: 100,
-	singleQuote: true,
-	useTabs: true,
-	plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
 	overrides: [
 		{
 			files: ['*.astro'],
@@ -14,5 +10,9 @@ export default {
 			},
 		},
 	],
+	plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
+	printWidth: 100,
+	singleQuote: true,
 	tailwindStylesheet: './src/styles/global.css',
+	useTabs: true,
 };

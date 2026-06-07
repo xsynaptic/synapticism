@@ -15,8 +15,8 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 <Container as="div" class:list={['mb-2 pt-small', className]}>
 	<h1
 		class="mb-0 pb-2 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 sm:-mb-2 md:text-3xl lg:text-4xl"
-		style={{ marginLeft: '-0.125rem' }}
 		data-pagefind-weight="3"
+		style={{ marginLeft: '-0.125rem' }}
 	>
 		{title ? <Fragment set:html={title} /> : undefined}
 	</h1>

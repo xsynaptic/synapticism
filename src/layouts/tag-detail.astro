@@ -24,9 +24,9 @@ const { entry, page } = Astro.props;
 
 <MainSite
 	meta={{
-		title: entry.data.title,
 		description: entry.data.description,
 		noIndex: page.currentPage > 1,
+		title: entry.data.title,
 	}}
 >
 	<ContentHeader>

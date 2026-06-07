@@ -47,7 +47,8 @@
 	mask-size: 100%;
 }
 
-.pagefind-ui__search-clear:hover::before, .pagefind-ui__search-clear:focus::before {
+.pagefind-ui__search-clear:hover::before,
+.pagefind-ui__search-clear:focus::before {
 	@apply text-accent-300;
 }
 
@@ -61,7 +62,8 @@
 
 	--pagefind-ui-text: var(--color-accent-500);
 
-	&:hover, &:focus {
+	&:hover,
+	&:focus {
 		--pagefind-ui-text: var(--color-accent-300);
 	}
 }
@@ -69,7 +71,8 @@
 .pagefind-ui__result-nested .pagefind-ui__result-link {
 	--pagefind-ui-text: var(--color-primary-600);
 
-	&:hover, &:focus {
+	&:hover,
+	&:focus {
 		--pagefind-ui-text: var(--color-primary-500);
 	}
 }

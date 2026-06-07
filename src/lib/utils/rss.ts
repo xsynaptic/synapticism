@@ -18,14 +18,6 @@ import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
-function stripFootnotes(input: string): string {
-	let result = input.replaceAll(/<sup><a[^>]*data-footnote-ref[^>]*>.*?<\/a><\/sup>/gi, '');
-
-	result = result.replaceAll(/<section[^>]*data-footnotes[^>]*>.*?<\/section>/gis, '');
-
-	return result;
-}
-
 async function createRenderMdxFunction() {
 	const container = await AstroContainer.create();
 
@@ -38,16 +30,24 @@ async function createRenderMdxFunction() {
 	};
 }
 
+function stripFootnotes(input: string): string {
+	let result = input.replaceAll(/<sup><a[^>]*data-footnote-ref[^>]*>.*?<\/a><\/sup>/gi, '');
+
+	result = result.replaceAll(/<section[^>]*data-footnotes[^>]*>.*?<\/section>/gis, '');
+
+	return result;
+}
+
 const renderMdx = await createRenderMdxFunction();
 
 const generateFeedItem = async ({
+	debug,
 	entry,
 	excludeFootnotes,
-	debug,
 }: {
+	debug: boolean;
 	entry: CollectionEntry<'posts'>;
 	excludeFootnotes: boolean;
-	debug: boolean;
 }) => {
 	const startTime = performance.now();
 
@@ -66,9 +66,9 @@ const generateFeedItem = async ({
 	);
 
 	const feedItem = {
-		title: entry.data.title,
 		link: getContentUrl(entry.collection, entry.id),
 		pubDate: parseContentDate(entry.data.dateUpdated ?? entry.data.dateCreated),
+		title: entry.data.title,
 		...(entry.data.description
 			? { description: stripTags(transformMarkdown({ input: entry.data.description })) }
 			: {}),
@@ -85,19 +85,19 @@ const generateFeedItem = async ({
 };
 
 export async function generateFeedItems({
-	itemCount,
-	excludeFootnotes,
 	debug,
+	excludeFootnotes,
+	itemCount,
 }: {
-	itemCount: number;
-	excludeFootnotes: boolean;
 	debug: boolean;
+	excludeFootnotes: boolean;
+	itemCount: number;
 }) {
 	const { entries: posts } = await getPostsCollection();
 
 	return R.pipe(
 		await R.pipe([...posts], R.sort(sortByDateReverseChronological), R.take(itemCount), (items) =>
-			Promise.all(items.map((item) => generateFeedItem({ entry: item, excludeFootnotes, debug }))),
+			Promise.all(items.map((item) => generateFeedItem({ debug, entry: item, excludeFootnotes }))),
 		),
 		R.sort((a, b) => (a.pubDate && b.pubDate ? b.pubDate.getTime() - a.pubDate.getTime() : -1)),
 		R.take(itemCount),

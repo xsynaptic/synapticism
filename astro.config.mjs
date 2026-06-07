@@ -8,7 +8,49 @@ import expressiveCode from 'astro-expressive-code';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 
 export default defineConfig({
-	site: import.meta.env.PROD ? 'https://synapticism.com/' : 'http://localhost:4321/',
+	env: {
+		schema: {
+			UMAMI_DOMAIN: envField.string({ access: 'public', context: 'client', optional: true }),
+			UMAMI_ID: envField.string({ access: 'public', context: 'client', optional: true }),
+			WEBMENTION_DOMAIN: envField.string({ access: 'public', context: 'client', optional: true }),
+		},
+	},
+	experimental: {
+		contentIntellisense: true,
+	},
+	// Note: fallback fonts are handled in `styles/themes/fonts.css`
+	fonts: [
+		{
+			cssVariable: '--font-aleo',
+			fallbacks: [],
+			name: 'Aleo',
+			optimizedFallbacks: false,
+			provider: fontProviders.fontsource(),
+			styles: ['normal'],
+			subsets: ['latin'],
+			weights: ['300 700'],
+		},
+		{
+			cssVariable: '--font-geist',
+			fallbacks: [],
+			name: 'Geist',
+			optimizedFallbacks: false,
+			provider: fontProviders.fontsource(),
+			styles: ['normal'],
+			subsets: ['latin'],
+			weights: ['300 700'],
+		},
+		{
+			cssVariable: '--font-geist-mono',
+			fallbacks: [],
+			name: 'Geist Mono',
+			optimizedFallbacks: false,
+			provider: fontProviders.fontsource(),
+			styles: ['normal'],
+			subsets: ['latin'],
+			weights: ['300 700'],
+		},
+	],
 	integrations: [expressiveCode(), mdx(), sitemap()],
 	markdown: {
 		processor: unified({
@@ -25,58 +67,16 @@ export default defineConfig({
 			remarkRehype: { footnoteLabelTagName: 'h3' },
 		}),
 	},
-	env: {
-		schema: {
-			UMAMI_DOMAIN: envField.string({ context: 'client', access: 'public', optional: true }),
-			UMAMI_ID: envField.string({ context: 'client', access: 'public', optional: true }),
-			WEBMENTION_DOMAIN: envField.string({ context: 'client', access: 'public', optional: true }),
-		},
-	},
+	site: import.meta.env.PROD ? 'https://synapticism.com/' : 'http://localhost:4321/',
 	vite: {
-		plugins: [tailwindcss()],
 		build: {
 			rollupOptions: {
 				output: {
-					entryFileNames: 'js/a-[hash].js',
 					chunkFileNames: 'js/c-[hash].js',
+					entryFileNames: 'js/a-[hash].js',
 				},
 			},
 		},
-	},
-	// Note: fallback fonts are handled in `styles/themes/fonts.css`
-	fonts: [
-		{
-			provider: fontProviders.fontsource(),
-			name: 'Aleo',
-			cssVariable: '--font-aleo',
-			weights: ['300 700'],
-			styles: ['normal'],
-			subsets: ['latin'],
-			fallbacks: [],
-			optimizedFallbacks: false,
-		},
-		{
-			provider: fontProviders.fontsource(),
-			name: 'Geist',
-			cssVariable: '--font-geist',
-			weights: ['300 700'],
-			styles: ['normal'],
-			subsets: ['latin'],
-			fallbacks: [],
-			optimizedFallbacks: false,
-		},
-		{
-			provider: fontProviders.fontsource(),
-			name: 'Geist Mono',
-			cssVariable: '--font-geist-mono',
-			weights: ['300 700'],
-			styles: ['normal'],
-			subsets: ['latin'],
-			fallbacks: [],
-			optimizedFallbacks: false,
-		},
-	],
-	experimental: {
-		contentIntellisense: true,
+		plugins: [tailwindcss()],
 	},
 });

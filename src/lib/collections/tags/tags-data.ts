@@ -3,8 +3,6 @@ import { getCollection } from 'astro:content';
 import { createCollectionData } from '#lib/utils/collections.ts';
 
 export const getTagsCollection = createCollectionData({
-	collection: 'tags',
-	label: 'Tags',
 	async augment(entries) {
 		const posts = await getCollection('posts');
 
@@ -14,4 +12,6 @@ export const getTagsCollection = createCollectionData({
 			).length;
 		}
 	},
+	collection: 'tags',
+	label: 'Tags',
 });

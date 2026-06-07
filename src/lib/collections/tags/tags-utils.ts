@@ -22,12 +22,6 @@ export async function createPostsByTagFunction() {
 	};
 }
 
-export async function queryTagsIndex() {
-	const { entries } = await getTagsCollection();
-
-	return R.pipe(entries, R.filter(filterWithContent), R.sort(sortByContentCount));
-}
-
 export async function queryTagsEntryPosts(entry: CollectionEntry<'tags'>) {
 	const getPostsByTag = await createPostsByTagFunction();
 	const catalog = await getCatalog();
@@ -35,4 +29,10 @@ export async function queryTagsEntryPosts(entry: CollectionEntry<'tags'>) {
 	const posts = getPostsByTag(entry);
 
 	return R.pipe(catalog.resolve(posts), R.sort(sortCatalogByDate));
+}
+
+export async function queryTagsIndex() {
+	const { entries } = await getTagsCollection();
+
+	return R.pipe(entries, R.filter(filterWithContent), R.sort(sortByContentCount));
 }

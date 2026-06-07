@@ -1,104 +1,76 @@
 import { getSiteUrl } from '#lib/utils/routing.ts';
 import { sanitizeDescription } from '#lib/utils/text.ts';
 
-interface IdReference {
-	'@id': string;
-}
+export type Thing = Article | BreadcrumbList | Person | WebSite;
 
 interface Article {
-	'@type': 'Article';
 	'@id'?: string;
-	headline: string;
-	description?: string;
-	image?: string;
-	datePublished: string;
-	dateModified?: string;
+	'@type': 'Article';
 	author: IdReference;
+	dateModified?: string;
+	datePublished: string;
+	description?: string;
+	headline: string;
+	image?: string;
 	mainEntityOfPage: IdReference;
 }
 
 interface BreadcrumbList {
-	'@type': 'BreadcrumbList';
 	'@id'?: string;
+	'@type': 'BreadcrumbList';
 	itemListElement: Array<{
 		'@type': 'ListItem';
-		position: number;
-		name: string;
 		item?: string;
+		name: string;
+		position: number;
 	}>;
 }
-
-interface Person {
-	'@type': 'Person';
-	'@id'?: string;
-	name: string;
-	url: string;
-}
-
-interface WebSite {
-	'@type': 'WebSite';
-	'@id'?: string;
-	name: string;
-	url: string;
-	description: string;
-}
-
-export type Thing = Article | BreadcrumbList | Person | WebSite;
 
 interface Graph {
 	'@context': 'https://schema.org';
 	'@graph': ReadonlyArray<Thing>;
 }
 
+interface IdReference {
+	'@id': string;
+}
+
+interface Person {
+	'@id'?: string;
+	'@type': 'Person';
+	name: string;
+	url: string;
+}
+
+interface WebSite {
+	'@id'?: string;
+	'@type': 'WebSite';
+	description: string;
+	name: string;
+	url: string;
+}
+
 const SchemaFragmentIds = {
-	Website: '#website',
-	Breadcrumb: '#breadcrumb',
 	Article: '#article',
 	Author: '#author',
+	Breadcrumb: '#breadcrumb',
+	Website: '#website',
 } as const;
 
-export function serializeGraph(entities: Array<Thing>): string {
-	const graph: Graph = {
-		'@context': 'https://schema.org',
-		'@graph': entities,
-	};
-
-	return JSON.stringify(graph)
-		.replaceAll('<', String.raw`\u003c`)
-		.replaceAll('>', String.raw`\u003e`)
-		.replaceAll('&', String.raw`\u0026`);
-}
-
-export function buildBreadcrumbSchema(
-	items: Array<{ name: string; url?: string }>,
-	pageUrl: string,
-): BreadcrumbList {
-	return {
-		'@type': 'BreadcrumbList',
-		'@id': `${pageUrl}${SchemaFragmentIds.Breadcrumb}`,
-		itemListElement: items.map((item, index) => ({
-			'@type': 'ListItem' as const,
-			position: index + 1,
-			name: item.name,
-			...(item.url ? { item: item.url } : {}),
-		})),
-	};
-}
-
 export function buildArticleSchema(props: {
-	title: string;
-	description: string | undefined;
 	dateCreated: Date;
 	dateUpdated: Date | undefined;
-	url: string;
+	description: string | undefined;
 	imageUrl: string | undefined;
+	title: string;
+	url: string;
 }): Article {
 	const aboutUrl = getSiteUrl('/about');
 	const description = sanitizeDescription(props.description);
 
 	return {
-		'@type': 'Article',
 		'@id': `${props.url}${SchemaFragmentIds.Article}`,
+		'@type': 'Article',
 		headline: props.title,
 		...(description ? { description } : {}),
 		...(props.imageUrl ? { image: props.imageUrl } : {}),
@@ -113,21 +85,49 @@ export function buildAuthorSchema(name: string): Person {
 	const aboutUrl = getSiteUrl('/about');
 
 	return {
-		'@type': 'Person',
 		'@id': `${aboutUrl}${SchemaFragmentIds.Author}`,
+		'@type': 'Person',
 		name,
 		url: aboutUrl,
 	};
 }
 
-export function buildWebSiteSchema(props: { name: string; description: string }): WebSite {
+export function buildBreadcrumbSchema(
+	items: Array<{ name: string; url?: string }>,
+	pageUrl: string,
+): BreadcrumbList {
+	return {
+		'@id': `${pageUrl}${SchemaFragmentIds.Breadcrumb}`,
+		'@type': 'BreadcrumbList',
+		itemListElement: items.map((item, index) => ({
+			'@type': 'ListItem' as const,
+			name: item.name,
+			position: index + 1,
+			...(item.url ? { item: item.url } : {}),
+		})),
+	};
+}
+
+export function buildWebSiteSchema(props: { description: string; name: string }): WebSite {
 	const siteUrl = getSiteUrl();
 
 	return {
-		'@type': 'WebSite',
 		'@id': `${siteUrl}${SchemaFragmentIds.Website}`,
+		'@type': 'WebSite',
+		description: props.description,
 		name: props.name,
 		url: siteUrl,
-		description: props.description,
 	};
+}
+
+export function serializeGraph(entities: Array<Thing>): string {
+	const graph: Graph = {
+		'@context': 'https://schema.org',
+		'@graph': entities,
+	};
+
+	return JSON.stringify(graph)
+		.replaceAll('<', String.raw`\u003c`)
+		.replaceAll('>', String.raw`\u003e`)
+		.replaceAll('&', String.raw`\u0026`);
 }

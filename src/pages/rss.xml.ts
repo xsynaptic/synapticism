@@ -9,16 +9,16 @@ const FEED_ITEM_COUNT = 20;
 
 export async function GET(context: APIContext): Promise<Response> {
 	const items = await generateFeedItems({
-		itemCount: FEED_ITEM_COUNT,
-		excludeFootnotes: FEED_EXCLUDE_FOOTNOTES,
 		debug: false,
+		excludeFootnotes: FEED_EXCLUDE_FOOTNOTES,
+		itemCount: FEED_ITEM_COUNT,
 	});
 
 	return rss({
 		customData: '<language>en-us</language>',
-		title: 'Synapticism',
 		description: 'A technical blog about web development, design, and creative coding.',
-		site: context.site ?? '',
 		items,
+		site: context.site ?? '',
+		title: 'Synapticism',
 	});
 }

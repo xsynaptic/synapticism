@@ -9,23 +9,39 @@ import Container from '#components/parts/container.astro';
 
 const ResumeDataSchema = z.object({
 	basics: z.object({
-		name: z.string(),
+		email: z.email(),
 		label: z.string(),
 		location: z.object({
 			city: z.string(),
-			region: z.string(),
 			countryCode: z.string(),
+			region: z.string(),
 		}),
-		email: z.email(),
-		website: z.url(),
-		summary: z.string(),
+		name: z.string(),
 		profiles: z
 			.object({
 				network: z.string(),
 				url: z.url(),
 			})
 			.array(),
+		summary: z.string(),
+		website: z.url(),
 	}),
+	education: z
+		.object({
+			area: z.string(),
+			degree: z.string(),
+			institution: z.string(),
+		})
+		.array(),
+	projects: z
+		.object({
+			description: z.string(),
+			highlights: z.array(z.string()),
+			name: z.string(),
+			repo: z.url().optional(),
+			url: z.url(),
+		})
+		.array(),
 	skills: z
 		.object({
 			category: z.string(),
@@ -35,27 +51,11 @@ const ResumeDataSchema = z.object({
 	work: z
 		.object({
 			company: z.string(),
-			position: z.string(),
-			location: z.string(),
-			startDate: z.string(),
 			endDate: z.string().optional(),
 			highlights: z.array(z.string()),
-		})
-		.array(),
-	projects: z
-		.object({
-			name: z.string(),
-			url: z.url(),
-			repo: z.url().optional(),
-			description: z.string(),
-			highlights: z.array(z.string()),
-		})
-		.array(),
-	education: z
-		.object({
-			institution: z.string(),
-			area: z.string(),
-			degree: z.string(),
+			location: z.string(),
+			position: z.string(),
+			startDate: z.string(),
 		})
 		.array(),
 });
@@ -72,7 +72,7 @@ function getResume(): Resume {
 
 const resume = getResume();
 
-const { basics, skills, work, projects, education } = resume;
+const { basics, education, projects, skills, work } = resume;
 ---
 
 <MainSite>
@@ -122,14 +122,14 @@ const { basics, skills, work, projects, education } = resume;
 							</h3>
 							<span class="text-sm text-neutral-500">
 								{new Date(job.startDate).toLocaleDateString('en-US', {
-									year: 'numeric',
 									month: 'long',
+									year: 'numeric',
 								})}
 								&ndash;
 								{job.endDate
 									? new Date(job.endDate).toLocaleDateString('en-US', {
-											year: 'numeric',
 											month: 'long',
+											year: 'numeric',
 										})
 									: 'Present'}
 							</span>

@@ -1,8 +1,6 @@
-import { getConfig } from '@xsynaptic/eslint-config';
+import { getAstroConfig, getConfig, getWebComponentConfig } from '@xsynaptic/eslint-config';
 import astroPlugin from 'eslint-plugin-astro';
-import { configs as wcConfigs } from 'eslint-plugin-wc';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
 
 const isStrictLint = process.env.ESLINT_STRICT === '1';
 
@@ -22,31 +20,12 @@ export default getConfig(
 		},
 		{
 			rules: {
-				// Conflicts with Remeda's sort function
-				'unicorn/no-array-sort': 'off',
-				// Conflicts with Prettier, which always uppercases hex digits and is not configurable
-				'unicorn/number-literal-case': 'off',
 				// Expensive type-aware rules; only run in strict mode
 				'@typescript-eslint/no-deprecated': isStrictLint ? 'error' : 'off',
-				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
 				'@typescript-eslint/no-misused-promises': isStrictLint ? 'error' : 'off',
-			},
-		},
-		/**
-		 * JSX
-		 */
-		{
-			files: ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts', '**/*.astro'],
-			rules: {
-				'no-restricted-syntax': [
-					'error',
-					{
-						message:
-							'Use a ternary returning undefined (condition ? <Element /> : undefined) instead of && for conditional rendering.',
-						selector:
-							':matches(JSXElement, JSXFragment) > JSXExpressionContainer > LogicalExpression[operator="&&"]',
-					},
-				],
+				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
+				// Conflicts with Remeda's sort function
+				'unicorn/no-array-sort': 'off',
 			},
 		},
 		// These files run in the browser and might need the browser globals
@@ -63,45 +42,15 @@ export default getConfig(
 				'unicorn/prefer-global-this': 'off',
 			},
 		},
-		/**
-		 * Native web components
-		 */
+		getWebComponentConfig(['src/components/**/*.ts']),
 		{
-			...wcConfigs['flat/best-practice'],
 			files: ['src/components/**/*.ts'],
 			rules: {
-				...wcConfigs['flat/best-practice'].rules,
-				'wc/define-tag-after-class-definition': 'error',
-				'wc/guard-define-call': 'error',
-				'wc/max-elements-per-file': 'error',
-				'wc/no-constructor': 'error',
-				'wc/no-exports-with-element': 'error',
-				'wc/no-method-prefixed-with-on': 'error',
 				// Redundant under strict TS; the project avoids custom-element inheritance entirely
 				'wc/guard-super-call': 'off',
 			},
 		},
-		/**
-		 * Astro
-		 */
-		...astroPlugin.configs['flat/recommended'],
-		...astroPlugin.configs['jsx-a11y-strict'],
-		// Split into two blocks so disableTypeChecked doesn't clobber our parserOptions
-		{
-			files: ['**/*.astro'],
-			languageOptions: {
-				parserOptions: {
-					parser: tseslint.parser,
-					extraFileExtensions: ['.astro'],
-				},
-			},
-		},
-		// Type-aware rules can't properly resolve types in .astro files; `astro check` handles this
-		// Keep frontmatter thin and push logic into .ts files for full lint coverage
-		{
-			files: ['**/*.astro'],
-			...tseslint.configs.disableTypeChecked,
-		},
+		...getAstroConfig({ a11y: astroPlugin.configs['jsx-a11y-strict'] }),
 	],
 	{
 		customGlobals: { mode: 'readonly' },

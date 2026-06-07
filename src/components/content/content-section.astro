@@ -7,11 +7,11 @@ import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props extends HTMLAttributes<'div'> {
 	fillViewport?: boolean | undefined;
-	titleLarge?: boolean | undefined;
 	marginSmall?: boolean | undefined;
+	titleLarge?: boolean | undefined;
 }
 
-const { class: className, fillViewport, titleLarge, marginSmall, ...props } = Astro.props;
+const { class: className, fillViewport, marginSmall, titleLarge, ...props } = Astro.props;
 
 const title = await renderSlot(Astro.slots, 'section-title');
 const subtitle = await renderSlot(Astro.slots, 'section-subtitle');

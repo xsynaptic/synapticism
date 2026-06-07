@@ -9,9 +9,9 @@ import { loadDeployConfig, printDeployConfig } from './deploy-config.js';
 const { values } = parseArgs({
 	args: process.argv.slice(2),
 	options: {
-		'root-path': { type: 'string', default: process.cwd() },
-		'dry-run': { type: 'boolean', default: false },
-		'skip-build': { type: 'boolean', default: false },
+		'dry-run': { default: false, type: 'boolean' },
+		'root-path': { default: process.cwd(), type: 'string' },
+		'skip-build': { default: false, type: 'boolean' },
 	},
 });
 
@@ -36,11 +36,11 @@ async function build() {
 		return;
 	}
 	console.log(chalk.blue('Building...'));
-	await $({ stdio: 'inherit', cwd: rootPath })`pnpm astro build`;
+	await $({ cwd: rootPath, stdio: 'inherit' })`pnpm astro build`;
 }
 
 async function transfer() {
-	await deployApp({ rootPath, dryRun, skipDelete: skipBuild });
+	await deployApp({ dryRun, rootPath, skipDelete: skipBuild });
 }
 
 try {

@@ -2,8 +2,8 @@ import chalk from 'chalk';
 
 interface DeployConfig {
 	remoteHost: string;
-	sshKeyPath: string;
 	sitePath: string;
+	sshKeyPath: string;
 }
 
 export function loadDeployConfig(): DeployConfig {
@@ -25,8 +25,8 @@ export function loadDeployConfig(): DeployConfig {
 
 	return {
 		remoteHost,
-		sshKeyPath,
 		sitePath,
+		sshKeyPath,
 	};
 }
 

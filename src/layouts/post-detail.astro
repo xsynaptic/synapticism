@@ -21,11 +21,11 @@ import { getSeoArticleProps } from '#lib/utils/seo.ts';
 import { getEntryDescription } from '#lib/utils/text.ts';
 
 interface Props {
-	entry: CollectionEntry<'posts'>;
 	backlinks: Array<CatalogItem> | undefined;
+	entry: CollectionEntry<'posts'>;
 }
 
-const { entry, backlinks } = Astro.props;
+const { backlinks, entry } = Astro.props;
 
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
@@ -33,16 +33,16 @@ const { Content } = await render(entry);
 ---
 
 <MainSite
+	hasReadingBar={true}
 	meta={{
-		title: entry.data.title,
 		description: getEntryDescription(entry),
+		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,
 			dateUpdated: entry.data.dateUpdated,
 		}),
 	}}
-	schemas={getPostSchema(entry, { url: Astro.url.toString(), authorName: SITE_AUTHOR_NAME })}
-	hasReadingBar={true}
+	schemas={getPostSchema(entry, { authorName: SITE_AUTHOR_NAME, url: Astro.url.toString() })}
 >
 	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp()}>
 		<ContentHeader>

@@ -18,8 +18,8 @@ const { recentPosts, selectedProjects } = Astro.props;
 <MainSite
 	schemas={[
 		buildWebSiteSchema({
-			name: 'Synapticism',
 			description: 'A technical blog about web development, design, and creative coding.',
+			name: 'Synapticism',
 		}),
 	]}
 >
@@ -34,8 +34,7 @@ const { recentPosts, selectedProjects } = Astro.props;
 			typography and creative code, and longer pieces when an idea earns the room.
 		</p>
 		<p class="mt-5 font-mono text-xs text-primary-600">
-			<span class="text-accent-700" aria-hidden="true">//</span> web development, design, creative
-			coding
+			<span aria-hidden="true" class="text-accent-700">//</span> web development, design, creative coding
 		</p>
 	</Container>
 
@@ -44,7 +43,7 @@ const { recentPosts, selectedProjects } = Astro.props;
 			<Container as="section" class="mt-14 md:mt-20">
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">Recent posts</h2>
-					<span class="h-px flex-1 bg-primary-200" aria-hidden="true" />
+					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
 				</div>
 				<ul class="mt-6 flex flex-col">
 					{recentPosts.map((item, index) => (
@@ -52,8 +51,8 @@ const { recentPosts, selectedProjects } = Astro.props;
 							<article class="flex flex-col gap-2">
 								<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
 									<a
-										href={item.url}
 										class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
+										href={item.url}
 									>
 										{item.title}
 									</a>
@@ -74,8 +73,8 @@ const { recentPosts, selectedProjects } = Astro.props;
 				</ul>
 				<p class="mt-7 font-mono text-sm">
 					<a
-						href="/posts"
 						class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
+						href="/posts"
 					>
 						All posts <span aria-hidden="true">&rarr;</span>
 					</a>
@@ -89,7 +88,7 @@ const { recentPosts, selectedProjects } = Astro.props;
 			<Container as="section" class="mt-14 pb-16 md:mt-20 md:pb-24">
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">Selected work</h2>
-					<span class="h-px flex-1 bg-primary-200" aria-hidden="true" />
+					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
 				</div>
 				<ul class="mt-6 flex flex-col gap-5">
 					{selectedProjects.map((item) => (
@@ -97,8 +96,8 @@ const { recentPosts, selectedProjects } = Astro.props;
 							<article class="grid gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-baseline">
 								<h3 class="font-mono text-base font-medium">
 									<a
-										href={item.url}
 										class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
+										href={item.url}
 									>
 										{item.title}
 									</a>
@@ -114,8 +113,8 @@ const { recentPosts, selectedProjects } = Astro.props;
 				</ul>
 				<p class="mt-7 font-mono text-sm">
 					<a
-						href="/projects"
 						class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
+						href="/projects"
 					>
 						All projects <span aria-hidden="true">&rarr;</span>
 					</a>

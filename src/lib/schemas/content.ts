@@ -19,11 +19,11 @@ export const DateStringSchema = z.string().transform((value) => new Date(value))
 export const NumericScaleSchema = z.number().int().min(1).max(5);
 
 export const contentBaseSchema = z.object({
-	title: StylizedTextSchema,
-	description: DescriptionSchema.optional(),
 	dateCreated: DateStringSchema,
 	dateUpdated: DateStringSchema.optional(),
+	description: DescriptionSchema.optional(),
+	entryQuality: NumericScaleSchema,
 	imageFeatured: z.string().optional(),
 	imageHero: z.string().optional(),
-	entryQuality: NumericScaleSchema,
+	title: StylizedTextSchema,
 });

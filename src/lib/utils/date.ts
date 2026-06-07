@@ -1,22 +1,22 @@
 export const DatePresetEnum = {
-	Short: 'short',
-	Medium: 'medium',
 	Long: 'long',
+	Medium: 'medium',
+	Short: 'short',
 } as const;
 
 export type DatePreset = (typeof DatePresetEnum)[keyof typeof DatePresetEnum];
 
-export function parseContentDate(date: string | Date | undefined) {
+interface CollectionEntryWithStandardDates {
+	data: {
+		dateCreated: Date | string;
+		dateUpdated?: Date | string | undefined;
+	};
+}
+
+export function parseContentDate(date: Date | string | undefined) {
 	if (!date) return;
 	if (date instanceof Date) return date;
 	return new Date(date);
-}
-
-interface CollectionEntryWithStandardDates {
-	data: {
-		dateCreated: string | Date;
-		dateUpdated?: string | Date | undefined;
-	};
 }
 
 export function sortByDateReverseChronological(

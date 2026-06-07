@@ -7,13 +7,13 @@ import { $ } from 'zx';
 import { loadDeployConfig } from './deploy-config.js';
 
 interface DeployAppOptions {
-	rootPath: string;
 	dryRun?: boolean;
+	rootPath: string;
 	skipDelete?: boolean;
 }
 
 export async function deployApp(options: DeployAppOptions): Promise<void> {
-	const { rootPath, dryRun = false, skipDelete = false } = options;
+	const { dryRun = false, rootPath, skipDelete = false } = options;
 
 	// Load deploy configuration
 	const config = loadDeployConfig();
@@ -51,9 +51,9 @@ if (scriptPath.includes('deploy-app')) {
 	const { values } = parseArgs({
 		args: process.argv.slice(2),
 		options: {
-			'root-path': { type: 'string', default: process.cwd() },
-			'dry-run': { type: 'boolean', default: false },
-			'skip-delete': { type: 'boolean', default: false },
+			'dry-run': { default: false, type: 'boolean' },
+			'root-path': { default: process.cwd(), type: 'string' },
+			'skip-delete': { default: false, type: 'boolean' },
 		},
 	});
 
@@ -64,8 +64,8 @@ if (scriptPath.includes('deploy-app')) {
 	}
 
 	await deployApp({
-		rootPath: values['root-path'],
 		dryRun: values['dry-run'],
+		rootPath: values['root-path'],
 		skipDelete: values['skip-delete'],
 	});
 }

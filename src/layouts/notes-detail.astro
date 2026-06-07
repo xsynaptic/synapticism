@@ -21,11 +21,11 @@ import { getSeoArticleProps } from '#lib/utils/seo.ts';
 import { getEntryDescription } from '#lib/utils/text.ts';
 
 interface Props {
-	entry: CollectionEntry<'notes'>;
 	backlinks: Array<CatalogItem> | undefined;
+	entry: CollectionEntry<'notes'>;
 }
 
-const { entry, backlinks } = Astro.props;
+const { backlinks, entry } = Astro.props;
 
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
@@ -34,14 +34,14 @@ const { Content } = await render(entry);
 
 <MainSite
 	meta={{
-		title: entry.data.title,
 		description: getEntryDescription(entry),
+		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,
 			dateUpdated: entry.data.dateUpdated,
 		}),
 	}}
-	schemas={getNoteSchema(entry, { url: Astro.url.toString(), authorName: SITE_AUTHOR_NAME })}
+	schemas={getNoteSchema(entry, { authorName: SITE_AUTHOR_NAME, url: Astro.url.toString() })}
 >
 	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp()}>
 		<ContentHeader>

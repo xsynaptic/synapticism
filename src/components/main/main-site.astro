@@ -19,12 +19,12 @@ import { getSiteUrl } from '#lib/utils/routing.ts';
 import { serializeGraph } from '#lib/utils/structured-data.ts';
 
 interface Props {
+	hasReadingBar?: boolean;
 	meta?: MetaProps;
 	schemas?: Array<Thing>;
-	hasReadingBar?: boolean;
 }
 
-const { meta, schemas, hasReadingBar = false } = Astro.props;
+const { hasReadingBar = false, meta, schemas } = Astro.props;
 
 const siteUrl = getSiteUrl();
 ---
@@ -55,14 +55,14 @@ const siteUrl = getSiteUrl();
 				<Container class="flex flex-wrap items-center justify-between gap-2">
 					<h2>
 						<Link
-							href={siteUrl}
 							class="font-sans text-xl font-semibold md:text-2xl lg:text-3xl"
+							href={siteUrl}
 							linkColor="on-dark"
 						>
 							Synapticism
 						</Link>
 					</h2>
-					<div id="search" class="relative"></div>
+					<div class="relative" id="search"></div>
 				</Container>
 			</div>
 			<MenuHeader />
@@ -89,7 +89,7 @@ const siteUrl = getSiteUrl();
 		}
 		{
 			schemas && schemas.length > 0 ? (
-				<script type="application/ld+json" is:inline set:html={serializeGraph(schemas)} />
+				<script is:inline set:html={serializeGraph(schemas)} type="application/ld+json" />
 			) : undefined
 		}
 	</body>

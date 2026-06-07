@@ -21,7 +21,7 @@ const tags = tagIds ? getTagsByIds(tagIds).sort(sortByContentCount) : undefined;
 
 {
 	tags && tags.length > 0 ? (
-		<ContentSection data-pagefind-ignore data-nosnippet {...props}>
+		<ContentSection data-nosnippet data-pagefind-ignore {...props}>
 			<Fragment slot="section-title">Tags</Fragment>
 			<ListRow>
 				{tags.map((item) => (

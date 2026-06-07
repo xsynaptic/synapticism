@@ -17,21 +17,21 @@ import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
 import { getEntryDescription } from '#lib/utils/text.ts';
 
 interface Props {
-	entry: CollectionEntry<'projects'>;
 	backlinks: Array<CatalogItem> | undefined;
+	entry: CollectionEntry<'projects'>;
 }
 
-const { entry, backlinks } = Astro.props;
+const { backlinks, entry } = Astro.props;
 
 const { Content } = await render(entry);
 ---
 
 <MainSite
-	meta={{
-		title: entry.data.title,
-		description: getEntryDescription(entry),
-	}}
 	hasReadingBar={true}
+	meta={{
+		description: getEntryDescription(entry),
+		title: entry.data.title,
+	}}
 >
 	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp()}>
 		<ContentHeader>

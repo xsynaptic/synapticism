@@ -11,15 +11,15 @@ import { sanitizeAltAttribute, sanitizeDescription } from '#lib/utils/text.ts';
 type Props = MetaProps;
 
 const {
-	title: contentTitle,
+	article,
 	description: descriptionRaw,
-	ogType,
 	image,
 	imageAlt,
-	article,
-	prefetchUrls,
-	noIndex,
 	noFollow,
+	noIndex,
+	ogType,
+	prefetchUrls,
+	title: contentTitle,
 } = Astro.props;
 
 const siteTitle = 'Synapticism';
@@ -30,33 +30,39 @@ const description = sanitizeDescription(descriptionRaw) ?? siteDescription;
 const openGraphImageUrl = image?.url ? new URL(image.url, Astro.site).href : getSeoImageFallback();
 
 const openGraphImage = {
-	url: openGraphImageUrl,
-	type: 'image/jpeg',
 	alt: sanitizeAltAttribute(image?.alt ?? imageAlt ?? description),
+	type: 'image/jpeg',
+	url: openGraphImageUrl,
 };
 ---
 
 <SEO
-	title={contentTitle ?? siteTitle}
-	titleTemplate={!!contentTitle && contentTitle !== siteTitle ? `%s - ${siteTitle}` : '%s'}
-	titleDefault={siteTitle}
 	description={description}
+	extend={{
+		...(prefetchUrls && prefetchUrls.length > 0
+			? { link: prefetchUrls.map((prefetchUrl) => ({ href: prefetchUrl, rel: 'prefetch' })) }
+			: {}),
+		meta: [{ content: Astro.generator, name: 'generator' }],
+	}}
 	openGraph={{
 		basic: {
+			image: openGraphImage.url,
 			title: contentTitle ? `${contentTitle} - ${siteTitle}` : siteTitle,
 			type: ogType ?? 'website',
-			image: openGraphImage.url,
 		},
+		image: openGraphImage,
 		optional: {
 			description,
 		},
-		image: openGraphImage,
 		...(ogType === 'article' && article !== undefined ? { article } : {}),
 	}}
+	title={contentTitle ?? siteTitle}
+	titleDefault={siteTitle}
+	titleTemplate={!!contentTitle && contentTitle !== siteTitle ? `%s - ${siteTitle}` : '%s'}
 	twitter={{
 		card: 'summary_large_image',
-		title: contentTitle ?? siteTitle,
 		description,
+		title: contentTitle ?? siteTitle,
 		...(openGraphImage.url
 			? {
 					image: openGraphImage.url,
@@ -64,24 +70,18 @@ const openGraphImage = {
 				}
 			: {}),
 	}}
-	extend={{
-		...(prefetchUrls && prefetchUrls.length > 0
-			? { link: prefetchUrls.map((prefetchUrl) => ({ rel: 'prefetch', href: prefetchUrl })) }
-			: {}),
-		meta: [{ name: 'generator', content: Astro.generator }],
-	}}
 	{...noIndex ? { noindex: noIndex } : {}}
 	{...noFollow ? { nofollow: noFollow } : {}}
 />
 <link
-	rel="alternate"
-	type="application/rss+xml"
-	title={siteTitle}
 	href={`${getSiteUrl()}rss.xml`}
+	rel="alternate"
+	title={siteTitle}
+	type="application/rss+xml"
 />
-<link rel="sitemap" href={`${getSiteUrl()}sitemap-index.xml`} />
+<link href={`${getSiteUrl()}sitemap-index.xml`} rel="sitemap" />
 {
 	WEBMENTION_DOMAIN ? (
-		<link rel="webmention" href={`https://webmention.io/${WEBMENTION_DOMAIN}/webmention`} />
+		<link href={`https://webmention.io/${WEBMENTION_DOMAIN}/webmention`} rel="webmention" />
 	) : undefined
 }

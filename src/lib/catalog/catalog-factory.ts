@@ -9,14 +9,14 @@ import type {
 import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
 
 export interface Catalog {
+	all: () => ReadonlyArray<CatalogItem>;
+	backlinksOf: (id: string) => Array<CatalogItem>;
+	byCollection: (...collections: Array<CatalogCollectionKey>) => Array<CatalogItem>;
 	getById: (id: string) => CatalogItem | undefined;
 	getCaption: (id: string) => CatalogCaption | undefined;
-	backlinksOf: (id: string) => Array<CatalogItem>;
 	resolve: <T extends CatalogCollectionKey = CatalogCollectionKey>(
 		entries: Array<CollectionEntry<T>>,
 	) => Array<CatalogItem<T>>;
-	byCollection: (...collections: Array<CatalogCollectionKey>) => Array<CatalogItem>;
-	all: () => ReadonlyArray<CatalogItem>;
 }
 
 // Only dated content surfaces as a backlink; pages and tags are link targets, not sources
@@ -35,7 +35,7 @@ export function createCatalog(items: ReadonlyArray<CatalogItem>): Catalog {
 
 		if (!item) return undefined;
 
-		return { title: item.title, id: item.id, url: item.url };
+		return { id: item.id, title: item.title, url: item.url };
 	}
 
 	function backlinksOf(id: string): Array<CatalogItem> {
@@ -59,7 +59,7 @@ export function createCatalog(items: ReadonlyArray<CatalogItem>): Catalog {
 	function resolve<T extends CatalogCollectionKey = CatalogCollectionKey>(
 		entries: Array<CollectionEntry<T>>,
 	): Array<CatalogItem<T>> {
-		return entries.map(({ id, collection }) => {
+		return entries.map(({ collection, id }) => {
 			const item = itemsById.get(id);
 
 			if (!item) {
@@ -81,5 +81,5 @@ export function createCatalog(items: ReadonlyArray<CatalogItem>): Catalog {
 		return items;
 	}
 
-	return { getById, getCaption, backlinksOf, resolve, byCollection, all };
+	return { all, backlinksOf, byCollection, getById, getCaption, resolve };
 }

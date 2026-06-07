@@ -1,46 +1,10 @@
 const animationDuration = 300;
 
 class ProgressReading extends HTMLElement {
+	#frame: number | undefined;
 	#observer: IntersectionObserver | undefined;
 	#target: Element | undefined;
 	#ticking = false;
-	#frame: number | undefined;
-
-	#setProgress(value: number) {
-		this.style.setProperty('--progress-bar', String(value));
-	}
-
-	#setOpacity(value: number) {
-		this.style.setProperty('opacity', String(value));
-	}
-
-	#updateProgress = () => {
-		this.#frame = undefined;
-
-		if (!this.#target) return;
-
-		const rect = this.#target.getBoundingClientRect();
-		const scrollable = Math.max(1, rect.height - globalThis.window.innerHeight);
-		const progress = Math.min(Math.max(0, -rect.top / scrollable), 1);
-
-		if (progress === 1) {
-			this.#setProgress(1);
-			globalThis.window.setTimeout(() => {
-				this.#setOpacity(0);
-			}, animationDuration / 2);
-		} else {
-			this.#setOpacity(1);
-			this.#setProgress(progress);
-		}
-
-		this.#ticking = false;
-	};
-
-	#onScroll = () => {
-		if (this.#ticking) return;
-		this.#ticking = true;
-		this.#frame = requestAnimationFrame(this.#updateProgress);
-	};
 
 	connectedCallback() {
 		this.ariaHidden = 'true';
@@ -79,6 +43,42 @@ class ProgressReading extends HTMLElement {
 			this.#frame = undefined;
 		}
 	}
+
+	#onScroll = () => {
+		if (this.#ticking) return;
+		this.#ticking = true;
+		this.#frame = requestAnimationFrame(this.#updateProgress);
+	};
+
+	#setOpacity(value: number) {
+		this.style.setProperty('opacity', String(value));
+	}
+
+	#setProgress(value: number) {
+		this.style.setProperty('--progress-bar', String(value));
+	}
+
+	#updateProgress = () => {
+		this.#frame = undefined;
+
+		if (!this.#target) return;
+
+		const rect = this.#target.getBoundingClientRect();
+		const scrollable = Math.max(1, rect.height - globalThis.window.innerHeight);
+		const progress = Math.min(Math.max(0, -rect.top / scrollable), 1);
+
+		if (progress === 1) {
+			this.#setProgress(1);
+			globalThis.window.setTimeout(() => {
+				this.#setOpacity(0);
+			}, animationDuration / 2);
+		} else {
+			this.#setOpacity(1);
+			this.#setProgress(progress);
+		}
+
+		this.#ticking = false;
+	};
 }
 
 if (!customElements.get('progress-reading')) {

@@ -4,38 +4,24 @@ import { getCollection } from 'astro:content';
 import { performance } from 'node:perf_hooks';
 import pMemoize from 'p-memoize';
 
+export interface CollectionResult<K extends CollectionKey> {
+	entries: Array<CollectionEntry<K>>;
+	entriesMap: Map<string, CollectionEntry<K>>;
+}
+
 interface CollectionEntryWithContentCount {
 	data: {
 		_postCount?: number | undefined;
 	};
 }
 
-export function sortByContentCount<T extends CollectionEntryWithContentCount>(
-	entryA: T,
-	entryB: T,
-) {
-	const aTotal = entryA.data._postCount ?? 0;
-	const bTotal = entryB.data._postCount ?? 0;
-
-	return bTotal - aTotal;
-}
-
-export function filterWithContent(entry: CollectionEntryWithContentCount) {
-	return (entry.data._postCount ?? 0) > 0;
-}
-
-export interface CollectionResult<K extends CollectionKey> {
-	entries: Array<CollectionEntry<K>>;
-	entriesMap: Map<string, CollectionEntry<K>>;
-}
-
 export function createCollectionData<K extends CollectionKey>(config: {
-	collection: K;
-	label?: string;
 	augment?: (
 		entries: Array<CollectionEntry<K>>,
 		entriesMap: Map<string, CollectionEntry<K>>,
 	) => Promise<void> | void;
+	collection: K;
+	label?: string;
 }) {
 	return pMemoize(async (): Promise<CollectionResult<K>> => {
 		const startTime = performance.now();
@@ -80,4 +66,18 @@ export function createCollectionLookupByIds<K extends CollectionKey>(
 				.filter((entry): entry is CollectionEntry<K> => !!entry);
 		};
 	};
+}
+
+export function filterWithContent(entry: CollectionEntryWithContentCount) {
+	return (entry.data._postCount ?? 0) > 0;
+}
+
+export function sortByContentCount<T extends CollectionEntryWithContentCount>(
+	entryA: T,
+	entryB: T,
+) {
+	const aTotal = entryA.data._postCount ?? 0;
+	const bTotal = entryB.data._postCount ?? 0;
+
+	return bTotal - aTotal;
 }

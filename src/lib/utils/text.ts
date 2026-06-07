@@ -3,52 +3,34 @@ import * as R from 'remeda';
 
 import { MDX_COMPONENTS_TO_STRIP } from '#constants.ts';
 
-function textClipper(
-	input: string,
-	options: { wordCount: number; trailer?: string | undefined },
-): string {
-	const words = input.split(' ');
-
-	if (words.length <= options.wordCount) {
-		return input;
-	}
-
-	const trailer = options.trailer ?? '...';
-
-	return words.slice(0, options.wordCount).join(' ') + trailer;
-}
-
-export function stripMdxComponents(input: string, componentNames: Array<string>): string {
-	const regex = new RegExp(
-		componentNames.map((name) => `<${name}(?:[^>.]*)>|</${name}>`).join('|'),
-		'gm',
-	);
-
-	return input.replace(regex, '').trim();
-}
-
 export function formatNumber({
-	number,
 	locales,
+	number,
 	options,
 }: {
-	number: string | number;
 	locales?: Intl.LocalesArgument | undefined;
+	number: number | string;
 	options?: Intl.NumberFormatOptions | undefined;
 }) {
 	return new Intl.NumberFormat(locales ?? 'en', options).format(Number(number));
 }
 
-function encodeHtmlEntities(input: string): string {
-	return input
-		.replaceAll('<', '&lt;')
-		.replaceAll('>', '&gt;')
-		.replaceAll('&', '&amp;')
-		.replaceAll('"', '&quot;');
+export function formatStringTemplate(
+	template: string,
+	values: Record<string, number | string> = {},
+): string {
+	return template.replaceAll(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ''));
 }
 
-function stripFootnoteReferences(input: string) {
-	return input.replaceAll(/\[\^[^\]]+\]/g, '');
+export function getEntryDescription(entry: {
+	body?: string | undefined;
+	data: { description?: string | undefined };
+}): string | undefined {
+	return entry.data.description ?? sanitizeDescription(entry.body);
+}
+
+export function sanitizeAltAttribute(input: string): string {
+	return encodeHtmlEntities(stripTags(input));
 }
 
 export function sanitizeDescription(description: string | undefined) {
@@ -64,20 +46,38 @@ export function sanitizeDescription(description: string | undefined) {
 		: undefined;
 }
 
-export function getEntryDescription(entry: {
-	data: { description?: string | undefined };
-	body?: string | undefined;
-}): string | undefined {
-	return entry.data.description ?? sanitizeDescription(entry.body);
+export function stripMdxComponents(input: string, componentNames: Array<string>): string {
+	const regex = new RegExp(
+		componentNames.map((name) => `<${name}(?:[^>.]*)>|</${name}>`).join('|'),
+		'gm',
+	);
+
+	return input.replace(regex, '').trim();
 }
 
-export function sanitizeAltAttribute(input: string): string {
-	return encodeHtmlEntities(stripTags(input));
+function encodeHtmlEntities(input: string): string {
+	return input
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('&', '&amp;')
+		.replaceAll('"', '&quot;');
 }
 
-export function formatStringTemplate(
-	template: string,
-	values: Record<string, string | number> = {},
+function stripFootnoteReferences(input: string) {
+	return input.replaceAll(/\[\^[^\]]+\]/g, '');
+}
+
+function textClipper(
+	input: string,
+	options: { trailer?: string | undefined; wordCount: number },
 ): string {
-	return template.replaceAll(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ''));
+	const words = input.split(' ');
+
+	if (words.length <= options.wordCount) {
+		return input;
+	}
+
+	const trailer = options.trailer ?? '...';
+
+	return words.slice(0, options.wordCount).join(' ') + trailer;
 }

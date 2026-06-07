@@ -6,39 +6,39 @@ import type { DatePreset } from '#lib/utils/date.ts';
 import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
 
 interface Props extends HTMLAttributes<'time'> {
-	date: string | Date;
-	datePreset?: DatePreset;
+	date: Date | string;
 	dateOptions?: Intl.DateTimeFormatOptions | undefined;
+	datePreset?: DatePreset;
 }
 
 const datePresets = {
-	[DatePresetEnum.Short]: {
-		year: 'numeric',
-		month: 'numeric',
-		day: 'numeric',
-		hour12: false,
-		timeZone: 'UTC',
-	},
-	[DatePresetEnum.Medium]: {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric',
-		hour12: false,
-		timeZone: 'UTC',
-	},
 	[DatePresetEnum.Long]: {
-		year: 'numeric',
-		month: 'long',
 		day: 'numeric',
 		hour: 'numeric',
-		minute: 'numeric',
 		hour12: false,
+		minute: 'numeric',
+		month: 'long',
 		timeZone: 'UTC',
 		timeZoneName: 'short',
+		year: 'numeric',
+	},
+	[DatePresetEnum.Medium]: {
+		day: 'numeric',
+		hour12: false,
+		month: 'long',
+		timeZone: 'UTC',
+		year: 'numeric',
+	},
+	[DatePresetEnum.Short]: {
+		day: 'numeric',
+		hour12: false,
+		month: 'numeric',
+		timeZone: 'UTC',
+		year: 'numeric',
 	},
 } satisfies Record<DatePreset, Intl.DateTimeFormatOptions>;
 
-const { date, datePreset = DatePresetEnum.Medium, dateOptions, ...props } = Astro.props;
+const { date, dateOptions, datePreset = DatePresetEnum.Medium, ...props } = Astro.props;
 
 const dateRaw = parseContentDate(date);
 
