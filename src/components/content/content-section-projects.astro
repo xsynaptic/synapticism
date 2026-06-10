@@ -1,0 +1,39 @@
+---
+import DividedItem from '#components/parts/divided-item.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
+import Link from '#components/parts/link.astro';
+import ListRow from '#components/parts/list-row.astro';
+import { createProjectsByIdsFunction } from '#lib/collections/projects/projects-utils.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getContentUrl } from '#lib/utils/routing.ts';
+
+interface Props {
+	projectIds: Array<string> | undefined;
+}
+
+const { projectIds } = Astro.props;
+
+const getProjectsByIds = await createProjectsByIdsFunction();
+
+const projects = projectIds
+	? getProjectsByIds(projectIds).sort((projectA, projectB) =>
+			projectA.data.title.localeCompare(projectB.data.title),
+		)
+	: undefined;
+---
+
+{
+	projects && projects.length > 0 ? (
+		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.projects')}>
+			<ListRow>
+				{projects.map((item) => (
+					<DividedItem as="li" class="font-mono text-sm after:text-sm after:font-light">
+						<Link href={getContentUrl(item.collection, item.id)} linkColor="accent">
+							{item.data.title}
+						</Link>
+					</DividedItem>
+				))}
+			</ListRow>
+		</LabeledSection>
+	) : undefined
+}

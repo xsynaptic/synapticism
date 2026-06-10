@@ -36,6 +36,8 @@ const strings = {
 	'noteNav.older': 'Older note: ',
 	'section.backlinks': 'Backlinks',
 	'section.moreNotes': 'More Notes',
+	'section.projects': 'Projects',
+	'section.relatedWriting': 'Related writing',
 	'section.source': 'Source',
 	'section.tags': 'Tags',
 

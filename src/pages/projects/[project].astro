@@ -4,15 +4,22 @@ import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 import ProjectDetail from '#layouts/project-detail.astro';
 import { getCatalog } from '#lib/catalog/catalog-data.js';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.js';
+import { queryProjectEntryContent } from '#lib/collections/projects/projects-utils.js';
 
 export const getStaticPaths = (async () => {
 	const { entries } = await getProjectsCollection();
 	const catalog = await getCatalog();
 
-	return entries.map((entry) => ({
-		params: { project: entry.id },
-		props: { backlinks: catalog.backlinksOf(entry.id), entry },
-	}));
+	return Promise.all(
+		entries.map(async (entry) => ({
+			params: { project: entry.id },
+			props: {
+				backlinks: catalog.backlinksOf(entry.id),
+				entry,
+				relatedContent: await queryProjectEntryContent(entry),
+			},
+		})),
+	);
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;

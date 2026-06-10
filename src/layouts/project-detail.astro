@@ -10,6 +10,7 @@ import MainSite from '#components/main/main-site.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
+import SectionRelatedContent from '#components/sections/section-related-content.astro';
 import { renderContent } from '#lib/utils/astro.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
@@ -19,9 +20,10 @@ import { getEntryDescription } from '#lib/utils/text.ts';
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
 	entry: CollectionEntry<'projects'>;
+	relatedContent: Array<CatalogItem> | undefined;
 }
 
-const { backlinks, entry } = Astro.props;
+const { backlinks, entry, relatedContent } = Astro.props;
 
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
@@ -65,5 +67,6 @@ const { components, Content } = await renderContent(entry);
 		</ProseBody>
 		<ContentSectionTags tagIds={tagIds} />
 	</article>
+	<SectionRelatedContent entries={relatedContent} />
 	<SectionBacklinks backlinks={backlinks} />
 </MainSite>

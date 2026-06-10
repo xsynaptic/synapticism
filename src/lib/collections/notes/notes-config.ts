@@ -9,6 +9,7 @@ export const notes = defineCollection({
 	schema: contentBaseSchema
 		.extend({
 			links: LinkItemSchema.array().optional(),
+			projects: reference('projects').array().optional(),
 			source: SourceSchema.optional(),
 			tags: reference('tags').array().optional(),
 		})
