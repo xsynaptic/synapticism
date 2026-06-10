@@ -13,6 +13,7 @@ export type CatalogCollectionKey = Extract<
 export interface CatalogItem<T extends CatalogCollectionKey = CatalogCollectionKey> {
 	backlinks: Set<string>;
 	collection: T;
+	contentCount: number | undefined;
 	dateCreated: Date;
 	dateUpdated: Date | undefined;
 	description: string | undefined;
@@ -21,7 +22,6 @@ export interface CatalogItem<T extends CatalogCollectionKey = CatalogCollectionK
 	imageId: string | undefined;
 	links: Array<z.infer<typeof LinkItemSchema>> | undefined;
 	linksCount: number | undefined;
-	postCount: number | undefined;
 	title: string;
 	url: string;
 	wordCount: number | undefined;

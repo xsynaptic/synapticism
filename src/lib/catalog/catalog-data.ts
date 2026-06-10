@@ -47,6 +47,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 			catalogItemsById.set(entry.id, {
 				backlinks: new Set<string>(),
 				collection: entry.collection,
+				contentCount: '_contentCount' in entry.data ? entry.data._contentCount : undefined,
 				dateCreated:
 					parseContentDate(entry.data.dateCreated) ?? new Date(String(SITE_YEAR_FOUNDED)),
 				dateUpdated: parseContentDate(
@@ -58,7 +59,6 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 				imageId: 'imageFeatured' in entry.data ? entry.data.imageFeatured : undefined,
 				links: 'links' in entry.data ? entry.data.links : undefined,
 				linksCount: getLinksCount(entry),
-				postCount: '_postCount' in entry.data ? entry.data._postCount : undefined,
 				title: entry.data.title,
 				url: getContentUrl(entry.collection, entry.id),
 				wordCount: getWordCount(entry),

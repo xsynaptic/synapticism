@@ -11,7 +11,7 @@ export interface CollectionResult<K extends CollectionKey> {
 
 interface CollectionEntryWithContentCount {
 	data: {
-		_postCount?: number | undefined;
+		_contentCount?: number | undefined;
 	};
 }
 
@@ -69,15 +69,15 @@ export function createCollectionLookupByIds<K extends CollectionKey>(
 }
 
 export function filterWithContent(entry: CollectionEntryWithContentCount) {
-	return (entry.data._postCount ?? 0) > 0;
+	return (entry.data._contentCount ?? 0) > 0;
 }
 
 export function sortByContentCount<T extends CollectionEntryWithContentCount>(
 	entryA: T,
 	entryB: T,
 ) {
-	const aTotal = entryA.data._postCount ?? 0;
-	const bTotal = entryB.data._postCount ?? 0;
+	const aTotal = entryA.data._contentCount ?? 0;
+	const bTotal = entryB.data._contentCount ?? 0;
 
 	return bTotal - aTotal;
 }

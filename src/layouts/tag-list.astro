@@ -7,6 +7,7 @@ import MainSite from '#components/main/main-site.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import Link from '#components/parts/link.astro';
 import ListRow from '#components/parts/list-row.astro';
+import { groupTagsByLetter } from '#lib/collections/tags/tags-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
@@ -15,6 +16,8 @@ interface Props {
 }
 
 const { tags } = Astro.props;
+
+const groups = groupTagsByLetter(tags);
 ---
 
 <MainSite
@@ -28,19 +31,28 @@ const { tags } = Astro.props;
 	</ContentHeader>
 	<ContentSection>
 		{
-			tags.length > 0 ? (
-				<ListRow>
-					{tags.map((tag) => (
-						<DividedItem as="li" class="font-serif text-sm after:text-sm after:font-light">
-							<Link href={getContentUrl(tag.collection, tag.id)}>
-								{tag.data.title}
-								{tag.data._postCount ? (
-									<span class="text-xs text-primary-400">({String(tag.data._postCount)})</span>
-								) : undefined}
-							</Link>
-						</DividedItem>
+			groups.length > 0 ? (
+				<div class="flex flex-col gap-medium">
+					{groups.map((group) => (
+						<section class="flex flex-col gap-2">
+							<h2 class="font-mono text-sm font-semibold text-primary-400">{group.letter}</h2>
+							<ListRow>
+								{group.tags.map((tag) => (
+									<DividedItem as="li" class="font-serif text-sm after:text-sm after:font-light">
+										<Link href={getContentUrl(tag.collection, tag.id)}>
+											{tag.data.title}
+											{tag.data._contentCount ? (
+												<span class="text-xs text-primary-400">
+													({String(tag.data._contentCount)})
+												</span>
+											) : undefined}
+										</Link>
+									</DividedItem>
+								))}
+							</ListRow>
+						</section>
 					))}
-				</ListRow>
+				</div>
 			) : (
 				<p class="text-sm text-primary-500">{t('tags.empty')}</p>
 			)

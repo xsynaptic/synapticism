@@ -5,6 +5,7 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentDate from '#components/content/content-date.astro';
 import ContentHeader from '#components/content/content-header.astro';
+import ContentSectionTags from '#components/content/content-section-tags.astro';
 import MainSite from '#components/main/main-site.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
@@ -21,6 +22,8 @@ interface Props {
 }
 
 const { backlinks, entry } = Astro.props;
+
+const tagIds = entry.data.tags?.map(({ id }) => id);
 
 const { components, Content } = await renderContent(entry);
 ---
@@ -60,6 +63,7 @@ const { components, Content } = await renderContent(entry);
 		<ProseBody class:list={['content', 'e-content', 'pb-small']} data-reading-frame>
 			<Content components={components} />
 		</ProseBody>
+		<ContentSectionTags tagIds={tagIds} />
 	</article>
 	<SectionBacklinks backlinks={backlinks} />
 </MainSite>

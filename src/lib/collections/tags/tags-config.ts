@@ -9,7 +9,7 @@ export const tags = defineCollection({
 	loader: glob({ base: `${CONTENT_COLLECTIONS_PATH}/tags`, pattern: '**/[^_]*.(md|mdx)' }),
 	schema: z
 		.object({
-			_postCount: z.number().int().optional(),
+			_contentCount: z.number().int().optional(),
 			dateCreated: DateStringSchema,
 			dateUpdated: DateStringSchema.optional(),
 			description: z.string().optional(),
