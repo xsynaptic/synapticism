@@ -4,6 +4,7 @@ import Link from '#components/parts/link.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
 import { CONTENT_EXCERPT_IDENTIFIER } from '#constants.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
@@ -48,7 +49,7 @@ const hasExcerpt = excerptSplit.length > 1;
 	{
 		hasExcerpt ? (
 			<Container as="div" class="text-right font-serif font-medium italic">
-				<Link href={entryUrl}>Continue reading</Link>&nbsp;&raquo;
+				<Link href={entryUrl}>{t('content.continueReading')}</Link>&nbsp;&raquo;
 			</Container>
 		) : undefined
 	}

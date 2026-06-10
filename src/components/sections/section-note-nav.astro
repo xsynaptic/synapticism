@@ -3,6 +3,7 @@ import type { NoteNavItem } from '#components/types.ts';
 
 import LabeledSection from '#components/parts/labeled-section.astro';
 import Link from '#components/parts/link.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
 interface Props {
@@ -15,7 +16,7 @@ const { newer, older } = Astro.props;
 const notesUrl = getContentUrl('notes');
 ---
 
-<LabeledSection data-nosnippet data-pagefind-ignore label="More Notes">
+<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.moreNotes')}>
 	<nav class="flex items-baseline gap-4 text-sm">
 		<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1.5">
 			{
@@ -25,20 +26,20 @@ const notesUrl = getContentUrl('notes');
 							&larr;
 						</span>
 						<Link class="link-underline min-w-0" href={newer.url} linkColor="accent">
-							<span class="sr-only">Newer note: </span>
+							<span class="sr-only">{t('noteNav.newer')}</span>
 							{newer.title}
 						</Link>
 					</Fragment>
 				) : undefined
 			}
 		</span>
-		<Link class="shrink-0" href={notesUrl} linkColor="accent">All Notes</Link>
+		<Link class="shrink-0" href={notesUrl} linkColor="accent">{t('noteNav.allNotes')}</Link>
 		<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1.5">
 			{
 				older ? (
 					<Fragment>
 						<Link class="link-underline min-w-0" href={older.url} linkColor="accent">
-							<span class="sr-only">Older note: </span>
+							<span class="sr-only">{t('noteNav.older')}</span>
 							{older.title}
 						</Link>
 						<span aria-hidden="true" class="shrink-0 text-primary-600">

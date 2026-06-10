@@ -5,6 +5,7 @@ import type { LinkItemSchema, SourceSchema } from '#lib/schemas/content.ts';
 
 import LabeledSection from '#components/parts/labeled-section.astro';
 import Link from '#components/parts/link.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
@@ -17,7 +18,7 @@ const { links, source } = Astro.props;
 
 {
 	links && links.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore label="Source">
+		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.source')}>
 			<ul class="flex flex-col gap-3 text-sm">
 				{links.map((link, index) => (
 					<li>
@@ -34,7 +35,7 @@ const { links, source } = Astro.props;
 							{getSourceDomain(link.url)}
 							{index === 0 && source ? (
 								<Fragment>
-									{' · via '}
+									{t('content.via')}
 									{source.url ? (
 										<Link
 											class="link-underline"

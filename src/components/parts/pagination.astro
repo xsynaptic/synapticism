@@ -6,7 +6,9 @@ import * as R from 'remeda';
 import urlJoin from 'url-join';
 
 import Link from '#components/parts/link.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSiteUrl } from '#lib/utils/routing.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props extends HTMLAttributes<'nav'> {
 	page: Page;
@@ -118,7 +120,7 @@ const pageNextLink = url.next ?? undefined;
 
 {
 	pagePrevLink || pageNextLink ? (
-		<nav aria-label="Pagination" class:list={[className]} {...props}>
+		<nav aria-label={t('aria.pagination')} class:list={[className]} {...props}>
 			<ul
 				class:list={[
 					'flex flex-wrap gap-4 text-base font-medium tabular-nums select-none md:gap-1 md:text-sm',
@@ -128,8 +130,8 @@ const pageNextLink = url.next ?? undefined;
 				{pagePrevLink ? (
 					<li class="flex flex-wrap gap-1 pr-2">
 						<span class="text-accent-300 select-none">&lsaquo;</span>
-						<Link aria-label="Previous page" href={pagePrevLink}>
-							Previous
+						<Link aria-label={t('aria.prevPage')} href={pagePrevLink}>
+							{t('pagination.previous')}
 						</Link>
 					</li>
 				) : undefined}
@@ -158,7 +160,9 @@ const pageNextLink = url.next ?? undefined;
 									]}
 								>
 									<Link
-										aria-label={`Go to page ${String(item.pageNumber)}`}
+										aria-label={formatStringTemplate(t('aria.goToPage'), {
+											page: item.pageNumber,
+										})}
 										class="px-2"
 										href={getPageNumberLink(item.pageNumber)}
 									>
@@ -171,8 +175,8 @@ const pageNextLink = url.next ?? undefined;
 				})}
 				{pageNextLink ? (
 					<li class="flex flex-wrap gap-1 pl-2">
-						<Link aria-label="Next page" href={pageNextLink}>
-							Next
+						<Link aria-label={t('aria.nextPage')} href={pageNextLink}>
+							{t('pagination.next')}
 						</Link>
 						<span class="text-accent-300 select-none">&rsaquo;</span>
 					</li>

@@ -2,22 +2,23 @@
 import ContentHeader from '#components/content/content-header.astro';
 import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSeoHideSearch } from '#lib/utils/seo.ts';
 ---
 
 <MainSite
 	meta={{
-		description: 'The page you were looking for could not be found.',
-		title: 'Page Not Found',
+		description: t('notFound.description'),
+		title: t('notFound.title'),
 		...getSeoHideSearch(true),
 	}}
 >
 	<ContentHeader>
-		<Fragment slot="header-title">Page Not Found</Fragment>
+		<Fragment slot="header-title">{t('notFound.title')}</Fragment>
 	</ContentHeader>
 	<ContentSection>
 		<Fragment slot="section-description">
-			<p>The page you were looking for could not be found. It may have been moved or deleted.</p>
+			<p>{t('notFound.body')}</p>
 		</Fragment>
 	</ContentSection>
 </MainSite>

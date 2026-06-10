@@ -3,6 +3,7 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import LabeledSection from '#components/parts/labeled-section.astro';
 import Link from '#components/parts/link.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
@@ -13,7 +14,7 @@ const { backlinks } = Astro.props;
 
 {
 	backlinks && backlinks.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore label="Backlinks">
+		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.backlinks')}>
 			<ul class="flex flex-col gap-1 text-sm">
 				{backlinks.map(({ title, url }) => (
 					<li>

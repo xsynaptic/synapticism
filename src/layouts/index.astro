@@ -4,9 +4,10 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import MainSite from '#components/main/main-site.astro';
 import Container from '#components/parts/container.astro';
 import DateDisplay from '#components/parts/date-display.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
-import { getSourceDomain } from '#lib/utils/text.ts';
+import { formatStringTemplate, getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
 	pageNumber: number;
@@ -31,12 +32,17 @@ const mainProps = isFirstPage
 	? {
 			schemas: [
 				buildWebSiteSchema({
-					description: 'A technical blog about web development, design, and creative coding.',
-					name: 'Synapticism',
+					description: t('site.description'),
+					name: t('site.title'),
 				}),
 			],
 		}
-	: { meta: { noIndex: true, title: `Page ${String(pageNumber)}` } };
+	: {
+			meta: {
+				noIndex: true,
+				title: formatStringTemplate(t('index.pageTitle'), { page: pageNumber }),
+			},
+		};
 ---
 
 <MainSite {...mainProps}>
@@ -44,17 +50,16 @@ const mainProps = isFirstPage
 		isFirstPage ? (
 			<Container as="section" class="pt-8 pb-2 md:pt-14">
 				<h1 class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]">
-					I&rsquo;m Alexander Synaptic, a web developer and designer.
+					{t('index.heroHeading')}
 				</h1>
 				<p class="mt-4 max-w-[60ch] text-base leading-relaxed text-pretty text-primary-600 md:text-lg">
-					Synapticism is my notebook in the open: field notes from real projects, experiments with
-					typography and creative code, and longer pieces when an idea earns the room.
+					{t('index.heroSubtitle')}
 				</p>
 				<p class="mt-5 font-mono text-xs text-primary-600">
 					<span aria-hidden="true" class="text-accent-700">
 						//
 					</span>{' '}
-					web development, design, creative coding
+					{t('index.tagline')}
 				</p>
 			</Container>
 		) : undefined
@@ -64,7 +69,7 @@ const mainProps = isFirstPage
 		streamItems.length > 0 ? (
 			<Container as="section" class:list={[isFirstPage ? 'mt-14 md:mt-20' : 'pt-8 md:pt-14']}>
 				<div class="flex items-center gap-4">
-					<h2 class="font-mono text-sm font-medium text-primary-600">Recently</h2>
+					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.recently')}</h2>
 					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
 				</div>
 				<ul class="mt-6 flex flex-col">
@@ -101,13 +106,13 @@ const mainProps = isFirstPage
 					})}
 				</ul>
 				{totalPages > 1 ? (
-					<nav aria-label="Stream pagination" class="mt-10 flex justify-between font-mono text-sm">
+					<nav aria-label={t('aria.streamPagination')} class="mt-10 flex justify-between font-mono text-sm">
 						{previousUrl ? (
 							<a
 								class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
 								href={previousUrl}
 							>
-								<span aria-hidden="true">&larr;</span> Newer
+								<span aria-hidden="true">&larr;</span> {t('index.newer')}
 							</a>
 						) : (
 							<span />
@@ -117,7 +122,7 @@ const mainProps = isFirstPage
 								class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
 								href={nextUrl}
 							>
-								Older <span aria-hidden="true">&rarr;</span>
+								{t('index.older')} <span aria-hidden="true">&rarr;</span>
 							</a>
 						) : (
 							<span />
@@ -132,7 +137,7 @@ const mainProps = isFirstPage
 		isFirstPage && selectedProjects && selectedProjects.length > 0 ? (
 			<Container as="section" class="mt-14 pb-16 md:mt-20 md:pb-24">
 				<div class="flex items-center gap-4">
-					<h2 class="font-mono text-sm font-medium text-primary-600">Selected work</h2>
+					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.selectedWork')}</h2>
 					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
 				</div>
 				<ul class="mt-6 flex flex-col gap-5">
@@ -161,7 +166,7 @@ const mainProps = isFirstPage
 						class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
 						href="/projects"
 					>
-						All projects <span aria-hidden="true">&rarr;</span>
+						{t('index.allProjects')} <span aria-hidden="true">&rarr;</span>
 					</a>
 				</p>
 			</Container>

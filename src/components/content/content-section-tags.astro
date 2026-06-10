@@ -4,6 +4,7 @@ import LabeledSection from '#components/parts/labeled-section.astro';
 import Link from '#components/parts/link.astro';
 import ListRow from '#components/parts/list-row.astro';
 import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { sortByContentCount } from '#lib/utils/collections.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
@@ -21,7 +22,7 @@ const tags = tagIds ? getTagsByIds(tagIds).sort(sortByContentCount) : undefined;
 
 {
 	tags && tags.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore label="Tags" {...props}>
+		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.tags')} {...props}>
 			<ListRow>
 				{tags.map((item) => (
 					<DividedItem

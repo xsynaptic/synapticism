@@ -15,6 +15,7 @@ import MenuHeader from '#components/menu/menu-header.astro';
 import Container from '#components/parts/container.astro';
 import Link from '#components/parts/link.astro';
 import ProgressReading from '#components/progress/progress-reading.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSiteUrl } from '#lib/utils/routing.ts';
 import { serializeGraph } from '#lib/utils/structured-data.ts';
 
@@ -49,7 +50,7 @@ const siteUrl = getSiteUrl();
 			'bg-primary-100 text-primary-700',
 		]}
 	>
-		<SkipLink label="Skip to content" />
+		<SkipLink label={t('site.skipToContent')} />
 		<header class:list={['transition-colors', 'z-40']}>
 			<div class:list={['py-3 lg:py-4', 'bg-primary-800']}>
 				<Container class="flex flex-wrap items-center justify-between gap-2">
@@ -59,7 +60,7 @@ const siteUrl = getSiteUrl();
 							href={siteUrl}
 							linkColor="on-dark"
 						>
-							Synapticism
+							{t('site.title')}
 						</Link>
 					</h2>
 					<div class="relative" id="search"></div>

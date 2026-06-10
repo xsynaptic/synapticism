@@ -2,7 +2,9 @@
 import DividedItem from '#components/parts/divided-item.astro';
 import Link from '#components/parts/link.astro';
 import { SITE_YEAR_FOUNDED } from '#constants.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSiteUrl } from '#lib/utils/routing.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
 
 const currentYear = new Date().getFullYear();
 const copyrightYears =
@@ -13,12 +15,12 @@ const copyrightYears =
 
 <div class="flex flex-wrap items-center gap-x-1 text-xs text-primary-600">
 	<DividedItem as="span" dividerContent="slash">
-		&copy;{copyrightYears} A. Synaptic.
+		{formatStringTemplate(t('footer.copyright'), { years: copyrightYears })}
 	</DividedItem>
 	<DividedItem as="span" dividerContent="slash">
-		Built with <Link href="https://astro.build" linkColor="primary-bright">Astro</Link>
+		{t('footer.builtWith')} <Link href="https://astro.build" linkColor="primary-bright">Astro</Link>
 	</DividedItem>
 	<DividedItem as="span" dividerContent="slash">
-		<Link href={`${getSiteUrl()}rss.xml`} linkColor="primary-bright">RSS</Link>
+		<Link href={`${getSiteUrl()}rss.xml`} linkColor="primary-bright">{t('footer.rss')}</Link>
 	</DividedItem>
 </div>

@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import MainSite from '#components/main/main-site.astro';
 import Container from '#components/parts/container.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 
 const ResumeDataSchema = z.object({
 	basics: z.object({
@@ -99,7 +100,7 @@ const { basics, education, projects, skills, work } = resume;
 			<p>{basics.summary}</p>
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">Skills</h2>
+			<h2 class="text-lg font-bold">{t('cv.skills')}</h2>
 			<ul>
 				{
 					skills.map((skill) => (
@@ -112,7 +113,7 @@ const { basics, education, projects, skills, work } = resume;
 			</ul>
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">Experience</h2>
+			<h2 class="text-lg font-bold">{t('cv.experience')}</h2>
 			{
 				work.map((job) => (
 					<div class="flex flex-col gap-2">
@@ -131,7 +132,7 @@ const { basics, education, projects, skills, work } = resume;
 											month: 'long',
 											year: 'numeric',
 										})
-									: 'Present'}
+									: t('cv.present')}
 							</span>
 						</div>
 						<ul>
@@ -146,7 +147,7 @@ const { basics, education, projects, skills, work } = resume;
 			}
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">Projects</h2>
+			<h2 class="text-lg font-bold">{t('cv.projects')}</h2>
 			{
 				projects.map((project) => (
 					<div class="flex flex-col gap-2">
@@ -158,7 +159,7 @@ const { basics, education, projects, skills, work } = resume;
 								</h3>
 								{project.repo ? (
 									<a class="text-sm text-neutral-500 print:hidden" href={project.repo}>
-										GitHub
+										{t('cv.github')}
 									</a>
 								) : undefined}
 							</div>
@@ -180,7 +181,7 @@ const { basics, education, projects, skills, work } = resume;
 			}
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">Education</h2>
+			<h2 class="text-lg font-bold">{t('cv.education')}</h2>
 			{
 				education.map((edu) => (
 					<div>

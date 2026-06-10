@@ -9,6 +9,7 @@ import DateDisplay from '#components/parts/date-display.astro';
 import Link from '#components/parts/link.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 import { getEntryDescription } from '#lib/utils/text.ts';
@@ -22,13 +23,13 @@ const { page } = Astro.props;
 
 <MainSite
 	meta={{
-		description: 'Articles about web development, design, and creative coding.',
+		description: t('posts.description'),
 		noIndex: page.currentPage > 1,
-		title: 'Posts',
+		title: t('posts.title'),
 	}}
 >
 	<ContentHeader>
-		<Fragment slot="header-title">Posts</Fragment>
+		<Fragment slot="header-title">{t('posts.title')}</Fragment>
 		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
 	</ContentHeader>
 	<ContentSection>

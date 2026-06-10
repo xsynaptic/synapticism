@@ -2,15 +2,8 @@
 import type { CatalogCollectionKey } from '#lib/catalog/catalog-types.ts';
 
 import Link from '#components/parts/link.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSiteUrl } from '#lib/utils/routing.ts';
-
-const collectionLabels: Record<CatalogCollectionKey, string> = {
-	notes: 'Notes',
-	pages: 'Pages',
-	posts: 'Posts',
-	projects: 'Projects',
-	tags: 'Tags',
-};
 
 interface Props {
 	collection: CatalogCollectionKey;
@@ -22,5 +15,5 @@ const collectionUrl = getSiteUrl(collection);
 ---
 
 <Link class="font-semibold" href={collectionUrl} linkColor="highlight" {...props}>
-	{collectionLabels[collection]}
+	{t(`collection.${collection}`)}
 </Link>

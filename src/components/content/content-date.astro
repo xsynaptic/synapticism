@@ -4,6 +4,7 @@ import type { HTMLAttributes } from 'astro/types';
 import type { DatePreset } from '#lib/utils/date.ts';
 
 import DateDisplay from '#components/parts/date-display.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 
 interface Props extends HTMLAttributes<'div'> {
@@ -20,7 +21,7 @@ const { date, datePreset, showMicroformats = false, showUpdated = false } = Astr
 	date ? (
 		showUpdated ? (
 			<>
-				Updated{' '}
+				{t('content.updated')}{' '}
 				<DateDisplay
 					class:list={[showMicroformats ? MicroformatClassNames.DateUpdated : undefined]}
 					date={date}

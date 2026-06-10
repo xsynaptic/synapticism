@@ -7,6 +7,7 @@ import MainSite from '#components/main/main-site.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import Link from '#components/parts/link.astro';
 import ListRow from '#components/parts/list-row.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
 interface Props {
@@ -18,12 +19,12 @@ const { tags } = Astro.props;
 
 <MainSite
 	meta={{
-		description: 'Browse all tags on Synapticism.',
-		title: 'Tags',
+		description: t('tags.description'),
+		title: t('tags.title'),
 	}}
 >
 	<ContentHeader>
-		<Fragment slot="header-title">Tags</Fragment>
+		<Fragment slot="header-title">{t('tags.title')}</Fragment>
 	</ContentHeader>
 	<ContentSection>
 		{
@@ -41,7 +42,7 @@ const { tags } = Astro.props;
 					))}
 				</ListRow>
 			) : (
-				<p class="text-sm text-primary-500">No tags yet.</p>
+				<p class="text-sm text-primary-500">{t('tags.empty')}</p>
 			)
 		}
 	</ContentSection>
