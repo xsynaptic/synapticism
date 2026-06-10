@@ -18,7 +18,8 @@ const copyrightYears =
 		{formatStringTemplate(t('footer.copyright'), { years: copyrightYears })}
 	</DividedItem>
 	<DividedItem as="span" dividerContent="slash">
-		{t('footer.builtWith')} <Link href="https://astro.build" linkColor="primary-bright">Astro</Link>
+		{t('footer.builtWith')}
+		<Link href="https://astro.build" linkColor="primary-bright">Astro</Link>
 	</DividedItem>
 	<DividedItem as="span" dividerContent="slash">
 		<Link href={`${getSiteUrl()}rss.xml`} linkColor="primary-bright">{t('footer.rss')}</Link>

@@ -28,6 +28,13 @@ export default getConfig(
 				'unicorn/no-array-sort': 'off',
 			},
 		},
+		{
+			// Sort keys within each group instead of flattening the sections into one alphabetical list
+			files: ['src/lib/i18n/**/*.ts'],
+			rules: {
+				'perfectionist/sort-objects': ['error', { partitionByComment: true, type: 'natural' }],
+			},
+		},
 		// These files run in the browser and might need the browser globals
 		{
 			files: ['src/components/**/*'],

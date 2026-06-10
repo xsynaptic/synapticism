@@ -106,7 +106,10 @@ const mainProps = isFirstPage
 					})}
 				</ul>
 				{totalPages > 1 ? (
-					<nav aria-label={t('aria.streamPagination')} class="mt-10 flex justify-between font-mono text-sm">
+					<nav
+						aria-label={t('aria.streamPagination')}
+						class="mt-10 flex justify-between font-mono text-sm"
+					>
 						{previousUrl ? (
 							<a
 								class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
