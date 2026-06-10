@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'astro/types';
 
 import type { DatePreset } from '#lib/utils/date.ts';
 
-import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
+import { DatePresetEnum, hasUtcTime, parseContentDate } from '#lib/utils/date.ts';
 
 interface Props extends HTMLAttributes<'time'> {
 	date: Date | string;
@@ -14,29 +14,30 @@ interface Props extends HTMLAttributes<'time'> {
 const datePresets = {
 	[DatePresetEnum.Long]: {
 		day: 'numeric',
-		hour: 'numeric',
-		hour12: false,
-		minute: 'numeric',
 		month: 'long',
 		timeZone: 'UTC',
-		timeZoneName: 'short',
 		year: 'numeric',
 	},
 	[DatePresetEnum.Medium]: {
 		day: 'numeric',
-		hour12: false,
 		month: 'long',
 		timeZone: 'UTC',
 		year: 'numeric',
 	},
 	[DatePresetEnum.Short]: {
 		day: 'numeric',
-		hour12: false,
 		month: 'numeric',
 		timeZone: 'UTC',
 		year: 'numeric',
 	},
 } satisfies Record<DatePreset, Intl.DateTimeFormatOptions>;
+
+const timeOptions = {
+	hour: '2-digit',
+	hour12: false,
+	minute: '2-digit',
+	timeZone: 'UTC',
+} satisfies Intl.DateTimeFormatOptions;
 
 const { date, dateOptions, datePreset = DatePresetEnum.Medium, ...props } = Astro.props;
 
@@ -50,6 +51,12 @@ const dateDisplay = dateRaw.toLocaleDateString('en-US', {
 	...datePresets[datePreset],
 	...dateOptions,
 });
+
+const timeDisplay = hasUtcTime(dateRaw)
+	? `${dateRaw.toLocaleTimeString('en-US', timeOptions)} UTC`
+	: undefined;
 ---
 
-<time datetime={dateTimeAttribute} {...props}>{dateDisplay}</time>
+<time datetime={dateTimeAttribute} {...props}
+	>{timeDisplay ? `${dateDisplay} at ${timeDisplay}` : dateDisplay}</time
+>

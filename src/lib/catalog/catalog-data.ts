@@ -56,6 +56,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 				entryQuality: 'entryQuality' in entry.data ? entry.data.entryQuality : undefined,
 				id: entry.id,
 				imageId: 'imageFeatured' in entry.data ? entry.data.imageFeatured : undefined,
+				links: 'links' in entry.data ? entry.data.links : undefined,
 				linksCount: getLinksCount(entry),
 				postCount: '_postCount' in entry.data ? entry.data._postCount : undefined,
 				title: entry.data.title,

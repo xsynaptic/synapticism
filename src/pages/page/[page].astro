@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths } from 'astro';
+
+import * as R from 'remeda';
+
+import { STREAM_PAGE_SIZE } from '#constants.ts';
+import IndexLayout from '#layouts/index.astro';
+import { queryRecentStream } from '#lib/utils/stream.ts';
+
+export const getStaticPaths = (async () => {
+	const stream = await queryRecentStream();
+
+	const totalPages = Math.max(1, Math.ceil(stream.length / STREAM_PAGE_SIZE));
+
+	return R.range(2, totalPages + 1).map((pageNumber) => {
+		const start = (pageNumber - 1) * STREAM_PAGE_SIZE;
+
+		return {
+			params: { page: String(pageNumber) },
+			props: {
+				pageNumber,
+				streamItems: stream.slice(start, start + STREAM_PAGE_SIZE),
+				totalPages,
+			},
+		};
+	});
+}) satisfies GetStaticPaths;
+
+const { pageNumber, streamItems, totalPages } = Astro.props;
+---
+
+<IndexLayout
+	pageNumber={pageNumber}
+	selectedProjects={undefined}
+	streamItems={streamItems}
+	totalPages={totalPages}
+/>

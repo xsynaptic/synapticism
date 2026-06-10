@@ -1,6 +1,8 @@
 import { stylizeText } from '@xsynaptic/unified-tools';
 import { z } from 'zod';
 
+import { parseFrontmatterDate } from '#lib/utils/date.ts';
+
 export const StylizedTextSchema = z.string().transform((value) => stylizeText(value).trim());
 
 // Descriptions should meet basic SEO requirements
@@ -14,9 +16,33 @@ export const DescriptionSchema = z
 	})
 	.transform((value) => value.trim());
 
-export const DateStringSchema = z.string().transform((value) => new Date(value));
+// Dates are authored in ISO 8601, ideally with a full time (e.g. 2026-06-08T14:30:00Z). A bare
+// date or a missing time is allowed; the display falls back to a calendar date in that case. YAML
+// parses an unquoted ISO value into a UTC Date directly; a quoted (or legacy) value arrives as a
+// string and is parsed as UTC here.
+export const DateStringSchema = z
+	.union([z.date(), z.string()])
+	.refine(
+		(value) =>
+			!Number.isNaN((value instanceof Date ? value : parseFrontmatterDate(value)).getTime()),
+		{ message: 'Invalid date. Use ISO 8601, for example 2026-06-08 or 2026-06-08T14:30:00Z.' },
+	)
+	.transform((value) => (value instanceof Date ? value : parseFrontmatterDate(value)));
 
 export const NumericScaleSchema = z.number().int().min(1).max(5);
+
+// An external link: the thing a note points to. Both fields required.
+export const LinkItemSchema = z.object({
+	title: z.string(),
+	url: z.url(),
+});
+
+// Where a note was found. "via" is a render label; the data is a source. URL optional so a
+// name-only credit works.
+export const SourceSchema = z.object({
+	title: z.string(),
+	url: z.url().optional(),
+});
 
 export const contentBaseSchema = z.object({
 	dateCreated: DateStringSchema,

@@ -1,6 +1,6 @@
 ---
-import ContentSection from '#components/content/content-section.astro';
 import DividedItem from '#components/parts/divided-item.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
 import Link from '#components/parts/link.astro';
 import ListRow from '#components/parts/list-row.astro';
 import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
@@ -21,22 +21,23 @@ const tags = tagIds ? getTagsByIds(tagIds).sort(sortByContentCount) : undefined;
 
 {
 	tags && tags.length > 0 ? (
-		<ContentSection data-nosnippet data-pagefind-ignore {...props}>
-			<Fragment slot="section-title">Tags</Fragment>
+		<LabeledSection data-nosnippet data-pagefind-ignore label="Tags" {...props}>
 			<ListRow>
 				{tags.map((item) => (
 					<DividedItem
 						as="li"
 						class:list={[
-							'font-serif text-sm after:text-sm after:font-light',
+							'font-mono text-sm after:text-sm after:font-light',
 							MicroformatClassNames.Category,
 						]}
 						data-pagefind-filter="tag"
 					>
-						<Link href={getContentUrl(item.collection, item.id)}>{item.data.title}</Link>
+						<Link href={getContentUrl(item.collection, item.id)} linkColor="accent">
+							{item.data.title}
+						</Link>
 					</DividedItem>
 				))}
 			</ListRow>
-		</ContentSection>
+		</LabeledSection>
 	) : undefined
 }

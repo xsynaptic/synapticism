@@ -11,6 +11,21 @@
 	color: var(--link-hover);
 }
 
+/* Reading-surface link affordance: an underline matching the prose treatment, for links that sit
+   among text (the link-note destination, prev/next titles) so they read as the same object. */
+.link-underline {
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-decoration-color: var(--color-accent-300);
+	text-underline-offset: 2px;
+	transition: text-decoration-color 0.15s ease;
+}
+
+.link-underline:hover,
+.link-underline:focus-visible {
+	text-decoration-color: var(--color-accent-500);
+}
+
 .link-primary {
 	--link-color: var(--color-primary-800);
 	--link-hover: var(--color-primary-600);

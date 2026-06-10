@@ -32,3 +32,6 @@ export const TAILWIND_CONTENT_PADDING_MD = '4rem';
 export const SITE_YEAR_FOUNDED = 2024;
 
 export const SITE_AUTHOR_NAME = 'Alexander Synaptic';
+
+// Entries per page in the interleaved homepage stream
+export const STREAM_PAGE_SIZE = 20;

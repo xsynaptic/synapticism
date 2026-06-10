@@ -29,6 +29,10 @@ export function getEntryDescription(entry: {
 	return entry.data.description ?? sanitizeDescription(entry.body);
 }
 
+export function getSourceDomain(url: string): string {
+	return new URL(url).hostname.replace(/^www\./, '');
+}
+
 export function sanitizeAltAttribute(input: string): string {
 	return encodeHtmlEntities(stripTags(input));
 }

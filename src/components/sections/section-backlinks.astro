@@ -1,7 +1,7 @@
 ---
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
-import ContentSection from '#components/content/content-section.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
 import Link from '#components/parts/link.astro';
 
 interface Props {
@@ -13,15 +13,16 @@ const { backlinks } = Astro.props;
 
 {
 	backlinks && backlinks.length > 0 ? (
-		<ContentSection data-nosnippet data-pagefind-ignore>
-			<Fragment slot="section-title">Backlinks</Fragment>
+		<LabeledSection data-nosnippet data-pagefind-ignore label="Backlinks">
 			<ul class="flex flex-col gap-1 text-sm">
 				{backlinks.map(({ title, url }) => (
 					<li>
-						<Link href={url}>{title}</Link>
+						<Link class="link-underline" href={url} linkColor="accent">
+							{title}
+						</Link>
 					</li>
 				))}
 			</ul>
-		</ContentSection>
+		</LabeledSection>
 	) : undefined
 }

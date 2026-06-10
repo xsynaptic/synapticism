@@ -1,0 +1,59 @@
+---
+import type { z } from 'zod';
+
+import type { LinkItemSchema, SourceSchema } from '#lib/schemas/content.ts';
+
+import LabeledSection from '#components/parts/labeled-section.astro';
+import Link from '#components/parts/link.astro';
+import { getSourceDomain } from '#lib/utils/text.ts';
+
+interface Props {
+	links: Array<z.infer<typeof LinkItemSchema>> | undefined;
+	source: undefined | z.infer<typeof SourceSchema>;
+}
+
+const { links, source } = Astro.props;
+---
+
+{
+	links && links.length > 0 ? (
+		<LabeledSection data-nosnippet data-pagefind-ignore label="Source">
+			<ul class="flex flex-col gap-3 text-sm">
+				{links.map((link, index) => (
+					<li>
+						<Link
+							class="link-underline"
+							href={link.url}
+							linkColor="accent"
+							rel="noopener"
+							target="_blank"
+						>
+							{link.title}
+						</Link>
+						<span class="mt-0.5 block font-mono text-xs text-primary-600">
+							{getSourceDomain(link.url)}
+							{index === 0 && source ? (
+								<Fragment>
+									{' · via '}
+									{source.url ? (
+										<Link
+											class="link-underline"
+											href={source.url}
+											linkColor="accent"
+											rel="noopener"
+											target="_blank"
+										>
+											{source.title}
+										</Link>
+									) : (
+										source.title
+									)}
+								</Fragment>
+							) : undefined}
+						</span>
+					</li>
+				))}
+			</ul>
+		</LabeledSection>
+	) : undefined
+}

@@ -3,15 +3,18 @@ import type { CollectionEntry } from 'astro:content';
 
 import { render } from 'astro:content';
 
+import type { NoteNavItem } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentDate from '#components/content/content-date.astro';
 import ContentHeader from '#components/content/content-header.astro';
+import ContentNoteLinks from '#components/content/content-note-links.astro';
 import ContentSectionTags from '#components/content/content-section-tags.astro';
 import MainSite from '#components/main/main-site.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
+import SectionNoteNav from '#components/sections/section-note-nav.astro';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
@@ -23,9 +26,11 @@ import { getEntryDescription } from '#lib/utils/text.ts';
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
 	entry: CollectionEntry<'notes'>;
+	newerNote: NoteNavItem | undefined;
+	olderNote: NoteNavItem | undefined;
 }
 
-const { backlinks, entry } = Astro.props;
+const { backlinks, entry, newerNote, olderNote } = Astro.props;
 
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
@@ -71,7 +76,9 @@ const { Content } = await render(entry);
 		<ProseBody class:list={['content', 'e-content', 'pb-small']}>
 			<Content />
 		</ProseBody>
+		<ContentNoteLinks links={entry.data.links} source={entry.data.source} />
 		<ContentSectionTags tagIds={tagIds} />
 	</article>
 	<SectionBacklinks backlinks={backlinks} />
+	<SectionNoteNav newer={newerNote} older={olderNote} />
 </MainSite>

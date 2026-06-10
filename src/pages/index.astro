@@ -1,12 +1,23 @@
 ---
 import * as R from 'remeda';
 
+import { STREAM_PAGE_SIZE } from '#constants.ts';
 import IndexLayout from '#layouts/index.astro';
-import { queryPostsIndex } from '#lib/collections/posts/posts-utils.ts';
 import { queryProjectsIndex } from '#lib/collections/projects/projects-utils.ts';
+import { queryRecentStream } from '#lib/utils/stream.ts';
 
-const recentPosts = R.pipe(await queryPostsIndex(), R.take(5));
+const stream = await queryRecentStream();
+
+const streamItems = R.take(stream, STREAM_PAGE_SIZE);
+
+const totalPages = Math.max(1, Math.ceil(stream.length / STREAM_PAGE_SIZE));
+
 const selectedProjects = R.pipe(await queryProjectsIndex(), R.take(4));
 ---
 
-<IndexLayout recentPosts={recentPosts} selectedProjects={selectedProjects} />
+<IndexLayout
+	pageNumber={1}
+	selectedProjects={selectedProjects}
+	streamItems={streamItems}
+	totalPages={totalPages}
+/>

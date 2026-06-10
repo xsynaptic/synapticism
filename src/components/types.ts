@@ -18,6 +18,14 @@ export interface MetaProps {
 }
 
 /**
+ * A single previous/next target for note-to-note navigation
+ */
+export interface NoteNavItem {
+	title: string;
+	url: string;
+}
+
+/**
  * Meta component types
  */
 interface MetaImageProps {

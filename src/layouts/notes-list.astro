@@ -11,7 +11,7 @@ import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
 import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
-import { getEntryDescription } from '#lib/utils/text.ts';
+import { getEntryDescription, getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
 	page: Page<CollectionEntry<'notes'>>;
@@ -37,20 +37,27 @@ const { page } = Astro.props;
 				page.data.map((entry) => {
 					const dateCreated = parseContentDate(entry.data.dateCreated);
 					const description = getEntryDescription(entry);
+					const primaryLink = entry.data.links?.[0];
 
 					return (
 						<li class="flex flex-col gap-1">
 							<h2 class="text-lg font-semibold md:text-xl">
 								<Link href={getContentUrl(entry.collection, entry.id)}>{entry.data.title}</Link>
 							</h2>
-							{dateCreated ? (
-								<DateDisplay
-									class="text-xs text-primary-400"
-									date={dateCreated}
-									datePreset={DatePresetEnum.Medium}
-								/>
-							) : undefined}
-							{description ? <p class="text-sm text-primary-500">{description}</p> : undefined}
+							<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
+								{dateCreated ? (
+									<DateDisplay date={dateCreated} datePreset={DatePresetEnum.Medium} />
+								) : undefined}
+								{primaryLink ? (
+									<span>
+										{getSourceDomain(primaryLink.url)}
+										<span aria-hidden="true" class="ml-1">
+											↗
+										</span>
+									</span>
+								) : undefined}
+							</div>
+							{description ? <p class="text-sm text-primary-600">{description}</p> : undefined}
 						</li>
 					);
 				})
