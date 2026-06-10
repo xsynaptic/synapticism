@@ -1,8 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-import { render } from 'astro:content';
-
 import type { NoteNavItem } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
@@ -17,6 +15,7 @@ import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionNoteNav from '#components/sections/section-note-nav.astro';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
+import { renderContent } from '#lib/utils/astro.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
@@ -34,7 +33,7 @@ const { backlinks, entry, newerNote, olderNote } = Astro.props;
 
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
-const { Content } = await render(entry);
+const { components, Content } = await renderContent(entry);
 ---
 
 <MainSite
@@ -74,7 +73,7 @@ const { Content } = await render(entry);
 			</Fragment>
 		</ContentHeader>
 		<ProseBody class:list={['content', 'e-content', 'pb-small']}>
-			<Content />
+			<Content components={components} />
 		</ProseBody>
 		<ContentNoteLinks links={entry.data.links} source={entry.data.source} />
 		<ContentSectionTags tagIds={tagIds} />

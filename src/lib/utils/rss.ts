@@ -10,23 +10,52 @@ import {
 	transformMarkdown,
 } from '@xsynaptic/unified-tools';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
-import { render } from 'astro:content';
 import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
+import { renderContent } from '#lib/utils/astro.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
+// AstroContainer.create() logs a deprecation for Astro 7 beta's own default gfm/smartypants
+// Here we filter that one line; remove when it is fixed upstream
+async function createContainerQuietly() {
+	const originalWarn = console.warn;
+
+	console.warn = (...args: Parameters<typeof console.warn>) => {
+		const [first] = args;
+
+		if (
+			typeof first === 'string' &&
+			first.includes('markdown.gfm') &&
+			first.includes('deprecated')
+		) {
+			return;
+		}
+
+		originalWarn(...args);
+	};
+
+	try {
+		return await AstroContainer.create();
+	} finally {
+		console.warn = originalWarn;
+	}
+}
+
 async function createRenderMdxFunction() {
-	const container = await AstroContainer.create();
+	const container = await createContainerQuietly();
 
 	container.addServerRenderer({ name: 'mdx', renderer: mdxRenderer });
 
 	return async function (entry: CollectionEntry<'posts'>, options?: ContainerRenderOptions) {
-		const { Content } = await render(entry);
+		const { components, Content } = await renderContent(entry);
 
-		return await container.renderToString(Content, options);
+		return await container.renderToString(Content, {
+			...options,
+			props: { ...options?.props, components },
+		});
 	};
 }
 

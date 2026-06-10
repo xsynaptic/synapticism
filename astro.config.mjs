@@ -1,11 +1,12 @@
 // @ts-check
-import { unified } from '@astrojs/markdown-remark';
+import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { remarkAutoImport } from '@xsynaptic/remark-auto-import';
-import expressiveCode from 'astro-expressive-code';
 import { defineConfig, envField, fontProviders } from 'astro/config';
+import expressiveCode from 'satteri-expressive-code';
+
+import { expressiveCodeOptions } from './expressive-code.config.mjs';
 
 export default defineConfig({
 	env: {
@@ -51,21 +52,13 @@ export default defineConfig({
 			weights: ['300 700'],
 		},
 	],
-	integrations: [expressiveCode(), mdx(), sitemap()],
+	integrations: [mdx(), sitemap()],
 	markdown: {
-		processor: unified({
-			remarkPlugins: [
-				remarkAutoImport({
-					imports: [
-						{
-							'./src/components/mdx/link.astro': [['default', 'Link']],
-							'./src/components/mdx/more.astro': [['default', 'More']],
-						},
-					],
-				}),
-			],
-			remarkRehype: { footnoteLabelTagName: 'h3' },
+		processor: satteri({
+			hastPlugins: [expressiveCode(expressiveCodeOptions)],
 		}),
+		// EC (the satteri-expressive-code hast plugin) owns highlighting; Satteri must not pre-highlight
+		syntaxHighlight: false,
 	},
 	site: import.meta.env.PROD ? 'https://synapticism.com/' : 'http://localhost:4321/',
 	vite: {

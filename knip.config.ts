@@ -5,12 +5,11 @@ import type { KnipConfig } from 'knip';
 export default {
 	workspaces: {
 		'.': {
-			// MDX auto-import components; referenced via remark-auto-import, not static imports
+			// MDX components are provided to <Content> at render time via renderContent (src/lib/utils/astro.ts)
 			entry: ['src/components/mdx/*.astro'],
 			ignoreDependencies: [
 				'eslint-plugin-jsx-a11y', // transitive dep required by eslint-plugin-astro jsx-a11y-strict
 				// Planned integrations; not yet wired up
-				'@astrojs/node',
 				'@astrojs/rss',
 				'@unpic/astro',
 				'@unpic/core',

@@ -2,12 +2,11 @@
 import type { CollectionEntry } from 'astro:content';
 
 import { transformMarkdown } from '@xsynaptic/unified-tools';
-import { render } from 'astro:content';
 
 import ContentSection from '#components/content/content-section.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
-import { getHasContent } from '#lib/utils/astro.ts';
+import { getHasContent, renderContent } from '#lib/utils/astro.ts';
 
 interface Props {
 	class?: string | undefined;
@@ -18,13 +17,13 @@ const { class: className, entry, ...props } = Astro.props;
 
 const hasContent = getHasContent(entry);
 
-const { Content } = await render(entry);
+const { components, Content } = await renderContent(entry);
 ---
 
 {
 	hasContent ? (
 		<ProseBody class:list={['content', 'pb-medium', className]} data-pagefind-weight="2" {...props}>
-			<Content />
+			<Content components={components} />
 		</ProseBody>
 	) : undefined
 }{

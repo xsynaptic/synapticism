@@ -1,13 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-import { render } from 'astro:content';
-
 import ContentDate from '#components/content/content-date.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import MainSite from '#components/main/main-site.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
+import { renderContent } from '#lib/utils/astro.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
@@ -19,7 +18,7 @@ interface Props {
 
 const { entry } = Astro.props;
 
-const { Content } = await render(entry);
+const { components, Content } = await renderContent(entry);
 ---
 
 <MainSite
@@ -56,7 +55,7 @@ const { Content } = await render(entry);
 			</Fragment>
 		</ContentHeader>
 		<ProseBody class:list={['content', 'e-content', 'pb-small']} data-reading-frame>
-			<Content />
+			<Content components={components} />
 		</ProseBody>
 	</article>
 </MainSite>
