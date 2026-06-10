@@ -21,13 +21,17 @@ import { serializeGraph } from '#lib/utils/structured-data.ts';
 
 interface Props {
 	hasReadingBar?: boolean;
+	isHomepage?: boolean;
 	meta?: MetaProps;
 	schemas?: Array<Thing>;
 }
 
-const { hasReadingBar = false, meta, schemas } = Astro.props;
+const { hasReadingBar = false, isHomepage = false, meta, schemas } = Astro.props;
 
 const siteUrl = getSiteUrl();
+
+// The site title is the page h1 on the homepage/stream, plain branding elsewhere
+const SiteTitleTag = isHomepage ? 'h1' : 'div';
 ---
 
 <!doctype html>
@@ -54,7 +58,7 @@ const siteUrl = getSiteUrl();
 		<header class:list={['transition-colors', 'z-40']}>
 			<div class:list={['py-3 lg:py-4', 'bg-primary-800']}>
 				<Container class="flex flex-wrap items-center justify-between gap-2">
-					<h2>
+					<SiteTitleTag>
 						<Link
 							class="font-sans text-xl font-semibold md:text-2xl lg:text-3xl"
 							href={siteUrl}
@@ -62,7 +66,7 @@ const siteUrl = getSiteUrl();
 						>
 							{t('site.title')}
 						</Link>
-					</h2>
+					</SiteTitleTag>
 					<div class="relative" id="search"></div>
 				</Container>
 			</div>

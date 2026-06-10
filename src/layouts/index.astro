@@ -45,13 +45,13 @@ const mainProps = isFirstPage
 		};
 ---
 
-<MainSite {...mainProps}>
+<MainSite isHomepage={true} {...mainProps}>
 	{
 		isFirstPage ? (
 			<Container as="section" class="pt-8 pb-2 md:pt-14">
-				<h1 class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]">
+				<p class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]">
 					{t('index.heroHeading')}
-				</h1>
+				</p>
 				<p class="mt-4 max-w-[60ch] text-base leading-relaxed text-pretty text-primary-600 md:text-lg">
 					{t('index.heroSubtitle')}
 				</p>
