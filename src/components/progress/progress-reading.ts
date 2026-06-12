@@ -85,7 +85,6 @@ if (!customElements.get('progress-reading')) {
 	customElements.define('progress-reading', ProgressReading);
 }
 
- 
 export {};
 
 declare global {

@@ -24,6 +24,8 @@ export default getConfig(
 				'@typescript-eslint/no-deprecated': isStrictLint ? 'error' : 'off',
 				'@typescript-eslint/no-misused-promises': isStrictLint ? 'error' : 'off',
 				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
+				// We use intentional compounds such as schema.org's WebSite type
+				'unicorn/consistent-compound-words': 'off',
 				// Conflicts with Remeda's sort function
 				'unicorn/no-array-sort': 'off',
 			},
