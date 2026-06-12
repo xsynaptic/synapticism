@@ -28,8 +28,7 @@ const { page } = Astro.props;
 		title: t('notes.title'),
 	}}
 >
-	<ContentHeader>
-		<Fragment slot="header-title">{t('notes.title')}</Fragment>
+	<ContentHeader title={t('notes.title')}>
 		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
 	</ContentHeader>
 	<ContentSection>

@@ -4,11 +4,11 @@ import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
 	class?: string | undefined;
+	title: string;
 }
 
-const { class: className } = Astro.props;
+const { class: className, title } = Astro.props;
 
-const title = await renderSlot(Astro.slots, 'header-title');
 const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 ---
 
@@ -17,16 +17,15 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 		class="-ml-0.5 pb-2 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 md:text-3xl lg:text-4xl"
 		data-pagefind-weight="3"
 	>
-		{title ? <Fragment set:html={title} /> : undefined}
+		{title}
 	</h1>
 	{
 		subtitle ? (
 			<div
 				class="items-start gap-1 pb-2 font-mono text-sm text-primary-600 sm:flex sm:flex-wrap"
 				data-pagefind-ignore
-			>
-				<Fragment set:html={subtitle} />
-			</div>
+				set:html={subtitle}
+			/>
 		) : undefined
 	}
 </Container>

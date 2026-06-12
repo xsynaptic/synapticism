@@ -18,8 +18,7 @@ const children = await renderSlot(Astro.slots, 'default');
 				className,
 			]}
 			{...props}
-		>
-			<Fragment set:html={children} />
-		</div>
+			set:html={children}
+		/>
 	) : undefined
 }

@@ -32,9 +32,7 @@ const hasExcerpt = excerptSplit.length > 1;
 		</h2>
 		{
 			subtitle ? (
-				<h3 class="mb-1 text-xs font-medium text-primary-400 md:text-sm">
-					<Fragment set:html={subtitle} />
-				</h3>
+				<h3 class="mb-1 text-xs font-medium text-primary-400 md:text-sm" set:html={subtitle} />
 			) : undefined
 		}
 		{

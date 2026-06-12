@@ -29,8 +29,7 @@ const { entry, page } = Astro.props;
 		title: entry.data.title,
 	}}
 >
-	<ContentHeader>
-		<Fragment slot="header-title">{entry.data.title}</Fragment>
+	<ContentHeader title={entry.data.title}>
 		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
 	</ContentHeader>
 	<ContentDescription entry={entry} />

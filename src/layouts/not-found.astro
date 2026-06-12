@@ -13,9 +13,7 @@ import { getSeoHideSearch } from '#lib/utils/seo.ts';
 		...getSeoHideSearch(true),
 	}}
 >
-	<ContentHeader>
-		<Fragment slot="header-title">{t('notFound.title')}</Fragment>
-	</ContentHeader>
+	<ContentHeader title={t('notFound.title')} />
 	<ContentSection>
 		<Fragment slot="section-description">
 			<p>{t('notFound.body')}</p>

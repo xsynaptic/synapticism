@@ -1,7 +1,8 @@
-import { stripTags, transformMarkdown } from '@xsynaptic/unified-tools';
+import { stripTags } from '@xsynaptic/unified-tools';
 import * as R from 'remeda';
 
 import { MDX_COMPONENTS_TO_STRIP } from '#constants.ts';
+import { renderMarkdownInline } from '#lib/utils/markdown.ts';
 
 export function formatNumber({
 	locales,
@@ -33,6 +34,20 @@ export function getSourceDomain(url: string): string {
 	return new URL(url).hostname.replace(/^www\./, '');
 }
 
+// Typographic refinement for short text: smart quotes, en/em dashes, ellipses
+// This negates the need for a full-blown unified pipeline for titles and such
+export function refineTypography(input: string): string {
+	let value = input;
+	// Dashes: --- to em, -- to en (longest first)
+	value = value.replaceAll('---', '—').replaceAll('--', '–');
+	value = value.replaceAll('...', '…');
+	// Double quotes: opening after start/space/bracket/dash, otherwise closing
+	value = value.replaceAll(/(^|[\s([{<–—])"/g, '$1“').replaceAll('"', '”');
+	// Single quotes: opening in the same positions, otherwise apostrophe or closing
+	value = value.replaceAll(/(^|[\s([{<–—])'/g, '$1‘').replaceAll("'", '’');
+	return value;
+}
+
 export function sanitizeAltAttribute(input: string): string {
 	return encodeHtmlEntities(stripTags(input));
 }
@@ -43,7 +58,7 @@ export function sanitizeDescription(description: string | undefined) {
 				description,
 				stripFootnoteReferences,
 				(description) => stripMdxComponents(description, MDX_COMPONENTS_TO_STRIP),
-				(description) => transformMarkdown({ input: description }),
+				renderMarkdownInline,
 				stripTags,
 				(stripped) => textClipper(stripped, { wordCount: 100 }),
 			)

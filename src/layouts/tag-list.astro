@@ -26,9 +26,7 @@ const groups = groupTagsByLetter(tags);
 		title: t('tags.title'),
 	}}
 >
-	<ContentHeader>
-		<Fragment slot="header-title">{t('tags.title')}</Fragment>
-	</ContentHeader>
+	<ContentHeader title={t('tags.title')} />
 	<ContentSection>
 		{
 			groups.length > 0 ? (

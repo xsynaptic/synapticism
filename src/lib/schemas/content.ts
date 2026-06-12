@@ -1,9 +1,9 @@
-import { stylizeText } from '@xsynaptic/unified-tools';
 import { z } from 'zod';
 
 import { parseFrontmatterDate } from '#lib/utils/date.ts';
+import { refineTypography } from '#lib/utils/text.ts';
 
-export const StylizedTextSchema = z.string().transform((value) => stylizeText(value).trim());
+export const StylizedTextSchema = z.string().transform((value) => refineTypography(value).trim());
 
 // Descriptions should meet basic SEO requirements
 const DESCRIPTION_CHARACTER_LENGTH = 30;

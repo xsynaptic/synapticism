@@ -1,12 +1,11 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-import { transformMarkdown } from '@xsynaptic/unified-tools';
-
 import ContentSection from '#components/content/content-section.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
 import { getHasContent, renderContent } from '#lib/utils/astro.ts';
+import { renderMarkdownInline } from '#lib/utils/markdown.ts';
 
 interface Props {
 	class?: string | undefined;
@@ -31,7 +30,7 @@ const { components, Content } = await renderContent(entry);
 		<ContentSection {...props}>
 			<Fragment slot="section-description">
 				<ProseDescription class:list={[className]} data-pagefind-weight="2">
-					<Fragment set:html={transformMarkdown({ input: entry.data.description })} />
+					<Fragment set:html={renderMarkdownInline(entry.data.description)} />
 				</ProseDescription>
 			</Fragment>
 		</ContentSection>

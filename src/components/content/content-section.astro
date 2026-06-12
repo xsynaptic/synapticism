@@ -41,14 +41,11 @@ const children = await renderSlot(Astro.slots, 'default');
 									? 'font-sans text-xl font-semibold text-primary-800 md:text-2xl'
 									: 'font-mono text-sm font-medium text-primary-600',
 							]}
-						>
-							<Fragment set:html={title} />
-						</h2>
+							set:html={title}
+						/>
 					) : undefined}
 					{subtitle ? (
-						<h3 class="mb-1 text-xs font-medium text-primary-600 md:text-sm">
-							<Fragment set:html={subtitle} />
-						</h3>
+						<h3 class="mb-1 text-xs font-medium text-primary-600 md:text-sm" set:html={subtitle} />
 					) : undefined}
 					{description ? (
 						<ProseDescription class:list={['mb-small']}>

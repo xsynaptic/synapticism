@@ -25,6 +25,9 @@ const { class: className, href, linkColor = LinkColorEnum.Primary, ...props } = 
 const children = await renderSlot(Astro.slots, 'default');
 ---
 
-<a class:list={['link', `link-${linkColor}`, className]} href={href} {...props}
-	><Fragment set:html={children} /></a
->
+<a
+	class:list={['link', `link-${linkColor}`, className]}
+	href={href}
+	{...props}
+	set:html={children}
+/>
