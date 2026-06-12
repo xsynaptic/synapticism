@@ -34,9 +34,9 @@
 		"@types/react": "^19.2.17",
 		"@unpic/astro": "^1.0.2",
 		"@unpic/core": "^1.0.3",
-		"@xsynaptic/eslint-config": "^3.7.0",
+		"@xsynaptic/eslint-config": "^3.8.0",
 		"@xsynaptic/stylelint-config": "^0.1.1",
-		"@xsynaptic/unified-tools": "^5.0.0",
+		"@xsynaptic/unified-tools": "^5.1.0",
 		"astro-pagefind": "^2.0.0",
 		"astro-seo": "^1.1.0",
 		"eslint": "^9.39.4",
@@ -46,10 +46,10 @@
 		"globals": "^17.6.0",
 		"knip": "^6.16.1",
 		"p-memoize": "^8.0.0",
-		"prettier": "^3.8.3",
+		"prettier": "^3.8.4",
 		"prettier-plugin-astro": "^0.14.1",
 		"prettier-plugin-tailwindcss": "^0.8.0",
-		"remeda": "^2.38.0",
+		"remeda": "^2.39.0",
 		"satteri": "0.8.1",
 		"satteri-expressive-code": "0.1.11",
 		"stylelint": "^17.13.0",
@@ -59,5 +59,5 @@
 		"yaml": "^2.8.3",
 		"zod": "^4.4.3"
 	},
-	"packageManager": "pnpm@11.5.1+sha512.93f7b57422ea7068257235b4c16eb60762eb68e1dc23723199cc739043ea9be2c4143274a399d8c6defa2b1176226d9ca1c4b63482d6200c1a8fbaa78c1d1485"
+	"packageManager": "pnpm@11.6.0+sha512.9a36518224080c6fe5165afdcfe79bfa118c29be703f3f462b1e32efe1e98e47e8750b148e08286250aad4113cc7993ca413c4e2cd447752708c2ee5751bc95f"
 }
