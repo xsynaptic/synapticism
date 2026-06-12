@@ -1,5 +1,4 @@
 import { getSiteUrl } from '#lib/utils/routing.ts';
-import { sanitizeDescription } from '#lib/utils/text.ts';
 
 export type Thing = Article | BreadcrumbList | Person | WebSite;
 
@@ -66,13 +65,12 @@ export function buildArticleSchema(props: {
 	url: string;
 }): Article {
 	const aboutUrl = getSiteUrl('/about');
-	const description = sanitizeDescription(props.description);
 
 	return {
 		'@id': `${props.url}${SchemaFragmentIds.Article}`,
 		'@type': 'Article',
 		headline: props.title,
-		...(description ? { description } : {}),
+		...(props.description ? { description: props.description } : {}),
 		...(props.imageUrl ? { image: props.imageUrl } : {}),
 		datePublished: props.dateCreated.toISOString(),
 		...(props.dateUpdated ? { dateModified: props.dateUpdated.toISOString() } : {}),

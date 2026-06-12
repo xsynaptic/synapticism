@@ -3,7 +3,7 @@ import type { ContainerRenderOptions } from 'astro/container';
 import type { CollectionEntry } from 'astro:content';
 
 import mdxRenderer from '@astrojs/mdx/server.js';
-import { defaultSchema, sanitizeHtml, stripTags } from '@xsynaptic/unified-tools';
+import { defaultSchema, sanitizeHtml } from '@xsynaptic/unified-tools';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
@@ -11,7 +11,7 @@ import * as R from 'remeda';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { renderContent } from '#lib/utils/astro.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
-import { renderMarkdownInline } from '#lib/utils/markdown.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
 // AstroContainer.create() logs a deprecation for Astro 7 beta's own default gfm/smartypants
@@ -90,13 +90,13 @@ const generateFeedItem = async ({
 		},
 	);
 
+	const description = getDescriptionRenderedText(entry);
+
 	const feedItem = {
 		link: getContentUrl(entry.collection, entry.id),
 		pubDate: parseContentDate(entry.data.dateUpdated ?? entry.data.dateCreated),
 		title: entry.data.title,
-		...(entry.data.description
-			? { description: stripTags(renderMarkdownInline(entry.data.description)) }
-			: {}),
+		...(description ? { description } : {}),
 		...(contentSanitized ? { content: contentSanitized } : {}),
 	} satisfies RSSFeedItem;
 

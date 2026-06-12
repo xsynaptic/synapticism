@@ -11,8 +11,8 @@ import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
+import { getDescriptionRenderedHtml } from '#lib/utils/description.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
-import { getEntryDescription } from '#lib/utils/text.ts';
 
 interface Props {
 	page: Page<CollectionEntry<'projects'>>;
@@ -36,7 +36,7 @@ const { page } = Astro.props;
 			{
 				page.data.map((entry) => {
 					const dateCreated = parseContentDate(entry.data.dateCreated);
-					const description = getEntryDescription(entry);
+					const description = getDescriptionRenderedHtml(entry);
 
 					return (
 						<li class="flex flex-col gap-1">
@@ -50,7 +50,9 @@ const { page } = Astro.props;
 									datePreset={DatePresetEnum.Medium}
 								/>
 							) : undefined}
-							{description ? <p class="text-sm text-primary-500">{description}</p> : undefined}
+							{description ? (
+								<p class="text-sm text-primary-500" set:html={description} />
+							) : undefined}
 						</li>
 					);
 				})

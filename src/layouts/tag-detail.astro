@@ -13,6 +13,7 @@ import Link from '#components/parts/link.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 
 interface Props {
 	entry: CollectionEntry<'tags'>;
@@ -24,7 +25,7 @@ const { entry, page } = Astro.props;
 
 <MainSite
 	meta={{
-		description: entry.data.description,
+		description: getDescriptionRenderedText(entry),
 		noIndex: page.currentPage > 1,
 		title: entry.data.title,
 	}}
@@ -47,7 +48,7 @@ const { entry, page } = Astro.props;
 							datePreset={DatePresetEnum.Medium}
 						/>
 						{item.description ? (
-							<p class="text-sm text-primary-500">{item.description}</p>
+							<p class="text-sm text-primary-500" set:html={item.description} />
 						) : undefined}
 					</li>
 				))

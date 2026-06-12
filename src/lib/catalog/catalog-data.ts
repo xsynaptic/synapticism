@@ -13,8 +13,8 @@ import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
+import { getDescriptionRenderedHtml } from '#lib/utils/description.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
-import { getEntryDescription } from '#lib/utils/text.ts';
 import { getWordCount } from '#lib/utils/word-count.ts';
 
 function getLinksCount(entry: CollectionEntry<CollectionKey>): number {
@@ -53,7 +53,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 				dateUpdated: parseContentDate(
 					'dateUpdated' in entry.data ? entry.data.dateUpdated : undefined,
 				),
-				description: getEntryDescription(entry),
+				description: getDescriptionRenderedHtml(entry),
 				entryQuality: 'entryQuality' in entry.data ? entry.data.entryQuality : undefined,
 				id: entry.id,
 				imageId: 'imageFeatured' in entry.data ? entry.data.imageFeatured : undefined,

@@ -18,10 +18,10 @@ import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
 import { renderContent } from '#lib/utils/astro.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
 import { getSeoArticleProps } from '#lib/utils/seo.ts';
-import { getEntryDescription } from '#lib/utils/text.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
@@ -40,7 +40,7 @@ const { components, Content } = await renderContent(entry);
 
 <MainSite
 	meta={{
-		description: getEntryDescription(entry),
+		description: getDescriptionRenderedText(entry),
 		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,

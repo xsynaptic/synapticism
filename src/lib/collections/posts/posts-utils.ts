@@ -8,8 +8,8 @@ import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { createCollectionLookupByIds } from '#lib/utils/collections.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { buildArticleSchema, buildAuthorSchema } from '#lib/utils/structured-data.ts';
-import { getEntryDescription } from '#lib/utils/text.ts';
 
 export const createPostsByIdsFunction = createCollectionLookupByIds('Posts', getPostsCollection);
 
@@ -21,7 +21,7 @@ export function getPostSchema(
 		buildArticleSchema({
 			dateCreated: entry.data.dateCreated,
 			dateUpdated: entry.data.dateUpdated,
-			description: getEntryDescription(entry),
+			description: getDescriptionRenderedText(entry),
 			imageUrl: undefined,
 			title: entry.data.title,
 			url: props.url,

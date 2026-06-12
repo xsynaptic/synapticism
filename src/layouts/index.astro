@@ -96,9 +96,10 @@ const mainProps = isFirstPage
 										) : undefined}
 									</div>
 									{item.description ? (
-										<p class="max-w-[68ch] leading-relaxed text-pretty text-primary-600">
-											{item.description}
-										</p>
+										<p
+											class="max-w-[68ch] leading-relaxed text-pretty text-primary-600"
+											set:html={item.description}
+										/>
 									) : undefined}
 								</article>
 							</li>
@@ -156,9 +157,10 @@ const mainProps = isFirstPage
 									</a>
 								</h3>
 								{item.description ? (
-									<p class="max-w-[60ch] text-sm leading-relaxed text-pretty text-primary-600">
-										{item.description}
-									</p>
+									<p
+										class="max-w-[60ch] text-sm leading-relaxed text-pretty text-primary-600"
+										set:html={item.description}
+									/>
 								) : undefined}
 							</article>
 						</li>

@@ -6,8 +6,8 @@ import type { Thing } from '#lib/utils/structured-data.ts';
 
 import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { buildArticleSchema, buildAuthorSchema } from '#lib/utils/structured-data.ts';
-import { getEntryDescription } from '#lib/utils/text.ts';
 
 export function getNoteSchema(
 	entry: CollectionEntry<'notes'>,
@@ -17,7 +17,7 @@ export function getNoteSchema(
 		buildArticleSchema({
 			dateCreated: entry.data.dateCreated,
 			dateUpdated: entry.data.dateUpdated,
-			description: getEntryDescription(entry),
+			description: getDescriptionRenderedText(entry),
 			imageUrl: undefined,
 			title: entry.data.title,
 			url: props.url,
