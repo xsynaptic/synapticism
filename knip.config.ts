@@ -10,19 +10,14 @@ export default {
 			ignoreDependencies: [
 				'eslint-plugin-jsx-a11y', // transitive dep required by eslint-plugin-astro jsx-a11y-strict
 				// Planned integrations; not yet wired up
-				'@astrojs/rss',
 				'@unpic/astro',
 				'@unpic/core',
 				'astro-pagefind',
-				'astro-seo',
 				'eslint-plugin-react-hooks',
-				'remeda',
 			],
 		},
 		'packages/content': {
 			ignoreDependencies: [
-				'eslint-mdx', // referenced in eslint config
-				'eslint-plugin-mdx', // referenced in eslint config
 				'remark', // used via unified pipeline
 				'remark-lint-list-item-indent', // remark preset plugin
 				'remark-mdx', // remark preset plugin
