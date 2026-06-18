@@ -40,8 +40,8 @@ importers:
         specifier: ^1.0.3
         version: 1.0.3
       '@xsynaptic/eslint-config':
-        specifier: ^4.0.0
-        version: 4.0.0(eslint@10.5.0(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^4.0.1
+        version: 4.0.1(eslint@10.5.0(jiti@2.7.0))(typescript@6.0.3)
       '@xsynaptic/stylelint-config':
         specifier: ^0.1.1
         version: 0.1.1(stylelint-order@8.1.1(stylelint@17.13.0(typescript@6.0.3)))(stylelint@17.13.0(typescript@6.0.3))
@@ -1830,8 +1830,8 @@ packages:
   '@vscode/l10n@0.0.18':
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
 
-  '@xsynaptic/eslint-config@4.0.0':
-    resolution: {integrity: sha512-y/RCyltQhrIICn3561jKyUjHPcm/bi+SpTIux/6azbJxAbuRuujUK+C5isLReJrOVR3o/KFGzbYHub9q9t7QpQ==}
+  '@xsynaptic/eslint-config@4.0.1':
+    resolution: {integrity: sha512-vrMMHXQw4brG4XxzdNqkAM5LHRP3nSc/AbskofHBhKNsfZ5650YzyhW+Ndpd5A63jT63+nukuO9RcVUWviuW3w==}
 
   '@xsynaptic/rehype-wrap-cjk@3.0.1':
     resolution: {integrity: sha512-6QoZHDNEWb2gXVExzpOlJLf93xextV3OK5H/6jiytZEbRztqxPG23JA94KvyZ8oCyN5MXX3gztK9lBqOz2QBXA==}
@@ -6482,7 +6482,7 @@ snapshots:
 
   '@vscode/l10n@0.0.18': {}
 
-  '@xsynaptic/eslint-config@4.0.0(eslint@10.5.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@xsynaptic/eslint-config@4.0.1(eslint@10.5.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
       '@eslint-community/eslint-plugin-eslint-comments': 4.7.2(eslint@10.5.0(jiti@2.7.0))
       '@eslint/config-helpers': 0.6.0

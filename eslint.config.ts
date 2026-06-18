@@ -26,16 +26,14 @@ export default getConfig(
 				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
 				// Prefix demand fights idiomatic predicates, getters, schema fields, env (PROD), and CLI flags
 				'unicorn/consistent-boolean-name': 'off',
-				// Opinionated member order (hoists private helpers above public lifecycle methods)
-				'unicorn/consistent-class-member-order': 'off',
 				// We use intentional compounds such as schema.org's WebSite type
 				'unicorn/consistent-compound-words': 'off',
 				// Zod schema chains in cv.astro legitimately reach 4; depth 5+ still flagged
 				'unicorn/max-nested-calls': ['error', { max: 4 }],
 				// Conflicts with Remeda's sort function
 				'unicorn/no-array-sort': 'off',
-				// Stylistic; we prefer explicit `? {x} : {}` over conditional spread via &&
-				'unicorn/no-useless-fallback-in-spread': 'off',
+				// Allow our explicit `? {x} : {}` spread; still flags useless `|| {}` / `?? {}` fallbacks
+				'unicorn/no-useless-fallback-in-spread': ['error', { checkTernary: false }],
 			},
 		},
 		{
@@ -60,13 +58,6 @@ export default getConfig(
 			},
 		},
 		getWebComponentConfig(['src/components/**/*.ts']),
-		{
-			files: ['src/components/**/*.ts'],
-			rules: {
-				// Redundant under strict TS; the project avoids custom-element inheritance entirely
-				'wc/guard-super-call': 'off',
-			},
-		},
 		...getAstroConfig({ a11y: astroPlugin.configs['jsx-a11y-strict'] }),
 	],
 	{
