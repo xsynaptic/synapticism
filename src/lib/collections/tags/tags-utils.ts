@@ -55,7 +55,7 @@ export function groupTagsByLetter(tags: Array<CollectionEntry<'tags'>>) {
 		}
 	}
 
-	const groupList = [...groups.entries()].map(([letter, groupTags]) => ({
+	const groupList = [...groups].map(([letter, groupTags]) => ({
 		letter,
 		tags: R.sortBy(groupTags, (tag) => tag.data.title.toLowerCase()),
 	}));

@@ -9,7 +9,7 @@ import { formatStringTemplate } from '#lib/utils/text.ts';
 const currentYear = new Date().getFullYear();
 const copyrightYears =
 	currentYear > SITE_YEAR_FOUNDED
-		? `${String(SITE_YEAR_FOUNDED)}\u2013${String(currentYear)}`
+		? `${String(SITE_YEAR_FOUNDED)}\u{2013}${String(currentYear)}`
 		: String(SITE_YEAR_FOUNDED);
 ---
 

@@ -24,10 +24,18 @@ export default getConfig(
 				'@typescript-eslint/no-deprecated': isStrictLint ? 'error' : 'off',
 				'@typescript-eslint/no-misused-promises': isStrictLint ? 'error' : 'off',
 				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
+				// Prefix demand fights idiomatic predicates, getters, schema fields, env (PROD), and CLI flags
+				'unicorn/consistent-boolean-name': 'off',
+				// Opinionated member order (hoists private helpers above public lifecycle methods)
+				'unicorn/consistent-class-member-order': 'off',
 				// We use intentional compounds such as schema.org's WebSite type
 				'unicorn/consistent-compound-words': 'off',
+				// Zod schema chains in cv.astro legitimately reach 4; depth 5+ still flagged
+				'unicorn/max-nested-calls': ['error', { max: 4 }],
 				// Conflicts with Remeda's sort function
 				'unicorn/no-array-sort': 'off',
+				// Stylistic; we prefer explicit `? {x} : {}` over conditional spread via &&
+				'unicorn/no-useless-fallback-in-spread': 'off',
 			},
 		},
 		{
@@ -42,7 +50,7 @@ export default getConfig(
 			files: ['src/components/**/*'],
 			languageOptions: {
 				globals: {
-					...Object.fromEntries(Object.entries(globals.node).map(([key]) => [key, 'off'])),
+					...Object.fromEntries(Object.keys(globals.node).map((key) => [key, 'off'])),
 					...globals.browser,
 				},
 			},

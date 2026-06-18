@@ -101,6 +101,7 @@ let isCollapsible = false;
 
 const pageArray: Array<PaginationItem> = rawPages.map((pageNumber) => {
 	if (pageNumber === -1) {
+		// eslint-disable-next-line unicorn/no-top-level-assignment-in-function -- toggle accumulator tracks divider state across the map pass
 		isCollapsible = !isCollapsible;
 		return { type: 'divider' };
 	}

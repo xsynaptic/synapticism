@@ -92,11 +92,16 @@ function generateContentBacklinksFromMdxComponents(
 	}
 }
 
+async function loadCatalog(): Promise<Catalog> {
+	return createCatalog(await buildCatalogItems());
+}
+
 let catalogInstance: Promise<Catalog> | undefined;
 
 export async function getCatalog(): Promise<Catalog> {
 	if (!catalogInstance) {
-		catalogInstance = buildCatalogItems().then(createCatalog);
+		// eslint-disable-next-line unicorn/no-top-level-assignment-in-function -- lazy-singleton memoization assigns the cache once
+		catalogInstance = loadCatalog();
 	}
 	return catalogInstance;
 }

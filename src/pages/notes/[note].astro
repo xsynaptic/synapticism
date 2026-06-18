@@ -14,8 +14,8 @@ export const getStaticPaths = (async () => {
 	const sorted = [...entries].sort(sortByDateReverseChronological);
 
 	return sorted.map((entry, index) => {
-		const newer = index > 0 ? sorted[index - 1] : undefined;
-		const older = index < sorted.length - 1 ? sorted[index + 1] : undefined;
+		const newer = sorted[index - 1];
+		const older = sorted[index + 1];
 
 		return {
 			params: { note: entry.id },

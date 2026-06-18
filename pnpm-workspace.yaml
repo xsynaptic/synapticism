@@ -20,6 +20,12 @@ minimumReleaseAgeExclude:
   - '@xsynaptic/stylelint-config'
   - '@xsynaptic/unified-tools'
 
+peerDependencyRules:
+  allowedVersions:
+    # eslint-plugin-jsx-a11y@6.10.2 caps its eslint peer at ^9 but uses no APIs
+    # removed in ESLint 10. Safe to run on 10 until upstream widens the range.
+    'eslint-plugin-jsx-a11y>eslint': '10'
+
 allowBuilds:
   esbuild: true
   sharp: true
