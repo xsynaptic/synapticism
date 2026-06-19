@@ -8,17 +8,11 @@ strictDepBuilds: true
 
 minimumReleaseAgeExclude:
   - astro
-  - '@astrojs/markdown-satteri'
-  - '@astrojs/mdx'
-  - '@astrojs/react'
-  - '@astrojs/rss'
-  - '@astrojs/sitemap'
+  - '@bruits/*'
+  - '@astrojs/*'
+  - '@xsynaptic/*'
   - satteri
   - satteri-expressive-code
-  - '@xsynaptic/eslint-config'
-  - '@xsynaptic/rehype-wrap-cjk'
-  - '@xsynaptic/stylelint-config'
-  - '@xsynaptic/unified-tools'
 
 peerDependencyRules:
   allowedVersions:

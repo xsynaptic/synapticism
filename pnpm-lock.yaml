@@ -9,18 +9,18 @@ importers:
   .:
     dependencies:
       astro:
-        specifier: 7.0.0-beta.5
-        version: 7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
+        specifier: 7.0.0-beta.6
+        version: 7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
     devDependencies:
       '@astrojs/check':
         specifier: ^0.9.9
         version: 0.9.9(prettier-plugin-astro@0.14.1)(prettier@3.8.4)(typescript@6.0.3)
       '@astrojs/markdown-satteri':
-        specifier: 0.3.1-beta.1
-        version: 0.3.1-beta.1
+        specifier: 0.3.1-beta.2
+        version: 0.3.1-beta.2
       '@astrojs/mdx':
-        specifier: 7.0.0-beta.3
-        version: 7.0.0-beta.3(@astrojs/markdown-satteri@0.3.1-beta.1)(astro@7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))
+        specifier: 7.0.0-beta.4
+        version: 7.0.0-beta.4(@astrojs/markdown-satteri@0.3.1-beta.2)(astro@7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))
       '@astrojs/rss':
         specifier: ^4.0.18
         version: 4.0.18
@@ -35,7 +35,7 @@ importers:
         version: 19.2.17
       '@unpic/astro':
         specifier: ^1.0.2
-        version: 1.0.2(astro@7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 1.0.2(astro@7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))
       '@unpic/core':
         specifier: ^1.0.3
         version: 1.0.3
@@ -43,8 +43,8 @@ importers:
         specifier: ^4.0.1
         version: 4.0.1(eslint@10.5.0(jiti@2.7.0))(typescript@6.0.3)
       '@xsynaptic/satteri-auto-import':
-        specifier: ^0.1.0
-        version: 0.1.0(satteri@0.8.1)
+        specifier: ^0.1.1
+        version: 0.1.1(satteri@0.9.1)
       '@xsynaptic/stylelint-config':
         specifier: ^0.1.1
         version: 0.1.1(stylelint-order@8.1.1(stylelint@17.13.0(typescript@6.0.3)))(stylelint@17.13.0(typescript@6.0.3))
@@ -53,7 +53,7 @@ importers:
         version: 5.1.1
       astro-pagefind:
         specifier: ^2.0.0
-        version: 2.0.0(astro@7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))
+        version: 2.0.0(astro@7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))
       astro-seo:
         specifier: ^1.1.0
         version: 1.1.0(prettier-plugin-astro@0.14.1)(prettier@3.8.4)(typescript@6.0.3)
@@ -91,11 +91,11 @@ importers:
         specifier: ^2.39.0
         version: 2.39.0
       satteri:
-        specifier: 0.8.1
-        version: 0.8.1
+        specifier: 0.9.1
+        version: 0.9.1
       satteri-expressive-code:
-        specifier: 0.1.11
-        version: 0.1.11(satteri@0.8.1)
+        specifier: 0.1.14
+        version: 0.1.14(satteri@0.9.1)
       stylelint:
         specifier: ^17.13.0
         version: 17.13.0(typescript@6.0.3)
@@ -259,11 +259,11 @@ packages:
   '@astrojs/markdown-remark@7.2.0':
     resolution: {integrity: sha512-+YxmVQu1Bd+MFfSzjq1rOJvD9+nIOJzz5YIIhdIH01RrxRkKbyKoEgyIqP3yv51MhzMDgd79QaPv+kCVPT8vHw==}
 
-  '@astrojs/markdown-satteri@0.3.1-beta.1':
-    resolution: {integrity: sha512-mNs4/qfOpVii2IqWz6uiWU1cdzjpXnx4/EUZ6wtTEuMb/4snCJ6U9JzQZOsuEBIY+BamoLD2lyrsb9x0aq6C4g==}
+  '@astrojs/markdown-satteri@0.3.1-beta.2':
+    resolution: {integrity: sha512-w79znySarJyQ6K+MKku3+gWMQ4cX5YSM4TUBr6hJbtekEOZZfjlXXaCTVolujo5WVdISXn5Hm0mNzM2Aoswlzw==}
 
-  '@astrojs/mdx@7.0.0-beta.3':
-    resolution: {integrity: sha512-MFXL7YwAHplxQHJtF4e6tIkPwo1dWEXtL6zUxpD351xq8WIHWpkU7PS4ZVjU5nLt3C4J5kHbJOrXUFt7zt0egw==}
+  '@astrojs/mdx@7.0.0-beta.4':
+    resolution: {integrity: sha512-fay8a+XVQ8M/31IhQEcsM9BTMp1znOTMXnnAZq+F+UCBKlG0jeb6p8z/cZ3uVhIUsK+mfDL7jjsQ7xkHVz/XTg==}
     engines: {node: '>=22.12.0'}
     peerDependencies:
       '@astrojs/markdown-satteri': ^0.3.1-alpha.0
@@ -360,29 +360,29 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@bruits/satteri-darwin-arm64@0.8.1':
-    resolution: {integrity: sha512-9R8icJLGP8e3LOh8qLTZP1wdSGti6+OzGu3RCuSinMHUdPhTEDU3kbPV35vTGxUHghDGKYXPZBP+jDsbvKdf6A==}
+  '@bruits/satteri-darwin-arm64@0.9.1':
+    resolution: {integrity: sha512-NE4qC2sRd0+R+oPMsKcUikIvWTGpAV16fSXNBoMSW7nK7Pd9e/ZGB7M8knep83pFmGmOb/5NbGKiVIh3oLbljw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@bruits/satteri-darwin-x64@0.8.1':
-    resolution: {integrity: sha512-UY5qDOoPXFsSnmfU6Qwi7h0hrtwlU8brwDrgZ4C1GSjcBVV01kQ96iXX+JIDoyO1Lnps0Wola0ar+iwkL2sAtg==}
+  '@bruits/satteri-darwin-x64@0.9.1':
+    resolution: {integrity: sha512-Am8z5nX0L/sJR/n7np+5rMVP434MOBe3zlU+IO8fXbv2UaPNRCrEQPMS6lyxCj7dZHQI2AynSJw3v4fgQE8xSQ==}
     cpu: [x64]
     os: [darwin]
 
-  '@bruits/satteri-linux-x64-gnu@0.8.1':
-    resolution: {integrity: sha512-OnOyNWEgUVFiDlaVuzd56GSucKY2F+1GMUT9lBqHb4TI0OQgZRP4fCfwxfz+2Rb1hQXuEGSTRJjyhPGQ5ft6kQ==}
+  '@bruits/satteri-linux-x64-gnu@0.9.1':
+    resolution: {integrity: sha512-Bivw60+SIfmlaU9wEZ39HAcyPh1xU9TvOrz4KJgc+ziRStQs4EzYoWW4Eh9aSdiol+xV0vjEWYuA79aF3dr7kg==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@bruits/satteri-wasm32-wasi@0.8.1':
-    resolution: {integrity: sha512-FKgKMIplotnCobQwfVd81YSakgiUBSn+truqElYFX9O+sinePlJXmLuDECNS1Utj8/59t0ryOZ2Sv1ThfAfaNA==}
+  '@bruits/satteri-wasm32-wasi@0.9.1':
+    resolution: {integrity: sha512-lEFk5ebh5SxRquA5RJisEoMoDmOiSnS10PGgXgXeVlWgF8KWKI9D3hSzVqNjEg/qKOjHcNdjIfyx/03Wrl6J3g==}
     engines: {node: '>=14.0.0'}
     cpu: [wasm32]
 
-  '@bruits/satteri-win32-x64-msvc@0.8.1':
-    resolution: {integrity: sha512-YgNvyaW5MLsrcnlwLdjk7/wSdER15+8cGdCHVkJY3KuaBdEW6XnfA35Svf88Ar+gBG+QsHEb8JE42DEJUiw22g==}
+  '@bruits/satteri-win32-x64-msvc@0.9.1':
+    resolution: {integrity: sha512-YBhm8yARopswAPeTih11BzMxWVQFD5CI9Yryp6HWepi6F/CeMycqxv18DXrj9U2fDDlbVGwT2IiEM2UPBjIPDQ==}
     cpu: [x64]
     os: [win32]
 
@@ -1609,9 +1609,6 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@tybys/wasm-util@0.10.1':
-    resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
-
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
 
@@ -1841,10 +1838,10 @@ packages:
     peerDependencies:
       unified: ^11.0.0
 
-  '@xsynaptic/satteri-auto-import@0.1.0':
-    resolution: {integrity: sha512-CUw42GTc1/LVN6Tq/iQoHY6JQ2Ed3ZA2E1wNLSTImG8Pm2gThs7AsuD7jYIsIKGqOJziJFvkSU1mTithijt77g==}
+  '@xsynaptic/satteri-auto-import@0.1.1':
+    resolution: {integrity: sha512-C0utDXyooFG7ZvTXiIszSQU704Yy5zOv8qyWCfFyoDsUExPWd+OXvCCHLGJFjHz5UBJ+PCY/5grsOXp5cMoFOw==}
     peerDependencies:
-      satteri: ^0.8.1
+      satteri: ^0.9.0
 
   '@xsynaptic/stylelint-config@0.1.1':
     resolution: {integrity: sha512-yozYUwI3u7glmdpjA18/W/jbLv7PnBlE0l9Z3wNIkDN+eO6xoQnNWquXJy4ycy+4gfW1v7rlN0Gv9DJUYqltAQ==}
@@ -1966,8 +1963,8 @@ packages:
   astro-seo@1.1.0:
     resolution: {integrity: sha512-G6LDNDyga30o+52v58jU7C35n3cORUzk7RSuY+xf/ZRbW6JiNplyaOO1VoYVKO+xzYNaBcxqNln2RFRR/wgJNQ==}
 
-  astro@7.0.0-beta.5:
-    resolution: {integrity: sha512-D0vm5aJf/AMr2YgFRdWCkPT3j9/JhmFtfFnAqeTlCDggowIe0lM208taQ/Rq/JN67oX7zeL0+vHbk7zWuakBVA==}
+  astro@7.0.0-beta.6:
+    resolution: {integrity: sha512-ZyqG42WZOZFFeMx9/bf8ABbcRurV1PSLENkqIUarkALfvjxqTP8GvHUv2kqGsuUwMRPxwOLazGNgC8uGnarP3g==}
     engines: {node: '>=22.12.0', npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
     peerDependencies:
@@ -4152,13 +4149,13 @@ packages:
   sass-formatter@0.7.9:
     resolution: {integrity: sha512-CWZ8XiSim+fJVG0cFLStwDvft1VI7uvXdCNJYXhDvowiv+DsbD1nXLiQ4zrE5UBvj5DWZJ93cwN0NX5PMsr1Pw==}
 
-  satteri-expressive-code@0.1.11:
-    resolution: {integrity: sha512-8HW4pDfdmiqQKWWfAuvHlvRnc7jAmfBbK6RdCTZNZSMNmcv0IGeh8thUWKo5LRj3AHyjxkLEkS6wjhcQTMynBg==}
+  satteri-expressive-code@0.1.14:
+    resolution: {integrity: sha512-2f1Bdba0f9eWpotJTZKWgefkEGCv5qG/l6vq4zBmbMVSMop+LiVWHUYqAXJlxEvKx2Xf5DlJ4IGlXfAm8SenQg==}
     peerDependencies:
       satteri: '>=0.4.0'
 
-  satteri@0.8.1:
-    resolution: {integrity: sha512-B3dPc3RsWN+CIrwJHk6KnPQjdN7cg9mnSgfs7AUEXITlIYRnSMleOZQPgpmm759pGZ/vpnsXciNfJKXKME2rrg==}
+  satteri@0.9.1:
+    resolution: {integrity: sha512-0oIBjwDxWvz8ePRSBxv8vEdZ0GI25/UcSq11y4651tJztUAmZlIdPjFx8luqBAM22g8YKVr5R17KaaZ2kIfLrw==}
 
   sax@1.6.0:
     resolution: {integrity: sha512-6R3J5M4AcbtLUdZmRv2SygeVaM7IhrLXu9BmnOGmmACak8fiUtOsYNWUS4uK7upbmHIBbLBeFeI//477BKLBzA==}
@@ -5084,20 +5081,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/markdown-satteri@0.3.1-beta.1':
+  '@astrojs/markdown-satteri@0.3.1-beta.2':
     dependencies:
       '@astrojs/internal-helpers': 0.10.0
       '@astrojs/prism': 4.0.2
       github-slugger: 2.0.0
-      satteri: 0.8.1
+      satteri: 0.9.1
 
-  '@astrojs/mdx@7.0.0-beta.3(@astrojs/markdown-satteri@0.3.1-beta.1)(astro@7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))':
+  '@astrojs/mdx@7.0.0-beta.4(@astrojs/markdown-satteri@0.3.1-beta.2)(astro@7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))':
     dependencies:
       '@astrojs/internal-helpers': 0.10.0
       '@astrojs/markdown-remark': 7.2.0
       '@mdx-js/mdx': 3.1.1
       acorn: 8.16.0
-      astro: 7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
+      astro: 7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
       es-module-lexer: 2.0.0
       estree-util-visit: 2.0.0
       hast-util-to-html: 9.0.5
@@ -5109,7 +5106,7 @@ snapshots:
       unist-util-visit: 5.1.0
       vfile: 6.0.3
     optionalDependencies:
-      '@astrojs/markdown-satteri': 0.3.1-beta.1
+      '@astrojs/markdown-satteri': 0.3.1-beta.2
     transitivePeerDependencies:
       - supports-color
 
@@ -5243,23 +5240,23 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@bruits/satteri-darwin-arm64@0.8.1':
+  '@bruits/satteri-darwin-arm64@0.9.1':
     optional: true
 
-  '@bruits/satteri-darwin-x64@0.8.1':
+  '@bruits/satteri-darwin-x64@0.9.1':
     optional: true
 
-  '@bruits/satteri-linux-x64-gnu@0.8.1':
+  '@bruits/satteri-linux-x64-gnu@0.9.1':
     optional: true
 
-  '@bruits/satteri-wasm32-wasi@0.8.1':
+  '@bruits/satteri-wasm32-wasi@0.9.1':
     dependencies:
       '@emnapi/core': 1.9.1
       '@emnapi/runtime': 1.9.1
-      '@napi-rs/wasm-runtime': 1.1.4(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+      '@napi-rs/wasm-runtime': 1.1.5(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
     optional: true
 
-  '@bruits/satteri-win32-x64-msvc@0.8.1':
+  '@bruits/satteri-win32-x64-msvc@0.9.1':
     optional: true
 
   '@cacheable/memory@2.0.9':
@@ -5700,20 +5697,20 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
-      '@tybys/wasm-util': 0.10.1
-    optional: true
-
-  '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
-    dependencies:
-      '@emnapi/core': 1.9.1
-      '@emnapi/runtime': 1.9.1
-      '@tybys/wasm-util': 0.10.1
+      '@tybys/wasm-util': 0.10.2
     optional: true
 
   '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
       '@emnapi/core': 1.10.0
       '@emnapi/runtime': 1.10.0
+      '@tybys/wasm-util': 0.10.2
+    optional: true
+
+  '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
+    dependencies:
+      '@emnapi/core': 1.9.1
+      '@emnapi/runtime': 1.9.1
       '@tybys/wasm-util': 0.10.2
     optional: true
 
@@ -6182,11 +6179,6 @@ snapshots:
       tailwindcss: 4.3.1
       vite: 8.0.16(@types/node@25.0.3)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.4)(yaml@2.9.0)
 
-  '@tybys/wasm-util@0.10.1':
-    dependencies:
-      tslib: 2.8.1
-    optional: true
-
   '@tybys/wasm-util@0.10.2':
     dependencies:
       tslib: 2.8.1
@@ -6418,12 +6410,12 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@unpic/astro@1.0.2(astro@7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))':
+  '@unpic/astro@1.0.2(astro@7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0))':
     dependencies:
       '@unpic/core': 1.0.3
       '@unpic/pixels': 1.3.0
       '@unpic/placeholder': 0.1.2
-      astro: 7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
+      astro: 7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
       blurhash: 2.0.5
 
   '@unpic/core@1.0.3':
@@ -6513,9 +6505,9 @@ snapshots:
       unified: 11.0.5
       unist-util-visit-parents: 6.0.2
 
-  '@xsynaptic/satteri-auto-import@0.1.0(satteri@0.8.1)':
+  '@xsynaptic/satteri-auto-import@0.1.1(satteri@0.9.1)':
     dependencies:
-      satteri: 0.8.1
+      satteri: 0.9.1
       zod: 4.4.3
 
   '@xsynaptic/stylelint-config@0.1.1(stylelint-order@8.1.1(stylelint@17.13.0(typescript@6.0.3)))(stylelint@17.13.0(typescript@6.0.3))':
@@ -6664,10 +6656,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  astro-pagefind@2.0.0(astro@7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)):
+  astro-pagefind@2.0.0(astro@7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)):
     dependencies:
       '@pagefind/component-ui': 1.5.2
-      astro: 7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
+      astro: 7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0)
       pagefind: 1.5.2
       sirv: 3.0.2
 
@@ -6679,11 +6671,11 @@ snapshots:
       - prettier-plugin-astro
       - typescript
 
-  astro@7.0.0-beta.5(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0):
+  astro@7.0.0-beta.6(@astrojs/markdown-remark@7.2.0)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@types/node@25.0.3)(jiti@2.7.0)(rollup@4.54.0)(tsx@4.22.4)(yaml@2.9.0):
     dependencies:
       '@astrojs/compiler-rs': 0.2.2(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
       '@astrojs/internal-helpers': 0.10.0
-      '@astrojs/markdown-satteri': 0.3.1-beta.1
+      '@astrojs/markdown-satteri': 0.3.1-beta.2
       '@astrojs/telemetry': 3.3.2
       '@capsizecss/unpack': 4.0.0
       '@clack/prompts': 1.1.0
@@ -9767,23 +9759,23 @@ snapshots:
     dependencies:
       suf-log: 2.5.3
 
-  satteri-expressive-code@0.1.11(satteri@0.8.1):
+  satteri-expressive-code@0.1.14(satteri@0.9.1):
     dependencies:
       expressive-code: 0.42.0
-      satteri: 0.8.1
+      satteri: 0.9.1
 
-  satteri@0.8.1:
+  satteri@0.9.1:
     dependencies:
       '@types/estree-jsx': 1.0.5
       '@types/hast': 3.0.4
       '@types/mdast': 4.0.4
       '@types/unist': 3.0.3
     optionalDependencies:
-      '@bruits/satteri-darwin-arm64': 0.8.1
-      '@bruits/satteri-darwin-x64': 0.8.1
-      '@bruits/satteri-linux-x64-gnu': 0.8.1
-      '@bruits/satteri-wasm32-wasi': 0.8.1
-      '@bruits/satteri-win32-x64-msvc': 0.8.1
+      '@bruits/satteri-darwin-arm64': 0.9.1
+      '@bruits/satteri-darwin-x64': 0.9.1
+      '@bruits/satteri-linux-x64-gnu': 0.9.1
+      '@bruits/satteri-wasm32-wasi': 0.9.1
+      '@bruits/satteri-win32-x64-msvc': 0.9.1
 
   sax@1.6.0: {}
 
