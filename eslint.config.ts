@@ -2,8 +2,6 @@ import { getAstroConfig, getConfig, getWebComponentConfig } from '@xsynaptic/esl
 import astroPlugin from 'eslint-plugin-astro';
 import globals from 'globals';
 
-const isStrictLint = process.env.ESLINT_STRICT === '1';
-
 export default getConfig(
 	[
 		{
@@ -20,10 +18,6 @@ export default getConfig(
 		},
 		{
 			rules: {
-				// Expensive type-aware rules; only run in strict mode
-				'@typescript-eslint/no-deprecated': isStrictLint ? 'error' : 'off',
-				'@typescript-eslint/no-misused-promises': isStrictLint ? 'error' : 'off',
-				'@typescript-eslint/no-unsafe-assignment': isStrictLint ? 'error' : 'off',
 				// Prefix demand fights idiomatic predicates, getters, schema fields, env (PROD), and CLI flags
 				'unicorn/consistent-boolean-name': 'off',
 				// We use intentional compounds such as schema.org's WebSite type
