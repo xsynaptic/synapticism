@@ -17,13 +17,13 @@ export default {
 			],
 		},
 		'packages/content': {
+			// Config and ambient-type files consumed by tooling, not imported
+			entry: ['.remarkrc.mjs', 'global.d.ts'],
+			// Content is loaded by Astro's glob loader via a path string, which knip can't trace
+			ignore: ['collections/**'],
 			ignoreDependencies: [
+				'react', // type-only: jsxImportSource + React.JSX in global.d.ts for the MDX language server
 				'remark', // used via unified pipeline
-				'remark-lint-list-item-indent', // remark preset plugin
-				'remark-mdx', // remark preset plugin
-				'remark-preset-lint-consistent', // remark preset
-				'remark-preset-lint-recommended', // remark preset
-				'unified', // used via remark pipeline
 			],
 		},
 		'packages/scripts': {

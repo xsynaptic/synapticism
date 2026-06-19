@@ -9,7 +9,7 @@ export const StylizedTextSchema = z.string().transform((value) => refineTypograp
 const DESCRIPTION_CHARACTER_LENGTH = 30;
 
 // Markdown may be present so we don't further transform the value
-export const DescriptionSchema = z
+const DescriptionSchema = z
 	.string()
 	.min(DESCRIPTION_CHARACTER_LENGTH, {
 		message: `Descriptions must be ${String(DESCRIPTION_CHARACTER_LENGTH)} or more characters long.`,
@@ -29,7 +29,7 @@ export const DateStringSchema = z
 	)
 	.transform((value) => (value instanceof Date ? value : parseFrontmatterDate(value)));
 
-export const NumericScaleSchema = z.number().int().min(1).max(5);
+const NumericScaleSchema = z.number().int().min(1).max(5);
 
 // An external link: the thing a note points to. Both fields required.
 export const LinkItemSchema = z.object({
