@@ -1,10 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
+import { render } from 'astro:content';
+
 import ContentSection from '#components/content/content-section.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
-import { getHasContent, renderContent } from '#lib/utils/astro.ts';
+import { getHasContent } from '#lib/utils/astro.ts';
 import { renderMarkdownInline } from '#lib/utils/markdown.ts';
 
 interface Props {
@@ -16,13 +18,13 @@ const { class: className, entry, ...props } = Astro.props;
 
 const hasContent = getHasContent(entry);
 
-const { components, Content } = await renderContent(entry);
+const { Content } = await render(entry);
 ---
 
 {
 	hasContent ? (
 		<ProseBody class:list={['content', 'pb-medium', className]} data-pagefind-weight="2" {...props}>
-			<Content components={components} />
+			<Content />
 		</ProseBody>
 	) : undefined
 }{

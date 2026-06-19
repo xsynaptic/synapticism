@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
+import { render } from 'astro:content';
+
 import type { NoteNavItem } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
@@ -16,7 +18,6 @@ import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionNoteNav from '#components/sections/section-note-nav.astro';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
-import { renderContent } from '#lib/utils/astro.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
@@ -35,7 +36,7 @@ const { backlinks, entry, newerNote, olderNote } = Astro.props;
 const projectIds = entry.data.projects?.map(({ id }) => id);
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
-const { components, Content } = await renderContent(entry);
+const { Content } = await render(entry);
 ---
 
 <MainSite
@@ -74,7 +75,7 @@ const { components, Content } = await renderContent(entry);
 			</Fragment>
 		</ContentHeader>
 		<ProseBody class:list={['content', 'e-content', 'pb-small']}>
-			<Content components={components} />
+			<Content />
 		</ProseBody>
 		<ContentNoteLinks links={entry.data.links} source={entry.data.source} />
 		<ContentSectionProjects projectIds={projectIds} />

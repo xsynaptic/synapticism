@@ -5,11 +5,11 @@ import type { CollectionEntry } from 'astro:content';
 import mdxRenderer from '@astrojs/mdx/server.js';
 import { defaultSchema, sanitizeHtml } from '@xsynaptic/unified-tools';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import { render } from 'astro:content';
 import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
-import { renderContent } from '#lib/utils/astro.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
@@ -19,8 +19,8 @@ import { getContentUrl } from '#lib/utils/routing.ts';
 async function createContainerQuietly() {
 	const originalWarn = console.warn;
 
-	console.warn = (...args: Parameters<typeof console.warn>) => {
-		const [first] = args;
+	console.warn = (...args: Array<unknown>) => {
+		const first = args[0];
 
 		if (
 			typeof first === 'string' &&
@@ -46,12 +46,9 @@ async function createRenderMdxFunction() {
 	container.addServerRenderer({ name: 'mdx', renderer: mdxRenderer });
 
 	return async function (entry: CollectionEntry<'posts'>, options?: ContainerRenderOptions) {
-		const { components, Content } = await renderContent(entry);
+		const { Content } = await render(entry);
 
-		return await container.renderToString(Content, {
-			...options,
-			props: { ...options?.props, components },
-		});
+		return await container.renderToString(Content, options);
 	};
 }
 

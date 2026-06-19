@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
+import { render } from 'astro:content';
+
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentDate from '#components/content/content-date.astro';
@@ -13,7 +15,6 @@ import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getPostSchema } from '#lib/collections/posts/posts-utils.ts';
-import { renderContent } from '#lib/utils/astro.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
@@ -30,7 +31,7 @@ const { backlinks, entry } = Astro.props;
 const projectIds = entry.data.projects?.map(({ id }) => id);
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
-const { components, Content } = await renderContent(entry);
+const { Content } = await render(entry);
 ---
 
 <MainSite
@@ -70,7 +71,7 @@ const { components, Content } = await renderContent(entry);
 			</Fragment>
 		</ContentHeader>
 		<ProseBody class:list={['content', 'e-content', 'pb-small']} data-reading-frame>
-			<Content components={components} />
+			<Content />
 		</ProseBody>
 		<ContentSectionProjects projectIds={projectIds} />
 		<ContentSectionTags tagIds={tagIds} />

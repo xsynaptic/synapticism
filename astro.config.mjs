@@ -3,6 +3,7 @@ import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { autoImport } from '@xsynaptic/satteri-auto-import';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
@@ -56,6 +57,16 @@ export default defineConfig({
 	markdown: {
 		processor: satteri({
 			hastPlugins: [expressiveCode(expressiveCodeOptions)],
+			mdastPlugins: [
+				autoImport({
+					imports: [
+						{
+							'./src/components/mdx/link.astro': [['default', 'Link']],
+							'./src/components/mdx/more.astro': [['default', 'More']],
+						},
+					],
+				}),
+			],
 		}),
 		// EC (the satteri-expressive-code hast plugin) owns highlighting; Satteri must not pre-highlight
 		syntaxHighlight: false,
