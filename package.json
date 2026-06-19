@@ -8,12 +8,11 @@
 		"preview": "astro preview",
 		"astro": "astro",
 		"lint": "eslint",
-		"lint-strict": "ESLINT_STRICT=1 eslint",
 		"lint-content": "pnpm --filter synapticism-content lint",
 		"lint-css": "stylelint \"src/**/*.{css,astro}\"",
 		"lint-css-fix": "stylelint \"src/**/*.{css,astro}\" --fix",
 		"knip": "knip",
-		"fix": "stylelint \"src/**/*.{css,astro}\" --fix && prettier --write . && eslint --fix && tsc --noEmit --extendedDiagnostics && knip",
+		"fix": "stylelint \"src/**/*.{css,astro}\" --fix --cache --cache-location node_modules/.cache/stylelint/ && prettier --write . --cache && eslint --fix --cache --cache-location node_modules/.cache/eslint/ && tsc --noEmit --extendedDiagnostics && knip",
 		"check": "stylelint \"src/**/*.{css,astro}\" && prettier --check . && eslint && tsc --noEmit --extendedDiagnostics && knip",
 		"check-types": "tsc --noEmit --extendedDiagnostics",
 		"deploy-site": "pnpm --filter @synapticism/scripts run deploy-site --root-path=$PWD",
@@ -23,12 +22,12 @@
 		"#*": "./src/*"
 	},
 	"dependencies": {
-		"astro": "7.0.0-beta.3"
+		"astro": "7.0.0-beta.5"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.9",
-		"@astrojs/markdown-satteri": "0.3.1-alpha.0",
-		"@astrojs/mdx": "7.0.0-alpha.1",
+		"@astrojs/markdown-satteri": "0.3.1-beta.1",
+		"@astrojs/mdx": "7.0.0-beta.3",
 		"@astrojs/rss": "^4.0.18",
 		"@astrojs/sitemap": "^3.7.3",
 		"@tailwindcss/vite": "^4.3.1",
@@ -36,6 +35,7 @@
 		"@unpic/astro": "^1.0.2",
 		"@unpic/core": "^1.0.3",
 		"@xsynaptic/eslint-config": "^4.0.1",
+		"@xsynaptic/satteri-auto-import": "^0.1.0",
 		"@xsynaptic/stylelint-config": "^0.1.1",
 		"@xsynaptic/unified-tools": "^5.1.1",
 		"astro-pagefind": "^2.0.0",
