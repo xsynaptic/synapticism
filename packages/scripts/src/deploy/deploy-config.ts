@@ -1,38 +1,20 @@
 import chalk from 'chalk';
 
-interface DeployConfig {
-	remoteHost: string;
-	sitePath: string;
-	sshKeyPath: string;
-}
+type AuthMode = 'interactive' | 'token';
 
-export function loadDeployConfig(): DeployConfig {
-	const remoteHost = process.env.DEPLOY_REMOTE_HOST;
-	const sshKeyPath = process.env.DEPLOY_SSH_KEY_PATH;
-	const sitePath = process.env.DEPLOY_SITE_PATH;
-
-	const missing: Array<string> = [];
-
-	if (!remoteHost) missing.push('DEPLOY_REMOTE_HOST');
-	if (!sshKeyPath) missing.push('DEPLOY_SSH_KEY_PATH');
-	if (!sitePath) missing.push('DEPLOY_SITE_PATH');
-
-	if (!remoteHost || !sshKeyPath || !sitePath) {
-		console.error(chalk.red(`Missing required environment variables: ${missing.join(', ')}`));
-		console.error(chalk.gray('\nCheck deploy/.env or deploy/.env.example for required vars.'));
-		throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
-	}
-
-	return {
-		remoteHost,
-		sitePath,
-		sshKeyPath,
-	};
-}
-
-export function printDeployConfig(config: DeployConfig) {
-	console.log(chalk.blue('Deploy Configuration:'));
-	console.log(chalk.gray(`  Remote:     ${config.remoteHost}`));
-	console.log(chalk.gray(`  Site path:  ${config.sitePath}`));
+export function printDeployConfig() {
+	console.log(chalk.blue('Deploy: Cloudflare Workers (static assets)'));
+	console.log(
+		chalk.gray(
+			getDeployAuthMode() === 'token'
+				? '  Auth: CLOUDFLARE_API_TOKEN (env)'
+				: '  Auth: wrangler login session (run `pnpm exec wrangler login` if deploy fails)',
+		),
+	);
 	console.log('');
+}
+
+// wrangler resolves auth itself (env token or login session), so we don't gate on it here
+function getDeployAuthMode(): AuthMode {
+	return process.env.CLOUDFLARE_API_TOKEN ? 'token' : 'interactive';
 }

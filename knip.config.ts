@@ -8,12 +8,9 @@ export default {
 			// MDX components are provided to <Content> at render time via renderContent (src/lib/utils/astro.ts)
 			entry: ['src/components/mdx/*.astro'],
 			ignoreDependencies: [
-				'eslint-plugin-jsx-a11y', // transitive dep required by eslint-plugin-astro jsx-a11y-strict
-				// Planned integrations; not yet wired up
-				'@unpic/astro',
-				'@unpic/core',
 				'astro-pagefind',
 				'eslint-plugin-react-hooks',
+				'wrangler', // used via wrangler.jsonc + the deploy script ($`wrangler deploy`), neither traceable
 			],
 		},
 		'packages/content': {
@@ -27,7 +24,9 @@ export default {
 			],
 		},
 		'packages/scripts': {
-			ignoreBinaries: ['ssh-add'], // system binary used in deploy scripts
+			ignoreDependencies: [
+				'@fontsource/geist', // OG fonts resolved at build via a fontsource path string knip can't trace
+			],
 		},
 	},
 } satisfies KnipConfig;

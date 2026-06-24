@@ -26,8 +26,6 @@ export default getConfig(
 				'unicorn/max-nested-calls': ['error', { max: 4 }],
 				// Conflicts with Remeda's sort function
 				'unicorn/no-array-sort': 'off',
-				// Allow our explicit `? {x} : {}` spread; still flags useless `|| {}` / `?? {}` fallbacks
-				'unicorn/no-useless-fallback-in-spread': ['error', { checkTernary: false }],
 			},
 		},
 		{

@@ -24,3 +24,5 @@ allowBuilds:
   esbuild: true
   sharp: true
   satteri: true
+  # Binary ships via the @cloudflare/workerd-* optional dep; postinstall only validates/optimizes
+  workerd: false
