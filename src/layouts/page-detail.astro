@@ -12,7 +12,7 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getSeoHideSearch } from '#lib/utils/seo.ts';
+import { getOgImageUrl, getSeoHideSearch } from '#lib/utils/seo.ts';
 
 interface Props {
 	entry: CollectionEntry<'pages'>;
@@ -27,6 +27,7 @@ const { Content } = await render(entry);
 	hasReadingBar={true}
 	meta={{
 		description: getDescriptionRenderedText(entry),
+		image: { url: getOgImageUrl(entry.collection, entry.id) },
 		title: entry.data.title,
 		...getSeoHideSearch(entry.data.hideSearch),
 	}}

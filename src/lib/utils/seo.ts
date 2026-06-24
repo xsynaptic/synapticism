@@ -6,6 +6,11 @@ import { parseContentDate } from '#lib/utils/date.ts';
 
 const { BASE_URL, PROD, SITE } = import.meta.env;
 
+// Must mirror the og-image script's output path (packages/scripts/src/og-image)
+export function getOgImageUrl(collection: string, id: string): string {
+	return `/og/${collection}/${id}.jpg`;
+}
+
 export function getSeoArticleProps({
 	dateCreated,
 	dateUpdated,

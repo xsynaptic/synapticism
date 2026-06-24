@@ -6,6 +6,7 @@ import Container from '#components/parts/container.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { getContentUrl, getSiteUrl } from '#lib/utils/routing.ts';
 import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
 import { formatStringTemplate, getSourceDomain } from '#lib/utils/text.ts';
 
@@ -23,10 +24,10 @@ const isFirstPage = pageNumber === 1;
 let previousUrl: string | undefined;
 
 if (!isFirstPage) {
-	previousUrl = pageNumber === 2 ? '/' : `/page/${String(pageNumber - 1)}`;
+	previousUrl = pageNumber === 2 ? getSiteUrl() : getSiteUrl('page', String(pageNumber - 1));
 }
 
-const nextUrl = pageNumber < totalPages ? `/page/${String(pageNumber + 1)}` : undefined;
+const nextUrl = pageNumber < totalPages ? getSiteUrl('page', String(pageNumber + 1)) : undefined;
 
 const mainProps = isFirstPage
 	? {
@@ -169,7 +170,7 @@ const mainProps = isFirstPage
 				<p class="mt-7 font-mono text-sm">
 					<a
 						class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
-						href="/projects"
+						href={getContentUrl('projects')}
 					>
 						{t('index.allProjects')} <span aria-hidden="true">&rarr;</span>
 					</a>

@@ -19,7 +19,7 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getSeoArticleProps } from '#lib/utils/seo.ts';
+import { getOgImageUrl, getSeoArticleProps } from '#lib/utils/seo.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
@@ -38,6 +38,7 @@ const { Content } = await render(entry);
 	hasReadingBar={true}
 	meta={{
 		description: getDescriptionRenderedText(entry),
+		image: { url: getOgImageUrl(entry.collection, entry.id) },
 		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,
