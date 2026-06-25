@@ -49,6 +49,7 @@ export const contentBaseSchema = z.object({
 	dateUpdated: DateStringSchema.optional(),
 	description: DescriptionSchema.optional(),
 	entryQuality: NumericScaleSchema,
+	imageAlt: z.string().optional(),
 	imageFeatured: z.string().optional(),
 	imageHero: z.string().optional(),
 	title: StylizedTextSchema,

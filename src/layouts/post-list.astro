@@ -4,6 +4,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import ContentHeader from '#components/content/content-header.astro';
 import ContentSection from '#components/content/content-section.astro';
+import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import Link from '#components/parts/link.astro';
@@ -39,20 +40,25 @@ const { page } = Astro.props;
 					const description = getDescriptionRenderedHtml(entry);
 
 					return (
-						<li class="flex flex-col gap-1">
-							<h2 class="text-lg font-semibold md:text-xl">
-								<Link href={getContentUrl(entry.collection, entry.id)}>{entry.data.title}</Link>
-							</h2>
-							{dateCreated ? (
-								<DateDisplay
-									class="text-xs text-primary-400"
-									date={dateCreated}
-									datePreset={DatePresetEnum.Medium}
-								/>
+						<li class="flex gap-3 sm:gap-4">
+							{entry.data.imageFeatured ? (
+								<ContentThumbnail src={entry.data.imageFeatured} />
 							) : undefined}
-							{description ? (
-								<p class="text-sm text-primary-500" set:html={description} />
-							) : undefined}
+							<div class="flex min-w-0 flex-col gap-1">
+								<h2 class="text-lg font-semibold md:text-xl">
+									<Link href={getContentUrl(entry.collection, entry.id)}>{entry.data.title}</Link>
+								</h2>
+								{dateCreated ? (
+									<DateDisplay
+										class="text-xs text-primary-400"
+										date={dateCreated}
+										datePreset={DatePresetEnum.Medium}
+									/>
+								) : undefined}
+								{description ? (
+									<p class="text-sm text-primary-500" set:html={description} />
+								) : undefined}
+							</div>
 						</li>
 					);
 				})

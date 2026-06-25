@@ -53,6 +53,10 @@ export default defineConfig({
 			weights: ['300 700'],
 		},
 	],
+	image: {
+		layout: 'constrained',
+		responsiveStyles: true,
+	},
 	integrations: [mdx(), sitemap()],
 	markdown: {
 		processor: satteri({

@@ -7,6 +7,7 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import ContentDescription from '#components/content/content-description.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentSection from '#components/content/content-section.astro';
+import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import Link from '#components/parts/link.astro';
@@ -38,18 +39,21 @@ const { entry, page } = Astro.props;
 		<ul class="flex flex-col gap-4">
 			{
 				page.data.map((item) => (
-					<li class="flex flex-col gap-1">
-						<h2 class="text-lg font-semibold md:text-xl">
-							<Link href={item.url}>{item.title}</Link>
-						</h2>
-						<DateDisplay
-							class="text-xs text-primary-400"
-							date={item.dateCreated}
-							datePreset={DatePresetEnum.Medium}
-						/>
-						{item.description ? (
-							<p class="text-sm text-primary-500" set:html={item.description} />
-						) : undefined}
+					<li class="flex gap-3 sm:gap-4">
+						{item.imageId ? <ContentThumbnail src={item.imageId} /> : undefined}
+						<div class="flex min-w-0 flex-col gap-1">
+							<h2 class="text-lg font-semibold md:text-xl">
+								<Link href={item.url}>{item.title}</Link>
+							</h2>
+							<DateDisplay
+								class="text-xs text-primary-400"
+								date={item.dateCreated}
+								datePreset={DatePresetEnum.Medium}
+							/>
+							{item.description ? (
+								<p class="text-sm text-primary-500" set:html={item.description} />
+							) : undefined}
+						</div>
 					</li>
 				))
 			}

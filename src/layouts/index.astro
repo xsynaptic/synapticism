@@ -1,6 +1,7 @@
 ---
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
+import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
 import Container from '#components/parts/container.astro';
 import DateDisplay from '#components/parts/date-display.astro';
@@ -79,29 +80,32 @@ const mainProps = isFirstPage
 
 						return (
 							<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
-								<article class="flex flex-col gap-2">
-									<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
-										<a
-											class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
-											href={item.url}
-										>
-											{item.title}
-										</a>
-									</h3>
-									<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
-										<DateDisplay date={item.dateCreated} datePreset={DatePresetEnum.Medium} />
-										{primaryLink ? (
-											<span>
-												{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
-											</span>
+								<article class="flex gap-3 sm:gap-4">
+									{item.imageId ? <ContentThumbnail src={item.imageId} /> : undefined}
+									<div class="flex min-w-0 flex-col gap-2">
+										<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
+											<a
+												class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
+												href={item.url}
+											>
+												{item.title}
+											</a>
+										</h3>
+										<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
+											<DateDisplay date={item.dateCreated} datePreset={DatePresetEnum.Medium} />
+											{primaryLink ? (
+												<span>
+													{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
+												</span>
+											) : undefined}
+										</div>
+										{item.description ? (
+											<p
+												class="max-w-[68ch] leading-relaxed text-pretty text-primary-600"
+												set:html={item.description}
+											/>
 										) : undefined}
 									</div>
-									{item.description ? (
-										<p
-											class="max-w-[68ch] leading-relaxed text-pretty text-primary-600"
-											set:html={item.description}
-										/>
-									) : undefined}
 								</article>
 							</li>
 						);

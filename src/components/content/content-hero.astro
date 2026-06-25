@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+
+import Container from '#components/parts/container.astro';
+import { getMediaImage, getMediaLqip } from '#lib/utils/media.ts';
+
+interface Props {
+	alt: string;
+	src: string;
+}
+
+const { alt, src } = Astro.props;
+
+const image = getMediaImage(src);
+const lqip = getMediaLqip(src);
+---
+
+<Container as="figure" class="mb-medium">
+	<div
+		class="overflow-hidden rounded-lg border border-primary-200 bg-primary-100 bg-cover bg-center"
+		style={lqip ? `background-image:url(${lqip})` : undefined}
+	>
+		<Image
+			alt={alt}
+			class="block w-full"
+			layout="constrained"
+			priority
+			sizes="(min-width: 58rem) 58rem, 100vw"
+			src={image}
+			width={1600}
+		/>
+	</div>
+</Container>
