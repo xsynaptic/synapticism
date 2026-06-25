@@ -43,8 +43,7 @@
 	},
 	"files.associations": {
 		"*.css": "tailwindcss",
-		"*.conf.template": "nginx",
-		"*.caddy": "caddyfile"
+		"*.conf.template": "nginx"
 	},
 	"npm.packageManager": "pnpm",
 	"typescript.preferences.importModuleSpecifier": "non-relative", // Prefer import mapped paths

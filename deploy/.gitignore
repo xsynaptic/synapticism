@@ -1,7 +1,0 @@
-# Ignore actual env file but keep example
-.env
-!.env.example
-
-# Ignore actual certs but keep directory
-certs/*
-!certs/.gitkeep

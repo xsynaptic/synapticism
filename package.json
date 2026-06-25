@@ -4,7 +4,8 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "astro dev",
-		"build": "astro check && astro build && pnpm --filter @synapticism/scripts run og-image --root-path=$PWD",
+		"build": "pnpm lqip && astro check && astro build && pnpm --filter @synapticism/scripts run og-image --root-path=$PWD",
+		"lqip": "pnpm --filter @synapticism/scripts run lqip --root-path=$PWD",
 		"og-image": "astro sync && pnpm --filter @synapticism/scripts run og-image --root-path=$PWD",
 		"preview": "astro preview",
 		"astro": "astro",
@@ -52,11 +53,12 @@
 		"remeda": "^2.39.0",
 		"satteri": "^0.9.2",
 		"satteri-expressive-code": "^0.1.15",
+		"sharp": "^0.35.2",
 		"stylelint": "^17.13.0",
 		"tailwindcss": "^4.3.1",
 		"typescript": "^6.0.3",
 		"url-join": "^5.0.0",
-		"wrangler": "^4.103.0",
+		"wrangler": "^4.104.0",
 		"yaml": "^2.8.3",
 		"zod": "^4.4.3"
 	},

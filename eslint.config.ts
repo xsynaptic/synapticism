@@ -11,7 +11,6 @@ export default getConfig(
 				'**/.astro-cache/**/*',
 				'**/.cache/**/*',
 				'**/dist/**/*',
-				'deploy/**/*',
 				'packages/content/**/*',
 				'**/temp/**/*',
 			],
