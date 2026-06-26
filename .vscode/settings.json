@@ -18,7 +18,15 @@
 		"yml": true
 	},
 	"cSpell.ignorePaths": [".vscode", "pnpm*.yaml", "node_modules", "tsconfig.json"],
-	"cSpell.words": ["fontsource", "remeda", "synapticism", "umami", "xsynaptic"],
+	"cSpell.words": [
+		"fontsource",
+		"microformat",
+		"pagefind",
+		"remeda",
+		"synapticism",
+		"umami",
+		"xsynaptic"
+	],
 	"eslint.validate": [
 		"javascript",
 		"javascriptreact",
