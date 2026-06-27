@@ -4,6 +4,7 @@
 	"exclude": [".vscode", "dist"],
 	"compilerOptions": {
 		"outDir": "./dist",
+		"rootDir": ".",
 		"strictNullChecks": true,
 		"erasableSyntaxOnly": true,
 		"jsx": "react-jsx"
