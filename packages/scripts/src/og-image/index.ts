@@ -4,6 +4,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 
+import { ASTRO_CACHE_DIR } from './constants.js';
 import { getOgImageEntries } from './content.js';
 import { loadOgFonts } from './fonts.js';
 import { createGenerator } from './generate.js';
@@ -11,7 +12,7 @@ import { createGenerator } from './generate.js';
 const { values } = parseArgs({
 	args: process.argv.slice(2),
 	options: {
-		'data-store-path': { default: '.astro/data-store.json', type: 'string' },
+		'data-store-path': { default: path.join(ASTRO_CACHE_DIR, 'data-store.json'), type: 'string' },
 		'output-path': { default: 'dist/og', type: 'string' },
 		'root-path': { default: process.cwd(), type: 'string' },
 	},
