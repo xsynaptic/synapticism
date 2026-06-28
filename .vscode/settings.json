@@ -19,7 +19,9 @@
 	},
 	"cSpell.ignorePaths": [".vscode", "pnpm*.yaml", "node_modules", "tsconfig.json"],
 	"cSpell.words": [
+		"backlinks",
 		"fontsource",
+		"lqip",
 		"microformat",
 		"pagefind",
 		"remeda",
