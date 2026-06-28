@@ -1,7 +1,4 @@
-// Central dictionary of user-facing UI strings. Reference with `t(key)`; for
-// strings containing {tokens}, interpolate with formatStringTemplate from
-// #lib/utils/text.ts. Single-language by design (no translation layer).
-
+// Central dictionary of user-facing UI strings
 const strings = {
 	// Site
 	'site.description': 'A technical blog about web development, design, and creative coding.',

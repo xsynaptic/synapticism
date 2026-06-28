@@ -4,7 +4,7 @@ import { stripTags } from '@xsynaptic/unified-tools';
 import * as R from 'remeda';
 
 import { MDX_COMPONENTS_TO_STRIP } from '#constants.ts';
-import { renderMarkdownInline } from '#lib/utils/markdown.ts';
+import { renderMarkdownInline } from '#lib/utils/text.ts';
 import { stripMdxComponents } from '#lib/utils/text.ts';
 
 export function getWordCount(entry: CollectionEntry<CollectionKey>): number | undefined {

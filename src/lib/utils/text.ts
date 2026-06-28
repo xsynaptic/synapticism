@@ -1,4 +1,5 @@
 import { stripTags } from '@xsynaptic/unified-tools';
+import { markdownToHtml } from 'satteri';
 
 export function formatNumber({
 	locales,
@@ -75,4 +76,21 @@ function encodeHtmlEntities(input: string): string {
 		.replaceAll('>', '&gt;')
 		.replaceAll('&', '&amp;')
 		.replaceAll('"', '&quot;');
+}
+
+// Render a short markdown string (descriptions, notices, teasers) to inline HTML
+// Stripping or sanitizing is left to callers that need it
+const markdownCache = new Map<string, string>();
+
+export function renderMarkdownInline(input: string): string {
+	const cached = markdownCache.get(input);
+	if (cached !== undefined) return cached;
+
+	const { html } = markdownToHtml(input, {
+		features: { smartPunctuation: true },
+	});
+	const result = html.trim();
+
+	markdownCache.set(input, result);
+	return result;
 }

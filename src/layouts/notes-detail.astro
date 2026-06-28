@@ -17,11 +17,11 @@ import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionNoteNav from '#components/sections/section-note-nav.astro';
+import { MicroformatClassNames } from '#components/types.ts';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
-import { MicroformatClassNames } from '#lib/utils/microformats.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
 import { getOgImageUrl, getSeoArticleProps } from '#lib/utils/seo.ts';
 

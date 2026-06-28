@@ -13,8 +13,8 @@ interface CollectionEntryWithStandardDates {
 	};
 }
 
-// A note authored date-only lands on UTC midnight; treat that as "no time" so the display falls
-// back to a bare calendar date.
+// A note authored date-only lands on UTC midnight
+// Treat that as "no time" so the display falls back to a bare calendar date
 export function hasUtcTime(date: Date): boolean {
 	return date.getUTCHours() !== 0 || date.getUTCMinutes() !== 0 || date.getUTCSeconds() !== 0;
 }
@@ -25,9 +25,10 @@ export function parseContentDate(date: Date | string | undefined) {
 	return new Date(date);
 }
 
-// Interpret a frontmatter date string as UTC: bare dates and zoneless datetimes are read as UTC
-// wall-clock, values carrying an explicit zone are honored. Keeps display and sorting consistent
-// regardless of the build machine's timezone.
+// Interpret a frontmatter date string as UTC:
+// - bare dates and zoneless datetimes are read as UTC wall-clock
+// - values carrying an explicit zone are honored
+// Keeps display and sorting consistent regardless of the build machine's timezone
 export function parseFrontmatterDate(value: string): Date {
 	const trimmed = value.trim();
 

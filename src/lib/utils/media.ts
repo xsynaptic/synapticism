@@ -21,7 +21,7 @@ export function getMediaImage(mediaPath: string): ImageMetadata {
 	return image.default;
 }
 
-// The lqip script regenerates this gitignored cache before each build
+// The LQIP script regenerates this gitignored cache before each build
 // Read once via fs so a missing file (fresh checkout) degrades to no placeholder
 function loadLqipMap(): Record<string, { lqip: string }> {
 	try {

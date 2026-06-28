@@ -16,10 +16,8 @@ const DescriptionSchema = z
 	})
 	.transform((value) => value.trim());
 
-// Dates are authored in ISO 8601, ideally with a full time (e.g. 2026-06-08T14:30:00Z). A bare
-// date or a missing time is allowed; the display falls back to a calendar date in that case. YAML
-// parses an unquoted ISO value into a UTC Date directly; a quoted (or legacy) value arrives as a
-// string and is parsed as UTC here.
+// Dates are authored in ISO 8601, ideally with a full time (e.g. 2026-06-08T14:30:00Z)
+// A bare date or a missing time is allowed; the display falls back to a calendar date in that case
 export const DateStringSchema = z
 	.union([z.date(), z.string()])
 	.refine(
@@ -31,14 +29,13 @@ export const DateStringSchema = z
 
 const NumericScaleSchema = z.number().int().min(1).max(5);
 
-// An external link: the thing a note points to. Both fields required.
+// An external link: the thing a note points to
 export const LinkItemSchema = z.object({
 	title: z.string(),
 	url: z.url(),
 });
 
-// Where a note was found. "via" is a render label; the data is a source. URL optional so a
-// name-only credit works.
+// Where a note was found; URL optional so a name-only credit works
 export const SourceSchema = z.object({
 	title: z.string(),
 	url: z.url().optional(),

@@ -2,8 +2,12 @@ import { sanitizeHtml, stripTags } from '@xsynaptic/unified-tools';
 import * as R from 'remeda';
 
 import { MDX_COMPONENTS_TO_STRIP } from '#constants.ts';
-import { renderMarkdownInline } from '#lib/utils/markdown.ts';
-import { stripFootnoteReferences, stripMdxComponents, textClipper } from '#lib/utils/text.ts';
+import {
+	renderMarkdownInline,
+	stripFootnoteReferences,
+	stripMdxComponents,
+	textClipper,
+} from '#lib/utils/text.ts';
 
 interface DescriptionRendered {
 	html: string;

@@ -15,16 +15,6 @@ export const MDX_COMPONENTS_TO_STRIP = ['Img', 'ImgGroup', 'More'];
  */
 export const OPEN_GRAPH_IMAGE_FALLBACK_COUNT = 5;
 export const OPEN_GRAPH_IMAGE_FALLBACK_PREFIX = 'og-image';
-export const OPEN_GRAPH_IMAGE_DENSITY = 2;
-
-/**
- * Tailwind CSS V4 breakpoints and spacing
- */
-export const TAILWIND_BREAKPOINT_SM = '40rem';
-export const TAILWIND_BREAKPOINT_MD = '48rem';
-export const TAILWIND_BREAKPOINT_CONTENT = '60.25rem';
-export const TAILWIND_CONTENT_PADDING_SM = '2rem';
-export const TAILWIND_CONTENT_PADDING_MD = '4rem';
 
 /**
  * Various settings

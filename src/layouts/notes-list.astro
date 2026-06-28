@@ -1,6 +1,7 @@
 ---
 import type { Page } from 'astro';
-import type { CollectionEntry } from 'astro:content';
+
+import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentHeader from '#components/content/content-header.astro';
 import ContentSection from '#components/content/content-section.astro';
@@ -11,13 +12,11 @@ import Link from '#components/parts/link.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
-import { getDescriptionRenderedHtml } from '#lib/utils/description.ts';
-import { getContentUrl } from '#lib/utils/routing.ts';
+import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
-	page: Page<CollectionEntry<'notes'>>;
+	page: Page<CatalogItem>;
 }
 
 const { page } = Astro.props;
@@ -36,24 +35,18 @@ const { page } = Astro.props;
 	<ContentSection>
 		<ul class="flex flex-col gap-4">
 			{
-				page.data.map((entry) => {
-					const dateCreated = parseContentDate(entry.data.dateCreated);
-					const description = getDescriptionRenderedHtml(entry);
-					const primaryLink = entry.data.links?.[0];
+				page.data.map((item) => {
+					const primaryLink = item.links?.[0];
 
 					return (
 						<li class="flex gap-3 sm:gap-4">
-							{entry.data.imageFeatured ? (
-								<ContentThumbnail src={entry.data.imageFeatured} />
-							) : undefined}
+							{item.imageId ? <ContentThumbnail src={item.imageId} /> : undefined}
 							<div class="flex min-w-0 flex-col gap-1">
 								<h2 class="text-lg font-semibold md:text-xl">
-									<Link href={getContentUrl(entry.collection, entry.id)}>{entry.data.title}</Link>
+									<Link href={item.url}>{item.title}</Link>
 								</h2>
 								<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
-									{dateCreated ? (
-										<DateDisplay date={dateCreated} datePreset={DatePresetEnum.Medium} />
-									) : undefined}
+									<DateDisplay date={item.dateCreated} datePreset={DatePresetEnum.Medium} />
 									{primaryLink ? (
 										<span>
 											{getSourceDomain(primaryLink.url)}
@@ -63,8 +56,8 @@ const { page } = Astro.props;
 										</span>
 									) : undefined}
 								</div>
-								{description ? (
-									<p class="text-sm text-primary-600" set:html={description} />
+								{item.description ? (
+									<p class="text-sm text-primary-600" set:html={item.description} />
 								) : undefined}
 							</div>
 						</li>

@@ -1,6 +1,7 @@
 ---
 import type { Page } from 'astro';
-import type { CollectionEntry } from 'astro:content';
+
+import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentHeader from '#components/content/content-header.astro';
 import ContentSection from '#components/content/content-section.astro';
@@ -11,12 +12,10 @@ import Link from '#components/parts/link.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { DatePresetEnum, parseContentDate } from '#lib/utils/date.ts';
-import { getDescriptionRenderedHtml } from '#lib/utils/description.ts';
-import { getContentUrl } from '#lib/utils/routing.ts';
+import { DatePresetEnum } from '#lib/utils/date.ts';
 
 interface Props {
-	page: Page<CollectionEntry<'posts'>>;
+	page: Page<CatalogItem>;
 }
 
 const { page } = Astro.props;
@@ -35,33 +34,24 @@ const { page } = Astro.props;
 	<ContentSection>
 		<ul class="flex flex-col gap-4">
 			{
-				page.data.map((entry) => {
-					const dateCreated = parseContentDate(entry.data.dateCreated);
-					const description = getDescriptionRenderedHtml(entry);
-
-					return (
-						<li class="flex gap-3 sm:gap-4">
-							{entry.data.imageFeatured ? (
-								<ContentThumbnail src={entry.data.imageFeatured} />
+				page.data.map((item) => (
+					<li class="flex gap-3 sm:gap-4">
+						{item.imageId ? <ContentThumbnail src={item.imageId} /> : undefined}
+						<div class="flex min-w-0 flex-col gap-1">
+							<h2 class="text-lg font-semibold md:text-xl">
+								<Link href={item.url}>{item.title}</Link>
+							</h2>
+							<DateDisplay
+								class="text-xs text-primary-400"
+								date={item.dateCreated}
+								datePreset={DatePresetEnum.Medium}
+							/>
+							{item.description ? (
+								<p class="text-sm text-primary-500" set:html={item.description} />
 							) : undefined}
-							<div class="flex min-w-0 flex-col gap-1">
-								<h2 class="text-lg font-semibold md:text-xl">
-									<Link href={getContentUrl(entry.collection, entry.id)}>{entry.data.title}</Link>
-								</h2>
-								{dateCreated ? (
-									<DateDisplay
-										class="text-xs text-primary-400"
-										date={dateCreated}
-										datePreset={DatePresetEnum.Medium}
-									/>
-								) : undefined}
-								{description ? (
-									<p class="text-sm text-primary-500" set:html={description} />
-								) : undefined}
-							</div>
-						</li>
-					);
-				})
+						</div>
+					</li>
+				))
 			}
 		</ul>
 		<Pagination class="mt-small md:mt-medium" page={page} />

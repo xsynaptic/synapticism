@@ -1,6 +1,6 @@
 import { glob } from 'astro/loaders';
 import { defineCollection } from 'astro:content';
-import { basename, extname } from 'node:path';
+import path from 'node:path';
 import { z } from 'zod';
 
 import { CONTENT_COLLECTIONS_PATH } from '#constants.js';
@@ -10,7 +10,7 @@ import { contentBaseSchema } from '#lib/schemas/content.js';
 export const pages = defineCollection({
 	loader: glob({
 		base: `${CONTENT_COLLECTIONS_PATH}/pages`,
-		generateId: ({ entry }) => basename(entry, extname(entry)),
+		generateId: ({ entry }) => path.basename(entry, path.extname(entry)),
 		pattern: '**/[^_]*.(md|mdx)',
 	}),
 	schema: contentBaseSchema.extend({ hideSearch: z.boolean().optional() }).strict(),

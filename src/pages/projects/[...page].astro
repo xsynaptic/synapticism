@@ -1,16 +1,11 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
-import * as R from 'remeda';
-
 import ProjectList from '#layouts/project-list.astro';
-import { getProjectsCollection } from '#lib/collections/projects/projects-data.js';
-import { sortByDateReverseChronological } from '#lib/utils/date.ts';
+import { queryProjectsIndex } from '#lib/collections/projects/projects-utils.ts';
 
 export const getStaticPaths = (async ({ paginate }) => {
-	const { entries } = await getProjectsCollection();
-
-	return paginate(R.sort(entries, sortByDateReverseChronological), { pageSize: 20 });
+	return paginate(await queryProjectsIndex(), { pageSize: 20 });
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
