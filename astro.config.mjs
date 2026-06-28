@@ -25,13 +25,10 @@ export default defineConfig({
 	experimental: {
 		contentIntellisense: true,
 	},
-	// Note: fallback fonts are handled in `styles/themes/fonts.css`
 	fonts: [
 		{
 			cssVariable: '--font-aleo',
-			fallbacks: [],
 			name: 'Aleo',
-			optimizedFallbacks: false,
 			provider: fontProviders.fontsource(),
 			styles: ['normal'],
 			subsets: ['latin'],
@@ -39,9 +36,7 @@ export default defineConfig({
 		},
 		{
 			cssVariable: '--font-geist',
-			fallbacks: [],
 			name: 'Geist',
-			optimizedFallbacks: false,
 			provider: fontProviders.fontsource(),
 			styles: ['normal'],
 			subsets: ['latin'],
@@ -49,9 +44,8 @@ export default defineConfig({
 		},
 		{
 			cssVariable: '--font-geist-mono',
-			fallbacks: [],
+			fallbacks: ['monospace'],
 			name: 'Geist Mono',
-			optimizedFallbacks: false,
 			provider: fontProviders.fontsource(),
 			styles: ['normal'],
 			subsets: ['latin'],
