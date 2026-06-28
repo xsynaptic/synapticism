@@ -26,3 +26,5 @@ allowBuilds:
   satteri: true
   # Binary ships via the @cloudflare/workerd-* optional dep; postinstall only validates/optimizes
   workerd: false
+  # Native binding for the build-time word-count SQLite cache (@keyv/sqlite)
+  sqlite3: true

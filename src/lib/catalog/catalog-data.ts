@@ -36,7 +36,15 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	const { entries: projects } = await getProjectsCollection();
 	const { entries: tags } = await getTagsCollection();
 
-	for (const collection of [pages, posts, notes, projects, tags]) {
+	const collections = [pages, posts, notes, projects, tags];
+
+	const wordCountsById = new Map(
+		await Promise.all(
+			collections.flat().map(async (entry) => [entry.id, await getWordCount(entry)] as const),
+		),
+	);
+
+	for (const collection of collections) {
 		for (const entry of collection) {
 			if (catalogItemsById.has(entry.id)) {
 				throw new Error(
@@ -61,12 +69,12 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 				linksCount: getLinksCount(entry),
 				title: entry.data.title,
 				url: getContentUrl(entry.collection, entry.id),
-				wordCount: getWordCount(entry),
+				wordCount: wordCountsById.get(entry.id),
 			});
 		}
 	}
 
-	for (const collection of [pages, posts, notes, projects, tags]) {
+	for (const collection of collections) {
 		for (const entry of collection) {
 			generateContentBacklinksFromMdxComponents(entry, catalogItemsById);
 		}

@@ -12,6 +12,11 @@ import { expressiveCodeOptions } from './expressive-code.config.mjs';
 export default defineConfig({
 	env: {
 		schema: {
+			CUSTOM_CACHE_PATH: envField.string({
+				access: 'public',
+				context: 'server',
+				default: './.cache',
+			}),
 			UMAMI_DOMAIN: envField.string({ access: 'public', context: 'client', optional: true }),
 			UMAMI_ID: envField.string({ access: 'public', context: 'client', optional: true }),
 			WEBMENTION_DOMAIN: envField.string({ access: 'public', context: 'client', optional: true }),
@@ -72,7 +77,7 @@ export default defineConfig({
 				}),
 			],
 		}),
-		// EC (the satteri-expressive-code hast plugin) owns highlighting; Satteri must not pre-highlight
+		// EC (the satteri-expressive-code hast plugin) owns highlighting
 		syntaxHighlight: false,
 	},
 	site: import.meta.env.PROD ? 'https://synapticism.com/' : 'http://localhost:4321/',
@@ -86,5 +91,9 @@ export default defineConfig({
 			},
 		},
 		plugins: [tailwindcss()],
+		// The prerender chunks runtime-import @keyv/sqlite (build-time word-count cache)
+		ssr: {
+			external: ['@keyv/sqlite', 'sqlite3', 'bindings'],
+		},
 	},
 });
