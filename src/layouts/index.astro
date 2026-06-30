@@ -3,7 +3,6 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
-import Container from '#components/parts/container.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
@@ -50,7 +49,7 @@ const mainProps = isFirstPage
 <MainSite isHomepage={true} {...mainProps}>
 	{
 		isFirstPage ? (
-			<Container as="section" class="pt-8 pb-2 md:pt-14">
+			<section class="content-column pt-8 pb-2 md:pt-14">
 				<p class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]">
 					{t('index.heroHeading')}
 				</p>
@@ -63,13 +62,13 @@ const mainProps = isFirstPage
 					</span>{' '}
 					{t('index.tagline')}
 				</p>
-			</Container>
+			</section>
 		) : undefined
 	}
 
 	{
 		streamItems.length > 0 ? (
-			<Container as="section" class:list={[isFirstPage ? 'mt-14 md:mt-20' : 'pt-8 md:pt-14']}>
+			<section class:list={['content-column', isFirstPage ? 'mt-14 md:mt-20' : 'pt-8 md:pt-14']}>
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.recently')}</h2>
 					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
@@ -138,13 +137,13 @@ const mainProps = isFirstPage
 						)}
 					</nav>
 				) : undefined}
-			</Container>
+			</section>
 		) : undefined
 	}
 
 	{
 		isFirstPage && selectedProjects && selectedProjects.length > 0 ? (
-			<Container as="section" class="mt-14 pb-16 md:mt-20 md:pb-24">
+			<section class="content-column mt-14 pb-16 md:mt-20 md:pb-24">
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.selectedWork')}</h2>
 					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
@@ -179,7 +178,7 @@ const mainProps = isFirstPage
 						{t('index.allProjects')} <span aria-hidden="true">&rarr;</span>
 					</a>
 				</p>
-			</Container>
+			</section>
 		) : undefined
 	}
 </MainSite>

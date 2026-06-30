@@ -12,6 +12,9 @@
 @import './theme/colors.css';
 @import './theme/fonts.css';
 
+/** Custom utilities */
+@import './utilities.css';
+
 /** Component and feature styling */
 @import './content.css';
 @import './divider.css';

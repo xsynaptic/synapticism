@@ -1,5 +1,4 @@
 ---
-import Container from '#components/parts/container.astro';
 import Link from '#components/parts/link.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
@@ -24,7 +23,7 @@ const hasExcerpt = excerptSplit.length > 1;
 ---
 
 <article class={className}>
-	<Container as="header" class:list={[description ? undefined : 'mb-2']}>
+	<header class:list={['content-column', description ? undefined : 'mb-2']}>
 		<h2 class="mb-1 text-2xl font-bold lg:text-3xl">
 			<a class="text-primary-700 transition-colors ease-in hover:text-accent-500" href={entryUrl}>
 				<slot name="excerpt-title" />
@@ -42,13 +41,13 @@ const hasExcerpt = excerptSplit.length > 1;
 				</ProseDescription>
 			) : undefined
 		}
-	</Container>
+	</header>
 	<ProseBody class:list={['content', 'pb-small']}><Fragment set:html={excerptContent} /></ProseBody>
 	{
 		hasExcerpt ? (
-			<Container as="div" class="text-right font-serif font-medium italic">
+			<div class="content-column text-right font-serif font-medium italic">
 				<Link href={entryUrl}>{t('content.continueReading')}</Link>&nbsp;&raquo;
-			</Container>
+			</div>
 		) : undefined
 	}
 </article>

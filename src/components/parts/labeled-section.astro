@@ -1,8 +1,6 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-import Container from '#components/parts/container.astro';
-
 interface Props extends HTMLAttributes<'section'> {
 	as?: 'h2' | 'h3';
 	label: string;
@@ -11,10 +9,10 @@ interface Props extends HTMLAttributes<'section'> {
 const { as: Heading = 'h2', class: className, label, ...props } = Astro.props;
 ---
 
-<Container as="section" class:list={['mb-medium', className]} {...props}>
+<section class:list={['content-column mb-medium', className]} {...props}>
 	<div class="mb-4 flex items-center gap-4">
 		<Heading class="font-mono text-sm font-medium text-primary-600">{label}</Heading>
 		<span aria-hidden="true" class="h-px flex-1 bg-primary-200"></span>
 	</div>
 	<slot />
-</Container>
+</section>
