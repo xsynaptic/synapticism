@@ -49,7 +49,7 @@ const { Content } = await render(entry);
 	schemas={getPostSchema(entry, { authorName: SITE_AUTHOR_NAME, url: Astro.url.toString() })}
 >
 	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp()}>
-		<ContentHeader class="mt-4" title={entry.data.title}>
+		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>
 					<ContentDate

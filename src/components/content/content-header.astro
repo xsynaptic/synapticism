@@ -11,9 +11,9 @@ const { class: className, title } = Astro.props;
 const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 ---
 
-<div class:list={['content-column mb-2 pt-small', className]}>
+<div class:list={['content-column mt-4 mb-2 pt-small pb-2', className]}>
 	<h1
-		class="-ml-0.5 pb-2 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 md:text-3xl lg:text-4xl"
+		class="-ml-0.5 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 md:text-3xl lg:text-4xl"
 		data-pagefind-weight="3"
 	>
 		{title}
@@ -21,7 +21,7 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 	{
 		subtitle ? (
 			<div
-				class="items-start gap-1 pb-2 font-mono text-sm text-primary-600 sm:flex sm:flex-wrap"
+				class="items-start gap-1 pt-1 font-mono text-sm text-primary-500 sm:flex sm:flex-wrap"
 				data-pagefind-ignore
 				set:html={subtitle}
 			/>
