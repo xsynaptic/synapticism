@@ -3,6 +3,7 @@ import './station-tile.ts';
 import type { TileTheme } from './station-tile-themes.ts';
 
 import { defaultTileSeed } from './station-tile-input.ts';
+import styles from './station-tile-lab.css?inline';
 import { DEFAULT_TILE_THEME, TILE_THEMES } from './station-tile-themes.ts';
 
 interface RangeSpec {
@@ -22,72 +23,6 @@ const RANGES: ReadonlyArray<RangeSpec> = [
 	{ attribute: 'macro-lighting', label: 'Macro light', max: 1, min: 0, step: 0.05, value: 0.3 },
 	{ attribute: 'stagger', label: 'Stagger', max: 0.5, min: 0, step: 0.05, value: 0 },
 ];
-
-const STYLE = `
-	:host {
-		--mtr-surface: var(--color-primary-100, #f4f4f5);
-		--mtr-carbon: var(--color-primary-800, #27272a);
-		--mtr-ink: var(--color-primary-700, #3f3f46);
-		--mtr-ink-muted: var(--color-primary-600, #52525b);
-		--mtr-hairline: var(--color-primary-200, #e4e4e7);
-		--mtr-accent: var(--color-accent-600, #2b7e8f);
-		--mtr-mono: var(--font-mono, var(--font-geist-mono, ui-monospace, monospace));
-		display: block;
-	}
-	* { box-sizing: border-box; }
-	.lab {
-		overflow: hidden;
-		font-family: var(--mtr-mono);
-		color: var(--mtr-ink);
-		background: var(--mtr-surface);
-		border: 1px solid var(--mtr-hairline);
-		border-radius: 0.25rem;
-	}
-	.preview {
-		aspect-ratio: 16 / 7;
-		background: var(--mtr-carbon);
-	}
-	.preview station-tile { display: block; width: 100%; height: 100%; }
-	.controls {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-		gap: 0.85rem 1rem;
-		padding: 0.85rem 1rem;
-		border-top: 1px solid var(--mtr-hairline);
-	}
-	.field { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.8rem; }
-	.field-head { display: flex; justify-content: space-between; gap: 0.5rem; color: var(--mtr-ink-muted); }
-	.field-value { color: var(--mtr-accent); }
-	input[type='range'] { width: 100%; margin: 0; accent-color: var(--mtr-accent); }
-	select, input[type='text'] {
-		width: 100%;
-		min-width: 0;
-		padding: 0.3rem 0.45rem;
-		font-family: var(--mtr-mono);
-		font-size: 0.8rem;
-		color: var(--mtr-ink);
-		background: #fff;
-		border: 1px solid var(--mtr-hairline);
-		border-radius: 0.25rem;
-	}
-	.seed-row { display: flex; gap: 0.4rem; }
-	button {
-		flex: none;
-		padding: 0 0.6rem;
-		font-family: var(--mtr-mono);
-		font-size: 0.9rem;
-		color: #fff;
-		cursor: pointer;
-		background: var(--mtr-accent);
-		border: none;
-		border-radius: 0.25rem;
-	}
-	.toggle { flex-direction: row; align-items: center; gap: 0.5rem; }
-	.toggle input { accent-color: var(--mtr-accent); }
-	@media (prefers-reduced-motion: no-preference) {
-		button, select, input { transition: border-color 0.2s, background-color 0.2s; }
-	}
-`;
 
 class StationTileLab extends HTMLElement {
 	connectedCallback() {
@@ -121,7 +56,7 @@ class StationTileLab extends HTMLElement {
 		lab.append(preview, controls);
 
 		const style = document.createElement('style');
-		style.textContent = STYLE;
+		style.textContent = styles;
 		root.append(style, lab);
 	}
 
