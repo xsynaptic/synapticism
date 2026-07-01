@@ -1,0 +1,10 @@
+{
+	"name": "@synapticism/lab",
+	"version": "0.0.0",
+	"description": "Creative coding tools and experiments",
+	"type": "module",
+	"private": true,
+	"exports": {
+		"./*": "./*"
+	}
+}

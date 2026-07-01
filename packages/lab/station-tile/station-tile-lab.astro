@@ -1,0 +1,36 @@
+---
+import type { TileTheme } from './station-tile-themes.ts';
+
+interface Props {
+	class?: string | undefined;
+	/** Canonical URL where the lab runs; used for the RSS link-to-live fallback */
+	href?: string | undefined;
+	seed?: number | string | undefined;
+	theme?: TileTheme | undefined;
+}
+
+const { class: className, href, seed, theme } = Astro.props;
+
+const { isRss } = Astro.locals;
+
+const attributes: Record<string, string> = {};
+
+if (theme !== undefined) attributes.theme = theme;
+if (seed !== undefined) attributes.seed = String(seed);
+---
+
+{
+	isRss ? (
+		href === undefined ? undefined : (
+			<p>
+				<a href={href}>Open the interactive station tile lab.</a>
+			</p>
+		)
+	) : (
+		<station-tile-lab class:list={[className]} {...attributes} />
+	)
+}
+
+<script>
+	import './station-tile-lab.ts';
+</script>

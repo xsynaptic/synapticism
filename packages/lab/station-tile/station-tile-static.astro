@@ -1,0 +1,124 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import type { TileInput } from './station-tile-input.ts';
+import type { TileTheme } from './station-tile-themes.ts';
+import type { GlossBlend, GrainMode } from './station-tile-types.ts';
+
+import { generateTileSvg } from './station-tile-generate-svg.ts';
+import { compact, resolveTileOptions } from './station-tile-input.ts';
+
+interface Props extends Omit<HTMLAttributes<'div'>, 'class'> {
+	bevel?: number | undefined;
+	class?: string | undefined;
+	colorA?: string | undefined;
+	colorB?: string | undefined;
+	gloss?: number | undefined;
+	glossBlend?: GlossBlend | undefined;
+	glossColor?: string | undefined;
+	grain?: number | undefined;
+	grainGrout?: number | undefined;
+	grainMode?: GrainMode | undefined;
+	grout?: string | undefined;
+	groutWidth?: number | undefined;
+	height?: number | undefined;
+	jitter?: number | undefined;
+	macroLighting?: number | undefined;
+	seamless?: boolean | undefined;
+	seed?: number | string | undefined;
+	stagger?: number | undefined;
+	theme?: TileTheme | undefined;
+	tileSize?: number | undefined;
+	width?: number | undefined;
+}
+
+const {
+	bevel,
+	class: className,
+	colorA,
+	colorB,
+	gloss,
+	glossBlend,
+	glossColor,
+	grain,
+	grainGrout,
+	grainMode,
+	grout,
+	groutWidth,
+	height,
+	jitter,
+	macroLighting,
+	seamless,
+	seed,
+	stagger,
+	theme,
+	tileSize,
+	width,
+	...rest
+} = Astro.props;
+
+const { isRss } = Astro.locals;
+
+const input: TileInput = compact({
+	bevel,
+	colorA,
+	colorB,
+	gloss,
+	glossBlend,
+	glossColor,
+	grain,
+	grainGrout,
+	grainMode,
+	grout,
+	groutWidth,
+	height,
+	jitter,
+	macroLighting,
+	seamless,
+	seed,
+	stagger,
+	theme,
+	tileSize,
+	width,
+});
+
+const { height: svgHeight, svg, width: svgWidth } = generateTileSvg(resolveTileOptions(input));
+
+const isSeamless = seamless === true;
+const dataUri = isSeamless ? `data:image/svg+xml;utf8,${encodeURIComponent(svg)}` : '';
+const backgroundStyle = isSeamless
+	? `background-image:url("${dataUri}");background-repeat:repeat;background-size:${String(svgWidth)}px ${String(svgHeight)}px;`
+	: undefined;
+
+const inlineSvg = isSeamless
+	? ''
+	: svg.replaceAll('<svg ', '<svg style="display:block;width:100%;height:100%" ');
+---
+
+{
+	!isRss && isSeamless ? (
+		<div
+			aria-hidden="true"
+			class:list={['station-tile', className]}
+			style={backgroundStyle}
+			{...rest}
+		/>
+	) : undefined
+}
+{
+	!isRss && !isSeamless ? (
+		<div
+			aria-hidden="true"
+			class:list={['station-tile', className]}
+			set:html={inlineSvg}
+			{...rest}
+		/>
+	) : undefined
+}
+
+<style>
+	.station-tile {
+		display: block;
+		aspect-ratio: var(--station-tile-aspect, 16 / 7);
+	}
+</style>

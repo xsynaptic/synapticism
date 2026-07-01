@@ -8,6 +8,7 @@ export default {
 			// MDX components are provided to <Content> at render time via renderContent (src/lib/utils/astro.ts)
 			entry: ['src/components/mdx/*.astro'],
 			ignoreDependencies: [
+				'@synapticism/lab', // imported only from posts in packages/content/collections, which knip ignores
 				'astro-pagefind',
 				'eslint-plugin-react-hooks',
 				'wrangler', // used via wrangler.jsonc + the deploy script ($`wrangler deploy`), neither traceable
@@ -22,6 +23,10 @@ export default {
 				'react', // type-only: jsxImportSource + React.JSX in global.d.ts for the MDX language server
 				'remark', // used via unified pipeline
 			],
+		},
+		'packages/lab': {
+			// Experiments are imported ad hoc
+			entry: ['*/*.astro', '*/*.ts'],
 		},
 		'packages/scripts': {
 			ignoreDependencies: [
