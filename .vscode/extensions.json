@@ -1,4 +1,9 @@
 {
-	"recommendations": ["astro-build.astro-vscode", "stylelint.vscode-stylelint"],
+	"recommendations": [
+		"astro-build.astro-vscode",
+		"stylelint.vscode-stylelint",
+		"remcohaszing.vscode-mdxlint",
+		"unifiedjs.vscode-mdx"
+	],
 	"unwantedRecommendations": []
 }

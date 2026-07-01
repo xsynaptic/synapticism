@@ -16,12 +16,16 @@ export default {
 		},
 		'packages/content': {
 			// Config and ambient-type files consumed by tooling, not imported
-			entry: ['.remarkrc.mjs', 'global.d.ts'],
+			entry: ['.mdxlintrc.mjs', 'global.d.ts'],
 			// Content is loaded by Astro's glob loader via a path string, which knip can't trace
 			ignore: ['collections/**'],
+			// The content scripts delegate to root via `pnpm -w run`, which knip reads as a binary
+			ignoreBinaries: ['check-content', 'fix-content'],
 			ignoreDependencies: [
 				'react', // type-only: jsxImportSource + React.JSX in global.d.ts for the MDX language server
-				'remark', // used via unified pipeline
+				'@textlint-rule/textlint-rule-pattern', // referenced by name in .textlintrc.json
+				'textlint-plugin-mdx',
+				'textlint-rule-diacritics',
 			],
 		},
 		'packages/lab': {

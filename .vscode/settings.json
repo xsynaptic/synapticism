@@ -34,9 +34,7 @@
 		"javascriptreact",
 		"typescript",
 		"typescriptreact",
-		"astro",
-		"markdown",
-		"mdx"
+		"astro"
 	],
 	"stylelint.validate": ["css", "postcss", "tailwindcss", "astro"],
 	"css.lint.unknownAtRules": "ignore",
