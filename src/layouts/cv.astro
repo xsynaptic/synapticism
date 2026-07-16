@@ -1,0 +1,159 @@
+---
+import MainSite from '#components/main/main-site.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
+
+interface Props {
+	cv: {
+		basics: {
+			email: string;
+			label: string;
+			location: { city: string; region: string };
+			name: string;
+			profiles: Array<{ network: string; url: string }>;
+			summary: string;
+		};
+		education: Array<{ area: string; degree: string; institution: string }>;
+		projects: Array<{
+			description: string;
+			highlights: Array<string>;
+			name: string;
+			// | undefined to match zod .optional() inference under exactOptionalPropertyTypes
+			repo?: string | undefined;
+			url: string;
+		}>;
+		skills: Array<{ category: string; items: Array<string> }>;
+		work: Array<{
+			company: string;
+			endDate?: string | undefined;
+			highlights: Array<string>;
+			position: string;
+			startDate: string;
+		}>;
+	};
+}
+
+const { cv } = Astro.props;
+
+const { basics, education, projects, skills, work } = cv;
+---
+
+<MainSite>
+	<article class="content-column my-8">
+		<header class="flex flex-col gap-1 py-1">
+			<div class="flex items-center justify-between gap-2">
+				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
+				<div class="flex items-center gap-2 text-sm text-neutral-500">
+					{
+						basics.profiles.map((profile) => (
+							<a class="print:hidden" href={profile.url}>
+								{profile.network}
+							</a>
+						))
+					}
+				</div>
+			</div>
+			<p class="text-base text-neutral-500 sm:text-lg">{basics.label}</p>
+			<div>{basics.location.city}, {basics.location.region}</div>
+			<div class="flex flex-col gap-1 text-sm text-neutral-500">
+				<a href={`mailto:${basics.email}`}>{basics.email}</a>
+			</div>
+		</header>
+		<section class="pt-1 pb-2 text-base">
+			<p>{basics.summary}</p>
+		</section>
+		<section class="pt-1 pb-2 text-base">
+			<h2 class="text-lg font-bold">{t('cv.skills')}</h2>
+			<ul>
+				{
+					skills.map((skill) => (
+						<li class="mb-1 ml-4 list-disc text-sm text-neutral-400">
+							<span class="sr-only">{skill.category}:</span>
+							<span class="text-neutral-700">{skill.items.join(', ')}</span>
+						</li>
+					))
+				}
+			</ul>
+		</section>
+		<section class="pt-1 pb-2 text-base">
+			<h2 class="text-lg font-bold">{t('cv.experience')}</h2>
+			{
+				work.map((job) => (
+					<div class="flex flex-col gap-2">
+						<div class="flex items-center justify-between gap-2">
+							<h3 class="font-semibold">
+								{job.company}, <span class="italic">{job.position}</span>
+							</h3>
+							<span class="text-sm text-neutral-500">
+								{new Date(job.startDate).toLocaleDateString('en-US', {
+									month: 'long',
+									year: 'numeric',
+								})}
+								&ndash;
+								{job.endDate
+									? new Date(job.endDate).toLocaleDateString('en-US', {
+											month: 'long',
+											year: 'numeric',
+										})
+									: t('cv.present')}
+							</span>
+						</div>
+						<ul>
+							{job.highlights.map((highlight) => (
+								<li class="mb-1 ml-4 list-disc text-sm text-neutral-400">
+									<span class="text-neutral-700">{highlight}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</section>
+		<section class="pt-1 pb-2 text-base">
+			<h2 class="text-lg font-bold">{t('cv.projects')}</h2>
+			{
+				projects.map((project) => (
+					<div class="flex flex-col gap-2">
+						<div class="flex flex-col gap-1">
+							<div class="flex items-center justify-between gap-2">
+								<h3 class="font-semibold">
+									<a href={project.url}>{project.name}</a>:{' '}
+									<span class="italic">{project.description}</span>
+								</h3>
+								{project.repo ? (
+									<a class="text-sm text-neutral-500 print:hidden" href={project.repo}>
+										{t('cv.github')}
+									</a>
+								) : undefined}
+							</div>
+							{project.url ? (
+								<div class="flex flex-col gap-1 text-sm text-neutral-500">
+									<a href={project.url}>{project.url}</a>
+								</div>
+							) : undefined}
+						</div>
+						<ul>
+							{project.highlights.map((highlight) => (
+								<li class="mb-1 ml-4 list-disc text-sm text-neutral-400">
+									<span class="text-neutral-700">{highlight}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</section>
+		<section class="pt-1 pb-2 text-base">
+			<h2 class="text-lg font-bold">{t('cv.education')}</h2>
+			{
+				education.map((educationItem) => (
+					<div>
+						<span class="font-semibold">{educationItem.institution}</span>:{' '}
+						<span>
+							{educationItem.degree}, {educationItem.area}
+						</span>
+					</div>
+				))
+			}
+		</section>
+	</article>
+</MainSite>
