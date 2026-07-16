@@ -48,7 +48,7 @@ export function stripFootnoteReferences(input: string) {
 
 export function stripMdxComponents(input: string, componentNames: Array<string>): string {
 	const regex = new RegExp(
-		componentNames.map((name) => `<${name}(?:[^>.]*)>|</${name}>`).join('|'),
+		componentNames.map((name) => `<${name}(?:[^>]*)>|</${name}>`).join('|'),
 		'gm',
 	);
 

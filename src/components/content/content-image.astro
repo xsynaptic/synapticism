@@ -1,0 +1,47 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import { Image } from 'astro:assets';
+
+import { renderSlot } from '#lib/utils/astro.ts';
+import { getMediaImage, getMediaLqip } from '#lib/utils/media.ts';
+import { sanitizeAltAttribute } from '#lib/utils/text.ts';
+
+interface Props extends HTMLAttributes<'figure'> {
+	alt?: string;
+	src: string;
+}
+
+const { alt: altProp, src, ...props } = Astro.props;
+
+const image = getMediaImage(src);
+const lqip = getMediaLqip(src);
+
+const caption = await renderSlot(Astro.slots);
+
+// Fall back to the caption for alt text; sanitizeAltAttribute strips its markup
+const alt = sanitizeAltAttribute(altProp ?? caption ?? '');
+---
+
+<figure class="content-image" {...props}>
+	<div
+		class="overflow-hidden rounded-lg border border-primary-200 bg-primary-100 bg-cover bg-center"
+		style={lqip ? `background-image:url(${lqip})` : undefined}
+	>
+		<Image
+			alt={alt}
+			class="block w-full"
+			layout="constrained"
+			sizes="(min-width: 58rem) 58rem, 100vw"
+			src={image}
+			width={1600}
+		/>
+	</div>
+	{
+		caption ? (
+			<figcaption>
+				<Fragment set:html={caption} />
+			</figcaption>
+		) : undefined
+	}
+</figure>

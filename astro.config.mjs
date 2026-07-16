@@ -65,6 +65,7 @@ export default defineConfig({
 				autoImport({
 					imports: [
 						{
+							'./src/components/mdx/img.astro': [['default', 'Img']],
 							'./src/components/mdx/link.astro': [['default', 'Link']],
 							'./src/components/mdx/more.astro': [['default', 'More']],
 						},

@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import ContentImage from '#components/content/content-image.astro';
+
+interface Props extends HTMLAttributes<'figure'> {
+	alt?: string;
+	src: string;
+}
+---
+
+<ContentImage {...Astro.props}>
+	<slot />
+</ContentImage>
