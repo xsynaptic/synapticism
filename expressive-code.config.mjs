@@ -1,7 +1,7 @@
 // @ts-check
 
-// Brand ramp hex used by the code theme, mirroring src/styles/theme/colors.css. Shiki resolves and
-// does color math on these at build, so they must be literals (it can't read the CSS custom properties).
+// Brand ramp hex used by the code theme, mirroring src/styles/theme/colors.css
+// Shiki resolves and does color math on these at build, so they must be literals
 const ramp = {
 	accent200: '#b7e6ea',
 	accent300: '#85d3db',

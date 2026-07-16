@@ -23,19 +23,16 @@
 		"fontsource",
 		"lqip",
 		"microformat",
+		"microformats",
+		"nosnippet",
 		"pagefind",
 		"remeda",
 		"synapticism",
 		"umami",
+		"webmention",
 		"xsynaptic"
 	],
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact",
-		"astro"
-	],
+	"eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "astro"],
 	"stylelint.validate": ["css", "postcss", "tailwindcss", "astro"],
 	"css.lint.unknownAtRules": "ignore",
 	"editor.codeActionsOnSave": {
@@ -53,8 +50,8 @@
 		"*.css": "tailwindcss",
 		"*.conf.template": "nginx"
 	},
+	"js/ts.preferences.importModuleSpecifier": "non-relative", // Prefer import mapped paths
 	"npm.packageManager": "pnpm",
-	"typescript.preferences.importModuleSpecifier": "non-relative", // Prefer import mapped paths
 	"workbench.editor.labelFormat": "short",
 	"[astro]": {
 		"editor.defaultFormatter": "astro-build.astro-vscode"

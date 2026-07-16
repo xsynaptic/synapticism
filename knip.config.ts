@@ -10,6 +10,7 @@ export default {
 			ignoreDependencies: [
 				'@synapticism/lab', // imported only from posts in packages/content/collections, which knip ignores
 				'astro-pagefind',
+				'eslint-plugin-jsx-a11y', // peer of eslint-plugin-astro's a11y-strict config; referenced by string, not import
 				'eslint-plugin-react-hooks',
 				'wrangler', // used via wrangler.jsonc + the deploy script ($`wrangler deploy`), neither traceable
 			],

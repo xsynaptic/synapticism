@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
+import { readingTime } from '@xsynaptic/satteri-reading-time';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
@@ -69,6 +70,7 @@ export default defineConfig({
 						},
 					],
 				}),
+				readingTime(),
 			],
 		}),
 		// EC (the satteri-expressive-code hast plugin) owns highlighting
