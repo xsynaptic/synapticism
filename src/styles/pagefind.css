@@ -19,7 +19,7 @@
 }
 
 .pagefind-ui .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
-	@apply absolute w-full min-w-64 rounded-b-sm px-small py-small shadow-md sm:right-0 sm:w-auto sm:min-w-[480px];
+	@apply absolute w-full min-w-64 rounded-b-sm px-4 py-4 shadow-md sm:right-0 sm:w-auto sm:min-w-[480px];
 
 	z-index: 99;
 	max-height: 85vh;

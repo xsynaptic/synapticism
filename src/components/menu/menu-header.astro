@@ -14,7 +14,7 @@ const { pathname } = Astro.url;
 ---
 
 <nav aria-label={t('aria.mainNav')} class="bg-accent-600 py-2" {...props}>
-	<ul class="mx-auto flex max-w-content items-center gap-4 px-small md:px-medium">
+	<ul class="mx-auto flex max-w-content items-center gap-4 px-4 md:px-8">
 		{
 			menuHeaderItems.map((item) => {
 				const isActive = isActiveMenuItem(item, pathname);

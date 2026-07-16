@@ -4,7 +4,7 @@
  * measure, while media (code blocks, images, tables) fills the wider frame.
  */
 .content {
-	@apply mx-auto px-small md:px-medium;
+	@apply mx-auto px-4 md:px-8;
 
 	max-width: var(--spacing-content);
 	font-size: 1.0625rem;

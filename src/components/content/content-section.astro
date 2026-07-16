@@ -23,7 +23,7 @@ const children = await renderSlot(Astro.slots, 'default');
 		<div
 			class:list={[
 				fillViewport ? 'content-column-fill' : 'content-column',
-				marginSmall ? 'mb-small' : 'mb-medium',
+				marginSmall ? 'mb-4' : 'mb-8',
 				className,
 			]}
 			{...props}
@@ -32,7 +32,7 @@ const children = await renderSlot(Astro.slots, 'default');
 				<header
 					class:list={[
 						description ? undefined : 'mb-2',
-						fillViewport ? 'px-small sm:px-0' : undefined,
+						fillViewport ? 'px-4 sm:px-0' : undefined,
 					]}
 				>
 					{title ? (
@@ -50,7 +50,7 @@ const children = await renderSlot(Astro.slots, 'default');
 						<h3 class="mb-1 text-xs font-medium text-primary-600 md:text-sm" set:html={subtitle} />
 					) : undefined}
 					{description ? (
-						<ProseDescription class:list={['mb-small']}>
+						<ProseDescription class:list={['mb-4']}>
 							<Fragment set:html={description} />
 						</ProseDescription>
 					) : undefined}

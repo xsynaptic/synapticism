@@ -81,7 +81,7 @@ const { Content } = await render(entry);
 				<ContentHero alt={entry.data.imageAlt ?? ''} src={entry.data.imageHero} />
 			) : undefined
 		}
-		<ProseBody class:list={['content', 'e-content', 'pb-small']}>
+		<ProseBody class:list={['content', 'e-content', 'pb-4']}>
 			<Content />
 		</ProseBody>
 		<ContentNoteLinks links={entry.data.links} source={entry.data.source} />

@@ -62,7 +62,7 @@ const { Content } = await render(entry);
 				<ContentHero alt={entry.data.imageAlt ?? ''} src={entry.data.imageHero} />
 			) : undefined
 		}
-		<ProseBody class:list={['content', 'e-content', 'pb-small']} data-reading-frame>
+		<ProseBody class:list={['content', 'e-content', 'pb-4']} data-reading-frame>
 			<Content />
 		</ProseBody>
 	</article>

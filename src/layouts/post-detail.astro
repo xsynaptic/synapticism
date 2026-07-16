@@ -55,7 +55,7 @@ const minutesRead =
 	}}
 	schemas={getPostSchema(entry, { authorName: SITE_AUTHOR_NAME, url: Astro.url.toString() })}
 >
-	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp()}>
+	<article class:list={['pb-4', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>
@@ -91,7 +91,7 @@ const minutesRead =
 				<ContentHero alt={entry.data.imageAlt ?? ''} src={entry.data.imageHero} />
 			) : undefined
 		}
-		<ProseBody class:list={['content', 'e-content', 'pb-small']} data-reading-frame>
+		<ProseBody class:list={['content', 'e-content', 'pb-4']} data-reading-frame>
 			<Content />
 		</ProseBody>
 		<ContentSectionProjects projectIds={projectIds} />

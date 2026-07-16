@@ -9,7 +9,7 @@ interface Props extends HTMLAttributes<'section'> {
 const { as: Heading = 'h2', class: className, label, ...props } = Astro.props;
 ---
 
-<section class:list={['content-column mb-medium', className]} {...props}>
+<section class:list={['content-column mb-8', className]} {...props}>
 	<div class="mb-4 flex items-center gap-4">
 		<Heading class="font-mono text-sm font-medium text-primary-600">{label}</Heading>
 		<span aria-hidden="true" class="h-px flex-1 bg-primary-200"></span>

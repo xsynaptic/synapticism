@@ -13,7 +13,7 @@ const props = Astro.props;
 const { pathname } = Astro.url;
 ---
 
-<nav aria-label={t('aria.footerNav')} class="pb-small text-sm" data-nosnippet {...props}>
+<nav aria-label={t('aria.footerNav')} class="pb-4 text-sm" data-nosnippet {...props}>
 	<ul class="flex flex-wrap gap-x-4 gap-y-2">
 		{
 			menuFooterItems.map((item) => (
