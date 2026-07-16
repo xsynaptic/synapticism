@@ -1,24 +1,19 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-import { UMAMI_DOMAIN, UMAMI_ID } from 'astro:env/client';
-
 interface Props extends HTMLAttributes<'script'> {
 	isViewTransitionsEnabled: boolean;
+	umamiDomain: string;
+	umamiId: string;
 }
 
-const { isViewTransitionsEnabled, ...props } = Astro.props;
+const { isViewTransitionsEnabled, umamiDomain, umamiId, ...props } = Astro.props;
 ---
 
-{
-	import.meta.env.PROD && UMAMI_ID && UMAMI_DOMAIN ? (
-		<script
-			data-website-id={UMAMI_ID}
-			defer
-			src={`${UMAMI_DOMAIN}/script.js`}
-			{...props}
-			{...(isViewTransitionsEnabled ? { 'data-astro-rerun': '' } : {})}
-			is:inline
-		/>
-	) : undefined
-}
+<script
+	data-website-id={umamiId}
+	defer
+	src={`${umamiDomain}/script.js`}
+	{...props}
+	{...isViewTransitionsEnabled ? { 'data-astro-rerun': '' } : {}}
+	is:inline></script>

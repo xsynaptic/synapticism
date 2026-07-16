@@ -1,0 +1,50 @@
+---
+import { t } from '#lib/i18n/i18n-strings.ts';
+---
+
+<top-button
+	class="fixed right-2 bottom-2 z-40 flex cursor-pointer items-center justify-center rounded-full border border-primary-200 bg-primary-50 shadow-lg transition-colors duration-200 hover:bg-primary-100 sm:hidden"
+	inert
+>
+	<button
+		aria-label={t('site.topButton')}
+		class="flex p-3 text-primary-600 transition-colors duration-200 hover:text-accent-500"
+		type="button"
+	>
+		<svg
+			aria-hidden="true"
+			fill="none"
+			height="24"
+			stroke="currentColor"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			stroke-width="2"
+			viewBox="0 0 24 24"
+			width="24"
+		>
+			<path d="m18 15-6-6-6 6"></path>
+		</svg>
+	</button>
+</top-button>
+
+<script>
+	import '#components/main/main-top-button.ts';
+</script>
+
+<style>
+	top-button {
+		translate: 0 150%;
+		transition:
+			translate 200ms ease-out,
+			opacity 200ms ease-out;
+	}
+
+	top-button:not([inert]) {
+		translate: 0 0;
+	}
+
+	top-button:not(:defined) {
+		pointer-events: none;
+		opacity: 0;
+	}
+</style>

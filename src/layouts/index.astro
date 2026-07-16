@@ -80,7 +80,9 @@ const mainProps = isFirstPage
 						return (
 							<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
 								<article class="flex gap-3 sm:gap-4">
-									{item.imageId ? <ContentThumbnail src={item.imageId} /> : undefined}
+									{item.imageId ? (
+										<ContentThumbnail imgAlt={item.title} src={item.imageId} />
+									) : undefined}
 									<div class="flex min-w-0 flex-col gap-2">
 										<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
 											<a

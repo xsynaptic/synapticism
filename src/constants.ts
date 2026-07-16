@@ -17,11 +17,13 @@ export const OPEN_GRAPH_IMAGE_FALLBACK_COUNT = 5;
 export const OPEN_GRAPH_IMAGE_FALLBACK_PREFIX = 'og-image';
 
 /**
- * Various settings
+ * Site settings
  */
 export const SITE_YEAR_FOUNDED = 2024;
-
 export const SITE_AUTHOR_NAME = 'Alexander Synaptic';
 
+/**
+ * Various settings
+ */
 // Entries per page in the interleaved homepage stream
 export const STREAM_PAGE_SIZE = 20;

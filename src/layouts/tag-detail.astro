@@ -40,7 +40,7 @@ const { entry, page } = Astro.props;
 			{
 				page.data.map((item) => (
 					<li class="flex gap-3 sm:gap-4">
-						{item.imageId ? <ContentThumbnail src={item.imageId} /> : undefined}
+						{item.imageId ? <ContentThumbnail imgAlt={item.title} src={item.imageId} /> : undefined}
 						<div class="flex min-w-0 flex-col gap-1">
 							<h2 class="text-lg font-semibold md:text-xl">
 								<Link href={item.url}>{item.title}</Link>

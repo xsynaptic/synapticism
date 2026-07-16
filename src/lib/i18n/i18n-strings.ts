@@ -4,6 +4,7 @@ const strings = {
 	'site.description': 'A technical blog about web development, design, and creative coding.',
 	'site.skipToContent': 'Skip to content',
 	'site.title': 'Synapticism',
+	'site.topButton': 'Back to top',
 
 	// Navigation menus
 	'nav.about': 'About',
@@ -52,6 +53,7 @@ const strings = {
 
 	// Content
 	'content.continueReading': 'Continue reading',
+	'content.minutesRead': '{minutesRead} minute read',
 	'content.updated': 'Updated',
 	'content.via': ' · via ',
 

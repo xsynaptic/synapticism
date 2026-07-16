@@ -17,10 +17,12 @@ import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getPostSchema } from '#lib/collections/posts/posts-utils.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
 import { getOgImageUrl, getSeoArticleProps } from '#lib/utils/seo.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
@@ -32,7 +34,12 @@ const { backlinks, entry } = Astro.props;
 const projectIds = entry.data.projects?.map(({ id }) => id);
 const tagIds = entry.data.tags?.map(({ id }) => id);
 
-const { Content } = await render(entry);
+const { Content, remarkPluginFrontmatter } = await render(entry);
+
+const minutesRead =
+	typeof remarkPluginFrontmatter.minutesRead === 'number'
+		? remarkPluginFrontmatter.minutesRead
+		: undefined;
 ---
 
 <MainSite
@@ -67,6 +74,13 @@ const { Content } = await render(entry);
 								showMicroformats={true}
 								showUpdated={true}
 							/>
+						</DividedItem>
+					) : undefined
+				}
+				{
+					minutesRead ? (
+						<DividedItem>
+							{formatStringTemplate(t('content.minutesRead'), { minutesRead })}
 						</DividedItem>
 					) : undefined
 				}
