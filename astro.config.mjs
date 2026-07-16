@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
 import { readingTime } from '@xsynaptic/satteri-reading-time';
+import pagefind from 'astro-pagefind';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
@@ -36,14 +37,6 @@ export default defineConfig({
 			weights: ['300 700'],
 		},
 		{
-			cssVariable: '--font-geist',
-			name: 'Geist',
-			provider: fontProviders.fontsource(),
-			styles: ['normal'],
-			subsets: ['latin'],
-			weights: ['300 700'],
-		},
-		{
 			cssVariable: '--font-geist-mono',
 			fallbacks: ['monospace'],
 			name: 'Geist Mono',
@@ -57,7 +50,19 @@ export default defineConfig({
 		layout: 'constrained',
 		responsiveStyles: true,
 	},
-	integrations: [mdx(), sitemap()],
+	integrations: [
+		mdx(),
+		sitemap(),
+		pagefind({
+			indexConfig: {
+				excludeSelectors: [
+					"[id='footnote-label']",
+					"[id^='user-content-fnref']",
+					'[data-footnote-backref]',
+				],
+			},
+		}),
+	],
 	markdown: {
 		processor: satteri({
 			hastPlugins: [expressiveCode(expressiveCodeOptions)],

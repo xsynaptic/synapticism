@@ -1,113 +1,50 @@
-.pagefind-ui {
-	--pagefind-ui-scale: 0.666;
-	--pagefind-ui-primary: var(--color-primary-400);
-	--pagefind-ui-text: var(--color-primary-600);
-	--pagefind-ui-background: var(--color-primary-100);
-	--pagefind-ui-border: var(--color-primary-200);
-	--pagefind-ui-border-width: 1px;
-	--pagefind-ui-border-radius: var(--radius-sm);
-	--pagefind-ui-tag: var(--color-accent-600);
-	--pagefind-ui-image-border-radius: var(--radius-sm);
-	--pagefind-ui-image-box-ratio: 3 / 2;
-	--pagefind-ui-font: var(--font-sans);
+/** Note: this CSS file does not import Tailwind but relies on variables in the global context */
+@import '@pagefind/component-ui/css/pagefind-component-ui.css';
+
+:root {
+	--pf-text: var(--color-primary-600);
+	--pf-text-secondary: var(--color-primary-500);
+	--pf-text-muted: var(--color-primary-400);
+	--pf-background: var(--color-primary-100);
+	--pf-border: var(--color-primary-200);
+	--pf-border-focus: var(--color-primary-400);
+	--pf-skeleton: var(--color-primary-200);
+	--pf-skeleton-shine: var(--color-primary-100);
+	--pf-hover: var(--color-primary-200);
+	--pf-mark: var(--color-highlight-600);
+	--pf-scroll-shadow: rgba(0, 0, 0, 0.08);
+	--pf-outline-focus: var(--color-accent-600);
+	--pf-font: var(--font-sans);
+	--pf-input-height: 36px;
+	--pf-border-radius: var(--radius-sm);
 }
 
-.pagefind-ui mark {
-	@apply rounded-sm bg-highlight-100 text-highlight-600;
-
-	padding: 2px;
+/*
+ * Pagefind 1.5.0 fix
+ * `all: initial` on custom elements breaks font inheritance for child buttons
+ */
+pagefind-modal button,
+pagefind-searchbox button {
+	font-family: var(--pf-font) !important;
 }
 
-.pagefind-ui .pagefind-ui__drawer:not(.pagefind-ui__hidden) {
-	@apply absolute w-full min-w-64 rounded-b-sm px-4 py-4 shadow-md sm:right-0 sm:w-auto sm:min-w-[480px];
-
-	z-index: 99;
-	max-height: 85vh;
-	margin-top: 0;
-	overflow-y: auto;
-	background-color: var(--pagefind-ui-background);
+/* Backdrop blur when modal is open */
+dialog.pf-modal::backdrop {
+	backdrop-filter: blur(4px);
 }
 
-.pagefind-ui__search-clear {
-	@apply invisible;
-}
-
-.pagefind-ui__search-clear::before {
-	--svg-cancel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10s10-4.47 10-10S17.53 2 12 2m0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8m3.59-13L12 10.59L8.41 7L7 8.41L10.59 12L7 15.59L8.41 17L12 13.41L15.59 17L17 15.59L13.41 12L17 8.41z'/%3E%3C/svg%3E");
-
-	@apply visible absolute top-1/2 -translate-y-1/2 cursor-pointer text-primary-400;
-
-	width: 16px;
-	aspect-ratio: 1/1;
-	content: '';
-	background-color: currentcolor;
-	mask-image: var(--svg-cancel);
-	mask-repeat: no-repeat;
-	mask-position: center;
-	mask-size: 100%;
-}
-
-.pagefind-ui__search-clear:hover::before,
-.pagefind-ui__search-clear:focus::before {
-	@apply text-accent-300;
-}
-
-.pagefind-ui__message,
-.pagefind-ui__result-title {
-	@apply font-sans;
-}
-
-.pagefind-ui__result-link {
-	@apply transition-colors;
-
-	--pagefind-ui-text: var(--color-accent-500);
-
-	&:hover,
-	&:focus {
-		--pagefind-ui-text: var(--color-accent-300);
+/** Result link colors */
+.pf-result-link {
+	--pf-text: var(--color-accent-500);
+	&:hover {
+		--pf-text: var(--color-accent-300);
 	}
 }
 
-.pagefind-ui__result-nested .pagefind-ui__result-link {
-	--pagefind-ui-text: var(--color-primary-600);
-
-	&:hover,
-	&:focus {
-		--pagefind-ui-text: var(--color-primary-500);
+/* Sub-result link colors */
+.pf-heading-link {
+	--pf-text: var(--color-primary-600);
+	&:hover {
+		--pf-text: var(--color-primary-500);
 	}
-}
-
-.pagefind-ui__result-nested .pagefind-ui__result-link::before {
-	@apply text-primary-400;
-}
-
-.pagefind-ui__search-input,
-.pagefind-ui__search-clear {
-	height: 36px !important;
-}
-
-.pagefind-ui__search-clear {
-	top: 0 !important;
-}
-
-.pagefind-ui__form::before {
-	top: 12px !important;
-	height: 12px !important;
-}
-
-.pagefind-ui__result {
-	padding-top: calc(10px * var(--pagefind-ui-scale)) !important;
-}
-
-.pagefind-ui__result-nested {
-	padding-top: 5px !important;
-}
-
-.pagefind-ui__filter-panel,
-.pagefind-ui__results-area {
-	margin-top: 0 !important;
-}
-
-.pagefind-ui__drawer {
-	gap: 10px !important;
 }

@@ -2,6 +2,9 @@
 const strings = {
 	// Site
 	'site.description': 'A technical blog about web development, design, and creative coding.',
+	'site.search.placeholder': 'Search...',
+	'site.search.toggle.label': 'Open search',
+	'site.search.toggle.title': 'Search',
 	'site.skipToContent': 'Skip to content',
 	'site.title': 'Synapticism',
 	'site.topButton': 'Back to top',
