@@ -7,21 +7,24 @@
 @source '../**/*.astro';
 @source '../**/*.tsx';
 
+/* Spacing */
+@theme {
+	--spacing-content: 58rem;
+}
+
 /** Theme styling */
-@import './theme/config.css';
-@import './theme/colors.css';
-@import './theme/fonts.css';
+@import './main/colors.css';
+@import './main/fonts.css';
 
 /** Custom utilities */
-@import './utilities.css';
+@import './main/utilities.css';
 
 /** Component and feature styling */
-@import './content.css';
-@import './divider.css';
-@import './link.css';
-@import './loading.css';
-@import './pagefind.css';
-@import './progress.css';
+@import './main/content.css';
+@import './main/divider.css';
+@import './main/link.css';
+@import './main/loading.css';
+@import './main/progress.css';
 
 /** These custom properties are defined outside Tailwind's system */
 :root {
