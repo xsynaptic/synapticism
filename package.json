@@ -26,7 +26,7 @@
 	},
 	"dependencies": {
 		"@synapticism/lab": "workspace:*",
-		"astro": "^7.0.9"
+		"astro": "^7.1.0"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.9",
@@ -52,12 +52,12 @@
 		"eslint-plugin-react-hooks": "^7.1.1",
 		"globals": "^17.7.0",
 		"keyv": "^5.6.0",
-		"knip": "^6.26.0",
+		"knip": "^6.27.0",
 		"ohash": "^2.0.11",
 		"p-memoize": "^8.0.0",
 		"prettier": "^3.9.5",
 		"prettier-plugin-astro": "^0.14.1",
-		"prettier-plugin-tailwindcss": "^0.8.0",
+		"prettier-plugin-tailwindcss": "^0.8.1",
 		"remeda": "^2.39.0",
 		"satteri": "^0.9.5",
 		"satteri-expressive-code": "^0.1.18",
@@ -66,7 +66,7 @@
 		"tailwindcss": "^4.3.2",
 		"typescript": "^6.0.3",
 		"url-join": "^5.0.0",
-		"wrangler": "^4.110.0",
+		"wrangler": "^4.111.0",
 		"yaml": "^2.8.3",
 		"zod": "^4.4.3"
 	},
