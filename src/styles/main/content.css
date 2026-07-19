@@ -125,19 +125,19 @@
 /* Blockquote: indented with a hanging accent quotation mark, never a side-stripe */
 .content blockquote {
 	position: relative;
-	padding-inline-start: 1.5rem;
+	padding-inline-start: 1.25rem;
+	font-size: 0.875em;
 	font-style: italic;
-	color: var(--color-primary-600);
+	color: var(--color-primary-500);
 }
 
 .content blockquote::before {
 	position: absolute;
 	inset-inline-start: 0;
-	top: -0.15em;
-	font-size: 1.7em;
+	font-size: 3em;
 	font-style: normal;
 	line-height: 1;
-	color: var(--color-accent-400);
+	color: var(--color-primary-300);
 	content: '\201C';
 }
 
@@ -202,6 +202,18 @@
 	font-size: 0.8125rem;
 	color: var(--color-primary-600);
 	text-align: center;
+}
+
+/* Quotations: unlike media figures they stay at the reading measure; the caption overrides the image-caption treatment and aligns with the indented quote text */
+.content > figure.quotation {
+	max-width: var(--content-measure);
+}
+
+.content .quotation figcaption {
+	padding-inline-start: 1.5rem;
+	font-family: inherit;
+	font-size: 0.9375rem;
+	text-align: start;
 }
 
 /* Footnotes */

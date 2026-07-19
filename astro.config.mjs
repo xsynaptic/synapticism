@@ -73,6 +73,7 @@ export default defineConfig({
 							'./src/components/mdx/img.astro': [['default', 'Img']],
 							'./src/components/mdx/link.astro': [['default', 'Link']],
 							'./src/components/mdx/more.astro': [['default', 'More']],
+							'./src/components/mdx/quotation.astro': [['default', 'Quotation']],
 						},
 					],
 				}),

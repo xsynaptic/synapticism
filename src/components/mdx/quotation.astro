@@ -1,0 +1,27 @@
+---
+interface Props {
+	author: string;
+	title?: string | undefined;
+	url?: string | undefined;
+	year?: number | string | undefined;
+}
+
+const { author, title, url, year } = Astro.props;
+---
+
+<figure class="quotation">
+	<blockquote cite={url}>
+		<slot />
+	</blockquote>
+	<figcaption>
+		{
+			[
+				author ? `― ${author}` : undefined,
+				title ? <cite>{url ? <a href={url}>{title}</a> : title}</cite> : undefined,
+				year === undefined ? undefined : String(year),
+			]
+				.filter(Boolean)
+				.flatMap((part, index) => (index === 0 ? [part] : [', ', part]))
+		}
+	</figcaption>
+</figure>
