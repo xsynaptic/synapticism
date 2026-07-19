@@ -56,5 +56,9 @@
 	"[astro]": {
 		"editor.defaultFormatter": "astro-build.astro-vscode"
 	},
+	"[mdx]": {
+		"editor.defaultFormatter": "remcohaszing.vscode-mdxlint"
+	},
+	"mdxlint.requireConfig": true,
 	"astro.content-intellisense": true
 }
