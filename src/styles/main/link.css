@@ -1,31 +1,4 @@
-/* Link styles; extracted here to avoid repetition in the link component */
-.link {
-	@apply transition-colors ease-linear;
-
-	color: var(--link-color);
-	cursor: pointer;
-}
-
-.link:hover,
-.link:focus-visible {
-	color: var(--link-hover);
-}
-
-/* Reading-surface link affordance: an underline matching the prose treatment, for links that sit
-   among text (the link-note destination, prev/next titles) so they read as the same object. */
-.link-underline {
-	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-decoration-color: var(--color-accent-300);
-	text-underline-offset: 2px;
-	transition: text-decoration-color 0.15s ease;
-}
-
-.link-underline:hover,
-.link-underline:focus-visible {
-	text-decoration-color: var(--color-accent-500);
-}
-
+/* Color variants for the link component; prose links are styled in content.css */
 .link-primary {
 	--link-color: var(--color-primary-800);
 	--link-hover: var(--color-primary-600);
@@ -64,4 +37,29 @@
 .link-on-accent {
 	--link-color: #fff;
 	--link-hover: var(--color-accent-100);
+}
+
+.link {
+	@apply transition-colors;
+
+	color: var(--link-color);
+	cursor: pointer;
+}
+
+/* Matches the prose link treatment in content.css; pair with linkColor="accent" */
+.link-underline {
+	text-decoration-line: underline;
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--color-primary-200);
+	text-underline-offset: 2px;
+}
+
+.link:hover,
+.link:focus-visible {
+	color: var(--link-hover);
+}
+
+.link-underline:hover,
+.link-underline:focus-visible {
+	text-decoration-color: var(--color-accent-200);
 }

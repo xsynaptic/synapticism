@@ -75,20 +75,19 @@
 
 /* Links */
 .content a {
+	@apply transition-colors;
+
 	color: var(--color-accent-700);
-	text-decoration: underline;
-	text-decoration-thickness: 1px;
-	text-decoration-color: var(--color-accent-300);
+	text-decoration-line: underline;
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--color-primary-200);
 	text-underline-offset: 2px;
-	transition:
-		color 0.15s ease,
-		text-decoration-color 0.15s ease;
 }
 
 .content a:hover,
-.content a:focus {
+.content a:focus-visible {
 	color: var(--color-accent-500);
-	text-decoration-color: var(--color-accent-500);
+	text-decoration-color: var(--color-accent-200);
 }
 
 /* Emphasis */
@@ -242,9 +241,10 @@
 
 .content [data-footnote-ref],
 .content [data-footnote-backref] {
-	@apply font-medium select-none;
+	@apply font-medium;
 
 	text-decoration-line: none;
+	user-select: none;
 }
 
 /** Inserted by remark-rehype for use with the footnotes label */

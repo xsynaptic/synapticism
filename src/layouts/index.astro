@@ -44,11 +44,14 @@ const mainProps = isFirstPage
 				title: formatStringTemplate(t('index.pageTitle'), { page: pageNumber }),
 			},
 		};
+
+const showHeadline = false as boolean;
+const showProjects = false as boolean;
 ---
 
 <MainSite isHomepage={true} {...mainProps}>
 	{
-		isFirstPage ? (
+		isFirstPage && showHeadline ? (
 			<section class="content-column pt-8 pb-2 md:pt-14">
 				<p class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]">
 					{t('index.heroHeading')}
@@ -65,7 +68,6 @@ const mainProps = isFirstPage
 			</section>
 		) : undefined
 	}
-
 	{
 		streamItems.length > 0 ? (
 			<section class:list={['content-column', isFirstPage ? 'mt-14 md:mt-20' : 'pt-8 md:pt-14']}>
@@ -142,9 +144,8 @@ const mainProps = isFirstPage
 			</section>
 		) : undefined
 	}
-
 	{
-		isFirstPage && selectedProjects && selectedProjects.length > 0 ? (
+		isFirstPage && showProjects && selectedProjects && selectedProjects.length > 0 ? (
 			<section class="content-column mt-14 pb-16 md:mt-20 md:pb-24">
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.selectedWork')}</h2>

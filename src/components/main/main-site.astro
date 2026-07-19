@@ -68,12 +68,8 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 		<header class:list={['transition-colors', 'z-40']}>
 			<div class:list={['py-3 lg:py-4', 'bg-primary-800']}>
 				<div class="content-column flex flex-wrap items-center justify-between gap-2">
-					<SiteTitleTag>
-						<Link
-							class="font-sans text-sm font-semibold tracking-widest uppercase"
-							href={siteUrl}
-							linkColor="on-dark"
-						>
+					<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
+						<span class="text-primary-500">ꗥ</span>{' '}<Link href={siteUrl} linkColor="on-dark">
 							{t('site.title')}
 						</Link>
 					</SiteTitleTag>

@@ -35,15 +35,14 @@
 	--content-slash: '/';
 
 	/* Reading line-length for long-form prose; media breaks out wider */
-	--content-measure: 38rem;
+	--content-measure: 70ch;
 }
 
 html {
 	scrollbar-gutter: stable;
 }
 
-/* A single visible focus indicator for keyboard users across every interactive element. Kept at
-   zero specificity with :where() so component styles still win. */
+/* A single visible focus indicator for keyboard users across every interactive element */
 :where(a, button, summary, input, select, textarea, [tabindex]:not([tabindex='-1'])):focus-visible {
 	outline: 2px solid var(--color-accent-600);
 	outline-offset: 2px;
