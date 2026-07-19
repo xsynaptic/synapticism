@@ -33,7 +33,10 @@ const { Content } = await render(entry);
 		...getSeoHideSearch(entry.data.hideSearch),
 	}}
 >
-	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp(entry.data.hideSearch)}>
+	<article
+		class:list={['entry-detail', MicroformatClassNames.Entry]}
+		{...getPagefindBodyProp(entry.data.hideSearch)}
+	>
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>

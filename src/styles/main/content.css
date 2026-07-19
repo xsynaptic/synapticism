@@ -4,11 +4,9 @@
  * measure, while media (code blocks, images, tables) fills the wider frame.
  */
 .content {
-	@apply mx-auto px-4 md:px-8;
+	@apply mx-auto px-4 text-base leading-relaxed md:px-8;
 
 	max-width: var(--spacing-content);
-	font-size: 1.0625rem;
-	line-height: 1.75;
 	color: var(--color-primary-700);
 }
 
@@ -52,25 +50,23 @@
 }
 
 .content h1 {
-	font-size: 1.9rem;
-	line-height: 1.15;
+	@apply text-3xl leading-tight;
+
 	letter-spacing: -0.015em;
 }
 
 .content h2 {
-	font-size: 1.6rem;
-	line-height: 1.2;
+	@apply text-2xl leading-tight;
+
 	letter-spacing: -0.01em;
 }
 
 .content h3 {
-	font-size: 1.3rem;
-	line-height: 1.3;
+	@apply text-xl leading-snug;
 }
 
 .content h4 {
-	font-size: 1.1rem;
-	line-height: 1.4;
+	@apply text-lg leading-snug;
 }
 
 /* Links */
@@ -163,7 +159,8 @@
 }
 
 .content table {
-	font-size: 0.9375rem;
+	@apply text-sm;
+
 	border-collapse: collapse;
 }
 
@@ -197,9 +194,10 @@
 }
 
 .content figcaption {
+	@apply text-xs;
+
 	margin-top: 0.6em;
 	font-family: var(--font-mono);
-	font-size: 0.8125rem;
 	color: var(--color-primary-600);
 	text-align: center;
 }
@@ -210,16 +208,18 @@
 }
 
 .content .quotation figcaption {
+	@apply text-sm;
+
 	padding-inline-start: 1.5rem;
 	font-family: inherit;
-	font-size: 0.9375rem;
 	text-align: start;
 }
 
 /* Footnotes */
 .content > .footnotes {
+	@apply text-sm leading-relaxed;
+
 	margin-top: 3em;
-	font-size: 0.9375rem;
 	color: var(--color-primary-600);
 }
 
@@ -257,9 +257,4 @@
 
 	text-decoration-line: none;
 	user-select: none;
-}
-
-/** Inserted by remark-rehype for use with the footnotes label */
-.sr-only {
-	@apply sr-only;
 }

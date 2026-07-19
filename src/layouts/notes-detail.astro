@@ -14,15 +14,18 @@ import ContentSectionProjects from '#components/content/content-section-projects
 import ContentSectionTags from '#components/content/content-section-tags.astro';
 import MainSite from '#components/main/main-site.astro';
 import DividedItem from '#components/parts/divided-item.astro';
+import Link from '#components/parts/link.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionNoteNav from '#components/sections/section-note-nav.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
+import { getSiteUrl } from '#lib/utils/routing.ts';
 import { getOgImageUrl, getSeoArticleProps } from '#lib/utils/seo.ts';
 
 interface Props {
@@ -52,10 +55,15 @@ const { Content } = await render(entry);
 	}}
 	schemas={getNoteSchema(entry, { authorName: SITE_AUTHOR_NAME, url: Astro.url.toString() })}
 >
-	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp()}>
+	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
-				<DividedItem>
+				<DividedItem
+					class="font-mono text-xs font-medium500 uppercase"
+					dividerContent="slash"
+					><Link color="accent" href={getSiteUrl('notes')}>{t('collection.notes')}</Link></DividedItem
+				>
+				<DividedItem class="font-mono text-xs text-primary-500">
 					<ContentDate
 						date={entry.data.dateCreated}
 						datePreset={DatePresetEnum.Medium}

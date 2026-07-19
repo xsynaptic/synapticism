@@ -41,7 +41,7 @@ const { Content } = await render(entry);
 		title: entry.data.title,
 	}}
 >
-	<article class={MicroformatClassNames.Entry} {...getPagefindBodyProp()}>
+	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>

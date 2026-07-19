@@ -55,7 +55,7 @@ const minutesRead =
 	}}
 	schemas={getPostSchema(entry, { authorName: SITE_AUTHOR_NAME, url: Astro.url.toString() })}
 >
-	<article class:list={['pb-4', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
+	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>

@@ -1,25 +1,33 @@
 ---
 import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 
-import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
+import { render } from 'astro:content';
 
+import ContentExcerpt from '#components/content/content-excerpt.astro';
 import ContentHeader from '#components/content/content-header.astro';
-import ContentSection from '#components/content/content-section.astro';
-import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
 import DateDisplay from '#components/parts/date-display.astro';
-import Link from '#components/parts/link.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { getContentUrl } from '#lib/utils/routing.ts';
 import { getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
-	page: Page<CatalogItem>;
+	page: Page<CollectionEntry<'notes'>>;
 }
 
 const { page } = Astro.props;
+
+const items = await Promise.all(
+	page.data.map(async (entry) => {
+		const { Content } = await render(entry);
+
+		return { Content, entry };
+	}),
+);
 ---
 
 <MainSite
@@ -32,41 +40,30 @@ const { page } = Astro.props;
 	<ContentHeader title={t('notes.title')}>
 		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
 	</ContentHeader>
-	<ContentSection>
-		<ul class="flex flex-col gap-4">
-			{
-				page.data.map((item) => {
-					const primaryLink = item.links?.[0];
+	{
+		items.map(({ Content, entry }) => {
+			const primaryLink = entry.data.links?.[0];
 
-					return (
-						<li class="flex gap-3 sm:gap-4">
-							{item.imageId ? (
-								<ContentThumbnail imgAlt={item.title} src={item.imageId} />
-							) : undefined}
-							<div class="flex min-w-0 flex-col gap-1">
-								<h2 class="text-lg font-semibold md:text-xl">
-									<Link href={item.url}>{item.title}</Link>
-								</h2>
-								<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
-									<DateDisplay date={item.dateCreated} datePreset={DatePresetEnum.Medium} />
-									{primaryLink ? (
-										<span>
-											{getSourceDomain(primaryLink.url)}
-											<span aria-hidden="true" class="ml-1">
-												↗
-											</span>
-										</span>
-									) : undefined}
-								</div>
-								{item.description ? (
-									<p class="text-sm text-primary-600" set:html={item.description} />
-								) : undefined}
-							</div>
-						</li>
-					);
-				})
-			}
-		</ul>
-		<Pagination class="mt-4 md:mt-8" page={page} />
-	</ContentSection>
+			return (
+				<ContentExcerpt class="mb-8" entryUrl={getContentUrl('notes', entry.id)}>
+					<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
+					<Fragment slot="excerpt-subtitle">
+						<DateDisplay date={entry.data.dateCreated} datePreset={DatePresetEnum.Medium} />
+						{primaryLink ? (
+							<span>
+								{getSourceDomain(primaryLink.url)}
+								<span aria-hidden="true" class="ml-1">
+									↗
+								</span>
+							</span>
+						) : undefined}
+					</Fragment>
+					<Content />
+				</ContentExcerpt>
+			);
+		})
+	}
+	<div class="content-column">
+		<Pagination class="mt-4 mb-8 md:mt-8" page={page} />
+	</div>
 </MainSite>

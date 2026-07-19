@@ -1,4 +1,9 @@
 @theme {
+	/* Fonts */
+	--font-sans: var(--font-aleo);
+	--font-serif: ui-serif, 'Georgia', 'Cambria', 'Times New Roman', 'Times', serif;
+	--font-mono: var(--font-geist-mono);
+
 	/* Teal primitive */
 	--color-blue-chill-50: #f0fafb;
 	--color-blue-chill-100: #d9f3f4;

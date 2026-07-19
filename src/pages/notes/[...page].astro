@@ -2,10 +2,13 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import NoteList from '#layouts/notes-list.astro';
-import { queryNotesIndex } from '#lib/collections/notes/notes-utils.ts';
+import { getNotesCollection } from '#lib/collections/notes/notes-data.js';
+import { sortByDateReverseChronological } from '#lib/utils/date.ts';
 
 export const getStaticPaths = (async ({ paginate }) => {
-	return paginate(await queryNotesIndex(), { pageSize: 20 });
+	const { entries } = await getNotesCollection();
+
+	return paginate([...entries].sort(sortByDateReverseChronological), { pageSize: 20 });
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;

@@ -24,14 +24,15 @@ const hasExcerpt = excerptSplit.length > 1;
 
 <article class={className}>
 	<header class:list={['content-column', description ? undefined : 'mb-2']}>
-		<h2 class="mb-1 text-2xl font-bold lg:text-3xl">
-			<a class="text-primary-700 transition-colors ease-in hover:text-accent-500" href={entryUrl}>
-				<slot name="excerpt-title" />
-			</a>
+		<h2 class="mb-1 text-lg font-semibold md:text-xl">
+			<Link href={entryUrl}><slot name="excerpt-title" /></Link>
 		</h2>
 		{
 			subtitle ? (
-				<h3 class="mb-1 text-xs font-medium text-primary-400 md:text-sm" set:html={subtitle} />
+				<div
+					class="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600"
+					set:html={subtitle}
+				/>
 			) : undefined
 		}
 		{
