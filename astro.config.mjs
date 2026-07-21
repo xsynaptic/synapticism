@@ -32,7 +32,7 @@ export default defineConfig({
 			cssVariable: '--font-aleo',
 			name: 'Aleo',
 			provider: fontProviders.fontsource(),
-			styles: ['normal'],
+			styles: ['normal', 'italic'],
 			subsets: ['latin'],
 			weights: ['300 700'],
 		},
