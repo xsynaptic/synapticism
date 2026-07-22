@@ -9,7 +9,6 @@ export const GET = (() => {
 Disallow: /_astro/
 Disallow: /pagefind/
 
-User-agent: *
 Sitemap: ${sitemapUrl}
 `);
 }) satisfies APIRoute;
