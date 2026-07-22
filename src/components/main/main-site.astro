@@ -66,7 +66,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			label={t('site.skipToContent')}
 		/>
 		<header class:list={['transition-colors', 'z-40']}>
-			<div class:list={['py-3 lg:py-4', 'bg-primary-800']}>
+			<div class:list={['py-3 lg:py-4', 'bg-linear-to-b from-primary-800 to-primary-700']}>
 				<div class="content-column flex flex-wrap items-center justify-between gap-2">
 					<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
 						<span class="text-primary-500">ꗥ</span>{' '}<Link href={siteUrl} linkColor="on-dark">
@@ -78,10 +78,16 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			</div>
 			<MenuHeader />
 		</header>
-		<main class="flex-1 bg-primary-100" id="main-content">
+		<main
+			class="flex-1 bg-linear-to-b from-primary-200 to-primary-100 to-[150px] pb-8"
+			id="main-content"
+		>
 			<slot />
 		</main>
-		<footer class="border-t border-primary-300 bg-primary-200 pt-4" data-nosnippet>
+		<footer
+			class="border-t border-primary-300 bg-linear-to-b from-primary-200 to-primary-100 pt-4"
+			data-nosnippet
+		>
 			<div class="content-column pb-8">
 				<MenuFooter />
 				<Colophon />
@@ -92,7 +98,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 				<ProgressReading
 					class:list={[
 						'z-98 rounded-br-md shadow-lg shadow-current',
-						'bg-linear-to-r from-accent-500 to-accent-300 text-accent-200',
+						'bg-linear-to-r from-highlight-500 to-highlight-300 text-highlight-200',
 					]}
 					height="2.5px"
 				/>

@@ -70,7 +70,9 @@ const showProjects = false as boolean;
 	}
 	{
 		streamItems.length > 0 ? (
-			<section class:list={['content-column', isFirstPage ? 'mt-14 md:mt-20' : 'pt-8 md:pt-14']}>
+			<section
+				class:list={['content-column', isFirstPage ? 'mt-14 pb-8 md:mt-20' : 'pt-8 md:pt-14']}
+			>
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.recently')}</h2>
 					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
@@ -146,7 +148,7 @@ const showProjects = false as boolean;
 	}
 	{
 		isFirstPage && showProjects && selectedProjects && selectedProjects.length > 0 ? (
-			<section class="content-column mt-14 pb-16 md:mt-20 md:pb-24">
+			<section class="content-column mt-14 pb-8 md:mt-20">
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.selectedWork')}</h2>
 					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />

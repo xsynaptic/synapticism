@@ -7,40 +7,42 @@ import { t } from '#lib/i18n/i18n-strings.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
 interface Props {
-	newer: NoteNavItem | undefined;
-	older: NoteNavItem | undefined;
+	newerNote: NoteNavItem | undefined;
+	olderNote: NoteNavItem | undefined;
 }
 
-const { newer, older } = Astro.props;
+const { newerNote, olderNote } = Astro.props;
 
 const notesUrl = getContentUrl('notes');
 ---
 
 <LabeledSection data-nosnippet data-pagefind-ignore label={t('section.moreNotes')}>
 	<nav class="flex items-baseline gap-4 text-sm">
-		<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1.5">
+		<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
 			{
-				newer ? (
+				newerNote ? (
 					<Fragment>
 						<span aria-hidden="true" class="shrink-0 text-primary-600">
 							&larr;
 						</span>
-						<Link class="link-underline min-w-0" href={newer.url} linkColor="accent">
+						<Link class="link-underline min-w-0 italic" href={newerNote.url} linkColor="accent">
 							<span class="sr-only">{t('noteNav.newer')}</span>
-							{newer.title}
+							{newerNote.title}
 						</Link>
 					</Fragment>
 				) : undefined
 			}
 		</span>
-		<Link class="shrink-0" href={notesUrl} linkColor="accent">{t('noteNav.allNotes')}</Link>
-		<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1.5">
+		<Link class="shrink-0 uppercase" href={notesUrl} linkColor="accent"
+			>{t('noteNav.allNotes')}</Link
+		>
+		<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
 			{
-				older ? (
+				olderNote ? (
 					<Fragment>
-						<Link class="link-underline min-w-0" href={older.url} linkColor="accent">
+						<Link class="link-underline min-w-0 italic" href={olderNote.url} linkColor="accent">
 							<span class="sr-only">{t('noteNav.older')}</span>
-							{older.title}
+							{olderNote.title}
 						</Link>
 						<span aria-hidden="true" class="shrink-0 text-primary-600">
 							&rarr;

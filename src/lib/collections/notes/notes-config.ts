@@ -5,7 +5,12 @@ import { CONTENT_COLLECTIONS_PATH } from '#constants.js';
 import { contentBaseSchema, LinkItemSchema, SourceSchema } from '#lib/schemas/content.js';
 
 export const notes = defineCollection({
-	loader: glob({ base: `${CONTENT_COLLECTIONS_PATH}/notes`, pattern: '**/[^_]*.(md|mdx)' }),
+	loader: glob({
+		base: `${CONTENT_COLLECTIONS_PATH}/notes`,
+		// Year folders organize content only; IDs and URLs stay flat
+		generateId: ({ entry }) => entry.replace(/^.*\//, '').replace(/\.mdx?$/, ''),
+		pattern: '**/[^_]*.(md|mdx)',
+	}),
 	schema: contentBaseSchema
 		.extend({
 			links: LinkItemSchema.array().optional(),

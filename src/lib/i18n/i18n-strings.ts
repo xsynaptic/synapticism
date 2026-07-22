@@ -86,8 +86,9 @@ const strings = {
 	'notFound.title': 'Page Not Found',
 
 	// Footer colophon
+	'footer.astro': 'Astro',
 	'footer.builtWith': 'Built with',
-	'footer.copyright': '©{years} A. Synaptic.',
+	'footer.copyright': '©{years} A. Synaptic',
 	'footer.rss': 'RSS',
 
 	// CV

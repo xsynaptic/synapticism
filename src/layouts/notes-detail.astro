@@ -58,10 +58,10 @@ const { Content } = await render(entry);
 	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
-				<DividedItem
-					class="font-mono text-xs font-medium500 uppercase"
-					dividerContent="slash"
-					><Link color="accent" href={getSiteUrl('notes')}>{t('collection.notes')}</Link></DividedItem
+				<DividedItem class="font-mono text-xs" dividerContent="slash"
+					><Link class="font-semibold uppercase" href={getSiteUrl('notes')} linkColor="accent"
+						>{t('collection.notes')}</Link
+					></DividedItem
 				>
 				<DividedItem class="font-mono text-xs text-primary-500">
 					<ContentDate
@@ -97,5 +97,5 @@ const { Content } = await render(entry);
 		<ContentSectionTags tagIds={tagIds} />
 	</article>
 	<SectionBacklinks backlinks={backlinks} />
-	<SectionNoteNav newer={newerNote} older={olderNote} />
+	<SectionNoteNav newerNote={newerNote} olderNote={olderNote} />
 </MainSite>
