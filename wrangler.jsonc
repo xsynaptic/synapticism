@@ -1,6 +1,8 @@
 {
 	"name": "synapticism",
 	"compatibility_date": "2026-06-22",
+	"routes": [{ "pattern": "synapticism.com", "custom_domain": true }],
+	"workers_dev": false,
 	"assets": {
 		"directory": "./dist/",
 		"html_handling": "auto-trailing-slash",

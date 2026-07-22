@@ -27,13 +27,7 @@ async function build() {
 		return;
 	}
 	console.log(chalk.blue('Building...'));
-	await $({ cwd: rootPath, stdio: 'inherit' })`pnpm astro build`;
-
-	console.log(chalk.blue('Generating OG images...'));
-	await $({
-		cwd: rootPath,
-		stdio: 'inherit',
-	})`pnpm --filter @synapticism/scripts run og-image --root-path=${rootPath}`;
+	await $({ cwd: rootPath, stdio: 'inherit' })`pnpm build`;
 }
 
 async function transfer() {
