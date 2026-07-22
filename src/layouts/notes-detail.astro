@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import { render } from 'astro:content';
 
-import type { NoteNavItem } from '#components/types.ts';
+import type { ContentNavigationItem } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentDate from '#components/content/content-date.astro';
@@ -17,7 +17,7 @@ import DividedItem from '#components/parts/divided-item.astro';
 import Link from '#components/parts/link.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
-import SectionNoteNav from '#components/sections/section-note-nav.astro';
+import SectionNavigation from '#components/sections/section-navigation.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { SITE_AUTHOR_NAME } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
@@ -25,17 +25,17 @@ import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getSiteUrl } from '#lib/utils/routing.ts';
+import { getContentUrl, getSiteUrl } from '#lib/utils/routing.ts';
 import { getOgImageUrl, getSeoArticleProps } from '#lib/utils/seo.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
 	entry: CollectionEntry<'notes'>;
-	newerNote: NoteNavItem | undefined;
-	olderNote: NoteNavItem | undefined;
+	newerItem: ContentNavigationItem | undefined;
+	olderItem: ContentNavigationItem | undefined;
 }
 
-const { backlinks, entry, newerNote, olderNote } = Astro.props;
+const { backlinks, entry, newerItem, olderItem } = Astro.props;
 
 const projectIds = entry.data.projects?.map(({ id }) => id);
 const tagIds = entry.data.tags?.map(({ id }) => id);
@@ -58,9 +58,9 @@ const { Content } = await render(entry);
 	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
-				<DividedItem class="font-mono text-xs" dividerContent="slash"
+				<DividedItem dividerContent="slash"
 					><Link class="font-semibold uppercase" href={getSiteUrl('notes')} linkColor="accent"
-						>{t('collection.notes')}</Link
+						>{t('collection.notes.plural')}</Link
 					></DividedItem
 				>
 				<DividedItem class="font-mono text-xs text-primary-500">
@@ -97,5 +97,12 @@ const { Content } = await render(entry);
 		<ContentSectionTags tagIds={tagIds} />
 	</article>
 	<SectionBacklinks backlinks={backlinks} />
-	<SectionNoteNav newerNote={newerNote} olderNote={olderNote} />
+	<SectionNavigation
+		baseUrl={getContentUrl('notes')}
+		labelPLural={t('collection.notes.plural')}
+		labelSingular={t('collection.notes.singular')}
+		newerItem={newerItem}
+		olderItem={olderItem}
+		title={t('section.moreNotes')}
+	/>
 </MainSite>

@@ -21,7 +21,7 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 	{
 		subtitle ? (
 			<div
-				class="items-center gap-1 pt-1 sm:flex sm:flex-wrap"
+				class="items-center gap-1 pt-1 font-mono text-xs sm:flex sm:flex-wrap"
 				data-pagefind-ignore
 				set:html={subtitle}
 			/>

@@ -40,9 +40,12 @@ const groups = groupTagsByLetter(tags);
 										<Link href={getContentUrl(tag.collection, tag.id)}>
 											{tag.data.title}
 											{tag.data._contentCount ? (
-												<span class="text-xs text-primary-400">
-													({String(tag.data._contentCount)})
-												</span>
+												<>
+													{' '}
+													<span class="text-xs text-primary-400">
+														({String(tag.data._contentCount)})
+													</span>
+												</>
 											) : undefined}
 										</Link>
 									</DividedItem>

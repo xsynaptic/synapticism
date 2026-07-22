@@ -1,3 +1,11 @@
+/**
+ * A single previous/next target for content navigation
+ */
+export interface ContentNavigationItem {
+	title: string;
+	url: string;
+}
+
 export interface MetaProps {
 	article?: {
 		authors?: Array<string>;
@@ -15,14 +23,6 @@ export interface MetaProps {
 	ogType?: 'article' | 'website' | undefined;
 	prefetchUrls?: Array<string> | undefined;
 	title?: string | undefined;
-}
-
-/**
- * A single previous/next target for note-to-note navigation
- */
-export interface NoteNavItem {
-	title: string;
-	url: string;
 }
 
 /**

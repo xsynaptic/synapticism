@@ -22,10 +22,10 @@ export const getStaticPaths = (async () => {
 			props: {
 				backlinks: catalog.backlinksOf(entry.id),
 				entry,
-				newerNote: newer
+				newerItem: newer
 					? { title: newer.data.title, url: getContentUrl('notes', newer.id) }
 					: undefined,
-				olderNote: older
+				olderItem: older
 					? { title: older.data.title, url: getContentUrl('notes', older.id) }
 					: undefined,
 			},

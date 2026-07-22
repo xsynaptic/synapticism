@@ -14,7 +14,7 @@ const { backlinks } = Astro.props;
 
 {
 	backlinks && backlinks.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.backlinks')}>
+		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.backlinks')}>
 			<ul class="flex flex-col gap-1 text-sm">
 				{backlinks.map(({ title, url }) => (
 					<li>

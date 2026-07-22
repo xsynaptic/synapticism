@@ -5,19 +5,19 @@ import { getSiteUrl } from '#lib/utils/routing.ts';
 
 export const menuHeaderItems = [
 	{
-		title: t('nav.posts'),
+		title: t('collection.posts.plural'),
 		url: getSiteUrl('posts'),
 	},
 	{
-		title: t('nav.notes'),
+		title: t('collection.notes.plural'),
 		url: getSiteUrl('notes'),
 	},
 	{
-		title: t('nav.projects'),
+		title: t('collection.projects.plural'),
 		url: getSiteUrl('projects'),
 	},
 	{
-		title: t('nav.tags'),
+		title: t('collection.tags.plural'),
 		url: getSiteUrl('tags'),
 	},
 	{

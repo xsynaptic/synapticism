@@ -22,7 +22,7 @@ const tags = tagIds ? getTagsByIds(tagIds).sort(sortByContentCount) : undefined;
 
 {
 	tags && tags.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.tags')} {...props}>
+		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.tags')} {...props}>
 			<ListRow>
 				{tags.map((item) => (
 					<DividedItem

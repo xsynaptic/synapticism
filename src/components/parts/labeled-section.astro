@@ -3,15 +3,15 @@ import type { HTMLAttributes } from 'astro/types';
 
 interface Props extends HTMLAttributes<'section'> {
 	as?: 'h2' | 'h3';
-	label: string;
+	title: string;
 }
 
-const { as: Heading = 'h2', class: className, label, ...props } = Astro.props;
+const { as: Heading = 'h2', class: className, title, ...props } = Astro.props;
 ---
 
 <section class:list={['content-column mb-4', className]} {...props}>
 	<div class="mb-4 flex items-center gap-2">
-		<Heading class="font-mono text-xs font-medium text-primary-600">{label}</Heading>
+		<Heading class="font-mono text-xs font-medium text-primary-600">{title}</Heading>
 		<span aria-hidden="true" class="h-px flex-1 bg-primary-200"></span>
 	</div>
 	<slot />

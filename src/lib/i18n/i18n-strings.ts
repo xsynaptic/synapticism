@@ -9,13 +9,20 @@ const strings = {
 	'site.title': 'Synapticism',
 	'site.topButton': 'Back to top',
 
+	// Collection labels
+	'collection.notes.plural': 'Notes',
+	'collection.notes.singular': 'Note',
+	'collection.pages': 'Pages',
+	'collection.posts.plural': 'Posts',
+	'collection.posts.singular': 'Post',
+	'collection.projects.plural': 'Projects',
+	'collection.projects.singular': 'Project',
+	'collection.tags.plural': 'Tags',
+	'collection.tags.singular': 'Tag',
+
 	// Navigation menus
 	'nav.about': 'About',
 	'nav.github': 'GitHub',
-	'nav.notes': 'Notes',
-	'nav.posts': 'Posts',
-	'nav.projects': 'Projects',
-	'nav.tags': 'Tags',
 
 	// Accessibility (aria-labels, screen-reader text)
 	'aria.footerNav': 'Footer navigation',
@@ -32,11 +39,11 @@ const strings = {
 	'pagination.previous': 'Previous',
 
 	// Section labels
-	'noteNav.allNotes': 'All Notes',
-	'noteNav.newer': 'Newer note: ',
-	'noteNav.older': 'Older note: ',
 	'section.backlinks': 'Backlinks',
 	'section.moreNotes': 'More Notes',
+	'section.navigation.label.list': 'All %s',
+	'section.navigation.label.newer': 'Newer %s: ',
+	'section.navigation.label.older': 'Older %s: ',
 	'section.projects': 'Projects',
 	'section.relatedWriting': 'Related writing',
 	'section.source': 'Source',
@@ -59,13 +66,6 @@ const strings = {
 	'content.minutesRead': '{minutesRead} minute read',
 	'content.updated': 'Updated',
 	'content.via': ' · via ',
-
-	// Collection labels
-	'collection.notes': 'Notes',
-	'collection.pages': 'Pages',
-	'collection.posts': 'Posts',
-	'collection.projects': 'Projects',
-	'collection.tags': 'Tags',
 
 	// List pages (heading + SEO title/description)
 	'notes.description':

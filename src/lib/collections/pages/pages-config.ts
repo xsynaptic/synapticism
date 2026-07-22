@@ -1,5 +1,5 @@
 import { glob } from 'astro/loaders';
-import { defineCollection } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
 import path from 'node:path';
 import { z } from 'zod';
 
@@ -13,5 +13,7 @@ export const pages = defineCollection({
 		generateId: ({ entry }) => path.basename(entry, path.extname(entry)),
 		pattern: '**/[^_]*.(md|mdx)',
 	}),
-	schema: contentBaseSchema.extend({ hideSearch: z.boolean().optional() }).strict(),
+	schema: contentBaseSchema
+		.extend({ hideSearch: z.boolean().optional(), tags: reference('tags').array().optional() })
+		.strict(),
 });

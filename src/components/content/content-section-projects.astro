@@ -24,7 +24,7 @@ const projects = projectIds
 
 {
 	projects && projects.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.projects')}>
+		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.projects')}>
 			<ListRow>
 				{projects.map((item) => (
 					<DividedItem as="li" class="font-mono text-sm after:text-sm after:font-light">

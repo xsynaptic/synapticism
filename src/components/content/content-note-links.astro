@@ -18,7 +18,7 @@ const { links, source } = Astro.props;
 
 {
 	links && links.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore label={t('section.source')}>
+		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.source')}>
 			<ul class="flex flex-col gap-3 text-sm">
 				{links.map((link, index) => (
 					<li>
