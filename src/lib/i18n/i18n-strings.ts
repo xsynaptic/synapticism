@@ -40,10 +40,10 @@ const strings = {
 
 	// Section labels
 	'section.backlinks': 'Backlinks',
-	'section.moreNotes': 'More Notes',
-	'section.navigation.label.list': 'All %s',
-	'section.navigation.label.newer': 'Newer %s: ',
-	'section.navigation.label.older': 'Older %s: ',
+	'section.navigation.label.list': 'All {label}',
+	'section.navigation.label.newer': 'Newer {label}: ',
+	'section.navigation.label.older': 'Older {label}: ',
+	'section.navigation.title': 'More {label}',
 	'section.projects': 'Projects',
 	'section.relatedWriting': 'Related writing',
 	'section.source': 'Source',

@@ -12,54 +12,57 @@ interface Props {
 	labelSingular: string;
 	newerItem: ContentNavigationItem | undefined;
 	olderItem: ContentNavigationItem | undefined;
-	title: string;
 }
 
-const { baseUrl, labelPLural, labelSingular, newerItem, olderItem, title } = Astro.props;
+const { baseUrl, labelPLural, labelSingular, newerItem, olderItem } = Astro.props;
 ---
 
-<LabeledSection data-nosnippet data-pagefind-ignore title={title}>
-	<nav class="flex items-baseline gap-4 text-sm">
-		<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
-			{
-				newerItem ? (
-					<Fragment>
-						<span aria-hidden="true" class="shrink-0 text-primary-600">
-							&larr;
-						</span>
-						<Link class="link-underline min-w-0 italic" href={newerItem.url} linkColor="accent">
-							<span class="sr-only">
-								{formatStringTemplate(t('section.navigation.label.newer'), {
-									label: labelSingular,
-								})}
-							</span>
-							{newerItem.title}
-						</Link>
-					</Fragment>
-				) : undefined
-			}
-		</span>
-		<Link class="shrink-0" href={baseUrl} linkColor="accent"
-			>{formatStringTemplate(t('section.navigation.label.list'), { label: labelPLural })}</Link
+{
+	newerItem || olderItem ? (
+		<LabeledSection
+			data-nosnippet
+			data-pagefind-ignore
+			title={formatStringTemplate(t('section.navigation.title'), { label: labelPLural })}
 		>
-		<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
-			{
-				olderItem ? (
-					<Fragment>
-						<Link class="link-underline min-w-0 italic" href={olderItem.url} linkColor="accent">
-							<span class="sr-only">
-								{formatStringTemplate(t('section.navigation.label.older'), {
-									label: labelSingular,
-								})}
+			<nav class="flex items-baseline gap-4 text-sm">
+				<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
+					{newerItem ? (
+						<Fragment>
+							<span aria-hidden="true" class="shrink-0 text-primary-600">
+								&larr;
 							</span>
-							{olderItem.title}
-						</Link>
-						<span aria-hidden="true" class="shrink-0 text-primary-600">
-							&rarr;
-						</span>
-					</Fragment>
-				) : undefined
-			}
-		</span>
-	</nav>
-</LabeledSection>
+							<Link class="link-underline min-w-0 italic" href={newerItem.url} linkColor="accent">
+								<span class="sr-only">
+									{formatStringTemplate(t('section.navigation.label.newer'), {
+										label: labelSingular,
+									})}
+								</span>
+								{newerItem.title}
+							</Link>
+						</Fragment>
+					) : undefined}
+				</span>
+				<Link class="shrink-0" href={baseUrl} linkColor="accent">
+					{formatStringTemplate(t('section.navigation.label.list'), { label: labelPLural })}
+				</Link>
+				<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
+					{olderItem ? (
+						<Fragment>
+							<Link class="link-underline min-w-0 italic" href={olderItem.url} linkColor="accent">
+								<span class="sr-only">
+									{formatStringTemplate(t('section.navigation.label.older'), {
+										label: labelSingular,
+									})}
+								</span>
+								{olderItem.title}
+							</Link>
+							<span aria-hidden="true" class="shrink-0 text-primary-600">
+								&rarr;
+							</span>
+						</Fragment>
+					) : undefined}
+				</span>
+			</nav>
+		</LabeledSection>
+	) : undefined
+}
