@@ -9,6 +9,7 @@ export default getConfig(
 				'**/.astro/**/*',
 				'**/.astro-cache/**/*',
 				'**/.cache/**/*',
+				'**/.wrangler/**/*',
 				'**/dist/**/*',
 				'packages/content/**/*',
 				'**/temp/**/*',

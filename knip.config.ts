@@ -34,7 +34,9 @@ export default {
 		},
 		'packages/scripts': {
 			ignoreDependencies: [
-				'@fontsource/geist', // OG fonts resolved at build via a fontsource path string knip can't trace
+				// OG fonts resolved at build via a fontsource path string knip can't trace
+				'@fontsource/aleo',
+				'@fontsource/geist-mono',
 			],
 		},
 	},

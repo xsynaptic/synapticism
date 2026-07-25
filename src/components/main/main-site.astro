@@ -46,7 +46,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 		<Font cssVariable="--font-geist-mono" preload />
 		<Meta {...meta} />
 		{
-			import.meta.env.PROD && UMAMI_ID && UMAMI_DOMAIN ? (
+			UMAMI_ID && UMAMI_DOMAIN && import.meta.env.PROD ? (
 				<Analytics isViewTransitionsEnabled={true} umamiDomain={UMAMI_DOMAIN} umamiId={UMAMI_ID} />
 			) : undefined
 		}

@@ -1,0 +1,2 @@
+# Legacy traffic still seeking spectralcodex content on this domain
+/regions/*  https://spectralcodex.com/regions/:splat  301
