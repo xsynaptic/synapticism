@@ -1,2 +1,38 @@
 # Legacy traffic still seeking spectralcodex content on this domain
+# synapticism.com was the spectralcodex travel blog ~5 years ago; inbound links persist
+
+# Wildcards (dynamic budget: 100 rules)
 /regions/*  https://spectralcodex.com/regions/:splat  301
+
+# Everything else (static budget: 2000)
+/a-foggy-hike-in-yangmingshan/  https://spectralcodex.com/a-foggy-hike-in-yangmingshan/  301
+/a-nameless-community-in-xinyi-district/  https://spectralcodex.com/a-nameless-community-in-xinyi-district/  301
+/baekje-hospital/  https://spectralcodex.com/baekje-hospital/  301
+/beitou-asia-pacific-resort/  https://spectralcodex.com/beitou-asia-pacific-resort/  301
+/crossing-the-central-mountain-range-of-taiwan/  https://spectralcodex.com/crossing-the-central-mountain-range-of-taiwan/  301
+/first-impressions-of-seoul/  https://spectralcodex.com/first-impressions-of-seoul/  301
+/fushimi-inari-taisha/  https://spectralcodex.com/fushimi-inari-taisha/  301
+/golden-birds-paradise/  https://spectralcodex.com/golden-birds-paradise/  301
+/guanmiao-shanxi-temple/  https://spectralcodex.com/guanmiao-shanxi-temple/  301
+/hong-kong-patterns-and-textures/  https://spectralcodex.com/hong-kong-patterns-and-textures/  301
+/jishan-gatehouse/  https://spectralcodex.com/jishan-gatehouse/  301
+/keelung-dahua-theater/  https://spectralcodex.com/keelung-dahua-theater/  301
+/keelung-road-guest-house/  https://spectralcodex.com/keelung-road-guest-house/  301
+/locations  https://spectralcodex.com/locations/  301
+/longteng-broken-bridge/  https://spectralcodex.com/longteng-broken-bridge/  301
+/lukang-yuqu-temple/  https://spectralcodex.com/lukang-yuqu-temple/  301
+/nishinari-and-the-way-things-ought-to-be/  https://spectralcodex.com/nishinari-and-the-way-things-ought-to-be/  301
+/postcards-from-changhua-city-2/  https://spectralcodex.com/postcards-from-changhua-city-2/  301
+/postcards-from-intramuros/  https://spectralcodex.com/postcards-from-intramuros/  301
+/postcards-from-nanfangao/  https://spectralcodex.com/postcards-from-nanfangao/  301
+/qiaoyou-building/  https://spectralcodex.com/qiaoyou-building/  301
+/suhua-highway-road-trip-2018/  https://spectralcodex.com/suhua-highway-road-trip-2018/  301
+/tainan-working-cafes/  https://spectralcodex.com/tainan-working-cafes/  301
+/taiwan-motor-transport-maintenance-depot/  https://spectralcodex.com/taiwan-motor-transport-maintenance-depot/  301
+/the-birdman-of-taipei-station/  https://spectralcodex.com/the-birdman-of-taipei-station/  301
+/the-mystic-island-of-pulau-besar/  https://spectralcodex.com/the-mystic-island-of-pulau-besar/  301
+/tsai-ing-wen-old-house/  https://spectralcodex.com/tsai-ing-wen-old-house/  301
+/tuaran-chinese-cemetery/  https://spectralcodex.com/tuaran-chinese-cemetery/  301
+/where-shanghai-disappears/  https://spectralcodex.com/where-shanghai-disappears/  301
+/yifang-old-house/  https://spectralcodex.com/yifang-old-house/  301
+/zhongsen-theater/  https://spectralcodex.com/zhongsen-theater/  301
