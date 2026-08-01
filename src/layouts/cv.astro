@@ -37,8 +37,8 @@ const { basics, education, projects, skills, work } = cv;
 ---
 
 <MainSite>
-	<article class="content-column my-8">
-		<header class="flex flex-col gap-1 py-1">
+	<article class="content-column my-8 print:my-0">
+		<header class="flex break-inside-avoid flex-col gap-1 py-1">
 			<div class="flex items-center justify-between gap-2">
 				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
 				<div class="flex items-center gap-2 text-sm text-neutral-500">
@@ -61,7 +61,7 @@ const { basics, education, projects, skills, work } = cv;
 			<p>{basics.summary}</p>
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">{t('cv.skills')}</h2>
+			<h2 class="break-after-avoid text-lg font-bold">{t('cv.skills')}</h2>
 			<ul>
 				{
 					skills.map((skill) => (
@@ -74,10 +74,10 @@ const { basics, education, projects, skills, work } = cv;
 			</ul>
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">{t('cv.experience')}</h2>
+			<h2 class="break-after-avoid text-lg font-bold">{t('cv.experience')}</h2>
 			{
 				work.map((job) => (
-					<div class="flex flex-col gap-2">
+					<div class="flex break-inside-avoid flex-col gap-2">
 						<div class="flex items-center justify-between gap-2">
 							<h3 class="font-semibold">
 								{job.company}, <span class="italic">{job.position}</span>
@@ -108,10 +108,10 @@ const { basics, education, projects, skills, work } = cv;
 			}
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">{t('cv.projects')}</h2>
+			<h2 class="break-after-avoid text-lg font-bold">{t('cv.projects')}</h2>
 			{
 				projects.map((project) => (
-					<div class="flex flex-col gap-2">
+					<div class="flex break-inside-avoid flex-col gap-2">
 						<div class="flex flex-col gap-1">
 							<div class="flex items-center justify-between gap-2">
 								<h3 class="font-semibold">
@@ -142,7 +142,7 @@ const { basics, education, projects, skills, work } = cv;
 			}
 		</section>
 		<section class="pt-1 pb-2 text-base">
-			<h2 class="text-lg font-bold">{t('cv.education')}</h2>
+			<h2 class="break-after-avoid text-lg font-bold">{t('cv.education')}</h2>
 			{
 				education.map((educationItem) => (
 					<div>
