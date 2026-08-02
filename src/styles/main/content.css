@@ -1,8 +1,4 @@
-/**
- * Article reading typography for rendered content (.content).
- * The element is a centered reading frame: text wraps at a comfortable
- * measure, while media (code blocks, images, tables) fills the wider frame.
- */
+/* Media (code blocks, images, tables) fills the frame; text wraps at the narrower measure */
 .content {
 	@apply mx-auto px-4 text-base leading-relaxed md:px-8;
 

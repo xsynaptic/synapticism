@@ -1,8 +1,6 @@
 @import 'tailwindcss' source(none);
 
-/**
- * Explicit source paths for Tailwind class detection
- */
+/* Sources are listed explicitly because `source(none)` disables auto-detection */
 @source './**/*.css';
 @source '../**/*.astro';
 @source '../**/*.tsx';
@@ -12,13 +10,8 @@
 	--spacing-content: 58rem;
 }
 
-/** Theme styling */
 @import './main/theme.css';
-
-/** Custom utilities */
 @import './main/utilities.css';
-
-/** Component and feature styling */
 @import './main/content.css';
 @import './main/divider.css';
 @import './main/link.css';

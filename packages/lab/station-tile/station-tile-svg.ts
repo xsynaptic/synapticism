@@ -29,7 +29,7 @@ export function buildGlossFilter(input: GlossFilterInput): string {
 	const glossSeed = (turbulenceSeed + (variant === 0 ? 0 : 113)) & 0xff;
 	const peakAlpha = gloss * 0.7;
 	const variantFrequencyMultiplier = variant === 0 ? 1 : 0.65;
-	// baseFrequency = 4 / tileSize keeps clump width at ~25% of a tile across all sizes.
+	// baseFrequency = 4 / tileSize keeps clump width at ~25% of a tile across all sizes
 	const clumpBaseFrequency = (4 / Math.max(4, tileSize)) * variantFrequencyMultiplier;
 
 	const glossRed = formatSvgNumber(glossColor.r / 255);

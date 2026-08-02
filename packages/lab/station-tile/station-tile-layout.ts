@@ -113,7 +113,7 @@ export function resolveOptions(input: TileOptions): ResolvedOptions {
 	const seamless = input.seamless ?? false;
 	let width = input.width ?? 768;
 	let height = input.height ?? 512;
-	// Snap viewBox to exact integer cell grid so the pattern tiles seamlessly.
+	// Snap viewBox to exact integer cell grid so the pattern tiles seamlessly
 	if (seamless) {
 		const cellSize = tileSize + groutWidth;
 		const cols = Math.max(1, Math.floor(width / cellSize));

@@ -1,12 +1,6 @@
-/**
- * Reads and deserializes Astro's data-store.json outside of Astro's runtime.
- *
- * `astro:content`'s getCollection only exists inside Astro, so a standalone
- * script reads the data store directly. It uses `devalue`, matching Astro's own
- * internal serialization.
- *
- * @see https://github.com/withastro/astro/blob/main/packages/astro/src/content/data-store.ts
- */
+// getCollection only exists inside Astro, so this standalone script reads data-store.json directly
+// devalue matches Astro's own internal serialization
+// https://github.com/withastro/astro/blob/main/packages/astro/src/content/data-store.ts
 import * as devalue from 'devalue';
 import { existsSync, readFileSync } from 'node:fs';
 

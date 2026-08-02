@@ -1,6 +1,4 @@
-/**
- * A single previous/next target for content navigation
- */
+/** A single previous/next target for content navigation */
 export interface ContentNavigationItem {
 	title: string;
 	url: string;
@@ -25,9 +23,6 @@ export interface MetaProps {
 	title?: string | undefined;
 }
 
-/**
- * Meta component types
- */
 interface MetaImageProps {
 	alt?: string;
 	height?: number;
@@ -37,9 +32,6 @@ interface MetaImageProps {
 	width?: number;
 }
 
-/**
- * Divider component types
- */
 export const DividerColorEnum = {
 	Darker: 'darker',
 	Default: 'default',

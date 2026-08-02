@@ -19,7 +19,7 @@ const ramp = {
 	primary900: '#18181b',
 };
 
-// Carbon code-block theme: a dark slab matching the masthead, syntax mapped to the brand ramps.
+// Carbon code-block theme: a dark slab matching the masthead, syntax mapped to the brand ramps
 const carbonCodeTheme = {
 	colors: {
 		'editor.background': ramp.primary800,

@@ -1,6 +1,3 @@
-// Not covered by astro:env but sometimes used in the application
-// interface ImportMetaEnv {}
-
 interface ImportMeta {
 	readonly env: ImportMetaEnv;
 }

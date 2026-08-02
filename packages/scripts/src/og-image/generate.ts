@@ -7,7 +7,7 @@ import type { OgImageEntry } from './content.js';
 import { OG_HEIGHT, OG_JPEG_QUALITY, OG_PANEL_WIDTH, OG_WIDTH } from './constants.js';
 import { getOgElement } from './element.js';
 
-// Build the renderer once and reuse it: font parsing and Yoga init are expensive.
+// Build the renderer once and reuse it: font parsing and Yoga init are expensive
 export function createGenerator(fonts: Array<Font>) {
 	const render = createOgRenderer({
 		fonts,
