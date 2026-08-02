@@ -1,6 +1,7 @@
 ---
 import MainSite from '#components/main/main-site.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
+import { getSeoHideSearch } from '#lib/utils/seo.ts';
 
 interface Props {
 	cv: {
@@ -36,7 +37,13 @@ const { cv } = Astro.props;
 const { basics, education, projects, skills, work } = cv;
 ---
 
-<MainSite>
+<MainSite
+	meta={{
+		description: t('cv.description'),
+		title: t('cv.title'),
+		...getSeoHideSearch(true),
+	}}
+>
 	<article class="content-column my-8 print:my-0">
 		<header class="flex break-inside-avoid flex-col gap-1 py-1">
 			<div class="flex items-center justify-between gap-2">

@@ -1,0 +1,16 @@
+{
+	"name": "@synapticism/astro-sitemap",
+	"version": "1.0.0",
+	"description": "A simple wrapper for the official Astro sitemap integration",
+	"type": "module",
+	"private": true,
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"dependencies": {
+		"@astrojs/sitemap": "^3.7.3"
+	},
+	"devDependencies": {
+		"astro": "^7.1.6"
+	}
+}

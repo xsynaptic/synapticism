@@ -1,7 +1,7 @@
 // @ts-check
 import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
+import sitemap from '@synapticism/astro-sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
 import { readingTime } from '@xsynaptic/satteri-reading-time';
@@ -52,7 +52,7 @@ export default defineConfig({
 	},
 	integrations: [
 		mdx(),
-		sitemap(),
+		sitemap({ excludePrefixes: ['/about/cv'] }),
 		pagefind({
 			indexConfig: {
 				excludeSelectors: [

@@ -92,12 +92,14 @@ const strings = {
 	'footer.rss': 'RSS',
 
 	// CV
+	'cv.description': 'The professional background of Alexander Synaptic, senior software engineer.',
 	'cv.education': 'Education',
 	'cv.experience': 'Experience',
 	'cv.github': 'GitHub',
 	'cv.present': 'Present',
 	'cv.projects': 'Projects',
 	'cv.skills': 'Skills',
+	'cv.title': 'Curriculum Vitae',
 } as const satisfies Record<string, string>;
 
 export type StringKey = keyof typeof strings;
