@@ -1,9 +1,9 @@
 ---
-import type { TileTheme } from './station-tile-themes.ts';
+import type { TileTheme } from './core/appearance.ts';
 
 interface Props {
 	class?: string | undefined;
-	/** Canonical URL where the lab runs; used for the RSS link-to-live fallback */
+	// Canonical URL where the lab runs; used for the RSS link-to-live fallback
 	href?: string | undefined;
 	seed?: number | string | undefined;
 	theme?: TileTheme | undefined;
@@ -32,5 +32,5 @@ if (seed !== undefined) attributes.seed = String(seed);
 }
 
 <script>
-	import './station-tile-lab.ts';
+	import './client/station-tile-lab.ts';
 </script>

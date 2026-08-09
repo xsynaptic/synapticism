@@ -1,10 +1,20 @@
 import './station-tile.ts';
 
-import type { TileTheme } from './station-tile-themes.ts';
+import type { TileTheme } from '../core/appearance.ts';
 
-import { defaultTileSeed } from './station-tile-input.ts';
+import {
+	DEFAULT_TILE_THEME,
+	GLOSS_BLENDS,
+	TILE_DEFAULTS,
+	TILE_THEMES,
+} from '../core/appearance.ts';
 import styles from './station-tile-lab.css?inline';
-import { DEFAULT_TILE_THEME, TILE_THEMES } from './station-tile-themes.ts';
+
+interface ColorSpec {
+	attribute: string;
+	label: string;
+	value: string;
+}
 
 interface RangeSpec {
 	attribute: string;
@@ -22,7 +32,18 @@ const RANGES: ReadonlyArray<RangeSpec> = [
 	{ attribute: 'bevel', label: 'Bevel', max: 1, min: 0, step: 0.05, value: 0.35 },
 	{ attribute: 'macro-lighting', label: 'Macro light', max: 1, min: 0, step: 0.05, value: 0.3 },
 	{ attribute: 'stagger', label: 'Stagger', max: 0.5, min: 0, step: 0.05, value: 0 },
+	{ attribute: 'unit-cells', label: 'Unit cells', max: 24, min: 4, step: 1, value: 12 },
+	{ attribute: 'grout-width', label: 'Grout width', max: 8, min: 1, step: 0.5, value: 2 },
+	{ attribute: 'grain', label: 'Tile grain', max: 0.3, min: 0, step: 0.01, value: 0.05 },
+	{ attribute: 'grain-grout', label: 'Grout grain', max: 1, min: 0, step: 0.05, value: 0.5 },
 ];
+
+const COLORS: ReadonlyArray<ColorSpec> = [
+	{ attribute: 'grout', label: 'Grout', value: '#8a8a85' },
+	{ attribute: 'gloss-color', label: 'Gloss tint', value: '#ffffff' },
+];
+
+const DEFAULT_GLOSS_BLEND = TILE_DEFAULTS.glossBlend;
 
 class StationTileLab extends HTMLElement {
 	connectedCallback() {
@@ -31,19 +52,25 @@ class StationTileLab extends HTMLElement {
 
 		const tile = document.createElement('station-tile');
 		const initialTheme = (this.getAttribute('theme') ?? DEFAULT_TILE_THEME) as TileTheme;
-		const initialSeed = this.getAttribute('seed') ?? defaultTileSeed;
+		const initialSeed = this.getAttribute('seed') ?? TILE_DEFAULTS.seed;
 		tile.setAttribute('theme', initialTheme);
 		tile.setAttribute('seed', initialSeed);
 		for (const range of RANGES) {
 			tile.setAttribute(range.attribute, String(range.value));
 		}
+		for (const color of COLORS) {
+			tile.setAttribute(color.attribute, color.value);
+		}
+		tile.setAttribute('gloss-blend', DEFAULT_GLOSS_BLEND);
 
 		const controls = document.createElement('div');
 		controls.className = 'controls';
 		controls.append(
-			this.#themeField(tile, initialTheme),
+			this.#selectField(tile, 'theme', 'Theme', Object.keys(TILE_THEMES), initialTheme),
 			this.#seedField(tile, initialSeed),
 			...RANGES.map((range) => this.#rangeField(tile, range)),
+			...COLORS.map((color) => this.#colorField(tile, color)),
+			this.#selectField(tile, 'gloss-blend', 'Gloss blend', GLOSS_BLENDS, DEFAULT_GLOSS_BLEND),
 			this.#seamlessField(tile),
 		);
 
@@ -58,6 +85,18 @@ class StationTileLab extends HTMLElement {
 		const style = document.createElement('style');
 		style.textContent = styles;
 		root.append(style, lab);
+	}
+
+	#colorField(tile: HTMLElement, color: ColorSpec): HTMLElement {
+		const input = document.createElement('input');
+		input.type = 'color';
+		input.value = color.value;
+		input.setAttribute('aria-label', color.label);
+		input.addEventListener('input', () => {
+			tile.setAttribute(color.attribute, input.value);
+		});
+
+		return this.#field(color.label, undefined, input);
 	}
 
 	#field(label: string, value: HTMLElement | undefined, control: HTMLElement): HTMLElement {
@@ -135,19 +174,26 @@ class StationTileLab extends HTMLElement {
 		return this.#field('Seed', undefined, row);
 	}
 
-	#themeField(tile: HTMLElement, initial: TileTheme): HTMLElement {
+	#selectField(
+		tile: HTMLElement,
+		attribute: string,
+		label: string,
+		values: ReadonlyArray<string>,
+		initial: string,
+	): HTMLElement {
 		const select = document.createElement('select');
-		for (const name of Object.keys(TILE_THEMES)) {
+		for (const name of values) {
 			const option = document.createElement('option');
 			option.value = name;
 			option.textContent = name;
 			option.selected = name === initial;
 			select.append(option);
 		}
+		select.setAttribute('aria-label', label);
 		select.addEventListener('change', () => {
-			tile.setAttribute('theme', select.value);
+			tile.setAttribute(attribute, select.value);
 		});
-		return this.#field('Theme', undefined, select);
+		return this.#field(label, undefined, select);
 	}
 }
 

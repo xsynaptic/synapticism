@@ -17,8 +17,6 @@ export default {
 		'packages/content': {
 			// Config and ambient-type files consumed by tooling, not imported
 			entry: ['.mdxlintrc.mjs', 'global.d.ts'],
-			// Content is loaded by Astro's glob loader via a path string, which knip can't trace
-			ignore: ['collections/**'],
 			// The content scripts delegate to root via `pnpm -w run`, which knip reads as a binary
 			ignoreBinaries: ['check-content', 'fix-content'],
 			ignoreDependencies: [
@@ -30,7 +28,7 @@ export default {
 		},
 		'packages/lab': {
 			// Experiments are imported ad hoc
-			entry: ['*/*.astro', '*/*.ts'],
+			entry: ['*/*.astro'],
 		},
 		'packages/scripts': {
 			ignoreDependencies: [

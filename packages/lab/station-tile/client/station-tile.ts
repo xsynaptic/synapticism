@@ -1,12 +1,32 @@
-import type { TileInput } from './station-tile-input.ts';
+import type { TileInput } from '../core/options.ts';
 
-import { generateTileSvg } from './station-tile-generate-svg.ts';
-import { camelToKebab, resolveTileOptions, tileFieldsEnum } from './station-tile-input.ts';
+import { generateTileSvg, tileBackgroundStyle } from '../core/render.ts';
 
-// A self-rendering tile field; every attribute maps to a `TileInput` field
+// Scalar options and how each parses from a string attribute
+// `seamless` is a boolean, handled separately
+const TILE_FIELDS = {
+	bevel: 'number',
+	colorA: 'string',
+	colorB: 'string',
+	gloss: 'number',
+	glossBlend: 'string',
+	glossColor: 'string',
+	grain: 'number',
+	grainGrout: 'number',
+	grout: 'string',
+	groutWidth: 'number',
+	jitter: 'number',
+	macroLighting: 'number',
+	seed: 'string',
+	stagger: 'number',
+	theme: 'string',
+	tileSize: 'number',
+	unitCells: 'number',
+} as const satisfies Record<string, 'number' | 'string'>;
+
 class StationTile extends HTMLElement {
 	static readonly observedAttributes = [
-		...Object.keys(tileFieldsEnum).map((key) => camelToKebab(key)),
+		...Object.keys(TILE_FIELDS).map((key) => camelToKebab(key)),
 		'seamless',
 	];
 
@@ -21,7 +41,7 @@ class StationTile extends HTMLElement {
 
 	#readInput(): TileInput {
 		const input: Record<string, number | string> = {};
-		for (const [key, kind] of Object.entries(tileFieldsEnum)) {
+		for (const [key, kind] of Object.entries(TILE_FIELDS)) {
 			const raw = this.getAttribute(camelToKebab(key));
 			if (raw === null || raw.trim() === '') continue;
 			if (kind === 'number') {
@@ -37,26 +57,21 @@ class StationTile extends HTMLElement {
 
 	#render() {
 		const input = this.#readInput();
-		const { height, svg, width } = generateTileSvg(resolveTileOptions(input));
+		const generated = generateTileSvg(input);
 
 		if (input.seamless) {
 			this.replaceChildren();
-			const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
-			this.style.backgroundImage = `url("${dataUri}")`;
-			this.style.backgroundRepeat = 'repeat';
-			this.style.backgroundSize = `${String(width)}px ${String(height)}px`;
+			Object.assign(this.style, tileBackgroundStyle(generated));
 			return;
 		}
 
 		this.style.backgroundImage = '';
-		this.innerHTML = svg;
-		const svgElement = this.querySelector('svg');
-		if (svgElement) {
-			svgElement.setAttribute('width', '100%');
-			svgElement.setAttribute('height', '100%');
-			svgElement.style.display = 'block';
-		}
+		this.innerHTML = generated.svg;
 	}
+}
+
+function camelToKebab(value: string): string {
+	return value.replaceAll(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
 }
 
 if (!customElements.get('station-tile')) {

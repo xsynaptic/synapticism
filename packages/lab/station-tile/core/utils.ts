@@ -1,13 +1,17 @@
-import type { RgbColor } from './station-tile-types.ts';
-
-const clamp01 = (value: number): number => (value < 0 ? 0 : Math.min(value, 1));
-const clamp255 = (value: number): number => (value < 0 ? 0 : Math.min(value, 255));
+export interface RgbColor {
+	b: number;
+	g: number;
+	r: number;
+}
 
 interface HslColor {
 	h: number;
 	l: number;
 	s: number;
 }
+
+const clamp01 = (value: number): number => (value < 0 ? 0 : Math.min(value, 1));
+const clamp255 = (value: number): number => (value < 0 ? 0 : Math.min(value, 255));
 
 // Per-cell seed from a root seed and (col, row). Stable across grid resizes
 export function cellSeed(rootSeed: number, col: number, row: number): number {
@@ -20,7 +24,6 @@ export function formatSvgNumber(value: number): string {
 	return Number.isSafeInteger(rounded) ? rounded.toString() : rounded.toFixed(2);
 }
 
-// Hash an arbitrary seed input to a uint32
 export function hashSeed(seed: number | string): number {
 	if (typeof seed === 'number') return seed >>> 0;
 	return xmur3(seed);
@@ -83,7 +86,6 @@ export function parseHex(input: string): RgbColor {
 	};
 }
 
-// Shift only lightness
 export function shiftLightness(rgb: RgbColor, delta: number): RgbColor {
 	const hsl = rgbToHsl(rgb);
 	return hslToRgb({ h: hsl.h, l: clamp01(hsl.l + delta), s: hsl.s });
@@ -125,7 +127,6 @@ function hue2rgb(p: number, q: number, tInput: number): number {
 	return p;
 }
 
-// Linear light → sRGB channel
 function linearToSrgb(value: number): number {
 	const clamped = clamp01(value);
 	const srgb = clamped <= 0.0031308 ? clamped * 12.92 : 1.055 * Math.pow(clamped, 1 / 2.4) - 0.055;
