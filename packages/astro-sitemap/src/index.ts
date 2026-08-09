@@ -13,7 +13,6 @@ export default function sitemapIntegration(options?: Options): AstroIntegration 
 		filter: (page) => {
 			const path = new URL(page).pathname.replace(/\/$/, '');
 
-			// Matching the prefix itself or a child keeps `/about/cv` from catching `/about`
 			return excludePrefixes.every((prefix) => !(path === prefix || path.startsWith(prefix + '/')));
 		},
 	});

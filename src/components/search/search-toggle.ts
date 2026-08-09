@@ -15,8 +15,8 @@ class SearchToggle extends HTMLElement {
 	// eslint-disable-next-line unicorn/no-null -- matches Pagefind's PagefindComponent interface
 	instance: Instance | null = null;
 
-	/** Pagefind reads this off the registered trigger to toggle aria-expanded and aria-controls */
-	get buttonEl() {
+	// Pagefind reads this off the registered trigger to toggle aria-expanded and aria-controls
+	get buttonElement() {
 		return this.querySelector<HTMLButtonElement>('button');
 	}
 
@@ -24,7 +24,7 @@ class SearchToggle extends HTMLElement {
 
 	connectedCallback() {
 		// Static props in markup; only the OS-dependent keyboard hint has to be set client-side
-		this.buttonEl?.setAttribute('aria-keyshortcuts', isMac ? 'Meta+K' : 'Control+K');
+		this.buttonElement?.setAttribute('aria-keyshortcuts', isMac ? 'Meta+K' : 'Control+K');
 
 		const instanceName = this.getAttribute('instance') ?? 'default';
 
@@ -59,8 +59,8 @@ class SearchToggle extends HTMLElement {
 
 	// Called by <pagefind-modal> when it closes. Matches the built-in trigger's contract
 	handleModalClose() {
-		this.buttonEl?.setAttribute('aria-expanded', 'false');
-		this.buttonEl?.focus();
+		this.buttonElement?.setAttribute('aria-expanded', 'false');
+		this.buttonElement?.focus();
 	}
 
 	// Load the deferred stylesheet on intent; resolves once applied
@@ -150,7 +150,7 @@ function getResultCount(result: unknown): number | undefined {
 	return undefined;
 }
 
-/** Record settled search queries */
+// Record settled search queries
 function registerSearchAnalytics(instance: Instance) {
 	if (searchAnalyticsRegistered) return;
 

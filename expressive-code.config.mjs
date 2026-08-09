@@ -97,7 +97,9 @@ const carbonCodeTheme = {
 	type: 'dark',
 };
 
-/** @type {import('satteri-expressive-code').SatteriExpressiveCodeOptions} */
+/**
+@type {import('satteri-expressive-code').SatteriExpressiveCodeOptions}
+*/
 export const expressiveCodeOptions = {
 	defaultProps: {
 		wrap: false,

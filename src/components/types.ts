@@ -1,4 +1,4 @@
-/** A single previous/next target for content navigation */
+// A single previous/next target for content navigation
 export interface ContentNavigationItem {
 	title: string;
 	url: string;
