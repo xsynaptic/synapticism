@@ -46,6 +46,15 @@ export function stripFootnoteReferences(input: string) {
 	return input.replaceAll(/\[\^[^\]]+\]/g, '');
 }
 
+// Strip rendered footnotes from HTML: the `sup` back-references and the trailing footnotes section
+export function stripFootnotes(input: string): string {
+	let result = input.replaceAll(/<sup><a[^>]*data-footnote-ref[^>]*>.*?<\/a><\/sup>/gi, '');
+
+	result = result.replaceAll(/<section[^>]*data-footnotes[^>]*>.*?<\/section>/gis, '');
+
+	return result;
+}
+
 export function stripMdxComponents(input: string, componentNames: Array<string>): string {
 	const regex = new RegExp(
 		componentNames.map((name) => `<${name}(?:[^>]*)>|</${name}>`).join('|'),

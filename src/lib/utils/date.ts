@@ -1,3 +1,5 @@
+import { SITE_YEAR_FOUNDED } from '#constants.ts';
+
 export const DatePresetEnum = {
 	Long: 'long',
 	Medium: 'medium',
@@ -11,6 +13,15 @@ interface CollectionEntryWithStandardDates {
 		dateCreated: Date | string;
 		dateUpdated?: Date | string | undefined;
 	};
+}
+
+// Collapses to a single year until the site outlives its founding year
+export function getCopyrightYears(): string {
+	const currentYear = new Date().getFullYear();
+
+	if (currentYear <= SITE_YEAR_FOUNDED) return String(SITE_YEAR_FOUNDED);
+
+	return `${String(SITE_YEAR_FOUNDED)}\u{2013}${String(currentYear)}`;
 }
 
 // A note authored date-only lands on UTC midnight

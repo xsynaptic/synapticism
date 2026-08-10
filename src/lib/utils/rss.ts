@@ -9,39 +9,15 @@ import { render } from 'astro:content';
 import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
+import { MILLISECONDS_PER_HOUR, SITE_TIMEZONE_OFFSET_HOURS } from '#constants.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
-
-// AstroContainer.create() logs a deprecation for Astro 7 beta's own default gfm/smartypants
-// Here we filter that one line; remove when it is fixed upstream
-async function createContainerQuietly() {
-	const originalWarn = console.warn;
-
-	console.warn = (...args: Array<unknown>) => {
-		const first = args[0];
-
-		if (
-			typeof first === 'string' &&
-			first.includes('markdown.gfm') &&
-			first.includes('deprecated')
-		) {
-			return;
-		}
-
-		originalWarn(...args);
-	};
-
-	try {
-		return await AstroContainer.create();
-	} finally {
-		console.warn = originalWarn;
-	}
-}
+import { stripFootnotes } from '#lib/utils/text.ts';
 
 async function createRenderMdxFunction() {
-	const container = await createContainerQuietly();
+	const container = await AstroContainer.create();
 
 	container.addServerRenderer({ name: 'mdx', renderer: mdxRenderer });
 
@@ -50,14 +26,6 @@ async function createRenderMdxFunction() {
 
 		return await container.renderToString(Content, options);
 	};
-}
-
-function stripFootnotes(input: string): string {
-	let result = input.replaceAll(/<sup><a[^>]*data-footnote-ref[^>]*>.*?<\/a><\/sup>/gi, '');
-
-	result = result.replaceAll(/<section[^>]*data-footnotes[^>]*>.*?<\/section>/gis, '');
-
-	return result;
 }
 
 const renderMdx = await createRenderMdxFunction();
@@ -89,9 +57,14 @@ const generateFeedItem = async ({
 
 	const description = getDescriptionRenderedText(entry);
 
+	const pubDate = parseContentDate(entry.data.dateUpdated ?? entry.data.dateCreated);
+
 	const feedItem = {
 		link: getContentUrl(entry.collection, entry.id),
-		pubDate: parseContentDate(entry.data.dateUpdated ?? entry.data.dateCreated),
+		// Dates sit at 00:00 UTC; re-anchor to the site timezone so today's entries are never future-dated
+		pubDate: pubDate
+			? new Date(pubDate.getTime() - SITE_TIMEZONE_OFFSET_HOURS * MILLISECONDS_PER_HOUR)
+			: undefined,
 		title: entry.data.title,
 		...(description ? { description } : {}),
 		...(contentSanitized ? { content: contentSanitized } : {}),
