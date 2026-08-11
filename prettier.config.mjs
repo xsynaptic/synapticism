@@ -12,6 +12,7 @@ export default {
 	],
 	plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
 	printWidth: 100,
+	proseWrap: 'never',
 	singleQuote: true,
 	tailwindStylesheet: './src/styles/main.css',
 	useTabs: true,

@@ -22,9 +22,8 @@ pnpm-debug.log*
 .DS_Store
 
 # LLM helper files
-.claude/
-.cursor/
-.impeccable/
+.claude/tasks*
+.claude/settings*.json
 
 # content
 packages/content
