@@ -17,7 +17,6 @@ export function createGenerator(fonts: Array<Font>) {
 		width: OG_WIDTH,
 	});
 
-	// Source imagery is reused across entries, and imageFeatured often equals imageHero
 	const imageCache = new Map<string, string>();
 
 	return async function generate(entry: OgImageEntry): Promise<Buffer> {

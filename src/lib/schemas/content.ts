@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { ImageFeaturedSchema } from '#lib/schemas/image-featured.ts';
 import { parseFrontmatterDate } from '#lib/utils/date.ts';
 import { refineTypography } from '#lib/utils/text.ts';
 
@@ -46,8 +47,6 @@ export const contentBaseSchema = z.object({
 	dateUpdated: DateStringSchema.optional(),
 	description: DescriptionSchema.optional(),
 	entryQuality: NumericScaleSchema,
-	imageAlt: z.string().optional(),
-	imageFeatured: z.string().optional(),
-	imageHero: z.string().optional(),
+	imageFeatured: ImageFeaturedSchema.optional(),
 	title: StylizedTextSchema,
 });

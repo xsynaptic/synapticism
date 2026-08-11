@@ -1,17 +1,21 @@
 ---
 import { Image } from 'astro:assets';
 
-import { getMediaImage, getMediaLqip } from '#lib/utils/media.ts';
+import type { ImageFeaturedObject } from '#lib/schemas/image-featured.ts';
 
-interface Props {
-	alt: string;
-	src: string;
+import { getMediaImage, getMediaLqip } from '#lib/utils/media.ts';
+import { sanitizeAltAttribute } from '#lib/utils/text.ts';
+
+interface Props extends ImageFeaturedObject {
+	fallbackAlt?: string | undefined;
 }
 
-const { alt, src } = Astro.props;
+const { fallbackAlt, id, title } = Astro.props;
 
-const image = getMediaImage(src);
-const lqip = getMediaLqip(src);
+const alt = sanitizeAltAttribute(title ?? fallbackAlt ?? '');
+
+const image = getMediaImage(id);
+const lqip = getMediaLqip(id);
 ---
 
 <figure class="content-column mb-8">

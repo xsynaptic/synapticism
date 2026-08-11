@@ -51,11 +51,30 @@ export function getOgImageEntries({
 	return entries;
 }
 
-// Prefer the card image over the in-page banner; a missing file degrades to the title-only card
-function resolveImagePath(data: Record<string, unknown>, mediaPath: string): string | undefined {
-	const mediaId = data.imageFeatured ?? data.imageHero;
+// Mirrored from src/lib/utils/image-featured.ts; this script can't resolve the site's path aliases
+function getImageFeaturedId(imageFeatured: unknown): string | undefined {
+	if (typeof imageFeatured === 'string') return imageFeatured;
 
-	if (typeof mediaId !== 'string') return undefined;
+	if (!Array.isArray(imageFeatured)) return undefined;
+
+	const item: unknown = imageFeatured[0];
+
+	if (typeof item === 'string') return item;
+
+	if (typeof item === 'object' && item !== null && 'id' in item) {
+		const { id } = item;
+
+		if (typeof id === 'string') return id;
+	}
+
+	return undefined;
+}
+
+// A missing file degrades to the title-only card
+function resolveImagePath(data: Record<string, unknown>, mediaPath: string): string | undefined {
+	const mediaId = getImageFeaturedId(data.imageFeatured);
+
+	if (!mediaId) return undefined;
 
 	const filePath = path.join(mediaPath, mediaId);
 

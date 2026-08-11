@@ -14,6 +14,7 @@ import { getProjectsCollection } from '#lib/collections/projects/projects-data.t
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
 import { getDescriptionRenderedHtml } from '#lib/utils/description.ts';
+import { getImageFeaturedId } from '#lib/utils/image-featured.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 import { getWordCount } from '#lib/utils/word-count.ts';
 
@@ -64,7 +65,10 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 				description: getDescriptionRenderedHtml(entry),
 				entryQuality: 'entryQuality' in entry.data ? entry.data.entryQuality : undefined,
 				id: entry.id,
-				imageId: 'imageFeatured' in entry.data ? entry.data.imageFeatured : undefined,
+				imageId:
+					'imageFeatured' in entry.data
+						? getImageFeaturedId({ imageFeatured: entry.data.imageFeatured })
+						: undefined,
 				links: 'links' in entry.data ? entry.data.links : undefined,
 				linksCount: getLinksCount(entry),
 				title: entry.data.title,

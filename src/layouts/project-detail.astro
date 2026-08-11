@@ -17,6 +17,7 @@ import SectionRelatedContent from '#components/sections/section-related-content.
 import { MicroformatClassNames } from '#components/types.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
+import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
 import { getOgImageUrl } from '#lib/utils/seo.ts';
 
@@ -29,6 +30,10 @@ interface Props {
 const { backlinks, entry, relatedContent } = Astro.props;
 
 const tagIds = entry.data.tags?.map(({ id }) => id);
+
+const imageFeaturedHeroGroup = getImageFeaturedHeroGroup({
+	imageFeatured: entry.data.imageFeatured,
+});
 
 const { Content } = await render(entry);
 ---
@@ -66,8 +71,8 @@ const { Content } = await render(entry);
 			</Fragment>
 		</ContentHeader>
 		{
-			entry.data.imageHero ? (
-				<ContentHero alt={entry.data.imageAlt ?? ''} src={entry.data.imageHero} />
+			imageFeaturedHeroGroup?.[0] ? (
+				<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
 			) : undefined
 		}
 		<ProseBody class:list={['content', 'e-content', 'pb-4']} data-reading-frame>
