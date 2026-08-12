@@ -13,23 +13,14 @@ const { isRss } = Astro.locals;
 
 const generated = generateTileSvg(input);
 
-const tileStyle = { aspectRatio: 'var(--station-tile-aspect, 16 / 7)' };
-const isSeamless = input.seamless === true;
-const style = isSeamless ? { ...tileStyle, ...tileBackgroundStyle(generated) } : tileStyle;
+const style = {
+	aspectRatio: 'var(--station-tile-aspect, 16 / 7)',
+	...tileBackgroundStyle(generated),
+};
 ---
 
 {
-	!isRss && isSeamless ? (
+	isRss ? undefined : (
 		<div aria-hidden="true" class:list={['station-tile', className]} style={style} />
-	) : undefined
-}
-{
-	!isRss && !isSeamless ? (
-		<div
-			aria-hidden="true"
-			class:list={['station-tile', className]}
-			set:html={generated.svg}
-			style={style}
-		/>
-	) : undefined
+	)
 }

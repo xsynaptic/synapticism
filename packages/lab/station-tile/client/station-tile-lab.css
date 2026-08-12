@@ -24,7 +24,7 @@
 }
 
 .preview {
-	aspect-ratio: 16 / 7;
+	aspect-ratio: 4 / 3;
 	background: var(--mtr-carbon);
 }
 

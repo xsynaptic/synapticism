@@ -18,6 +18,13 @@ export function cellSeed(rootSeed: number, col: number, row: number): number {
 	return (rootSeed ^ Math.imul(col, 73_856_093) ^ Math.imul(row, 19_349_663)) >>> 0;
 }
 
+// Coarser sibling of formatSvgNumber for per-cell values, which repeat thousands of times
+// 1dp still resolves ~6 levels of positional jitter at the smallest default grout
+export function formatSvgCoord(value: number): string {
+	const rounded = Math.round(value * 10) / 10;
+	return Number.isSafeInteger(rounded) ? rounded.toString() : rounded.toFixed(1);
+}
+
 // Format a number for SVG output: up to 2 decimal places, no trailing zeros
 export function formatSvgNumber(value: number): string {
 	const rounded = Math.round(value * 100) / 100;

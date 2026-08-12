@@ -4,10 +4,11 @@ import type { ResolvedOptions, TileInput } from './options.ts';
 import { BEVEL, GEOMETRY, GLOSS, GRAIN, TILT } from './appearance.ts';
 import { layoutTiles } from './layout.ts';
 import { resolveOptions } from './options.ts';
-import { formatSvgNumber, toHex } from './utils.ts';
+import { formatSvgCoord, formatSvgNumber, toHex } from './utils.ts';
 
 export interface GeneratedTile {
 	height: number;
+	seamless: boolean;
 	svg: string;
 	width: number;
 }
@@ -23,8 +24,20 @@ export function generateTileSvg(input: TileInput): GeneratedTile {
 	const showTileGrain = grain > 0;
 	const showGroutGrain = grainGrout > 0;
 
+	// Every cell shares one geometry, so body (#t) and gloss (#g) are defined once and instanced
+	// Per-cell colour rides in on `fill`/`fill-opacity`, which inherit through <use>
+	// Defs are centred on their own origin so each instance transform is just translate + rotate
+	const cornerRadius = Math.max(1, options.tileSize * GEOMETRY.cornerRadiusRatio);
+	const halfTile = options.tileSize / 2;
+	const cellGeometry =
+		` x="${formatSvgNumber(-halfTile)}" y="${formatSvgNumber(-halfTile)}"` +
+		` width="${formatSvgNumber(options.tileSize)}" height="${formatSvgNumber(options.tileSize)}"` +
+		` rx="${formatSvgNumber(cornerRadius)}" ry="${formatSvgNumber(cornerRadius)}"`;
+
 	const defs =
 		`<clipPath id="tile-clip"><rect width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}"/></clipPath>` +
+		`<g id="t"><rect${cellGeometry}/>${renderBevel(options.tileSize, cornerRadius, options.bevel)}</g>` +
+		(showGloss ? `<rect id="g"${cellGeometry} fill="#fff"/>` : '') +
 		(showTileGrain ? buildTileGrainFilter(options, turbulenceSeed) : '') +
 		(showGloss
 			? buildGlossFilter(options, turbulenceSeed, 0) + buildGlossFilter(options, turbulenceSeed, 1)
@@ -33,25 +46,15 @@ export function generateTileSvg(input: TileInput): GeneratedTile {
 
 	const tileBodyParts: Array<string> = [];
 	const glossAlphaParts: Array<Array<string>> = [[], []];
-	const cornerRadius = Math.max(1, options.tileSize * GEOMETRY.cornerRadiusRatio);
 
 	for (const cell of cells) {
-		const tiltTransform = buildTiltTransform(cell);
-		const rect =
-			`<rect x="${formatSvgNumber(cell.x)}" y="${formatSvgNumber(cell.y)}"` +
-			` width="${formatSvgNumber(cell.size)}" height="${formatSvgNumber(cell.size)}"` +
-			` rx="${formatSvgNumber(cornerRadius)}" ry="${formatSvgNumber(cornerRadius)}"`;
+		const transform = buildCellTransform(cell, halfTile);
 
-		tileBodyParts.push(
-			`<g${tiltTransform}>` +
-				`${rect} fill="${toHex(cell.baseColor)}"/>` +
-				renderBevel(cell, cornerRadius, options.bevel) +
-				`</g>`,
-		);
+		tileBodyParts.push(`<use href="#t" fill="${toHex(cell.baseColor)}"${transform}/>`);
 
 		if (showGloss && cell.glossIntensity > 0) {
 			glossAlphaParts[cell.glossClumpVariant]!.push(
-				`${rect} fill="#fff" fill-opacity="${formatSvgNumber(cell.glossIntensity)}"${tiltTransform}/>`,
+				`<use href="#g" fill-opacity="${formatSvgNumber(cell.glossIntensity)}"${transform}/>`,
 			);
 		}
 	}
@@ -65,13 +68,10 @@ export function generateTileSvg(input: TileInput): GeneratedTile {
 			`<g filter="url(#tile-gloss-1)"${glossBlendStyle}>${glossAlphaParts[1]!.join('')}</g>`
 		: '';
 
-	// Seamless needs intrinsic px so the data URI tiles at 1:1; inline fills its box and crops
-	const sizing = seamless
-		? ` width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}"`
-		: ` width="100%" height="100%" preserveAspectRatio="xMidYMid slice" style="display:block"`;
-
+	// The SVG is only ever painted as a background image, which needs a natural size to scale against
 	const svg =
-		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${formatSvgNumber(width)} ${formatSvgNumber(height)}"${sizing}>` +
+		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${formatSvgNumber(width)} ${formatSvgNumber(height)}"` +
+		` width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}">` +
 		`<defs>${defs}</defs>` +
 		`<g clip-path="url(#tile-clip)">` +
 		`<rect width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}" fill="${grout}"/>` +
@@ -83,16 +83,40 @@ export function generateTileSvg(input: TileInput): GeneratedTile {
 		`</g>` +
 		`</svg>`;
 
-	return { height, svg, width };
+	return { height, seamless, svg, width };
 }
 
-// Shared by the Astro component and the custom element so both paint seamless mode identically
+// Shared by the Astro component and the custom element so both paint identically
+// Seamless repeats its unit at 1:1; otherwise `cover` + centring stands in for the
+// `xMidYMid slice` the SVG used to carry itself
+// Both modes set the same keys so reassigning the style never leaves a stale one behind
 export function tileBackgroundStyle(tile: GeneratedTile): Record<string, string> {
+	const image = `url("data:image/svg+xml;utf8,${encodeURIComponent(tile.svg)}")`;
+
+	if (tile.seamless) {
+		return {
+			backgroundImage: image,
+			backgroundPosition: '0 0',
+			backgroundRepeat: 'repeat',
+			backgroundSize: `${formatSvgNumber(tile.width)}px ${formatSvgNumber(tile.height)}px`,
+		};
+	}
+
 	return {
-		backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(tile.svg)}")`,
-		backgroundRepeat: 'repeat',
-		backgroundSize: `${formatSvgNumber(tile.width)}px ${formatSvgNumber(tile.height)}px`,
+		backgroundImage: image,
+		backgroundPosition: 'center',
+		backgroundRepeat: 'no-repeat',
+		backgroundSize: 'cover',
 	};
+}
+
+// Translate lives in the transform, not in <use x y>: the spec composes those as
+// `transform ∘ translate(x,y)`, so the rotation would resolve in the wrong space
+function buildCellTransform(cell: Cell, halfTile: number): string {
+	const position = `translate(${formatSvgCoord(cell.x + halfTile)},${formatSvgCoord(cell.y + halfTile)})`;
+	const degrees = Math.round((cell.tiltX - cell.tiltY) * TILT.degrees * 10) / 10;
+	if (degrees === 0) return ` transform="${position}"`;
+	return ` transform="${position}rotate(${formatSvgCoord(degrees)})"`;
 }
 
 // RGB is a constant tint; alpha varies with gamma-curved noise
@@ -161,14 +185,6 @@ function buildTileGrainFilter(options: ResolvedOptions, turbulenceSeed: number):
 	);
 }
 
-function buildTiltTransform(cell: Cell): string {
-	const degrees = (cell.tiltX - cell.tiltY) * TILT.degrees;
-	if (Math.abs(degrees) <= 0.01) return '';
-	const centerX = cell.x + cell.size / 2;
-	const centerY = cell.y + cell.size / 2;
-	return ` transform="rotate(${formatSvgNumber(degrees)} ${formatSvgNumber(centerX)} ${formatSvgNumber(centerY)})"`;
-}
-
 // Anchor noise to the viewBox; gloss variants hold different tile subsets
 // Bbox-relative regions would each stitch on their own period
 function filterRegion(width: number, height: number): string {
@@ -181,28 +197,27 @@ function filterRegion(width: number, height: number): string {
 // Light stroke along the top-left edge (imagined upper-left light)
 // Dark stroke along the bottom-right edge (shadow)
 // Polarity reads the tile as raised above the grout, not recessed
-function renderBevel(cell: Cell, radius: number, strength: number): string {
+function renderBevel(size: number, radius: number, strength: number): string {
 	if (strength <= 0) return '';
-	const inset = Math.max(0.5, cell.size * BEVEL.insetRatio);
-	const innerX = cell.x + inset;
-	const innerY = cell.y + inset;
-	const span = cell.size - inset * 2;
+	const inset = Math.max(0.5, size * BEVEL.insetRatio);
+	const near = inset - size / 2;
+	const far = size / 2 - inset;
 	const innerRadius = Math.max(0, radius - inset * BEVEL.radiusFalloff);
 	const stroke = ` stroke-width="${formatSvgNumber(inset)}" stroke-linecap="round"`;
 
 	const topLeftEdge =
 		`<path fill="none" stroke="#fff" stroke-opacity="${formatSvgNumber(BEVEL.lightAlpha * strength)}"${stroke}` +
-		` d="M${formatSvgNumber(innerX)} ${formatSvgNumber(innerY + span - innerRadius)}` +
-		` L${formatSvgNumber(innerX)} ${formatSvgNumber(innerY + innerRadius)}` +
-		` Q${formatSvgNumber(innerX)} ${formatSvgNumber(innerY)} ${formatSvgNumber(innerX + innerRadius)} ${formatSvgNumber(innerY)}` +
-		` L${formatSvgNumber(innerX + span - innerRadius)} ${formatSvgNumber(innerY)}"/>`;
+		` d="M${formatSvgNumber(near)} ${formatSvgNumber(far - innerRadius)}` +
+		` L${formatSvgNumber(near)} ${formatSvgNumber(near + innerRadius)}` +
+		` Q${formatSvgNumber(near)} ${formatSvgNumber(near)} ${formatSvgNumber(near + innerRadius)} ${formatSvgNumber(near)}` +
+		` L${formatSvgNumber(far - innerRadius)} ${formatSvgNumber(near)}"/>`;
 
 	const bottomRightEdge =
 		`<path fill="none" stroke="#000" stroke-opacity="${formatSvgNumber(BEVEL.darkAlpha * strength)}"${stroke}` +
-		` d="M${formatSvgNumber(innerX + innerRadius)} ${formatSvgNumber(innerY + span)}` +
-		` L${formatSvgNumber(innerX + span - innerRadius)} ${formatSvgNumber(innerY + span)}` +
-		` Q${formatSvgNumber(innerX + span)} ${formatSvgNumber(innerY + span)} ${formatSvgNumber(innerX + span)} ${formatSvgNumber(innerY + span - innerRadius)}` +
-		` L${formatSvgNumber(innerX + span)} ${formatSvgNumber(innerY + innerRadius)}"/>`;
+		` d="M${formatSvgNumber(near + innerRadius)} ${formatSvgNumber(far)}` +
+		` L${formatSvgNumber(far - innerRadius)} ${formatSvgNumber(far)}` +
+		` Q${formatSvgNumber(far)} ${formatSvgNumber(far)} ${formatSvgNumber(far)} ${formatSvgNumber(far - innerRadius)}` +
+		` L${formatSvgNumber(far)} ${formatSvgNumber(near + innerRadius)}"/>`;
 
 	return topLeftEdge + bottomRightEdge;
 }

@@ -16,16 +16,7 @@ class StationTile extends HTMLElement {
 	}
 
 	#render() {
-		const generated = generateTileSvg(this.#input);
-
-		if (this.#input.seamless) {
-			this.replaceChildren();
-			Object.assign(this.style, tileBackgroundStyle(generated));
-			return;
-		}
-
-		this.style.backgroundImage = '';
-		this.innerHTML = generated.svg;
+		Object.assign(this.style, tileBackgroundStyle(generateTileSvg(this.#input)));
 	}
 }
 

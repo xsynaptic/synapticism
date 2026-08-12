@@ -59,6 +59,7 @@ const COLORS: ReadonlyArray<ColorSpec> = [
 const DEFAULT_GLOSS_BLEND = TILE_DEFAULTS.glossBlend;
 
 class StationTileLab extends HTMLElement {
+	#frame = 0;
 	#input: TileInput = {};
 	#tile = document.createElement('station-tile');
 
@@ -103,8 +104,15 @@ class StationTileLab extends HTMLElement {
 		this.#apply();
 	}
 
+	// A dragged slider fires `input` far faster than a tile field can be regenerated
+	// Coalesce to one render per frame so the queue can never outrun the display
 	#apply() {
-		this.#tile.options = { ...this.#input };
+		if (this.#frame > 0) return;
+
+		this.#frame = requestAnimationFrame(() => {
+			this.#frame = 0;
+			this.#tile.options = { ...this.#input };
+		});
 	}
 
 	#colorField(color: ColorSpec): HTMLElement {
