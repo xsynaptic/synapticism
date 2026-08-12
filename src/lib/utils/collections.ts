@@ -9,7 +9,7 @@ export interface CollectionResult<K extends CollectionKey> {
 	entriesMap: Map<string, CollectionEntry<K>>;
 }
 
-interface CollectionEntryWithContentCount {
+interface CollectionEntryWithEntryCount {
 	data: {
 		_entryCount?: number | undefined;
 	};
@@ -68,14 +68,11 @@ export function createCollectionLookupByIds<K extends CollectionKey>(
 	};
 }
 
-export function filterWithContent(entry: CollectionEntryWithContentCount) {
+export function filterHasEntries(entry: CollectionEntryWithEntryCount) {
 	return (entry.data._entryCount ?? 0) > 0;
 }
 
-export function sortByContentCount<T extends CollectionEntryWithContentCount>(
-	entryA: T,
-	entryB: T,
-) {
+export function sortByEntryCount<T extends CollectionEntryWithEntryCount>(entryA: T, entryB: T) {
 	const aTotal = entryA.data._entryCount ?? 0;
 	const bTotal = entryB.data._entryCount ?? 0;
 

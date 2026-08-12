@@ -3,6 +3,7 @@ import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import ProjectDetail from '#layouts/project-detail.astro';
 import { getCatalog } from '#lib/catalog/catalog-data.js';
+import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.js';
 import { queryProjectEntryContent } from '#lib/collections/projects/projects-utils.js';
 
@@ -14,7 +15,7 @@ export const getStaticPaths = (async () => {
 		entries.map(async (entry) => ({
 			params: { project: entry.id },
 			props: {
-				backlinks: catalog.backlinksOf(entry.id),
+				backlinks: catalog.backlinksOf(entry.id).filter(filterIsEditorialEntry),
 				entry,
 				relatedContent: await queryProjectEntryContent(entry),
 			},

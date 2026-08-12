@@ -10,8 +10,8 @@ import { getProjectsCollection } from '#lib/collections/projects/projects-data.t
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import {
 	createCollectionLookupByIds,
-	filterWithContent,
-	sortByContentCount,
+	filterHasEntries,
+	sortByEntryCount,
 } from '#lib/utils/collections.ts';
 
 export const createTagsByIdsFunction = createCollectionLookupByIds('Tags', getTagsCollection);
@@ -34,7 +34,7 @@ export async function queryTagsEntryContent(entry: CollectionEntry<'tags'>) {
 export async function queryTagsIndex() {
 	const { entries } = await getTagsCollection();
 
-	return R.pipe(entries, R.filter(filterWithContent), R.sort(sortByContentCount));
+	return R.pipe(entries, R.filter(filterHasEntries), R.sort(sortByEntryCount));
 }
 
 const NON_ALPHABETIC_GROUP = '#';

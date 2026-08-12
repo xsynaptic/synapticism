@@ -3,6 +3,7 @@ import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import NoteDetail from '#layouts/notes-detail.astro';
 import { getCatalog } from '#lib/catalog/catalog-data.js';
+import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
 import { getNotesCollection } from '#lib/collections/notes/notes-data.js';
 import { sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
@@ -20,7 +21,7 @@ export const getStaticPaths = (async () => {
 		return {
 			params: { note: entry.id },
 			props: {
-				backlinks: catalog.backlinksOf(entry.id),
+				backlinks: catalog.backlinksOf(entry.id).filter(filterIsEditorialEntry),
 				entry,
 				newerItem: newer
 					? { title: newer.data.title, url: getContentUrl('notes', newer.id) }

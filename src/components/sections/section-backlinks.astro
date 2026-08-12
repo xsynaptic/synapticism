@@ -5,11 +5,16 @@ import Anchor from '#components/parts/anchor.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
+// The list is a sample, not an inventory
+const BACKLINKS_DISPLAY_LIMIT = 10;
+
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
 }
 
-const { backlinks } = Astro.props;
+const { backlinks: backlinksAll } = Astro.props;
+
+const backlinks = backlinksAll?.slice(0, BACKLINKS_DISPLAY_LIMIT);
 ---
 
 {

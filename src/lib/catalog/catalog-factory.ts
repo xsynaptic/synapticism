@@ -19,10 +19,6 @@ export interface Catalog {
 	) => Array<CatalogItem<T>>;
 }
 
-// Only dated content surfaces as a backlink; pages and tags are link targets, not sources
-const backlinkCollections = new Set<CatalogCollectionKey>(['notes', 'posts', 'projects']);
-const backlinkLimit = 10;
-
 export function createCatalog(items: ReadonlyArray<CatalogItem>): Catalog {
 	const itemsById = new Map(items.map((item) => [item.id, item] as const));
 
@@ -38,6 +34,7 @@ export function createCatalog(items: ReadonlyArray<CatalogItem>): Catalog {
 		return { id: item.id, title: item.title, url: item.url };
 	}
 
+	// Every inbound link, unfiltered and uncapped; callers narrow to what they display
 	function backlinksOf(id: string): Array<CatalogItem> {
 		const item = itemsById.get(id);
 
@@ -48,12 +45,10 @@ export function createCatalog(items: ReadonlyArray<CatalogItem>): Catalog {
 		for (const backlinkId of item.backlinks) {
 			const backlink = itemsById.get(backlinkId);
 
-			if (backlink && backlinkCollections.has(backlink.collection)) {
-				backlinks.push(backlink);
-			}
+			if (backlink) backlinks.push(backlink);
 		}
 
-		return backlinks.sort(sortCatalogByDate).slice(0, backlinkLimit);
+		return backlinks.sort(sortCatalogByDate);
 	}
 
 	function resolve<T extends CatalogCollectionKey = CatalogCollectionKey>(

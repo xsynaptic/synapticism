@@ -3,6 +3,7 @@ import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import PostDetail from '#layouts/post-detail.astro';
 import { getCatalog } from '#lib/catalog/catalog-data.js';
+import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.js';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
@@ -17,7 +18,7 @@ export const getStaticPaths = (async () => {
 		return {
 			params: { post: entry.id },
 			props: {
-				backlinks: catalog.backlinksOf(entry.id),
+				backlinks: catalog.backlinksOf(entry.id).filter(filterIsEditorialEntry),
 				entry,
 				newerItem: newer
 					? { title: newer.data.title, url: getContentUrl('posts', newer.id) }

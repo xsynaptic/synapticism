@@ -6,7 +6,7 @@ import ListRow from '#components/parts/list-row.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { sortByContentCount } from '#lib/utils/collections.ts';
+import { sortByEntryCount } from '#lib/utils/collections.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
 interface Props {
@@ -17,7 +17,7 @@ const { tagIds, ...props } = Astro.props;
 
 const getTagsByIds = await createTagsByIdsFunction();
 
-const tags = tagIds ? getTagsByIds(tagIds).sort(sortByContentCount) : undefined;
+const tags = tagIds ? getTagsByIds(tagIds).sort(sortByEntryCount) : undefined;
 ---
 
 {
