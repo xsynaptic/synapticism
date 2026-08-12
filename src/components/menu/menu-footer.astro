@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'astro/types';
 
 import { menuFooterItems } from '#components/menu/menu-footer.ts';
 import { isActiveMenuItem } from '#components/menu/menu-utils.ts';
-import Link from '#components/parts/link.astro';
+import Anchor from '#components/parts/anchor.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 type Props = HTMLAttributes<'nav'>;
@@ -18,14 +18,14 @@ const { pathname } = Astro.url;
 		{
 			menuFooterItems.map((item) => (
 				<li class="text-xs font-medium sm:text-sm">
-					<Link
+					<Anchor
 						class:list={[isActiveMenuItem(item, pathname) ? 'font-semibold' : undefined]}
 						href={item.url}
 						linkColor="primary"
 						{...(item.rel ? { rel: item.rel } : undefined)}
 					>
 						{item.title}
-					</Link>
+					</Anchor>
 				</li>
 			))
 		}

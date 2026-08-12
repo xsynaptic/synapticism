@@ -13,15 +13,15 @@ export type CatalogCollectionKey = Extract<
 export interface CatalogItem<T extends CatalogCollectionKey = CatalogCollectionKey> {
 	backlinks: Set<string>;
 	collection: T;
-	contentCount: number | undefined;
 	dateCreated: Date;
 	dateUpdated: Date | undefined;
 	description: string | undefined;
+	entryCount: number | undefined;
 	entryQuality: number | undefined;
 	id: string;
 	imageId: string | undefined;
 	links: Array<z.infer<typeof LinkItemSchema>> | undefined;
-	linksCount: number | undefined;
+	linksExternalCount: number | undefined;
 	title: string;
 	url: string;
 	wordCount: number | undefined;

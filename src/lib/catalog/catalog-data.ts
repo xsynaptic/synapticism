@@ -18,7 +18,7 @@ import { getImageFeaturedId } from '#lib/utils/image-featured.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 import { getWordCount } from '#lib/utils/word-count.ts';
 
-function getLinksCount(entry: CollectionEntry<CollectionKey>): number {
+function getLinksExternalCount(entry: CollectionEntry<CollectionKey>): number {
 	if (!entry.body) return 0;
 
 	return (entry.body.match(/\[[^\]]*\]\(https?:\/\/[^)]+\)/g) ?? []).length;
@@ -56,13 +56,13 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 			catalogItemsById.set(entry.id, {
 				backlinks: new Set<string>(),
 				collection: entry.collection,
-				contentCount: '_contentCount' in entry.data ? entry.data._contentCount : undefined,
 				dateCreated:
 					parseContentDate(entry.data.dateCreated) ?? new Date(String(SITE_YEAR_FOUNDED)),
 				dateUpdated: parseContentDate(
 					'dateUpdated' in entry.data ? entry.data.dateUpdated : undefined,
 				),
 				description: getDescriptionRenderedHtml(entry),
+				entryCount: '_entryCount' in entry.data ? entry.data._entryCount : undefined,
 				entryQuality: 'entryQuality' in entry.data ? entry.data.entryQuality : undefined,
 				id: entry.id,
 				imageId:
@@ -70,7 +70,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 						? getImageFeaturedId({ imageFeatured: entry.data.imageFeatured })
 						: undefined,
 				links: 'links' in entry.data ? entry.data.links : undefined,
-				linksCount: getLinksCount(entry),
+				linksExternalCount: getLinksExternalCount(entry),
 				title: entry.data.title,
 				url: getContentUrl(entry.collection, entry.id),
 				wordCount: wordCountsById.get(entry.id),

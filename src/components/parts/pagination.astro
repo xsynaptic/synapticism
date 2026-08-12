@@ -5,7 +5,7 @@ import type { HTMLAttributes } from 'astro/types';
 import * as R from 'remeda';
 import urlJoin from 'url-join';
 
-import Link from '#components/parts/link.astro';
+import Anchor from '#components/parts/anchor.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSiteUrl } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
@@ -130,9 +130,9 @@ const pageNextLink = url.next ?? undefined;
 				{pagePrevLink ? (
 					<li class="flex flex-wrap gap-1 pr-2">
 						<span class="text-accent-300 select-none">&lsaquo;</span>
-						<Link aria-label={t('aria.prevPage')} href={pagePrevLink}>
+						<Anchor aria-label={t('aria.prevPage')} href={pagePrevLink}>
 							{t('pagination.previous')}
-						</Link>
+						</Anchor>
 					</li>
 				) : undefined}
 				{pageArray.map((item) => {
@@ -159,7 +159,7 @@ const pageNextLink = url.next ?? undefined;
 										item.isCollapsible ? 'hidden md:block' : undefined,
 									]}
 								>
-									<Link
+									<Anchor
 										aria-label={formatStringTemplate(t('aria.goToPage'), {
 											page: item.pageNumber,
 										})}
@@ -167,7 +167,7 @@ const pageNextLink = url.next ?? undefined;
 										href={getPageNumberLink(item.pageNumber)}
 									>
 										{String(item.pageNumber)}
-									</Link>
+									</Anchor>
 								</li>
 							);
 						}
@@ -175,9 +175,9 @@ const pageNextLink = url.next ?? undefined;
 				})}
 				{pageNextLink ? (
 					<li class="flex flex-wrap gap-1 pl-2">
-						<Link aria-label={t('aria.nextPage')} href={pageNextLink}>
+						<Anchor aria-label={t('aria.nextPage')} href={pageNextLink}>
 							{t('pagination.next')}
-						</Link>
+						</Anchor>
 						<span class="text-accent-300 select-none">&rsaquo;</span>
 					</li>
 				) : undefined}

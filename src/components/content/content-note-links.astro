@@ -3,8 +3,8 @@ import type { z } from 'zod';
 
 import type { LinkItemSchema, SourceSchema } from '#lib/schemas/content.ts';
 
+import Anchor from '#components/parts/anchor.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
-import Link from '#components/parts/link.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSourceDomain } from '#lib/utils/text.ts';
 
@@ -22,7 +22,7 @@ const { links, source } = Astro.props;
 			<ul class="flex flex-col gap-3 text-sm">
 				{links.map((link, index) => (
 					<li>
-						<Link
+						<Anchor
 							class="link-underline"
 							href={link.url}
 							linkColor="accent"
@@ -30,14 +30,14 @@ const { links, source } = Astro.props;
 							target="_blank"
 						>
 							{link.title}
-						</Link>
+						</Anchor>
 						<span class="mt-0.5 block font-mono text-xs text-primary-600">
 							{getSourceDomain(link.url)}
 							{index === 0 && source ? (
 								<Fragment>
 									{t('content.via')}
 									{source.url ? (
-										<Link
+										<Anchor
 											class="link-underline"
 											href={source.url}
 											linkColor="accent"
@@ -45,7 +45,7 @@ const { links, source } = Astro.props;
 											target="_blank"
 										>
 											{source.title}
-										</Link>
+										</Anchor>
 									) : (
 										source.title
 									)}

@@ -1,5 +1,5 @@
 ---
-import Link from '#components/parts/link.astro';
+import Anchor from '#components/parts/anchor.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
 import { CONTENT_EXCERPT_IDENTIFIER } from '#constants.ts';
@@ -25,7 +25,7 @@ const hasExcerpt = excerptSplit.length > 1;
 <article class={className}>
 	<header class:list={['content-column', description ? undefined : 'mb-2']}>
 		<h2 class="mb-1 text-lg font-semibold md:text-xl">
-			<Link href={entryUrl}><slot name="excerpt-title" /></Link>
+			<Anchor href={entryUrl}><slot name="excerpt-title" /></Anchor>
 		</h2>
 		{
 			subtitle ? (
@@ -47,7 +47,7 @@ const hasExcerpt = excerptSplit.length > 1;
 	{
 		hasExcerpt ? (
 			<div class="content-column text-right font-serif font-medium italic">
-				<Link href={entryUrl}>{t('content.continueReading')}</Link>&nbsp;&raquo;
+				<Anchor href={entryUrl}>{t('content.continueReading')}</Anchor>&nbsp;&raquo;
 			</div>
 		) : undefined
 	}

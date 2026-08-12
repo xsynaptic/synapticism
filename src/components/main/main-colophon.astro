@@ -1,6 +1,6 @@
 ---
+import Anchor from '#components/parts/anchor.astro';
 import DividedItem from '#components/parts/divided-item.astro';
-import Link from '#components/parts/link.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getCopyrightYears } from '#lib/utils/date.ts';
 import { getSiteUrl } from '#lib/utils/routing.ts';
@@ -15,9 +15,9 @@ const copyrightYears = getCopyrightYears();
 	</DividedItem>
 	<DividedItem as="span" dividerContent="slash">
 		{t('footer.builtWith')}{' '}
-		<Link href="https://astro.build" linkColor="primary-bright">{t('footer.astro')}</Link>
+		<Anchor href="https://astro.build" linkColor="primary-bright">{t('footer.astro')}</Anchor>
 	</DividedItem>
 	<DividedItem as="span" dividerContent="slash">
-		<Link href={`${getSiteUrl()}rss.xml`} linkColor="primary-bright">{t('footer.rss')}</Link>
+		<Anchor href={`${getSiteUrl()}rss.xml`} linkColor="primary-bright">{t('footer.rss')}</Anchor>
 	</DividedItem>
 </div>

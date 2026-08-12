@@ -15,7 +15,7 @@ import StructuredData from '#components/main/main-structured-data.astro';
 import TopButton from '#components/main/main-top-button.astro';
 import MenuFooter from '#components/menu/menu-footer.astro';
 import MenuHeader from '#components/menu/menu-header.astro';
-import Link from '#components/parts/link.astro';
+import Anchor from '#components/parts/anchor.astro';
 import ProgressReading from '#components/progress/progress-reading.astro';
 import Search from '#components/search/search.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
@@ -71,9 +71,9 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			<div class:list={['py-3 lg:py-4', 'bg-linear-to-b from-primary-800 to-primary-700']}>
 				<div class="content-column flex flex-wrap items-center justify-between gap-2">
 					<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
-						<span class="text-primary-500">ꗥ</span>{' '}<Link href={siteUrl} linkColor="on-dark">
+						<span class="text-primary-500">ꗥ</span>{' '}<Anchor href={siteUrl} linkColor="on-dark">
 							{t('site.title')}
-						</Link>
+						</Anchor>
 					</SiteTitleTag>
 					<Search />
 				</div>

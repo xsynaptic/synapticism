@@ -13,7 +13,7 @@ export const getTagsCollection = createCollectionData({
 		const tagged = [...posts, ...notes, ...projects];
 
 		for (const entry of entries) {
-			entry.data._contentCount = tagged.filter((item) =>
+			entry.data._entryCount = tagged.filter((item) =>
 				item.data.tags?.some(({ id }) => id === entry.id),
 			).length;
 		}

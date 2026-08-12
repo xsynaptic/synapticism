@@ -1,7 +1,7 @@
 ---
+import Anchor from '#components/parts/anchor.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
-import Link from '#components/parts/link.astro';
 import ListRow from '#components/parts/list-row.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
@@ -33,9 +33,9 @@ const tags = tagIds ? getTagsByIds(tagIds).sort(sortByContentCount) : undefined;
 						]}
 						data-pagefind-filter="tag"
 					>
-						<Link href={getContentUrl(item.collection, item.id)} linkColor="accent">
+						<Anchor href={getContentUrl(item.collection, item.id)} linkColor="accent">
 							{item.data.title}
-						</Link>
+						</Anchor>
 					</DividedItem>
 				))}
 			</ListRow>

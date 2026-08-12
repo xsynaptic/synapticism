@@ -13,8 +13,8 @@ import ContentNoteLinks from '#components/content/content-note-links.astro';
 import ContentSectionProjects from '#components/content/content-section-projects.astro';
 import ContentSectionTags from '#components/content/content-section-tags.astro';
 import MainSite from '#components/main/main-site.astro';
+import Anchor from '#components/parts/anchor.astro';
 import DividedItem from '#components/parts/divided-item.astro';
-import Link from '#components/parts/link.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionNavigation from '#components/sections/section-navigation.astro';
@@ -64,8 +64,8 @@ const { Content } = await render(entry);
 		<ContentHeader title={entry.data.title}>
 			<Fragment slot="header-subtitle">
 				<DividedItem dividerContent="slash"
-					><Link class="font-semibold uppercase" href={getSiteUrl('notes')} linkColor="accent"
-						>{t('collection.notes.plural')}</Link
+					><Anchor class="font-semibold uppercase" href={getSiteUrl('notes')} linkColor="accent"
+						>{t('collection.notes.plural')}</Anchor
 					></DividedItem
 				>
 				<DividedItem class="font-mono text-xs text-primary-500">

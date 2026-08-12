@@ -1,8 +1,8 @@
 ---
 import type { ContentNavigationItem } from '#components/types.ts';
 
+import Anchor from '#components/parts/anchor.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
-import Link from '#components/parts/link.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
@@ -31,31 +31,31 @@ const { baseUrl, labelPLural, labelSingular, newerItem, olderItem } = Astro.prop
 							<span aria-hidden="true" class="shrink-0 text-primary-600">
 								&larr;
 							</span>
-							<Link class="link-underline min-w-0 italic" href={newerItem.url} linkColor="accent">
+							<Anchor class="link-underline min-w-0 italic" href={newerItem.url} linkColor="accent">
 								<span class="sr-only">
 									{formatStringTemplate(t('section.navigation.label.newer'), {
 										label: labelSingular,
 									})}
 								</span>
 								{newerItem.title}
-							</Link>
+							</Anchor>
 						</Fragment>
 					) : undefined}
 				</span>
-				<Link class="shrink-0" href={baseUrl} linkColor="accent">
+				<Anchor class="shrink-0" href={baseUrl} linkColor="accent">
 					{formatStringTemplate(t('section.navigation.label.list'), { label: labelPLural })}
-				</Link>
+				</Anchor>
 				<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
 					{olderItem ? (
 						<Fragment>
-							<Link class="link-underline min-w-0 italic" href={olderItem.url} linkColor="accent">
+							<Anchor class="link-underline min-w-0 italic" href={olderItem.url} linkColor="accent">
 								<span class="sr-only">
 									{formatStringTemplate(t('section.navigation.label.older'), {
 										label: labelSingular,
 									})}
 								</span>
 								{olderItem.title}
-							</Link>
+							</Anchor>
 							<span aria-hidden="true" class="shrink-0 text-primary-600">
 								&rarr;
 							</span>
