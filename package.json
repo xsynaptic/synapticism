@@ -39,7 +39,7 @@
 		"@tailwindcss/vite": "^4.3.3",
 		"@types/react": "^19.2.18",
 		"@xsynaptic/eslint-config": "^6.2.1",
-		"@xsynaptic/mdxlint-config": "^1.0.2",
+		"@xsynaptic/mdxlint-config": "^2.0.0",
 		"@xsynaptic/satteri-auto-import": "^0.1.1",
 		"@xsynaptic/satteri-reading-time": "^0.2.1",
 		"@xsynaptic/stylelint-config": "^1.1.0",
