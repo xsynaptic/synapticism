@@ -1,6 +1,6 @@
 {
 	"name": "synapticism",
-	"compatibility_date": "2026-06-22",
+	"compatibility_date": "2026-08-04",
 	"routes": [{ "pattern": "synapticism.com", "custom_domain": true }],
 	"workers_dev": false,
 	"assets": {
