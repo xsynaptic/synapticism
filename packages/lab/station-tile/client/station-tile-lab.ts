@@ -61,11 +61,15 @@ const DEFAULT_GLOSS_BLEND = TILE_DEFAULTS.glossBlend;
 class StationTileLab extends HTMLElement {
 	#frame = 0;
 	#input: TileInput = {};
+	#root = this.attachShadow({ mode: 'open' });
 	#tile = document.createElement('station-tile');
 
 	connectedCallback() {
-		if (this.shadowRoot) return;
-		const root = this.attachShadow({ mode: 'open' });
+		// A reconnect keeps the built shadow tree; re-apply in case a pending frame was cancelled on the way out
+		if (this.#root.childElementCount > 0) {
+			this.#apply();
+			return;
+		}
 
 		const initialTheme = (this.getAttribute('theme') ?? DEFAULT_TILE_THEME) as TileTheme;
 		const initialSeed = this.getAttribute('seed') ?? TILE_DEFAULTS.seed;
@@ -99,9 +103,16 @@ class StationTileLab extends HTMLElement {
 
 		const style = document.createElement('style');
 		style.textContent = styles;
-		root.append(style, lab);
+		this.#root.append(style, lab);
 
 		this.#apply();
+	}
+
+	disconnectedCallback() {
+		if (this.#frame === 0) return;
+
+		cancelAnimationFrame(this.#frame);
+		this.#frame = 0;
 	}
 
 	// A dragged slider fires `input` far faster than a tile field can be regenerated

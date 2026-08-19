@@ -4,27 +4,30 @@ import { getInstanceManager } from '@pagefind/component-ui';
 
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.userAgent);
 
-const searchQueryDebounceMs = 1500; // Wait for the user to stop typing before recording their query
+const searchQueryDebounceMs = 1500;
 const searchQueryMinLength = 2;
-const searchQueryMaxLength = 100; // Cap the value sent to analytics
+const searchQueryMaxLength = 100;
 
 let searchAnalyticsRegistered = false;
 
-// An icon-based modal trigger integrating with Pagefind's instance API
 class SearchToggle extends HTMLElement {
 	// eslint-disable-next-line unicorn/no-null -- matches Pagefind's PagefindComponent interface
 	instance: Instance | null = null;
 
-	// Pagefind reads this off the registered trigger to toggle aria-expanded and aria-controls
-	get buttonElement() {
+	get buttonEl() {
 		return this.querySelector<HTMLButtonElement>('button');
 	}
 
+	#controller: AbortController | undefined;
 	#cssReady?: Promise<void>;
 
 	connectedCallback() {
+		this.#controller = new AbortController();
+
+		const { signal } = this.#controller;
+
 		// Static props in markup; only the OS-dependent keyboard hint has to be set client-side
-		this.buttonElement?.setAttribute('aria-keyshortcuts', isMac ? 'Meta+K' : 'Control+K');
+		this.buttonEl?.setAttribute('aria-keyshortcuts', isMac ? 'Meta+K' : 'Control+K');
 
 		const instanceName = this.getAttribute('instance') ?? 'default';
 
@@ -41,29 +44,25 @@ class SearchToggle extends HTMLElement {
 			this,
 		);
 
-		// Hover or focus the toggle and the stylesheet starts loading, so it's ready before the modal opens
-		this.addEventListener('pointerenter', this.#preloadPagefindCss, { once: true });
-		this.addEventListener('focusin', this.#preloadPagefindCss, { once: true });
+		this.addEventListener('pointerenter', this.#preloadPagefindCss, { once: true, signal });
+		this.addEventListener('focusin', this.#preloadPagefindCss, { once: true, signal });
 
-		this.addEventListener('click', this.#handleClickEvent);
-		document.addEventListener('keydown', this.#handleKeydown);
+		this.addEventListener('click', this.#handleClickEvent, { signal });
+		document.addEventListener('keydown', this.#handleKeydown, { signal });
 	}
 
 	disconnectedCallback() {
 		this.instance?.deregisterAllShortcuts(this);
-		this.removeEventListener('pointerenter', this.#preloadPagefindCss);
-		this.removeEventListener('focusin', this.#preloadPagefindCss);
-		this.removeEventListener('click', this.#handleClickEvent);
-		document.removeEventListener('keydown', this.#handleKeydown);
+		this.#controller?.abort();
+		this.#controller = undefined;
 	}
 
-	// Called by <pagefind-modal> when it closes. Matches the built-in trigger's contract
+	// Invoked by <pagefind-modal> on close, never from this file
 	handleModalClose() {
-		this.buttonElement?.setAttribute('aria-expanded', 'false');
-		this.buttonElement?.focus();
+		this.buttonEl?.setAttribute('aria-expanded', 'false');
+		this.buttonEl?.focus();
 	}
 
-	// Load the deferred stylesheet on intent; resolves once applied
 	#ensurePagefindCss = (): Promise<void> => {
 		if (this.#cssReady) return this.#cssReady;
 
@@ -113,7 +112,6 @@ class SearchToggle extends HTMLElement {
 		modal?.open();
 	};
 
-	// Void-returning wrapper for use as a click listener
 	#handleClickEvent = () => {
 		void this.#handleClick();
 	};
@@ -133,24 +131,19 @@ class SearchToggle extends HTMLElement {
 		void this.#handleClick();
 	};
 
-	// Void-returning wrapper so the listener ignores the preload promise
 	#preloadPagefindCss = () => {
 		void this.#ensurePagefindCss();
 	};
 }
 
 function getResultCount(result: unknown): number | undefined {
-	if (
-		result &&
-		typeof result === 'object' &&
-		Array.isArray((result as PagefindSearchResult).results)
-	) {
-		return (result as PagefindSearchResult).results.length;
-	}
-	return undefined;
+	if (!result || typeof result !== 'object') return undefined;
+
+	const { results } = result as Partial<PagefindSearchResult>;
+
+	return Array.isArray(results) ? results.length : undefined;
 }
 
-// Record settled search queries
 function registerSearchAnalytics(instance: Instance) {
 	if (searchAnalyticsRegistered) return;
 

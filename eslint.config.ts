@@ -48,7 +48,7 @@ export default getConfig(
 				'unicorn/prefer-global-this': 'off',
 			},
 		},
-		getWebComponentConfig(['src/components/**/*.ts']),
+		getWebComponentConfig(['src/components/**/*.ts', 'packages/lab/**/client/**/*.ts']),
 		...getAstroConfig({ a11y: 'strict' }),
 	],
 	{

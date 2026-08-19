@@ -14,25 +14,19 @@ const bundlePath = `${import.meta.env.BASE_URL}pagefind/`;
 ---
 
 <script>
+	import type { PagefindModal } from '@pagefind/component-ui';
+
 	import '#components/search/search-toggle.ts';
 
 	// Clears the Pagefind registry on navigation so search-toggle's modal-trigger registrations don't pile up
-	// Pagefind has no deregisterUtility; see search-toggle.ts
+	// Pagefind still exposes no deregisterUtility as of 1.5.2; see search-toggle.ts
 	document.addEventListener('astro:before-swap', () => {
-		const modal = document.querySelector('pagefind-modal') as
-			| (Element & {
-					instance?: {
-						components: Array<unknown>;
-						componentsByType: Record<string, Array<unknown>>;
-					};
-			  })
-			| null;
-		const instance = modal?.instance;
+		const instance = document.querySelector<PagefindModal>('pagefind-modal')?.instance;
 
-		if (instance) {
-			instance.components = [];
-			instance.componentsByType = {};
-		}
+		if (!instance) return;
+
+		instance.components = [];
+		instance.componentsByType = {};
 	});
 </script>
 

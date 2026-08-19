@@ -1,15 +1,15 @@
 const animationDuration = 300;
 
 class ProgressReading extends HTMLElement {
+	#fadeOutTimer: number | undefined;
 	#frame: number | undefined;
 	#observer: IntersectionObserver | undefined;
+	#scrollController: AbortController | undefined;
 	#target: Element | undefined;
-	#ticking = false;
 
 	connectedCallback() {
-		this.ariaHidden = 'true';
-
 		const selector = this.getAttribute('target') ?? '[data-reading-frame]';
+
 		this.#target = document.querySelector(selector) ?? undefined;
 
 		if (!this.#target) return;
@@ -18,12 +18,9 @@ class ProgressReading extends HTMLElement {
 			(entries) => {
 				for (const entry of entries) {
 					if (entry.isIntersecting) {
-						window.addEventListener('resize', this.#onScroll, { passive: true });
-						window.addEventListener('scroll', this.#onScroll, { passive: true });
-						this.#onScroll();
+						this.#trackScroll();
 					} else {
-						window.removeEventListener('resize', this.#onScroll);
-						window.removeEventListener('scroll', this.#onScroll);
+						this.#untrackScroll();
 					}
 				}
 			},
@@ -35,8 +32,9 @@ class ProgressReading extends HTMLElement {
 
 	disconnectedCallback() {
 		this.#observer?.disconnect();
-		window.removeEventListener('resize', this.#onScroll);
-		window.removeEventListener('scroll', this.#onScroll);
+		this.#observer = undefined;
+		this.#untrackScroll();
+		this.#clearFadeOut();
 
 		if (this.#frame !== undefined) {
 			cancelAnimationFrame(this.#frame);
@@ -44,9 +42,15 @@ class ProgressReading extends HTMLElement {
 		}
 	}
 
+	#clearFadeOut() {
+		if (this.#fadeOutTimer === undefined) return;
+
+		clearTimeout(this.#fadeOutTimer);
+		this.#fadeOutTimer = undefined;
+	}
+
 	#onScroll = () => {
-		if (this.#ticking) return;
-		this.#ticking = true;
+		if (this.#frame !== undefined) return;
 		this.#frame = requestAnimationFrame(this.#updateProgress);
 	};
 
@@ -58,6 +62,23 @@ class ProgressReading extends HTMLElement {
 		this.style.setProperty('--progress-bar', String(value));
 	}
 
+	#trackScroll() {
+		if (this.#scrollController) return;
+
+		this.#scrollController = new AbortController();
+
+		const { signal } = this.#scrollController;
+
+		window.addEventListener('resize', this.#onScroll, { passive: true, signal });
+		window.addEventListener('scroll', this.#onScroll, { passive: true, signal });
+		this.#onScroll();
+	}
+
+	#untrackScroll() {
+		this.#scrollController?.abort();
+		this.#scrollController = undefined;
+	}
+
 	#updateProgress = () => {
 		this.#frame = undefined;
 
@@ -67,17 +88,21 @@ class ProgressReading extends HTMLElement {
 		const scrollable = Math.max(1, rect.height - window.innerHeight);
 		const progress = Math.min(Math.max(0, -rect.top / scrollable), 1);
 
-		if (progress === 1) {
-			this.#setProgress(1);
-			window.setTimeout(() => {
-				this.#setOpacity(0);
-			}, animationDuration / 2);
-		} else {
+		this.#setProgress(progress);
+
+		// One fade per arrival at the end; scrolling back up cancels it before it lands
+		if (progress < 1) {
+			this.#clearFadeOut();
 			this.#setOpacity(1);
-			this.#setProgress(progress);
+			return;
 		}
 
-		this.#ticking = false;
+		if (this.#fadeOutTimer !== undefined) return;
+
+		this.#fadeOutTimer = window.setTimeout(() => {
+			this.#fadeOutTimer = undefined;
+			this.#setOpacity(0);
+		}, animationDuration / 2);
 	};
 }
 

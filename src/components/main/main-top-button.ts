@@ -1,7 +1,7 @@
 const hideThresholdPixels = 16;
 const revealThresholdPixels = 64;
 
-// Eligibility gate: stay hidden until the reader is genuinely deep into a long page
+// Stay hidden until the reader is deep into a long page
 const minViewportMultiple = 2;
 const minPageFraction = 0.2;
 
@@ -10,33 +10,48 @@ const desktopMediaQuery = '(min-width: 640px)';
 
 class TopButton extends HTMLElement {
 	#animationFrameId: number | undefined;
+	#controller: AbortController | undefined;
 	#desktopQuery: MediaQueryList | undefined;
 	#lastScrollY = 0;
 	#scrollAccumulator = 0;
+	#scrollController: AbortController | undefined;
 
 	connectedCallback() {
+		this.#controller = new AbortController();
+
+		const { signal } = this.#controller;
+
 		this.#setHidden(true);
-		this.addEventListener('click', this.#handleClick);
+		this.addEventListener('click', this.#handleClick, { signal });
 
 		this.#desktopQuery = window.matchMedia(desktopMediaQuery);
-		this.#desktopQuery.addEventListener('change', this.#handleViewportChange);
+		this.#desktopQuery.addEventListener('change', this.#handleViewportChange, { signal });
 		this.#handleViewportChange();
 	}
 
 	disconnectedCallback() {
-		this.removeEventListener('click', this.#handleClick);
-		this.#desktopQuery?.removeEventListener('change', this.#handleViewportChange);
+		this.#controller?.abort();
+		this.#controller = undefined;
 		this.#detachScroll();
 	}
 
 	#attachScroll() {
+		if (this.#scrollController) return;
+
+		this.#scrollController = new AbortController();
 		this.#lastScrollY = window.scrollY;
 		this.#scrollAccumulator = 0;
-		window.addEventListener('scroll', this.#handleScroll, { passive: true });
+
+		window.addEventListener('scroll', this.#handleScroll, {
+			passive: true,
+			signal: this.#scrollController.signal,
+		});
 	}
 
 	#detachScroll() {
-		window.removeEventListener('scroll', this.#handleScroll);
+		this.#scrollController?.abort();
+		this.#scrollController = undefined;
+
 		if (this.#animationFrameId !== undefined) {
 			cancelAnimationFrame(this.#animationFrameId);
 			this.#animationFrameId = undefined;
@@ -61,7 +76,7 @@ class TopButton extends HTMLElement {
 		this.#animationFrameId = requestAnimationFrame(this.#update);
 	};
 
-	// Only do scroll work on viewports where the button can actually be shown
+	// No scroll work on viewports where the button is hidden
 	#handleViewportChange = () => {
 		if (this.#desktopQuery?.matches) {
 			this.#detachScroll();
@@ -94,7 +109,6 @@ class TopButton extends HTMLElement {
 			return;
 		}
 
-		// Past the gate, reveal on sustained upward scroll, hide on sustained downward
 		this.#scrollAccumulator -= delta;
 		if (this.#scrollAccumulator < -hideThresholdPixels) {
 			this.#setHidden(true);
