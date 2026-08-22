@@ -1,8 +1,7 @@
-/** @jsxRuntime automatic */
-/** @jsxImportSource satori/jsx */
-import type { OgElement } from '@xsynaptic/og-image-generator';
+import { Bitmap } from 'takumi-js/helpers/jsx';
 
 import type { OgImageEntry } from './content.js';
+import type { ProcessedImage } from './generate.js';
 
 import {
 	OG_HEIGHT,
@@ -22,17 +21,17 @@ const colors = {
 	surface: '#f4f4f5', // primary-100, the reading surface
 } as const;
 
-export function getOgElement(entry: OgImageEntry, imageDataUrl?: string): OgElement {
-	const columnWidth = imageDataUrl ? OG_WIDTH - OG_PANEL_WIDTH - OG_SEAM_WIDTH : OG_WIDTH;
-	const padding = imageDataUrl ? OG_PADDING_SPLIT : OG_PADDING_FULL;
+export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
+	const columnWidth = image ? OG_WIDTH - OG_PANEL_WIDTH - OG_SEAM_WIDTH : OG_WIDTH;
+	const padding = image ? OG_PADDING_SPLIT : OG_PADDING_FULL;
 
 	return (
 		<div
 			style={{
 				backgroundColor: colors.carbon,
 				display: 'flex',
-				height: OG_HEIGHT,
-				width: OG_WIDTH,
+				height: px(OG_HEIGHT),
+				width: px(OG_WIDTH),
 			}}
 		>
 			<div
@@ -40,25 +39,24 @@ export function getOgElement(entry: OgImageEntry, imageDataUrl?: string): OgElem
 					display: 'flex',
 					flexDirection: 'column',
 					justifyContent: 'space-between',
-					padding,
-					width: columnWidth,
+					padding: px(padding),
+					width: px(columnWidth),
 				}}
 			>
 				<div
 					style={{
 						backgroundColor: colors.accent,
-						borderRadius: 2,
+						borderRadius: '2px',
 						display: 'flex',
-						height: 8,
-						width: 120,
+						height: '8px',
+						width: '120px',
 					}}
 				/>
 				<div
 					style={{
 						color: colors.surface,
-						display: 'flex',
 						fontFamily: 'Aleo',
-						fontSize: titleFontSize(entry.title.length, columnWidth),
+						fontSize: px(titleFontSize(entry.title.length, columnWidth)),
 						fontWeight: 600,
 						letterSpacing: '-0.01em',
 						lineClamp: 4,
@@ -71,7 +69,7 @@ export function getOgElement(entry: OgImageEntry, imageDataUrl?: string): OgElem
 					style={{
 						display: 'flex',
 						fontFamily: 'Geist Mono',
-						fontSize: 22,
+						fontSize: '22px',
 						fontWeight: 500,
 						letterSpacing: '2px',
 					}}
@@ -81,21 +79,25 @@ export function getOgElement(entry: OgImageEntry, imageDataUrl?: string): OgElem
 					<span style={{ color: colors.muted }}>SYNAPTICISM</span>
 				</div>
 			</div>
-			{imageDataUrl ? (
+			{image ? (
 				<>
 					<div
 						style={{
 							backgroundColor: colors.accent,
 							display: 'flex',
-							height: OG_HEIGHT,
-							width: OG_SEAM_WIDTH,
+							height: px(OG_HEIGHT),
+							width: px(OG_SEAM_WIDTH),
 						}}
 					/>
-					<img height={OG_HEIGHT} src={imageDataUrl} width={OG_PANEL_WIDTH} />
+					<Bitmap data={image.data} height={image.height} width={image.width} />
 				</>
 			) : undefined}
 		</div>
 	);
+}
+
+function px(value: number): string {
+	return `${String(value)}px`;
 }
 
 // Scale the title down as it lengthens so short titles stay punchy and long ones still fit

@@ -1,47 +1,50 @@
-import type { Font } from 'satori';
+import type { Font } from 'takumi-js';
 
-import { createOgRenderer, encodeDataUrl, resizeCover } from '@xsynaptic/og-image-generator';
+import sharp from 'sharp';
+import { render, setGlyphCacheMaxBytes } from 'takumi-js';
+import { Renderer } from 'takumi-js/node';
 
 import type { OgImageEntry } from './content.js';
 
 import { OG_HEIGHT, OG_JPEG_QUALITY, OG_PANEL_WIDTH, OG_WIDTH } from './constants.js';
 import { getOgElement } from './element.js';
 
-// Build the renderer once and reuse it: font parsing and Yoga init are expensive
-export function createGenerator(fonts: Array<Font>) {
-	const render = createOgRenderer({
-		fonts,
-		format: 'jpeg',
-		height: OG_HEIGHT,
-		quality: OG_JPEG_QUALITY,
-		width: OG_WIDTH,
-	});
+// The 8 MiB default evicts outlines mid-run once a corpus draws more than about a thousand glyphs
+const GLYPH_CACHE_BYTES = 64 * 1024 * 1024;
 
-	const imageCache = new Map<string, string>();
+export interface ProcessedImage {
+	data: Buffer;
+	height: number;
+	width: number;
+}
 
-	return async function generate(entry: OgImageEntry): Promise<Buffer> {
-		let imageDataUrl: string | undefined;
+// Fonts and glyph outlines live on the renderer, so build one and reuse it for every card
+export function createRenderer(fonts: Array<Font>) {
+	// Read when a cache is first used, so this has to run before the first render
+	setGlyphCacheMaxBytes(GLYPH_CACHE_BYTES);
 
-		if (entry.imagePath) {
-			imageDataUrl = imageCache.get(entry.imagePath);
+	const renderer = new Renderer();
 
-			if (!imageDataUrl) {
-				imageDataUrl = await processImage(entry.imagePath);
-				imageCache.set(entry.imagePath, imageDataUrl);
-			}
-		}
-
-		return render(getOgElement(entry, imageDataUrl));
+	return function renderCard(entry: OgImageEntry, image?: ProcessedImage) {
+		return render(getOgElement(entry, image), {
+			fonts,
+			format: 'jpeg',
+			height: OG_HEIGHT,
+			quality: OG_JPEG_QUALITY,
+			renderer,
+			width: OG_WIDTH,
+		});
 	};
 }
 
 // The panel is a tall crop of a wide source, so let sharp pick the region of interest
-async function processImage(imagePath: string): Promise<string> {
-	const buffer = await resizeCover(imagePath, {
-		height: OG_HEIGHT,
-		position: 'attention',
-		width: OG_PANEL_WIDTH,
-	}).toBuffer();
+// Raw RGBA hands off to Takumi without an encode, so the card takes one lossy pass instead of two
+export async function processImage(imagePath: string): Promise<ProcessedImage> {
+	const { data, info } = await sharp(imagePath)
+		.resize({ fit: 'cover', height: OG_HEIGHT, position: 'attention', width: OG_PANEL_WIDTH })
+		.ensureAlpha()
+		.raw()
+		.toBuffer({ resolveWithObject: true });
 
-	return encodeDataUrl(buffer, 'jpeg');
+	return { data, height: info.height, width: info.width };
 }

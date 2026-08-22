@@ -13,6 +13,12 @@ export const OG_PADDING_FULL = 80;
 // High-quality output because platforms re-encode OG images anyway
 export const OG_JPEG_QUALITY = 90;
 
+// Bump to invalidate every cached card when element.tsx changes
+export const OG_TEMPLATE_VERSION = '1';
+
+// Freshness ledger for the card store; kept outside it so the store copies into dist wholesale
+export const OG_LEDGER_PATH = '.cache/og-image.json';
+
 // Frontmatter stores media as paths relative to this directory
 export const MEDIA_DIR = 'packages/content/media';
 

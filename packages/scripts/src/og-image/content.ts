@@ -14,8 +14,11 @@ const OG_COLLECTIONS = {
 
 export interface OgImageEntry {
 	collection: string;
+	// Content hash from the data store; drives output cache freshness
+	digest: string;
 	id: string;
-	imagePath?: string;
+	// Media id relative to the media directory; a stable cache key, unlike an absolute path
+	imageId?: string;
 	label: string;
 	title: string;
 }
@@ -35,14 +38,15 @@ export function getOgImageEntries({
 			const title = entry.data.title;
 
 			if (typeof title === 'string') {
-				const imagePath = resolveImagePath(entry.data, mediaPath);
+				const imageId = resolveImageId(entry.data, mediaPath);
 
 				entries.push({
 					collection,
+					digest: entry.digest ?? '',
 					id: entry.id,
 					label,
 					title,
-					...(imagePath ? { imagePath } : {}),
+					...(imageId ? { imageId } : {}),
 				});
 			}
 		}
@@ -71,12 +75,10 @@ function getImageFeaturedId(imageFeatured: unknown): string | undefined {
 }
 
 // A missing file degrades to the title-only card
-function resolveImagePath(data: Record<string, unknown>, mediaPath: string): string | undefined {
+function resolveImageId(data: Record<string, unknown>, mediaPath: string): string | undefined {
 	const mediaId = getImageFeaturedId(data.imageFeatured);
 
 	if (!mediaId) return undefined;
 
-	const filePath = path.join(mediaPath, mediaId);
-
-	return existsSync(filePath) ? filePath : undefined;
+	return existsSync(path.join(mediaPath, mediaId)) ? mediaId : undefined;
 }

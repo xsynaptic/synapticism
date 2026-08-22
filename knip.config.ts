@@ -35,6 +35,9 @@ export default {
 				// OG fonts resolved at build via a fontsource path string knip can't trace
 				'@fontsource/aleo',
 				'@fontsource/geist-mono',
+				// The OG card template reaches React only through the automatic JSX runtime
+				'@types/react',
+				'react',
 			],
 		},
 	},
