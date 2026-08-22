@@ -3,7 +3,7 @@ export const OG_WIDTH = 1200;
 export const OG_HEIGHT = 630;
 
 // Right-hand image panel, separated from the text column by a teal seam
-export const OG_PANEL_WIDTH = 398;
+export const OG_PANEL_WIDTH = 540;
 export const OG_SEAM_WIDTH = 2;
 
 // Tighter padding on the split layout to protect the text measure
@@ -14,7 +14,7 @@ export const OG_PADDING_FULL = 80;
 export const OG_JPEG_QUALITY = 90;
 
 // Bump to invalidate every cached card when element.tsx changes
-export const OG_TEMPLATE_VERSION = '1';
+export const OG_TEMPLATE_VERSION = '2';
 
 // Freshness ledger for the card store; kept outside it so the store copies into dist wholesale
 export const OG_LEDGER_PATH = '.cache/og-image.json';

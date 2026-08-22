@@ -17,7 +17,6 @@ const colors = {
 	accent: '#2b7e8f', // accent-600
 	accentBright: '#4cb6c4', // accent-400, readable on carbon
 	carbon: '#27272a', // primary-800, the site background
-	muted: '#a1a1aa', // primary-400
 	surface: '#f4f4f5', // primary-100, the reading surface
 } as const;
 
@@ -43,15 +42,29 @@ export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
 					width: px(columnWidth),
 				}}
 			>
-				<div
-					style={{
-						backgroundColor: colors.accent,
-						borderRadius: '2px',
-						display: 'flex',
-						height: '8px',
-						width: '120px',
-					}}
-				/>
+				<div style={{ alignItems: 'center', display: 'flex' }}>
+					<div
+						style={{
+							backgroundColor: colors.accent,
+							borderRadius: '2px',
+							display: 'flex',
+							height: '4px',
+							width: '56px',
+						}}
+					/>
+					<span
+						style={{
+							color: colors.accentBright,
+							fontFamily: 'Geist Mono',
+							fontSize: '22px',
+							fontWeight: 500,
+							letterSpacing: '2px',
+							marginLeft: '20px',
+						}}
+					>
+						{entry.label.toUpperCase()}
+					</span>
+				</div>
 				<div
 					style={{
 						color: colors.surface,
@@ -65,18 +78,18 @@ export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
 				>
 					{entry.title}
 				</div>
+				{/* Mirrors the site header's brand mark: Aleo, semibold, uppercase, tracking-widest */}
 				<div
 					style={{
+						color: colors.surface,
 						display: 'flex',
-						fontFamily: 'Geist Mono',
+						fontFamily: 'Aleo',
 						fontSize: '22px',
-						fontWeight: 500,
-						letterSpacing: '2px',
+						fontWeight: 600,
+						letterSpacing: '0.1em',
 					}}
 				>
-					<span style={{ color: colors.accentBright }}>{entry.label}</span>
-					<span style={{ color: colors.muted, padding: '0 12px' }}>·</span>
-					<span style={{ color: colors.muted }}>SYNAPTICISM</span>
+					SYNAPTICISM
 				</div>
 			</div>
 			{image ? (
