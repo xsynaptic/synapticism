@@ -17,6 +17,8 @@ export default getConfig(
 		},
 		{
 			rules: {
+				// Ban logical-assignment shorthand (??=, ||=, &&=); the expanded form reads more clearly
+				'logical-assignment-operators': ['error', 'never'],
 				// Prefix demand fights idiomatic predicates, getters, schema fields, env (PROD), and CLI flags
 				'unicorn/consistent-boolean-name': 'off',
 				// We use intentional compounds such as schema.org's WebSite type

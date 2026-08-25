@@ -10,23 +10,23 @@ import { generateFeedItems } from '#lib/utils/rss.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 // Provide some helpful info while debugging feed generation
-const FEED_DEBUG = false as boolean;
+const feedDebug = false as boolean;
 
 // Should footnotes be excluded from feed content?
-const FEED_EXCLUDE_FOOTNOTES = true as boolean;
+const feedExcludeFootnotes = true as boolean;
 
 // How many items should be included in the feed?
-const FEED_ITEM_COUNT = 20;
+const feedItemCount = 20;
 
 export async function GET(context: APIContext): Promise<Response> {
 	const startTime = performance.now();
 
-	if (FEED_DEBUG) console.log(`[RSS] Initializing feed...`);
+	if (feedDebug) console.log(`[RSS] Initializing feed...`);
 
 	const items = await generateFeedItems({
-		debug: FEED_DEBUG,
-		excludeFootnotes: FEED_EXCLUDE_FOOTNOTES,
-		itemCount: FEED_ITEM_COUNT,
+		debug: feedDebug,
+		excludeFootnotes: feedExcludeFootnotes,
+		itemCount: feedItemCount,
 	});
 
 	// Channel freshness tracks the newest item, not build time, so unchanged content keeps its ETag
@@ -48,7 +48,7 @@ export async function GET(context: APIContext): Promise<Response> {
 		xmlns: { atom: 'http://www.w3.org/2005/Atom' },
 	});
 
-	if (FEED_DEBUG) {
+	if (feedDebug) {
 		console.log(`[RSS] Generated in ${(performance.now() - startTime).toFixed(5)}ms`);
 
 		if (items.length > 0) {

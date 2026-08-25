@@ -3,11 +3,10 @@ import type { Page } from 'astro';
 import type { HTMLAttributes } from 'astro/types';
 
 import * as R from 'remeda';
-import urlJoin from 'url-join';
 
 import Anchor from '#components/parts/anchor.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { getSiteUrl } from '#lib/utils/routing.ts';
+import { getSiteUrl, joinUrl } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props extends HTMLAttributes<'nav'> {
@@ -90,7 +89,7 @@ const { currentPage, lastPage: pageCount, url } = page;
 const pageBasePath = getSiteUrl(url.current.replace(new RegExp(`/${String(currentPage)}$`), ''));
 
 const getPageNumberLink = (pageNumber: number) =>
-	pageNumber === 1 ? pageBasePath : urlJoin(pageBasePath, String(pageNumber), '/');
+	pageNumber === 1 ? pageBasePath : joinUrl(pageBasePath, String(pageNumber), '/');
 
 const rawPages =
 	pageCount <= pageCountMax

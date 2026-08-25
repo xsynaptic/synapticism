@@ -10,6 +10,7 @@ import ContentHeader from '#components/content/content-header.astro';
 import ContentHero from '#components/content/content-hero.astro';
 import ContentSectionTags from '#components/content/content-section-tags.astro';
 import MainSite from '#components/main/main-site.astro';
+import AuthorCard from '#components/parts/author-card.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
@@ -47,7 +48,7 @@ const { Content } = await render(entry);
 	}}
 >
 	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
-		<ContentHeader title={entry.data.title}>
+		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>
 					<ContentDate
@@ -79,6 +80,7 @@ const { Content } = await render(entry);
 			<Content />
 		</ProseBody>
 		<ContentSectionTags tagIds={tagIds} />
+		<AuthorCard />
 	</article>
 	<SectionRelatedContent entries={relatedContent} />
 	<SectionBacklinks backlinks={backlinks} />

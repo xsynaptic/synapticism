@@ -1,14 +1,16 @@
 ---
 import { Image } from 'astro:assets';
 
+import { MicroformatClassNames } from '#components/types.ts';
 import { getMediaImage, getMediaLqip } from '#lib/utils/media.ts';
 
 interface Props {
 	imgAlt: string;
+	showMicroformats?: boolean | undefined;
 	src: string;
 }
 
-const { imgAlt, src } = Astro.props;
+const { imgAlt, showMicroformats = false, src } = Astro.props;
 
 const image = getMediaImage(src);
 const lqip = getMediaLqip(src);
@@ -18,5 +20,14 @@ const lqip = getMediaLqip(src);
 	class="aspect-square w-16 shrink-0 overflow-hidden rounded bg-primary-200 bg-cover bg-center md:w-20"
 	style={lqip ? `background-image:url(${lqip})` : undefined}
 >
-	<Image alt={imgAlt} class="h-full w-full object-cover" layout="none" src={image} width={160} />
+	<Image
+		alt={imgAlt}
+		class:list={[
+			'h-[100%] w-full object-cover',
+			showMicroformats ? MicroformatClassNames.Photo : undefined,
+		]}
+		layout="none"
+		src={image}
+		width={160}
+	/>
 </div>

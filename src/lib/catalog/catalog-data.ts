@@ -5,7 +5,7 @@ import { performance } from 'node:perf_hooks';
 import type { Catalog } from '#lib/catalog/catalog-factory.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
-import { SITE_YEAR_FOUNDED } from '#constants.ts';
+import { siteYearFounded } from '#constants.ts';
 import { createCatalog } from '#lib/catalog/catalog-factory.ts';
 import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
@@ -56,8 +56,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 			catalogItemsById.set(entry.id, {
 				backlinks: new Set<string>(),
 				collection: entry.collection,
-				dateCreated:
-					parseContentDate(entry.data.dateCreated) ?? new Date(String(SITE_YEAR_FOUNDED)),
+				dateCreated: parseContentDate(entry.data.dateCreated) ?? new Date(String(siteYearFounded)),
 				dateUpdated: parseContentDate(
 					'dateUpdated' in entry.data ? entry.data.dateUpdated : undefined,
 				),

@@ -6,11 +6,11 @@ import { parseArgs } from 'node:util';
 import sharp from 'sharp';
 import { glob } from 'zx';
 
-const LQIP_PIXEL_COUNT = 512;
-const LQIP_WEBP_QUALITY = 25;
+const lqipPixelCount = 512;
+const lqipWebpQuality = 25;
 
 // Saturation lift compensates for the desaturation heavy webp compression introduces
-const LQIP_SATURATION = 1.2;
+const lqipSaturation = 1.2;
 
 interface LqipEntry {
 	lqip: string;
@@ -36,16 +36,16 @@ async function generateLqip(filePath: string): Promise<string> {
 
 	const buffer = await image
 		.resize(width, height, { fit: 'fill' })
-		.modulate({ saturation: LQIP_SATURATION })
-		.webp({ quality: LQIP_WEBP_QUALITY })
+		.modulate({ saturation: lqipSaturation })
+		.webp({ quality: lqipWebpQuality })
 		.toBuffer();
 
 	return `data:image/webp;base64,${buffer.toString('base64')}`;
 }
 
 function getPlaceholderDimensions(aspectRatio: number): { height: number; width: number } {
-	const height = Math.sqrt(LQIP_PIXEL_COUNT / aspectRatio);
-	const width = LQIP_PIXEL_COUNT / height;
+	const height = Math.sqrt(lqipPixelCount / aspectRatio);
+	const width = lqipPixelCount / height;
 
 	return { height: Math.round(height), width: Math.round(width) };
 }

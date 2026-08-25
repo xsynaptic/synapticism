@@ -6,11 +6,11 @@ import { Renderer } from 'takumi-js/node';
 
 import type { OgImageEntry } from './content.js';
 
-import { OG_HEIGHT, OG_JPEG_QUALITY, OG_PANEL_WIDTH, OG_WIDTH } from './constants.js';
+import { ogHeight, ogJpegQuality, ogPanelWidth, ogWidth } from './constants.js';
 import { getOgElement } from './element.js';
 
 // The 8 MiB default evicts outlines mid-run once a corpus draws more than about a thousand glyphs
-const GLYPH_CACHE_BYTES = 64 * 1024 * 1024;
+const glyphCacheBytes = 64 * 1024 * 1024;
 
 export interface ProcessedImage {
 	data: Buffer;
@@ -21,7 +21,7 @@ export interface ProcessedImage {
 // Fonts and glyph outlines live on the renderer, so build one and reuse it for every card
 export function createRenderer(fonts: Array<Font>) {
 	// Read when a cache is first used, so this has to run before the first render
-	setGlyphCacheMaxBytes(GLYPH_CACHE_BYTES);
+	setGlyphCacheMaxBytes(glyphCacheBytes);
 
 	const renderer = new Renderer();
 
@@ -29,10 +29,10 @@ export function createRenderer(fonts: Array<Font>) {
 		return render(getOgElement(entry, image), {
 			fonts,
 			format: 'jpeg',
-			height: OG_HEIGHT,
-			quality: OG_JPEG_QUALITY,
+			height: ogHeight,
+			quality: ogJpegQuality,
 			renderer,
-			width: OG_WIDTH,
+			width: ogWidth,
 		});
 	};
 }
@@ -41,7 +41,7 @@ export function createRenderer(fonts: Array<Font>) {
 // Raw RGBA hands off to Takumi without an encode, so the card takes one lossy pass instead of two
 export async function processImage(imagePath: string): Promise<ProcessedImage> {
 	const { data, info } = await sharp(imagePath)
-		.resize({ fit: 'cover', height: OG_HEIGHT, position: 'attention', width: OG_PANEL_WIDTH })
+		.resize({ fit: 'cover', height: ogHeight, position: 'attention', width: ogPanelWidth })
 		.ensureAlpha()
 		.raw()
 		.toBuffer({ resolveWithObject: true });

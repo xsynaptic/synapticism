@@ -7,6 +7,7 @@ import ContentDate from '#components/content/content-date.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentHero from '#components/content/content-hero.astro';
 import MainSite from '#components/main/main-site.astro';
+import AuthorCard from '#components/parts/author-card.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import { MicroformatClassNames } from '#components/types.ts';
@@ -42,7 +43,7 @@ const { Content } = await render(entry);
 		class:list={['entry-detail', MicroformatClassNames.Entry]}
 		{...getPagefindBodyProp(entry.data.hideSearch)}
 	>
-		<ContentHeader title={entry.data.title}>
+		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>
 					<ContentDate
@@ -73,5 +74,6 @@ const { Content } = await render(entry);
 		<ProseBody class:list={['content', 'e-content', 'pb-4']} data-reading-frame>
 			<Content />
 		</ProseBody>
+		<AuthorCard />
 	</article>
 </MainSite>

@@ -1,8 +1,8 @@
 import * as R from 'remeda';
-import urlJoin from 'url-join';
 
-import { OPEN_GRAPH_IMAGE_FALLBACK_COUNT, OPEN_GRAPH_IMAGE_FALLBACK_PREFIX } from '#constants.ts';
+import { openGraphImageFallbackCount, openGraphImageFallbackPrefix } from '#constants.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
+import { joinUrl } from '#lib/utils/routing.ts';
 
 const { BASE_URL, PROD, SITE } = import.meta.env;
 
@@ -40,8 +40,8 @@ export function getSeoHideSearch(shouldHide: boolean | undefined) {
 }
 
 export function getSeoImageFallback() {
-	return urlJoin(
+	return joinUrl(
 		PROD ? SITE : BASE_URL,
-		`${OPEN_GRAPH_IMAGE_FALLBACK_PREFIX}-${String(R.randomInteger(1, OPEN_GRAPH_IMAGE_FALLBACK_COUNT))}.jpg`,
+		`${openGraphImageFallbackPrefix}-${String(R.randomInteger(1, openGraphImageFallbackCount))}.jpg`,
 	);
 }

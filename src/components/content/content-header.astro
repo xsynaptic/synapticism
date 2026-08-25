@@ -1,12 +1,14 @@
 ---
+import { MicroformatClassNames } from '#components/types.ts';
 import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
 	class?: string | undefined;
 	title: string;
+	titleUrl?: string | undefined;
 }
 
-const { class: className, title } = Astro.props;
+const { class: className, title, titleUrl } = Astro.props;
 
 const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 ---
@@ -16,7 +18,19 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 		class="-ml-0.5 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 md:text-3xl lg:text-4xl"
 		data-pagefind-weight="3"
 	>
-		{title}
+		{
+			titleUrl ? (
+				<a
+					class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+					href={titleUrl}
+					rel="bookmark"
+				>
+					{title}
+				</a>
+			) : (
+				title
+			)
+		}
 	</h1>
 	{
 		subtitle ? (

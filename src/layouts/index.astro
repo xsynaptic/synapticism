@@ -4,6 +4,7 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
 import DateDisplay from '#components/parts/date-display.astro';
+import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getContentUrl, getSiteUrl } from '#lib/utils/routing.ts';
@@ -75,29 +76,41 @@ const showProjects = false as boolean;
 			>
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.recently')}</h2>
-					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
+					<span aria-hidden="true" class="h-[1px] flex-1 bg-primary-200" />
 				</div>
-				<ul class="mt-6 flex flex-col">
+				<ul class:list={['mt-6 flex flex-col', MicroformatClassNames.Feed]}>
 					{streamItems.map((item, index) => {
 						const primaryLink = item.links?.[0];
 
 						return (
 							<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
-								<article class="flex gap-3 sm:gap-4">
+								<article class:list={['flex gap-3 sm:gap-4', MicroformatClassNames.Entry]}>
 									{item.imageId ? (
-										<ContentThumbnail imgAlt={item.title} src={item.imageId} />
+										<ContentThumbnail
+											imgAlt={item.title}
+											showMicroformats={true}
+											src={item.imageId}
+										/>
 									) : undefined}
 									<div class="flex min-w-0 flex-col gap-2">
 										<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
 											<a
-												class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
+												class:list={[
+													'text-primary-800 transition-colors duration-200 hover:text-accent-700',
+													MicroformatClassNames.Url,
+													MicroformatClassNames.Name,
+												]}
 												href={item.url}
 											>
 												{item.title}
 											</a>
 										</h3>
 										<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
-											<DateDisplay date={item.dateCreated} datePreset={DatePresetEnum.Medium} />
+											<DateDisplay
+												class={MicroformatClassNames.DatePublished}
+												date={item.dateCreated}
+												datePreset={DatePresetEnum.Medium}
+											/>
 											{primaryLink ? (
 												<span>
 													{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
@@ -106,7 +119,10 @@ const showProjects = false as boolean;
 										</div>
 										{item.description ? (
 											<p
-												class="max-w-[68ch] leading-relaxed text-pretty text-primary-600"
+												class:list={[
+													'max-w-[68ch] leading-relaxed text-pretty text-primary-600',
+													MicroformatClassNames.Summary,
+												]}
 												set:html={item.description}
 											/>
 										) : undefined}
@@ -151,7 +167,7 @@ const showProjects = false as boolean;
 			<section class="content-column mt-14 pb-8 md:mt-20">
 				<div class="flex items-center gap-4">
 					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.selectedWork')}</h2>
-					<span aria-hidden="true" class="h-px flex-1 bg-primary-200" />
+					<span aria-hidden="true" class="h-[1px] flex-1 bg-primary-200" />
 				</div>
 				<ul class="mt-6 flex flex-col gap-5">
 					{selectedProjects.map((item) => (

@@ -5,7 +5,7 @@ import { countWords } from '@xsynaptic/word-count';
 import { CUSTOM_CACHE_PATH } from 'astro:env/server';
 import * as R from 'remeda';
 
-import { MDX_COMPONENTS_TO_STRIP } from '#constants.ts';
+import { mdxComponentsToStrip } from '#constants.ts';
 import { getSqliteCacheInstance, hash } from '#lib/utils/cache.ts';
 import { renderMarkdownInline, stripMdxComponents } from '#lib/utils/text.ts';
 
@@ -14,7 +14,7 @@ const cacheInstance = getSqliteCacheInstance(CUSTOM_CACHE_PATH, 'word-counts');
 function computeWordCount(body: string): number {
 	return R.pipe(
 		body,
-		(body) => stripMdxComponents(body, MDX_COMPONENTS_TO_STRIP),
+		(body) => stripMdxComponents(body, mdxComponentsToStrip),
 		renderMarkdownInline,
 		stripTags,
 		countWords,

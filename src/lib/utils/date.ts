@@ -1,4 +1,4 @@
-import { SITE_YEAR_FOUNDED } from '#constants.ts';
+import { siteYearFounded } from '#constants.ts';
 
 export const DatePresetEnum = {
 	Long: 'long',
@@ -19,9 +19,9 @@ interface CollectionEntryWithStandardDates {
 export function getCopyrightYears(): string {
 	const currentYear = new Date().getFullYear();
 
-	if (currentYear <= SITE_YEAR_FOUNDED) return String(SITE_YEAR_FOUNDED);
+	if (currentYear <= siteYearFounded) return String(siteYearFounded);
 
-	return `${String(SITE_YEAR_FOUNDED)}\u{2013}${String(currentYear)}`;
+	return `${String(siteYearFounded)}\u{2013}${String(currentYear)}`;
 }
 
 // A note authored date-only lands on UTC midnight

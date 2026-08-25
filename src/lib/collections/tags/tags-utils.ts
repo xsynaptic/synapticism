@@ -37,14 +37,14 @@ export async function queryTagsIndex() {
 	return R.pipe(entries, R.filter(filterHasEntries), R.sort(sortByEntryCount));
 }
 
-const NON_ALPHABETIC_GROUP = '#';
+const nonAlphabeticGroup = '#';
 
 export function groupTagsByLetter(tags: Array<CollectionEntry<'tags'>>) {
 	const groups = new Map<string, Array<CollectionEntry<'tags'>>>();
 
 	for (const tag of tags) {
 		const initial = tag.data.title.charAt(0).toUpperCase();
-		const letter = /[A-Z]/.test(initial) ? initial : NON_ALPHABETIC_GROUP;
+		const letter = /[A-Z]/.test(initial) ? initial : nonAlphabeticGroup;
 
 		const group = groups.get(letter);
 
@@ -62,9 +62,9 @@ export function groupTagsByLetter(tags: Array<CollectionEntry<'tags'>>) {
 
 	// Alphabetic buckets in order, then the non-alphabetic bucket last
 	const alphabetic = groupList
-		.filter((group) => group.letter !== NON_ALPHABETIC_GROUP)
+		.filter((group) => group.letter !== nonAlphabeticGroup)
 		.sort((groupA, groupB) => groupA.letter.localeCompare(groupB.letter));
-	const nonAlphabetic = groupList.filter((group) => group.letter === NON_ALPHABETIC_GROUP);
+	const nonAlphabetic = groupList.filter((group) => group.letter === nonAlphabeticGroup);
 
 	return [...alphabetic, ...nonAlphabetic];
 }

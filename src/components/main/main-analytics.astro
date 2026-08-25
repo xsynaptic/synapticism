@@ -11,6 +11,9 @@ const { isViewTransitionsEnabled, umamiDomain, umamiId, ...props } = Astro.props
 ---
 
 <script
+	data-do-not-track={true}
+	data-exclude-hash={true}
+	data-performance={true}
 	data-website-id={umamiId}
 	defer
 	src={`${umamiDomain}/script.js`}

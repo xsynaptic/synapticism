@@ -13,6 +13,11 @@ export default function sitemapIntegration(options?: Options): AstroIntegration 
 		filter: (page) => {
 			const path = new URL(page).pathname.replace(/\/$/, '');
 
+			// Paginated list pages (e.g. /posts/2, /notes/3) duplicate the first page
+			if (/\/\d+$/.test(path)) {
+				return false;
+			}
+
 			return excludePrefixes.every((prefix) => !(path === prefix || path.startsWith(prefix + '/')));
 		},
 	});

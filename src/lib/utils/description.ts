@@ -1,7 +1,7 @@
 import { sanitizeHtml, stripTags } from '@xsynaptic/unified-tools';
 import * as R from 'remeda';
 
-import { MDX_COMPONENTS_TO_STRIP } from '#constants.ts';
+import { mdxComponentsToStrip } from '#constants.ts';
 import {
 	renderMarkdownInline,
 	stripFootnoteReferences,
@@ -48,7 +48,7 @@ function getDescription(
 	if (entry.body) {
 		return R.pipe(
 			entry.body,
-			(body) => stripMdxComponents(body, MDX_COMPONENTS_TO_STRIP),
+			(body) => stripMdxComponents(body, mdxComponentsToStrip),
 			stripFootnoteReferences,
 			(text) => textClipper(text.trim(), { wordCount: options.wordCount ?? wordCountFinal }),
 		);

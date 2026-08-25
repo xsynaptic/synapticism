@@ -2,12 +2,12 @@ import { glob } from 'astro/loaders';
 import { defineCollection } from 'astro:content';
 import { z } from 'zod';
 
-import { CONTENT_COLLECTIONS_PATH } from '#constants.js';
+import { contentCollectionsPath } from '#constants.js';
 import { DateStringSchema, StylizedTextSchema } from '#lib/schemas/content.js';
 import { ImageFeaturedSchema } from '#lib/schemas/image-featured.js';
 
 export const tags = defineCollection({
-	loader: glob({ base: `${CONTENT_COLLECTIONS_PATH}/tags`, pattern: '**/[^_]*.(md|mdx)' }),
+	loader: glob({ base: `${contentCollectionsPath}/tags`, pattern: '**/[^_]*.(md|mdx)' }),
 	schema: z
 		.object({
 			_entryCount: z.number().int().optional(),

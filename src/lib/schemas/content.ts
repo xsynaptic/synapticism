@@ -7,13 +7,13 @@ import { refineTypography } from '#lib/utils/text.ts';
 export const StylizedTextSchema = z.string().transform((value) => refineTypography(value).trim());
 
 // Descriptions should meet basic SEO requirements
-const DESCRIPTION_CHARACTER_LENGTH = 30;
+const descriptionCharacterLength = 30;
 
 // Markdown may be present so we don't further transform the value
 const DescriptionSchema = z
 	.string()
-	.min(DESCRIPTION_CHARACTER_LENGTH, {
-		message: `Descriptions must be ${String(DESCRIPTION_CHARACTER_LENGTH)} or more characters long.`,
+	.min(descriptionCharacterLength, {
+		message: `Descriptions must be ${String(descriptionCharacterLength)} or more characters long.`,
 	})
 	.transform((value) => value.trim());
 

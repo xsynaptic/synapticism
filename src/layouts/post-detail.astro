@@ -12,12 +12,13 @@ import ContentHero from '#components/content/content-hero.astro';
 import ContentSectionProjects from '#components/content/content-section-projects.astro';
 import ContentSectionTags from '#components/content/content-section-tags.astro';
 import MainSite from '#components/main/main-site.astro';
+import AuthorCard from '#components/parts/author-card.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionNavigation from '#components/sections/section-navigation.astro';
 import { MicroformatClassNames } from '#components/types.ts';
-import { SITE_AUTHOR_NAME } from '#constants.ts';
+import { siteAuthorName } from '#constants.ts';
 import { getPostSchema } from '#lib/collections/posts/posts-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
@@ -63,10 +64,10 @@ const minutesRead =
 			dateUpdated: entry.data.dateUpdated,
 		}),
 	}}
-	schemas={getPostSchema(entry, { authorName: SITE_AUTHOR_NAME, url: Astro.url.toString() })}
+	schemas={getPostSchema(entry, { authorName: siteAuthorName, url: Astro.url.toString() })}
 >
 	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
-		<ContentHeader title={entry.data.title}>
+		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
 			<Fragment slot="header-subtitle">
 				<DividedItem>
 					<ContentDate
@@ -106,6 +107,7 @@ const minutesRead =
 		</ProseBody>
 		<ContentSectionProjects projectIds={projectIds} />
 		<ContentSectionTags tagIds={tagIds} />
+		<AuthorCard />
 	</article>
 	<SectionBacklinks backlinks={backlinks} />
 	<SectionNavigation

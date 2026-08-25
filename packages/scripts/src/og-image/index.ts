@@ -9,7 +9,7 @@ import type { OgImageEntry } from './content.js';
 import type { ProcessedImage } from './generate.js';
 
 import { batchEntriesBySourceImage } from './batch.js';
-import { ASTRO_CACHE_DIR, MEDIA_DIR, OG_LEDGER_PATH, OG_TEMPLATE_VERSION } from './constants.js';
+import { astroCacheDir, mediaDir, ogLedgerPath, ogTemplateVersion } from './constants.js';
 import { getOgImageEntries } from './content.js';
 import { loadOgFonts } from './fonts.js';
 import { createRenderer, processImage } from './generate.js';
@@ -19,8 +19,8 @@ const { values } = parseArgs({
 	args: process.argv.slice(2),
 	options: {
 		'cache-path': { default: '.cache/og', type: 'string' },
-		'data-store-path': { default: path.join(ASTRO_CACHE_DIR, 'data-store.json'), type: 'string' },
-		'media-path': { default: MEDIA_DIR, type: 'string' },
+		'data-store-path': { default: path.join(astroCacheDir, 'data-store.json'), type: 'string' },
+		'media-path': { default: mediaDir, type: 'string' },
 		'output-path': { default: 'dist/og', type: 'string' },
 		'root-path': { default: process.cwd(), type: 'string' },
 	},
@@ -44,7 +44,7 @@ async function main() {
 	const rootPath = values['root-path'];
 	const cachePath = path.resolve(rootPath, values['cache-path']);
 	const dataStorePath = path.resolve(rootPath, values['data-store-path']);
-	const ledgerPath = path.resolve(rootPath, OG_LEDGER_PATH);
+	const ledgerPath = path.resolve(rootPath, ogLedgerPath);
 	const mediaPath = path.resolve(rootPath, values['media-path']);
 	const outputPath = path.resolve(rootPath, values['output-path']);
 
@@ -55,7 +55,7 @@ async function main() {
 	const cache = await createOutputCache({
 		dir: cachePath,
 		ledgerPath,
-		version: OG_TEMPLATE_VERSION,
+		version: ogTemplateVersion,
 	});
 
 	console.log(chalk.blue('Loading fonts...'));

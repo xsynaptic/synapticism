@@ -4,12 +4,12 @@ import type { OgImageEntry } from './content.js';
 import type { ProcessedImage } from './generate.js';
 
 import {
-	OG_HEIGHT,
-	OG_PADDING_FULL,
-	OG_PADDING_SPLIT,
-	OG_PANEL_WIDTH,
-	OG_SEAM_WIDTH,
-	OG_WIDTH,
+	ogHeight,
+	ogPaddingFull,
+	ogPaddingSplit,
+	ogPanelWidth,
+	ogSeamWidth,
+	ogWidth,
 } from './constants.js';
 
 // Mirrors src/styles/main/theme.css; scale positions given so they trace back to the site
@@ -21,16 +21,16 @@ const colors = {
 } as const;
 
 export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
-	const columnWidth = image ? OG_WIDTH - OG_PANEL_WIDTH - OG_SEAM_WIDTH : OG_WIDTH;
-	const padding = image ? OG_PADDING_SPLIT : OG_PADDING_FULL;
+	const columnWidth = image ? ogWidth - ogPanelWidth - ogSeamWidth : ogWidth;
+	const padding = image ? ogPaddingSplit : ogPaddingFull;
 
 	return (
 		<div
 			style={{
 				backgroundColor: colors.carbon,
 				display: 'flex',
-				height: px(OG_HEIGHT),
-				width: px(OG_WIDTH),
+				height: px(ogHeight),
+				width: px(ogWidth),
 			}}
 		>
 			<div
@@ -98,8 +98,8 @@ export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
 						style={{
 							backgroundColor: colors.accent,
 							display: 'flex',
-							height: px(OG_HEIGHT),
-							width: px(OG_SEAM_WIDTH),
+							height: px(ogHeight),
+							width: px(ogSeamWidth),
 						}}
 					/>
 					<Bitmap data={image.data} height={image.height} width={image.width} />
@@ -116,7 +116,7 @@ function px(value: number): string {
 // Scale the title down as it lengthens so short titles stay punchy and long ones still fit
 // Thresholds ride the measure: the split layout gives the text far less room
 function titleFontSize(length: number, columnWidth: number): number {
-	const scale = columnWidth / OG_WIDTH;
+	const scale = columnWidth / ogWidth;
 
 	if (length <= 32 * scale) return 72;
 	if (length <= 64 * scale) return 60;

@@ -9,6 +9,9 @@ const strings = {
 	'site.title': 'Synapticism',
 	'site.topButton': 'Back to top',
 
+	// Author
+	'author.role': 'Web Developer',
+
 	// Collection labels
 	'collection.notes.plural': 'Notes',
 	'collection.notes.singular': 'Note',

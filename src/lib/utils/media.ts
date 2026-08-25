@@ -5,7 +5,7 @@ import path from 'node:path';
 
 // Frontmatter stores media as paths relative to packages/content/media (e.g. 2026/05/x.jpg)
 // Astro can only optimize images it discovers statically, so the glob must be a literal
-const MEDIA_ROOT = '/packages/content/media';
+const mediaRoot = '/packages/content/media';
 
 const mediaImages = import.meta.glob<{ default: ImageMetadata }>(
 	'/packages/content/media/**/*.{avif,jpeg,jpg,png,webp}',
@@ -13,7 +13,7 @@ const mediaImages = import.meta.glob<{ default: ImageMetadata }>(
 );
 
 export function getMediaImage(mediaPath: string): ImageMetadata {
-	const key = `${MEDIA_ROOT}/${mediaPath}`;
+	const key = `${mediaRoot}/${mediaPath}`;
 	const image = mediaImages[key];
 	if (!image) {
 		throw new Error(`Media image not found: "${mediaPath}" (expected a file at ${key})`);

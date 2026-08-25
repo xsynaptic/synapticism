@@ -5,7 +5,7 @@ import { getDataStoreCollection, loadDataStore } from './data-store.js';
 
 // Singular labels for the card's meta line; kept local because the site's i18n strings
 // sit behind an Astro path alias this script can't resolve
-const OG_COLLECTIONS = {
+const ogCollections = {
 	notes: 'note',
 	pages: 'page',
 	posts: 'post',
@@ -33,7 +33,7 @@ export function getOgImageEntries({
 	const collections = loadDataStore(dataStorePath);
 	const entries: Array<OgImageEntry> = [];
 
-	for (const [collection, label] of Object.entries(OG_COLLECTIONS)) {
+	for (const [collection, label] of Object.entries(ogCollections)) {
 		for (const entry of getDataStoreCollection(collections, collection)) {
 			const title = entry.data.title;
 

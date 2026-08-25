@@ -9,7 +9,7 @@ import { render } from 'astro:content';
 import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
-import { MILLISECONDS_PER_HOUR, SITE_TIMEZONE_OFFSET_HOURS } from '#constants.ts';
+import { millisecondsPerHour, siteTimezoneOffsetHours } from '#constants.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
@@ -63,7 +63,7 @@ const generateFeedItem = async ({
 		link: getContentUrl(entry.collection, entry.id),
 		// Dates sit at 00:00 UTC; re-anchor to the site timezone so today's entries are never future-dated
 		pubDate: pubDate
-			? new Date(pubDate.getTime() - SITE_TIMEZONE_OFFSET_HOURS * MILLISECONDS_PER_HOUR)
+			? new Date(pubDate.getTime() - siteTimezoneOffsetHours * millisecondsPerHour)
 			: undefined,
 		title: entry.data.title,
 		...(description ? { description } : {}),

@@ -10,6 +10,7 @@ import MainSite from '#components/main/main-site.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import Pagination from '#components/parts/pagination.astro';
+import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
@@ -40,29 +41,35 @@ const items = await Promise.all(
 	<ContentHeader title={t('notes.title')}>
 		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
 	</ContentHeader>
-	{
-		items.map(({ Content, entry }) => {
-			const primaryLink = entry.data.links?.[0];
+	<div class={MicroformatClassNames.Feed}>
+		{
+			items.map(({ Content, entry }) => {
+				const primaryLink = entry.data.links?.[0];
 
-			return (
-				<ContentExcerpt class="mb-8" entryUrl={getContentUrl('notes', entry.id)}>
-					<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
-					<Fragment slot="excerpt-subtitle">
-						<DateDisplay date={entry.data.dateCreated} datePreset={DatePresetEnum.Medium} />
-						{primaryLink ? (
-							<span>
-								{getSourceDomain(primaryLink.url)}
-								<span aria-hidden="true" class="ml-1">
-									↗
+				return (
+					<ContentExcerpt class="mb-8" entryUrl={getContentUrl('notes', entry.id)}>
+						<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
+						<Fragment slot="excerpt-subtitle">
+							<DateDisplay
+								class={MicroformatClassNames.DatePublished}
+								date={entry.data.dateCreated}
+								datePreset={DatePresetEnum.Medium}
+							/>
+							{primaryLink ? (
+								<span>
+									{getSourceDomain(primaryLink.url)}
+									<span aria-hidden="true" class="ml-1">
+										↗
+									</span>
 								</span>
-							</span>
-						) : undefined}
-					</Fragment>
-					<Content />
-				</ContentExcerpt>
-			);
-		})
-	}
+							) : undefined}
+						</Fragment>
+						<Content />
+					</ContentExcerpt>
+				);
+			})
+		}
+	</div>
 	<div class="content-column">
 		<Pagination class="mt-4 mb-8 md:mt-8" page={page} />
 	</div>
