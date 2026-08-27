@@ -15,72 +15,101 @@ export interface Cell {
 	y: number;
 }
 
+interface GridBounds {
+	colEnd: number;
+	colStart: number;
+	rowEnd: number;
+	rowStart: number;
+}
+
 interface MacroField {
 	samples: Array<number>;
 }
 
 export function layoutTiles(options: ResolvedOptions): Array<Cell> {
-	const { groutWidth, height, rootSeed, seamless, stagger, tileSize, width } = options;
+	const { groutWidth, rootSeed, seamless, stagger, tileSize } = options;
 	const cellSize = tileSize + groutWidth;
-
-	// Non-seamless over-provisions a ring so partial tiles bleed off the edges
-	const colStart = seamless ? 0 : -1;
-	const rowStart = seamless ? 0 : -1;
-	const colEnd = seamless ? Math.round(width / cellSize) : Math.ceil(width / cellSize) + 1;
-	const rowEnd = seamless ? Math.round(height / cellSize) : Math.ceil(height / cellSize) + 1;
-
+	const bounds = getGridBounds(options, cellSize);
 	const macroField = seamless ? undefined : buildMacroField(rootSeed);
 	const cells: Array<Cell> = [];
 
-	for (let row = rowStart; row < rowEnd; row += 1) {
+	for (let row = bounds.rowStart; row < bounds.rowEnd; row += 1) {
+		// `%` keeps the sign of the dividend, so negative rows need the +2 wrap to alternate
 		const staggerOffsetX = ((row % 2) + 2) % 2 === 1 ? cellSize * stagger : 0;
-		for (let col = colStart; col < colEnd; col += 1) {
-			const rng = mulberry32(cellSeed(rootSeed, col, row));
 
-			const baseMix = lerp(options.colorA, options.colorB, rng());
+		for (let col = bounds.colStart; col < bounds.colEnd; col += 1) {
+			const cell = buildCell({ cellSize, col, macroField, options, row, staggerOffsetX });
 
-			const hueShift = signed(rng) * JITTER.hueDegrees * options.jitter;
-			const saturationShift = signed(rng) * JITTER.saturation * options.jitter;
-			const lightnessShift = signed(rng) * JITTER.lightness * options.jitter;
-			const jittered = jitterHsl(baseMix, hueShift, saturationShift, lightnessShift);
-
-			const cellOriginX = col * cellSize + staggerOffsetX;
-			const cellOriginY = row * cellSize;
-
-			let baseColor = jittered;
-			if (macroField) {
-				const macroValue = sampleMacroField(
-					macroField,
-					(cellOriginX + cellSize / 2) / Math.max(1, width),
-					(cellOriginY + cellSize / 2) / Math.max(1, height),
-				);
-				const macroDelta = (macroValue - 0.5) * MACRO.lightnessRange * options.macroLighting;
-				baseColor = shiftLightness(jittered, macroDelta);
-			}
-
-			const cell: Cell = {
-				baseColor,
-				glossClumpVariant: rng() < GLOSS.variantSplit ? 0 : 1,
-				glossIntensity: GLOSS.intensityMin + rng() * GLOSS.intensityRange,
-				size: tileSize,
-				tiltX: signed(rng) * TILT.spread,
-				tiltY: signed(rng) * TILT.spread,
-				x: cellOriginX + groutWidth / 2 + signed(rng) * groutWidth * JITTER.drift,
-				y: cellOriginY + groutWidth / 2 + signed(rng) * groutWidth * JITTER.drift,
-			};
-
-			// Staggered rows overhang the right edge; re-emit them on the left so the unit wraps
-			const offsetsX = seamless ? wrapOffsets(cell.x, cell.size, width) : [0];
-			const offsetsY = seamless ? wrapOffsets(cell.y, cell.size, height) : [0];
-			for (const offsetX of offsetsX) {
-				for (const offsetY of offsetsY) {
-					cells.push({ ...cell, x: cell.x + offsetX, y: cell.y + offsetY });
-				}
-			}
+			cells.push(...wrapCell(cell, options));
 		}
 	}
 
 	return cells;
+}
+
+// Macro lighting is a slow gradient across the whole canvas, so it can't wrap a seamless unit
+function applyMacroLighting(
+	color: RgbColor,
+	macroField: MacroField | undefined,
+	options: ResolvedOptions,
+	centerX: number,
+	centerY: number,
+): RgbColor {
+	if (!macroField) return color;
+
+	const macroValue = sampleMacroField(
+		macroField,
+		centerX / Math.max(1, options.width),
+		centerY / Math.max(1, options.height),
+	);
+
+	return shiftLightness(color, (macroValue - 0.5) * MACRO.lightnessRange * options.macroLighting);
+}
+
+// Every draw pulls from one seeded stream, so the property order below is load-bearing
+function buildCell({
+	cellSize,
+	col,
+	macroField,
+	options,
+	row,
+	staggerOffsetX,
+}: {
+	cellSize: number;
+	col: number;
+	macroField: MacroField | undefined;
+	options: ResolvedOptions;
+	row: number;
+	staggerOffsetX: number;
+}): Cell {
+	const { groutWidth, jitter, rootSeed, tileSize } = options;
+	const rng = mulberry32(cellSeed(rootSeed, col, row));
+
+	const baseMix = lerp(options.colorA, options.colorB, rng());
+	const hueShift = signed(rng) * JITTER.hueDegrees * jitter;
+	const saturationShift = signed(rng) * JITTER.saturation * jitter;
+	const lightnessShift = signed(rng) * JITTER.lightness * jitter;
+	const jittered = jitterHsl(baseMix, hueShift, saturationShift, lightnessShift);
+
+	const cellOriginX = col * cellSize + staggerOffsetX;
+	const cellOriginY = row * cellSize;
+
+	return {
+		baseColor: applyMacroLighting(
+			jittered,
+			macroField,
+			options,
+			cellOriginX + cellSize / 2,
+			cellOriginY + cellSize / 2,
+		),
+		glossClumpVariant: rng() < GLOSS.variantSplit ? 0 : 1,
+		glossIntensity: GLOSS.intensityMin + rng() * GLOSS.intensityRange,
+		size: tileSize,
+		tiltX: signed(rng) * TILT.spread,
+		tiltY: signed(rng) * TILT.spread,
+		x: cellOriginX + groutWidth / 2 + signed(rng) * groutWidth * JITTER.drift,
+		y: cellOriginY + groutWidth / 2 + signed(rng) * groutWidth * JITTER.drift,
+	};
 }
 
 function buildMacroField(rootSeed: number): MacroField {
@@ -92,6 +121,27 @@ function buildMacroField(rootSeed: number): MacroField {
 		}
 	}
 	return { samples };
+}
+
+function getGridBounds(options: ResolvedOptions, cellSize: number): GridBounds {
+	const { height, seamless, width } = options;
+
+	// Non-seamless over-provisions a ring so partial tiles bleed off the edges
+	if (!seamless) {
+		return {
+			colEnd: Math.ceil(width / cellSize) + 1,
+			colStart: -1,
+			rowEnd: Math.ceil(height / cellSize) + 1,
+			rowStart: -1,
+		};
+	}
+
+	return {
+		colEnd: Math.round(width / cellSize),
+		colStart: 0,
+		rowEnd: Math.round(height / cellSize),
+		rowStart: 0,
+	};
 }
 
 function sampleMacroField(field: MacroField, normalizedX: number, normalizedY: number): number {
@@ -111,6 +161,21 @@ function sampleMacroField(field: MacroField, normalizedX: number, normalizedY: n
 	const top = topLeft + (topRight - topLeft) * fractionX;
 	const bottom = bottomLeft + (bottomRight - bottomLeft) * fractionX;
 	return top + (bottom - top) * fractionY;
+}
+
+// Staggered rows overhang the right edge; re-emit them on the left so the unit wraps
+function wrapCell(cell: Cell, options: ResolvedOptions): Array<Cell> {
+	if (!options.seamless) return [cell];
+
+	const wrapped: Array<Cell> = [];
+
+	for (const offsetX of wrapOffsets(cell.x, cell.size, options.width)) {
+		for (const offsetY of wrapOffsets(cell.y, cell.size, options.height)) {
+			wrapped.push({ ...cell, x: cell.x + offsetX, y: cell.y + offsetY });
+		}
+	}
+
+	return wrapped;
 }
 
 function wrapOffsets(start: number, size: number, extent: number): Array<number> {

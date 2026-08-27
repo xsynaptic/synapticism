@@ -13,71 +13,53 @@ export interface GeneratedTile {
 	width: number;
 }
 
+interface CellParts {
+	glossAlpha: [Array<string>, Array<string>];
+	tileBody: Array<string>;
+}
+
+// Each optional layer costs a filter in <defs> and a pass at paint time; skip them at zero strength
+interface TileLayers {
+	gloss: boolean;
+	groutGrain: boolean;
+	tileGrain: boolean;
+}
+
 export function generateTileSvg(input: TileInput): GeneratedTile {
 	const options = resolveOptions(input);
 	const cells = layoutTiles(options);
-	const { gloss, glossBlend, grain, grainGrout, grout, height, rootSeed, seamless, width } =
-		options;
+	const { glossBlend, grout, height, rootSeed, seamless, width } = options;
 
 	const turbulenceSeed = rootSeed & 0xff;
-	const showGloss = gloss > 0;
-	const showTileGrain = grain > 0;
-	const showGroutGrain = grainGrout > 0;
+	const layers: TileLayers = {
+		gloss: options.gloss > 0,
+		groutGrain: options.grainGrout > 0,
+		tileGrain: options.grain > 0,
+	};
 
-	// Every cell shares one geometry, so body (#t) and gloss (#g) are defined once and instanced
-	// Per-cell colour rides in on `fill`/`fill-opacity`, which inherit through <use>
-	// Defs are centred on their own origin so each instance transform is just translate + rotate
-	const cornerRadius = Math.max(1, options.tileSize * GEOMETRY.cornerRadiusRatio);
 	const halfTile = options.tileSize / 2;
-	const cellGeometry =
-		` x="${formatSvgNumber(-halfTile)}" y="${formatSvgNumber(-halfTile)}"` +
-		` width="${formatSvgNumber(options.tileSize)}" height="${formatSvgNumber(options.tileSize)}"` +
-		` rx="${formatSvgNumber(cornerRadius)}" ry="${formatSvgNumber(cornerRadius)}"`;
+	const { glossAlpha, tileBody } = buildCellParts(cells, halfTile, layers.gloss);
 
-	const defs =
-		`<clipPath id="tile-clip"><rect width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}"/></clipPath>` +
-		`<g id="t"><rect${cellGeometry}/>${renderBevel(options.tileSize, cornerRadius, options.bevel)}</g>` +
-		(showGloss ? `<rect id="g"${cellGeometry} fill="#fff"/>` : '') +
-		(showTileGrain ? buildTileGrainFilter(options, turbulenceSeed) : '') +
-		(showGloss
-			? buildGlossFilter(options, turbulenceSeed, 0) + buildGlossFilter(options, turbulenceSeed, 1)
-			: '') +
-		(showGroutGrain ? buildGroutGrainFilter(options, turbulenceSeed) : '');
-
-	const tileBodyParts: Array<string> = [];
-	const glossAlphaParts: Array<Array<string>> = [[], []];
-
-	for (const cell of cells) {
-		const transform = buildCellTransform(cell, halfTile);
-
-		tileBodyParts.push(`<use href="#t" fill="${toHex(cell.baseColor)}"${transform}/>`);
-
-		if (showGloss && cell.glossIntensity > 0) {
-			glossAlphaParts[cell.glossClumpVariant]!.push(
-				`<use href="#g" fill-opacity="${formatSvgNumber(cell.glossIntensity)}"${transform}/>`,
-			);
-		}
-	}
-
-	const groutGrainOverlay = showGroutGrain
-		? `<rect width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}" filter="url(#grout-grain)" style="mix-blend-mode:multiply"/>`
-		: '';
 	const glossBlendStyle = glossBlend === 'normal' ? '' : ` style="mix-blend-mode:${glossBlend}"`;
-	const glossGroups = showGloss
-		? `<g filter="url(#tile-gloss-0)"${glossBlendStyle}>${glossAlphaParts[0]!.join('')}</g>` +
-			`<g filter="url(#tile-gloss-1)"${glossBlendStyle}>${glossAlphaParts[1]!.join('')}</g>`
+	const glossGroups = layers.gloss
+		? `<g filter="url(#tile-gloss-0)"${glossBlendStyle}>${glossAlpha[0].join('')}</g>` +
+			`<g filter="url(#tile-gloss-1)"${glossBlendStyle}>${glossAlpha[1].join('')}</g>`
 		: '';
+	const groutGrainOverlay = layers.groutGrain
+		? `<rect${canvasRect(width, height)} filter="url(#grout-grain)" style="mix-blend-mode:multiply"/>`
+		: '';
+	const tileBodyGroup = layers.tileGrain ? `<g filter="url(#tile-grain)">` : '<g>';
 
 	// The SVG is only ever painted as a background image, which needs a natural size to scale against
 	const svg =
 		`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${formatSvgNumber(width)} ${formatSvgNumber(height)}"` +
 		` width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}">` +
-		`<defs>${defs}</defs>` +
+		`<defs>${buildDefs(options, layers, turbulenceSeed)}</defs>` +
 		`<g clip-path="url(#tile-clip)">` +
-		`<rect width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}" fill="${grout}"/>` +
+		`<rect${canvasRect(width, height)} fill="${grout}"/>` +
 		groutGrainOverlay +
-		(showTileGrain ? `<g filter="url(#tile-grain)">` : '<g>') +
-		tileBodyParts.join('') +
+		tileBodyGroup +
+		tileBody.join('') +
 		`</g>` +
 		glossGroups +
 		`</g>` +
@@ -110,6 +92,26 @@ export function tileBackgroundStyle(tile: GeneratedTile): Record<string, string>
 	};
 }
 
+// Per-cell colour rides in on `fill`/`fill-opacity`, which inherit through <use>
+function buildCellParts(cells: Array<Cell>, halfTile: number, showGloss: boolean): CellParts {
+	const glossAlpha: [Array<string>, Array<string>] = [[], []];
+	const tileBody: Array<string> = [];
+
+	for (const cell of cells) {
+		const transform = buildCellTransform(cell, halfTile);
+
+		tileBody.push(`<use href="#t" fill="${toHex(cell.baseColor)}"${transform}/>`);
+
+		if (showGloss && cell.glossIntensity > 0) {
+			glossAlpha[cell.glossClumpVariant].push(
+				`<use href="#g" fill-opacity="${formatSvgNumber(cell.glossIntensity)}"${transform}/>`,
+			);
+		}
+	}
+
+	return { glossAlpha, tileBody };
+}
+
 // Translate lives in the transform, not in <use x y>: the spec composes those as
 // `transform ∘ translate(x,y)`, so the rotation would resolve in the wrong space
 function buildCellTransform(cell: Cell, halfTile: number): string {
@@ -117,6 +119,29 @@ function buildCellTransform(cell: Cell, halfTile: number): string {
 	const degrees = Math.round((cell.tiltX - cell.tiltY) * TILT.degrees * 10) / 10;
 	if (degrees === 0) return ` transform="${position}"`;
 	return ` transform="${position}rotate(${formatSvgCoord(degrees)})"`;
+}
+
+// Every cell shares one geometry, so body (#t) and gloss (#g) are defined once and instanced
+// Defs are centred on their own origin so each instance transform is just translate + rotate
+function buildDefs(options: ResolvedOptions, layers: TileLayers, turbulenceSeed: number): string {
+	const { height, tileSize, width } = options;
+	const cornerRadius = Math.max(1, tileSize * GEOMETRY.cornerRadiusRatio);
+	const halfTile = tileSize / 2;
+	const cellGeometry =
+		` x="${formatSvgNumber(-halfTile)}" y="${formatSvgNumber(-halfTile)}"` +
+		` width="${formatSvgNumber(tileSize)}" height="${formatSvgNumber(tileSize)}"` +
+		` rx="${formatSvgNumber(cornerRadius)}" ry="${formatSvgNumber(cornerRadius)}"`;
+
+	return (
+		`<clipPath id="tile-clip"><rect${canvasRect(width, height)}/></clipPath>` +
+		`<g id="t"><rect${cellGeometry}/>${renderBevel(tileSize, cornerRadius, options.bevel)}</g>` +
+		(layers.gloss ? `<rect id="g"${cellGeometry} fill="#fff"/>` : '') +
+		(layers.tileGrain ? buildTileGrainFilter(options, turbulenceSeed) : '') +
+		(layers.gloss
+			? buildGlossFilter(options, turbulenceSeed, 0) + buildGlossFilter(options, turbulenceSeed, 1)
+			: '') +
+		(layers.groutGrain ? buildGroutGrainFilter(options, turbulenceSeed) : '')
+	);
 }
 
 // RGB is a constant tint; alpha varies with gamma-curved noise
@@ -183,6 +208,10 @@ function buildTileGrainFilter(options: ResolvedOptions, turbulenceSeed: number):
 		`<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="grainMasked"/></feMerge>` +
 		`</filter>`
 	);
+}
+
+function canvasRect(width: number, height: number): string {
+	return ` width="${formatSvgNumber(width)}" height="${formatSvgNumber(height)}"`;
 }
 
 // Anchor noise to the viewBox; gloss variants hold different tile subsets

@@ -4,11 +4,8 @@ import type { RgbColor } from './utils.ts';
 import { DEFAULT_TILE_THEME, GEOMETRY, TILE_DEFAULTS, TILE_THEMES } from './appearance.ts';
 import { hashSeed, parseHex } from './utils.ts';
 
-export interface ResolvedOptions extends ResolvedColors, ResolvedGeometry {
+export interface ResolvedOptions extends ResolvedColors, ResolvedGeometry, ResolvedGloss {
 	bevel: number;
-	gloss: number;
-	glossBlend: GlossBlend;
-	glossColor: RgbColor;
 	grain: number;
 	grainGrout: number;
 	grout: string;
@@ -57,14 +54,18 @@ interface ResolvedGeometry {
 	width: number;
 }
 
+interface ResolvedGloss {
+	gloss: number;
+	glossBlend: GlossBlend;
+	glossColor: RgbColor;
+}
+
 export function resolveOptions(input: TileInput): ResolvedOptions {
 	return {
 		...resolveColors(input),
 		...resolveGeometry(input),
+		...resolveGloss(input),
 		bevel: input.bevel ?? TILE_DEFAULTS.bevel,
-		gloss: input.gloss ?? TILE_DEFAULTS.gloss,
-		glossBlend: input.glossBlend ?? TILE_DEFAULTS.glossBlend,
-		glossColor: parseHex(input.glossColor ?? TILE_DEFAULTS.glossColor),
 		grain: input.grain ?? TILE_DEFAULTS.grain,
 		grainGrout: input.grainGrout ?? TILE_DEFAULTS.grainGrout,
 		grout: input.grout ?? TILE_DEFAULTS.grout,
@@ -118,5 +119,13 @@ function resolveGeometry(input: TileInput): ResolvedGeometry {
 		stagger,
 		tileSize,
 		width: cols * cellSize,
+	};
+}
+
+function resolveGloss(input: TileInput): ResolvedGloss {
+	return {
+		gloss: input.gloss ?? TILE_DEFAULTS.gloss,
+		glossBlend: input.glossBlend ?? TILE_DEFAULTS.glossBlend,
+		glossColor: parseHex(input.glossColor ?? TILE_DEFAULTS.glossColor),
 	};
 }
