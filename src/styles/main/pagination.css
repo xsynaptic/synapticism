@@ -1,0 +1,102 @@
+/* Chromium supports styling select but most other browsers don't; here we do progressive enhancement */
+.pagination-control {
+	appearance: none;
+}
+
+.pagination-arrow {
+	inset-block: 0;
+	right: calc(var(--spacing) * 1);
+}
+
+.pagination-submit {
+	top: 50%;
+	left: 100%;
+	visibility: hidden;
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(-50%);
+	transition:
+		opacity 120ms cubic-bezier(0.22, 1, 0.36, 1),
+		visibility 120ms cubic-bezier(0.22, 1, 0.36, 1),
+		color 120ms linear;
+
+	&[data-visible] {
+		visibility: visible;
+		pointer-events: auto;
+		opacity: 1;
+	}
+}
+
+@supports (appearance: base-select) {
+	.pagination-control,
+	.pagination-control::picker(select) {
+		appearance: base-select;
+	}
+
+	/* Hide the base-appearance picker icon; we render our own chevron */
+	.pagination-control::picker-icon {
+		display: none;
+	}
+
+	.pagination-control option::checkmark {
+		display: none;
+	}
+
+	.pagination-control option[data-current-page]::after {
+		order: 1;
+		margin-inline-start: calc(var(--spacing) * 2);
+		color: var(--color-accent-400);
+		content: var(--content-bullet);
+	}
+
+	.pagination-control:open {
+		border-color: var(--color-accent-500);
+	}
+
+	.pagination-arrow {
+		@apply transition-transform transition-discrete duration-100;
+	}
+
+	.pagination-control:open ~ .pagination-arrow {
+		transform: scaleY(-1);
+	}
+
+	.pagination-control::picker(select) {
+		min-inline-size: anchor-size(width);
+		max-height: 240px;
+		overflow-y: auto;
+		overscroll-behavior: none;
+		scrollbar-color: color-mix(in srgb, var(--color-primary-400) 40%, transparent) transparent;
+		scrollbar-width: thin;
+		background-color: var(--color-primary-50);
+		border: 1px solid var(--color-primary-300);
+		border-radius: var(--radius-sm);
+		box-shadow: 0 4px 12px rgb(0 0 0 / 12%);
+
+		@media (width >= 768px) {
+			max-height: 300px;
+		}
+	}
+
+	.pagination-control option {
+		display: flex;
+		align-items: center;
+		height: 30px;
+		padding-block: 0;
+		padding-inline: calc(var(--spacing) * 2);
+		font-variant-numeric: tabular-nums;
+		color: var(--color-primary-800);
+		cursor: pointer;
+	}
+
+	.pagination-control option:hover,
+	.pagination-control option:focus {
+		color: var(--color-accent-800);
+		background-color: var(--color-accent-100);
+	}
+
+	.pagination-control option:checked {
+		font-weight: 600;
+		color: var(--color-accent-700);
+	}
+}

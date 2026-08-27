@@ -29,9 +29,9 @@ const strings = {
 
 	// Accessibility (aria-labels, screen-reader text)
 	'aria.footerNav': 'Footer navigation',
-	'aria.goToPage': 'Go to page {page}',
 	'aria.mainNav': 'Main navigation',
 	'aria.nextPage': 'Next page',
+	'aria.pageSelect': 'Select a page',
 	'aria.pagination': 'Pagination',
 	'aria.prevPage': 'Previous page',
 	'aria.streamPagination': 'Stream pagination',
@@ -39,7 +39,9 @@ const strings = {
 	// Pagination
 	'pagination.counter': 'Page {current} of {total}',
 	'pagination.next': 'Next',
+	'pagination.pageNumber': 'Page {page}',
 	'pagination.previous': 'Previous',
+	'pagination.select.submit': 'Go',
 
 	// Section labels
 	'section.backlinks': 'Backlinks',

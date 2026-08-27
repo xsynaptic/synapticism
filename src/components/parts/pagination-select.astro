@@ -1,0 +1,105 @@
+---
+import type { Page } from 'astro';
+import type { HTMLAttributes } from 'astro/types';
+
+import Anchor from '#components/parts/anchor.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { joinUrl } from '#lib/utils/routing.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
+
+interface Props extends HTMLAttributes<'nav'> {
+	page: Page;
+}
+
+const { class: className, page, ...props } = Astro.props;
+
+const { currentPage, lastPage, url } = page;
+
+// Root-relative base path for client-side, same-origin navigation
+// The site leaves `trailingSlash` at Astro's default, so `url.first` arrives bare
+const pageBasePath = joinUrl(url.first ?? url.current, '/');
+---
+
+{
+	lastPage > 1 ? (
+		<pagination-select
+			data-base-path={pageBasePath}
+			data-current-page={String(currentPage)}
+			data-last-page={String(lastPage)}
+			data-page-label={t('pagination.pageNumber')}
+		>
+			<nav
+				aria-label={t('aria.pagination')}
+				class:list={[
+					'flex items-center justify-between gap-4 text-base font-medium tabular-nums select-none md:text-sm',
+					className,
+				]}
+				{...props}
+			>
+				<div class="flex items-center">
+					<span class="text-primary-500" data-pagination-counter>
+						{formatStringTemplate(t('pagination.counter'), {
+							current: currentPage,
+							total: lastPage,
+						})}
+					</span>
+					<form class="relative flex items-center" data-pagination-form hidden={true}>
+						<span class="relative inline-flex items-center">
+							<select
+								aria-label={t('aria.pageSelect')}
+								class="pagination-control overflow-hidden rounded-sm border border-primary-300 bg-transparent py-2 pr-6 pl-2 text-ellipsis whitespace-nowrap tabular-nums transition-colors ease-linear hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-500 md:py-1"
+								data-pagination-control
+							/>
+							<span
+								aria-hidden="true"
+								class="pagination-arrow pointer-events-none absolute flex items-center text-accent-400"
+							>
+								<svg
+									fill="none"
+									height="16"
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									viewBox="0 0 24 24"
+									width="16"
+								>
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</span>
+						</span>
+						<button
+							class="pagination-submit absolute ml-2 cursor-pointer rounded px-2 py-2 font-medium text-accent-500 hover:text-accent-300 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-500 md:py-1"
+							data-pagination-submit
+							type="submit"
+						>
+							{t('pagination.select.submit')}
+						</button>
+					</form>
+				</div>
+				<div class="flex items-center gap-6">
+					{url.prev ? (
+						<span class="flex flex-wrap gap-1">
+							<span class="text-accent-300 select-none">&lsaquo;</span>
+							<Anchor aria-label={t('aria.prevPage')} href={url.prev}>
+								{t('pagination.previous')}
+							</Anchor>
+						</span>
+					) : undefined}
+					{url.next ? (
+						<span class="flex flex-wrap gap-1">
+							<Anchor aria-label={t('aria.nextPage')} href={url.next}>
+								{t('pagination.next')}
+							</Anchor>
+							<span class="text-accent-300 select-none">&rsaquo;</span>
+						</span>
+					) : undefined}
+				</div>
+			</nav>
+		</pagination-select>
+	) : undefined
+}
+
+<script>
+	import '#components/parts/pagination-select.ts';
+</script>

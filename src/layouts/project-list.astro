@@ -10,7 +10,7 @@ import MainSite from '#components/main/main-site.astro';
 import Anchor from '#components/parts/anchor.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
-import Pagination from '#components/parts/pagination.astro';
+import PaginationSelect from '#components/parts/pagination-select.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 
@@ -54,6 +54,6 @@ const { page } = Astro.props;
 				))
 			}
 		</ul>
-		<Pagination class="mt-4 md:mt-8" page={page} />
+		<PaginationSelect class="mt-4 md:mt-8" page={page} />
 	</ContentSection>
 </MainSite>
