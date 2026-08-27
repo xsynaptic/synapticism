@@ -26,7 +26,7 @@
 	},
 	"dependencies": {
 		"@synapticism/lab": "workspace:*",
-		"astro": "^7.2.6"
+		"astro": "^7.2.8"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.10",
@@ -47,7 +47,7 @@
 		"@xsynaptic/word-count": "^1.0.0",
 		"astro-pagefind": "^2.0.1",
 		"astro-seo": "^1.1.0",
-		"eslint": "^10.9.0",
+		"eslint": "^10.9.1",
 		"eslint-plugin-jsx-a11y": "^6.10.2",
 		"eslint-plugin-react-hooks": "^7.1.1",
 		"globals": "^17.11.0",
@@ -58,14 +58,14 @@
 		"prettier": "^3.9.6",
 		"prettier-plugin-astro": "^0.14.1",
 		"prettier-plugin-tailwindcss": "^0.8.1",
-		"remeda": "^2.43.0",
+		"remeda": "^2.45.0",
 		"satteri": "^0.10.5",
 		"satteri-expressive-code": "^0.1.24",
-		"sharp": "^0.35.3",
+		"sharp": "^0.35.4",
 		"stylelint": "^17.14.1",
 		"tailwindcss": "^4.3.3",
 		"typescript": "^6.0.3",
-		"wrangler": "^4.125.0",
+		"wrangler": "^4.126.0",
 		"yaml": "^2.8.3",
 		"zod": "^4.4.3"
 	},
