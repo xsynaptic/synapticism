@@ -37,55 +37,65 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	const { entries: projects } = await getProjectsCollection();
 	const { entries: tags } = await getTagsCollection();
 
-	const collections = [pages, posts, notes, projects, tags];
+	const catalogEntries: Array<CollectionEntry<CollectionKey>> = [
+		...pages,
+		...posts,
+		...notes,
+		...projects,
+		...tags,
+	];
 
 	const wordCountsById = new Map(
 		await Promise.all(
-			collections.flat().map(async (entry) => [entry.id, await getWordCount(entry)] as const),
+			catalogEntries.map(async (entry) => [entry.id, await getWordCount(entry)] as const),
 		),
 	);
 
-	for (const collection of collections) {
-		for (const entry of collection) {
-			if (catalogItemsById.has(entry.id)) {
-				throw new Error(
-					`[Catalog] Duplicate ID found for "${entry.id}" across different collections!`,
-				);
-			}
-
-			catalogItemsById.set(entry.id, {
-				backlinks: new Set<string>(),
-				collection: entry.collection,
-				dateCreated: parseContentDate(entry.data.dateCreated) ?? new Date(String(siteYearFounded)),
-				dateUpdated: parseContentDate(
-					'dateUpdated' in entry.data ? entry.data.dateUpdated : undefined,
-				),
-				description: getDescriptionRenderedHtml(entry),
-				entryCount: '_entryCount' in entry.data ? entry.data._entryCount : undefined,
-				entryQuality: 'entryQuality' in entry.data ? entry.data.entryQuality : undefined,
-				id: entry.id,
-				imageId:
-					'imageFeatured' in entry.data
-						? getImageFeaturedId({ imageFeatured: entry.data.imageFeatured })
-						: undefined,
-				links: 'links' in entry.data ? entry.data.links : undefined,
-				linksExternalCount: getLinksExternalCount(entry),
-				title: entry.data.title,
-				url: getContentUrl(entry.collection, entry.id),
-				wordCount: wordCountsById.get(entry.id),
-			});
+	// Note: name collisions across these collections are prohibited and will throw
+	for (const entry of catalogEntries) {
+		if (catalogItemsById.has(entry.id)) {
+			throw new Error(
+				`[Catalog] Duplicate ID found for "${entry.id}" across different collections!`,
+			);
 		}
+
+		catalogItemsById.set(entry.id, createCatalogItem(entry, wordCountsById));
 	}
 
-	for (const collection of collections) {
-		for (const entry of collection) {
-			generateContentBacklinksFromMdxComponents(entry, catalogItemsById);
-		}
+	for (const entry of catalogEntries) {
+		generateContentBacklinksFromMdxComponents(entry, catalogItemsById);
 	}
 
 	console.log(`[Catalog] Generated in ${(performance.now() - startTime).toFixed(4)}ms`);
 
 	return [...catalogItemsById.values()];
+}
+
+function createCatalogItem(
+	entry: CollectionEntry<CollectionKey>,
+	wordCountsById: Map<string, number | undefined>,
+): CatalogItem {
+	const { data } = entry;
+
+	return {
+		backlinks: new Set<string>(), // Populated by the backlink pass
+		collection: entry.collection,
+		dateCreated: parseContentDate(data.dateCreated) ?? new Date(String(siteYearFounded)),
+		dateUpdated: parseContentDate('dateUpdated' in data ? data.dateUpdated : undefined),
+		description: getDescriptionRenderedHtml(entry),
+		entryCount: '_entryCount' in data ? data._entryCount : undefined,
+		entryQuality: 'entryQuality' in data ? data.entryQuality : undefined,
+		id: entry.id,
+		imageId:
+			'imageFeatured' in data
+				? getImageFeaturedId({ imageFeatured: data.imageFeatured })
+				: undefined,
+		links: 'links' in data ? data.links : undefined,
+		linksExternalCount: getLinksExternalCount(entry),
+		title: data.title,
+		url: getContentUrl(entry.collection, entry.id),
+		wordCount: wordCountsById.get(entry.id),
+	};
 }
 
 function generateContentBacklinksFromMdxComponents(
