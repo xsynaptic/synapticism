@@ -53,8 +53,25 @@ class PaginationSelect extends HTMLElement {
 		this.#abortController = undefined;
 	}
 
-	#enhance() {
+	#buildOptions(lastPage: number) {
 		const currentPage = Number(this.dataset.currentPage);
+		const pageLabel = this.dataset.pageLabel ?? 'Page {page}';
+		const fragment = document.createDocumentFragment();
+
+		for (let pageNumber = 1; pageNumber <= lastPage; pageNumber += 1) {
+			const option = document.createElement('option');
+
+			option.value = String(pageNumber);
+			option.textContent = pageLabel.replace('{page}', () => String(pageNumber));
+			option.selected = pageNumber === currentPage;
+			if (pageNumber === currentPage) option.dataset.currentPage = '';
+			fragment.append(option);
+		}
+
+		return fragment;
+	}
+
+	#enhance() {
 		const lastPage = Number(this.dataset.lastPage);
 
 		if (!Number.isSafeInteger(lastPage) || lastPage <= 1) return;
@@ -64,21 +81,8 @@ class PaginationSelect extends HTMLElement {
 
 		if (!form || !select) return;
 
-		const pageLabel = this.dataset.pageLabel ?? 'Page {page}';
-
-		for (let pageNumber = 1; pageNumber <= lastPage; pageNumber += 1) {
-			const option = document.createElement('option');
-
-			option.value = String(pageNumber);
-			option.textContent = pageLabel.replace('{page}', () => String(pageNumber));
-			option.selected = pageNumber === currentPage;
-			if (pageNumber === currentPage) option.dataset.currentPage = '';
-			select.append(option);
-		}
-
-		const counter = this.querySelector<HTMLElement>('[data-pagination-counter]');
-
-		if (counter) counter.hidden = true;
+		select.append(this.#buildOptions(lastPage));
+		this.querySelector<HTMLElement>('[data-pagination-counter]')?.toggleAttribute('hidden', true);
 		form.hidden = false;
 
 		this.#lockSelectWidth(select, lastPage);

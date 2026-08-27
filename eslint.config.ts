@@ -17,8 +17,11 @@ export default getConfig(
 		},
 		{
 			rules: {
+				complexity: ['warn', { max: 8, variant: 'modified' }],
 				// Ban logical-assignment shorthand (??=, ||=, &&=); the expanded form reads more clearly
 				'logical-assignment-operators': ['error', 'never'],
+				// Catches genuinely tangled control flow; unlike `complexity` it ignores JSX ternaries
+				'max-depth': ['warn', 3],
 				// Prefix demand fights idiomatic predicates, getters, schema fields, env (PROD), and CLI flags
 				'unicorn/consistent-boolean-name': 'off',
 				// We use intentional compounds such as schema.org's WebSite type

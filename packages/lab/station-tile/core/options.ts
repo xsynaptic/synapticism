@@ -75,6 +75,18 @@ export function resolveOptions(input: TileInput): ResolvedOptions {
 	};
 }
 
+function resolveCellSize(input: TileInput, seamless: boolean) {
+	// Integer cells keep the repeat on whole device pixels; fractional ones resample into a seam
+	const rawTileSize = input.tileSize ?? TILE_DEFAULTS.tileSize;
+	const tileSize = seamless ? Math.round(rawTileSize) : rawTileSize;
+	const rawGroutWidth = input.groutWidth ?? Math.max(1, tileSize * GEOMETRY.groutRatio);
+
+	return {
+		groutWidth: seamless ? Math.max(1, Math.round(rawGroutWidth)) : rawGroutWidth,
+		tileSize,
+	};
+}
+
 function resolveColors(input: TileInput): ResolvedColors {
 	const themeName =
 		input.theme && Object.hasOwn(TILE_THEMES, input.theme) ? input.theme : DEFAULT_TILE_THEME;
@@ -89,37 +101,12 @@ function resolveColors(input: TileInput): ResolvedColors {
 function resolveGeometry(input: TileInput): ResolvedGeometry {
 	const seamless = input.seamless ?? false;
 	const stagger = input.stagger ?? TILE_DEFAULTS.stagger;
+	const { groutWidth, tileSize } = resolveCellSize(input, seamless);
+	const canvas = seamless
+		? resolveRepeatUnit(input, tileSize + groutWidth, stagger)
+		: { height: GEOMETRY.canvasHeight, width: GEOMETRY.canvasWidth };
 
-	// Integer cells keep the repeat on whole device pixels; fractional ones resample into a seam
-	const rawTileSize = input.tileSize ?? TILE_DEFAULTS.tileSize;
-	const tileSize = seamless ? Math.round(rawTileSize) : rawTileSize;
-	const rawGroutWidth = input.groutWidth ?? Math.max(1, tileSize * GEOMETRY.groutRatio);
-	const groutWidth = seamless ? Math.max(1, Math.round(rawGroutWidth)) : rawGroutWidth;
-
-	if (!seamless) {
-		return {
-			groutWidth,
-			height: GEOMETRY.canvasHeight,
-			seamless,
-			stagger,
-			tileSize,
-			width: GEOMETRY.canvasWidth,
-		};
-	}
-
-	const cellSize = tileSize + groutWidth;
-	const cols = Math.max(2, Math.round(input.unitCells ?? TILE_DEFAULTS.unitCells));
-	// Staggered bonds alternate per row, so the vertical period needs an even row count
-	const rows = stagger > 0 ? cols + (cols % 2) : cols;
-
-	return {
-		groutWidth,
-		height: rows * cellSize,
-		seamless,
-		stagger,
-		tileSize,
-		width: cols * cellSize,
-	};
+	return { groutWidth, seamless, stagger, tileSize, ...canvas };
 }
 
 function resolveGloss(input: TileInput): ResolvedGloss {
@@ -128,4 +115,12 @@ function resolveGloss(input: TileInput): ResolvedGloss {
 		glossBlend: input.glossBlend ?? TILE_DEFAULTS.glossBlend,
 		glossColor: parseHex(input.glossColor ?? TILE_DEFAULTS.glossColor),
 	};
+}
+
+function resolveRepeatUnit(input: TileInput, cellSize: number, stagger: number) {
+	const cols = Math.max(2, Math.round(input.unitCells ?? TILE_DEFAULTS.unitCells));
+	// Staggered bonds alternate per row, so the vertical period needs an even row count
+	const rows = stagger > 0 ? cols + (cols % 2) : cols;
+
+	return { height: rows * cellSize, width: cols * cellSize };
 }
