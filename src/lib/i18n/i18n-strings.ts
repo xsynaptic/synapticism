@@ -25,6 +25,7 @@ const strings = {
 
 	// Navigation menus
 	'nav.about': 'About',
+	'nav.bluesky': 'Bluesky',
 	'nav.github': 'GitHub',
 
 	// Accessibility (aria-labels, screen-reader text)

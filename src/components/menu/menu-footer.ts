@@ -6,6 +6,11 @@ import { getSiteUrl } from '#lib/utils/routing.ts';
 export const menuFooterItems = [
 	{
 		rel: 'me',
+		title: t('nav.bluesky'),
+		url: 'https://bsky.app/profile/synapticism.com',
+	},
+	{
+		rel: 'me',
 		title: t('nav.github'),
 		url: 'https://github.com/xsynaptic',
 	},
