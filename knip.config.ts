@@ -15,15 +15,13 @@ export default {
 			],
 		},
 		'packages/content': {
-			// Config and ambient-type files consumed by tooling, not imported
-			entry: ['.mdxlintrc.mjs', 'global.d.ts'],
+			// Ambient types consumed by the MDX language server, not imported
+			entry: ['global.d.ts'],
 			// The content scripts delegate to root via `pnpm -w run`, which knip reads as a binary
 			ignoreBinaries: ['check-content', 'fix-content'],
 			ignoreDependencies: [
+				'mdxlint', // enables knip's MDX plugin here; there is no `astro` devDep to do it
 				'react', // type-only: jsxImportSource + React.JSX in global.d.ts for the MDX language server
-				'@textlint-rule/textlint-rule-pattern', // referenced by name in .textlintrc.json
-				'textlint-plugin-mdx',
-				'textlint-rule-diacritics',
 			],
 		},
 		'packages/lab': {
