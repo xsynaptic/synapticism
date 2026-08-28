@@ -1,5 +1,5 @@
 {
-	"name": "synapticism-content",
+	"name": "@synapticism/content",
 	"version": "1.0.0",
 	"description": "Synapticism content archive",
 	"private": true,
