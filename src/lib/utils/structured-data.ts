@@ -90,6 +90,7 @@ export function buildAuthorSchema(name: string): Person {
 	};
 }
 
+/** @knipignore staged for the launch design; the schema graph has no breadcrumb consumer yet */
 export function buildBreadcrumbSchema(
 	items: Array<{ name: string; url?: string }>,
 	pageUrl: string,

@@ -11,6 +11,7 @@ import { createCollectionLookupByIds } from '#lib/utils/collections.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { buildArticleSchema, buildAuthorSchema } from '#lib/utils/structured-data.ts';
 
+/** @knipignore staged for the launch design; mirrors the lookup other collections already use */
 export const createPostsByIdsFunction = createCollectionLookupByIds('Posts', getPostsCollection);
 
 export function getPostSchema(

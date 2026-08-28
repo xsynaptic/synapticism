@@ -1,6 +1,7 @@
 import { stripTags } from '@xsynaptic/unified-tools';
 import { markdownToHtml } from 'satteri';
 
+/** @knipignore staged for the launch design; no view formats counts yet */
 export function formatNumber({
 	locales,
 	number,

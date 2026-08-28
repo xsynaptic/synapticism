@@ -3,7 +3,7 @@ interface Props {
 	author: string;
 	title?: string | undefined;
 	url?: string | undefined;
-	year?: number | string | undefined;
+	year?: string | undefined;
 }
 
 const { author, title, url, year } = Astro.props;
@@ -18,7 +18,7 @@ const { author, title, url, year } = Astro.props;
 			[
 				author ? `― ${author}` : undefined,
 				title ? <cite>{url ? <a href={url}>{title}</a> : title}</cite> : undefined,
-				year === undefined ? undefined : String(year),
+				year,
 			]
 				.filter(Boolean)
 				.flatMap((part, index) => (index === 0 ? [part] : [', ', part]))

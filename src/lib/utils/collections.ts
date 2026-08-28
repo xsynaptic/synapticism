@@ -1,6 +1,7 @@
 import type { CollectionEntry, CollectionKey } from 'astro:content';
 
 import { getCollection } from 'astro:content';
+import path from 'node:path';
 import { performance } from 'node:perf_hooks';
 import pMemoize from 'p-memoize';
 
@@ -70,6 +71,11 @@ export function createCollectionLookupByIds<K extends CollectionKey>(
 
 export function filterHasEntries(entry: CollectionEntryWithEntryCount) {
 	return (entry.data._entryCount ?? 0) > 0;
+}
+
+// Subfolders organize content only; the id collapses to the filename so URLs stay flat
+export function generateFlatId({ entry }: { entry: string }) {
+	return path.basename(entry, path.extname(entry));
 }
 
 export function sortByEntryCount<T extends CollectionEntryWithEntryCount>(entryA: T, entryB: T) {

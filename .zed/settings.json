@@ -1,19 +1,8 @@
 {
-	"lsp": {
-		"astro-language-server": {
-			"initialization_options": {
-				"contentIntellisense": true,
-				// The server throws without a tsdk; the relative path resolves against the workspace root
-				"typescript": { "tsdk": "node_modules/typescript/lib" }
-			}
+	"languages": {
+		"Astro": { "language_servers": ["...", "eslint"] },
+		"CSS": {
+			"language_servers": ["tailwindcss-intellisense-css", "!vscode-css-language-server", "..."],
 		},
-		// Tailwind v4 at-rules (`@theme`, `@utility`, `@plugin`) are unknown to the CSS service
-		"vscode-css-language-server": {
-			"settings": { "css": { "lint": { "unknownAtRules": "ignore" } } }
-		},
-		// Auto-imports use the `#` alias from package.json `imports` rather than a relative path
-		"vtsls": {
-			"settings": { "typescript": { "preferences": { "importModuleSpecifier": "non-relative" } } }
-		}
-	}
+	},
 }

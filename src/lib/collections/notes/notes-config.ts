@@ -3,12 +3,12 @@ import { defineCollection, reference } from 'astro:content';
 
 import { contentCollectionsPath } from '#constants.js';
 import { contentBaseSchema, LinkItemSchema, SourceSchema } from '#lib/schemas/content.js';
+import { generateFlatId } from '#lib/utils/collections.ts';
 
 export const notes = defineCollection({
 	loader: glob({
 		base: `${contentCollectionsPath}/notes`,
-		// Year folders organize content only; IDs and URLs stay flat
-		generateId: ({ entry }) => entry.replace(/^.*\//, '').replace(/\.mdx?$/, ''),
+		generateId: generateFlatId,
 		pattern: '**/[^_]*.(md|mdx)',
 	}),
 	schema: contentBaseSchema

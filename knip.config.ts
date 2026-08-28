@@ -3,10 +3,18 @@
 import type { KnipConfig } from 'knip';
 
 export default {
+	// Exports kept deliberately carry `@knipignore` with the reason at the declaration
+	tags: ['-knipignore'],
 	workspaces: {
 		'.': {
 			// MDX components are provided to <Content> at render time via renderContent (src/lib/utils/astro.ts)
 			entry: ['src/components/mdx/*.astro'],
+			// Staged for the launch design, not yet wired into a page
+			ignore: [
+				'src/components/parts/card-frame.astro',
+				'src/components/parts/grid.astro',
+				'src/components/parts/list-column.astro',
+			],
 			ignoreDependencies: [
 				'@synapticism/lab', // imported only from posts in packages/content/collections, which knip ignores
 				'eslint-plugin-jsx-a11y', // peer of eslint-plugin-astro's a11y-strict config; referenced by string, not import

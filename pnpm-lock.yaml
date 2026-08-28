@@ -154,15 +154,6 @@ importers:
       mdxlint:
         specifier: ^1.0.0
         version: 1.0.0(supports-color@10.2.2)
-      remark-frontmatter:
-        specifier: ^5.0.0
-        version: 5.0.0(supports-color@10.2.2)
-      remark-gfm:
-        specifier: ^4.0.1
-        version: 4.0.1(supports-color@10.2.2)
-      remark-smartypants:
-        specifier: ^3.0.3
-        version: 3.0.3
 
   packages/lab: {}
 
