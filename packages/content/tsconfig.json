@@ -12,7 +12,6 @@
 		"collections/**/*",
 		"data/**/*"
 	],
-	// MDXProvidedComponents needs to be globally defined in a file with an `export {}`
 	"mdx": {
 		"checkMdx": true
 	}
