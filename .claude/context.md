@@ -1,6 +1,6 @@
 # Synapticism
 
-This file is a glossary of terms commonly used in this project.
+The language of the site itself: what an author writes, how it is grouped, and how one piece points at another. Match these terms in code, in UI copy, and in prose.
 
 ## Content
 
@@ -44,4 +44,4 @@ This file is a glossary of terms commonly used in this project.
 
 ## Beyond the content model
 
-**Lab**: The body of self-contained creative-coding experiments kept outside the content model, each usable on the site and developed against its own set of interactive controls. _Avoid_: demos, sandbox, toys, playground.
+**Lab**: The body of self-contained creative coding experiments kept outside the content model, each usable on the site and developed against its own set of interactive controls. _Avoid_: demos, sandbox, toys, playground.
