@@ -10,18 +10,21 @@ import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
 import { millisecondsPerHour, siteTimezoneOffsetHours } from '#constants.ts';
+import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 import { stripFootnotes } from '#lib/utils/text.ts';
 
+type FeedEntry = CollectionEntry<'notes'> | CollectionEntry<'posts'>;
+
 async function createRenderMdxFunction() {
 	const container = await AstroContainer.create();
 
 	container.addServerRenderer({ name: 'mdx', renderer: mdxRenderer });
 
-	return async function (entry: CollectionEntry<'posts'>, options?: ContainerRenderOptions) {
+	return async function (entry: FeedEntry, options?: ContainerRenderOptions) {
 		const { Content } = await render(entry);
 
 		return await container.renderToString(Content, options);
@@ -36,7 +39,7 @@ const generateFeedItem = async ({
 	excludeFootnotes,
 }: {
 	debug: boolean;
-	entry: CollectionEntry<'posts'>;
+	entry: FeedEntry;
 	excludeFootnotes: boolean;
 }) => {
 	const startTime = performance.now();
@@ -88,11 +91,20 @@ export async function generateFeedItems({
 	excludeFootnotes: boolean;
 	itemCount: number;
 }) {
-	const { entries: posts } = await getPostsCollection();
+	const [{ entries: posts }, { entries: notes }] = await Promise.all([
+		getPostsCollection(),
+		getNotesCollection(),
+	]);
 
 	return R.pipe(
-		await R.pipe([...posts], R.sort(sortByDateReverseChronological), R.take(itemCount), (items) =>
-			Promise.all(items.map((item) => generateFeedItem({ debug, entry: item, excludeFootnotes }))),
+		await R.pipe(
+			[...posts, ...notes],
+			R.sort(sortByDateReverseChronological),
+			R.take(itemCount),
+			(items) =>
+				Promise.all(
+					items.map((item) => generateFeedItem({ debug, entry: item, excludeFootnotes })),
+				),
 		),
 		R.sort((a, b) => (a.pubDate && b.pubDate ? b.pubDate.getTime() - a.pubDate.getTime() : -1)),
 		R.take(itemCount),
