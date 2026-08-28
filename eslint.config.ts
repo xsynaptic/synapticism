@@ -11,7 +11,7 @@ export default getConfig(
 				'**/.cache/**/*',
 				'**/.wrangler/**/*',
 				'**/dist/**/*',
-				'packages/content/**/*',
+				'packages/content/{collections,data,media}/**/*',
 				'**/temp/**/*',
 			],
 		},

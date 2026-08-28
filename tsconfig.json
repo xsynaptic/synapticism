@@ -1,7 +1,7 @@
 {
 	"extends": "astro/tsconfigs/strictest",
 	"include": [".astro/types.d.ts", "**/*"],
-	"exclude": [".vscode", "dist"],
+	"exclude": ["dist"],
 	"compilerOptions": {
 		"outDir": "./dist",
 		"rootDir": ".",

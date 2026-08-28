@@ -1,11 +1,7 @@
 ---
-import type { TileInput } from './core/options.ts';
+import type { StationTileProps as Props } from './station-tile-types.ts';
 
 import { generateTileSvg, tileBackgroundStyle } from './core/render.ts';
-
-interface Props extends TileInput {
-	class?: string | undefined;
-}
 
 const { class: className, ...input } = Astro.props;
 

@@ -15,13 +15,11 @@ export default {
 			],
 		},
 		'packages/content': {
-			// Ambient types consumed by the MDX language server, not imported
-			entry: ['global.d.ts'],
 			// The content scripts delegate to root via `pnpm -w run`, which knip reads as a binary
 			ignoreBinaries: ['check-content', 'fix-content'],
 			ignoreDependencies: [
 				'mdxlint', // enables knip's MDX plugin here; there is no `astro` devDep to do it
-				'react', // type-only: jsxImportSource + React.JSX in global.d.ts for the MDX language server
+				'react', // type-only: jsxImportSource + React.JSX in the ambient types for the MDX language server
 			],
 		},
 		'packages/lab': {

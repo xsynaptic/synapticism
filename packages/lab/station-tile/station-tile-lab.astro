@@ -1,13 +1,5 @@
 ---
-import type { TileTheme } from './core/appearance.ts';
-
-interface Props {
-	class?: string | undefined;
-	// Canonical URL where the lab runs; used for the RSS link-to-live fallback
-	href?: string | undefined;
-	seed?: number | string | undefined;
-	theme?: TileTheme | undefined;
-}
+import type { StationTileLabProps as Props } from './station-tile-types.ts';
 
 const { class: className, href, seed, theme } = Astro.props;
 

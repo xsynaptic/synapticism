@@ -26,4 +26,6 @@ pnpm-debug.log*
 .claude/settings*.json
 
 # content
-packages/content
+packages/content/collections
+packages/content/data
+packages/content/media

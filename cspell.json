@@ -1,0 +1,25 @@
+{
+	"version": "0.2",
+	"words": [
+		"backlinks",
+		"fontsource",
+		"lqip",
+		"microformat",
+		"microformats",
+		"nosnippet",
+		"pagefind",
+		"remeda",
+		"synapticism",
+		"umami",
+		"webmention",
+		"xsynaptic"
+	],
+	"ignorePaths": [
+		".astro",
+		".cache",
+		"dist",
+		"node_modules",
+		"packages/content/media",
+		"pnpm-lock.yaml"
+	]
+}
