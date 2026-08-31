@@ -1,6 +1,6 @@
 @import 'tailwindcss' source(none);
 
-/**
+/*
  * Tailwind usually scans everything for class names
  * For performance reasons we're explicitly naming paths and file types here:
  * 1) CSS files, for which we need to check @apply rules and CSS variable names
@@ -9,27 +9,16 @@
 @source './main/**/*.css';
 @source '../**/*.astro';
 
-/** Safelist utilities applied to HTML we don't author directly */
+/* Safelist utilities applied to HTML we don't author directly */
 @source inline('sr-only');
 
-/** Theme styling */
 @import './main/parts/theme.css';
-
-/** Tailwind utilities */
 @import './main/parts/utilities.css';
-
-/** Root variables */
 @import './main/parts/root.css';
-
-/** Base layer */
 @import './main/parts/base.css' layer(base);
-
-/** Component layer */
 @import './main/components/anchor.css' layer(components);
+@import './main/components/chrome.css' layer(components);
 @import './main/components/divider.css' layer(components);
 @import './main/components/pagination.css' layer(components);
-@import './main/components/progress.css' layer(components);
 @import './main/components/prose.css' layer(components);
 @import './main/components/search.css' layer(components);
-@import './main/components/skip-link.css' layer(components);
-@import './main/components/top-button.css' layer(components);

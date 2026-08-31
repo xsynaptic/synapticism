@@ -3,7 +3,9 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
+import Anchor from '#components/parts/anchor.astro';
 import DateDisplay from '#components/parts/date-display.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
@@ -71,14 +73,11 @@ const showProjects = false as boolean;
 	}
 	{
 		streamItems.length > 0 ? (
-			<section
-				class:list={['content-column', isFirstPage ? 'mt-14 pb-8 md:mt-20' : 'pt-8 md:pt-14']}
+			<LabeledSection
+				class:list={[isFirstPage ? 'mt-14 pb-8 md:mt-20' : 'pt-8 md:pt-14']}
+				title={t('index.recently')}
 			>
-				<div class="flex items-center gap-4">
-					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.recently')}</h2>
-					<span aria-hidden="true" class="h-[1px] flex-1 bg-primary-200" />
-				</div>
-				<ul class:list={['mt-6 flex flex-col', MicroformatClassNames.Feed]}>
+				<ul class:list={['mt-2 flex flex-col', MicroformatClassNames.Feed]}>
 					{streamItems.map((item, index) => {
 						const primaryLink = item.links?.[0];
 
@@ -94,16 +93,13 @@ const showProjects = false as boolean;
 									) : undefined}
 									<div class="flex min-w-0 flex-col gap-2">
 										<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
-											<a
-												class:list={[
-													'text-primary-800 transition-colors duration-200 hover:text-accent-700',
-													MicroformatClassNames.Url,
-													MicroformatClassNames.Name,
-												]}
+											<Anchor
+												anchorColor="title"
+												class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
 												href={item.url}
 											>
 												{item.title}
-											</a>
+											</Anchor>
 										</h3>
 										<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
 											<DateDisplay
@@ -138,48 +134,35 @@ const showProjects = false as boolean;
 						class="mt-10 flex justify-between font-mono text-sm"
 					>
 						{previousUrl ? (
-							<a
-								class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
-								href={previousUrl}
-							>
+							<Anchor anchorColor="accent" href={previousUrl}>
 								<span aria-hidden="true">&larr;</span> {t('index.newer')}
-							</a>
+							</Anchor>
 						) : (
 							<span />
 						)}
 						{nextUrl ? (
-							<a
-								class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
-								href={nextUrl}
-							>
+							<Anchor anchorColor="accent" href={nextUrl}>
 								{t('index.older')} <span aria-hidden="true">&rarr;</span>
-							</a>
+							</Anchor>
 						) : (
 							<span />
 						)}
 					</nav>
 				) : undefined}
-			</section>
+			</LabeledSection>
 		) : undefined
 	}
 	{
 		isFirstPage && showProjects && selectedProjects && selectedProjects.length > 0 ? (
-			<section class="content-column mt-14 pb-8 md:mt-20">
-				<div class="flex items-center gap-4">
-					<h2 class="font-mono text-sm font-medium text-primary-600">{t('index.selectedWork')}</h2>
-					<span aria-hidden="true" class="h-[1px] flex-1 bg-primary-200" />
-				</div>
-				<ul class="mt-6 flex flex-col gap-5">
+			<LabeledSection class="mt-14 pb-8 md:mt-20" title={t('index.selectedWork')}>
+				<ul class="mt-2 flex flex-col gap-5">
 					{selectedProjects.map((item) => (
 						<li>
 							<article class="grid gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-baseline">
 								<h3 class="font-mono text-base font-medium">
-									<a
-										class="text-primary-800 transition-colors duration-200 hover:text-accent-700"
-										href={item.url}
-									>
+									<Anchor anchorColor="title" href={item.url}>
 										{item.title}
-									</a>
+									</Anchor>
 								</h3>
 								{item.description ? (
 									<p
@@ -192,14 +175,11 @@ const showProjects = false as boolean;
 					))}
 				</ul>
 				<p class="mt-7 font-mono text-sm">
-					<a
-						class="text-accent-700 transition-colors duration-200 hover:text-accent-600"
-						href={getContentUrl('projects')}
-					>
+					<Anchor anchorColor="accent" href={getContentUrl('projects')}>
 						{t('index.allProjects')} <span aria-hidden="true">&rarr;</span>
-					</a>
+					</Anchor>
 				</p>
-			</section>
+			</LabeledSection>
 		) : undefined
 	}
 </MainSite>

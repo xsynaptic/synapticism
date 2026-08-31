@@ -1,5 +1,5 @@
-/* Divider styles; extracted here to avoid repetition in the divided-item component */
-.divided {
+/* Hook prefix: divided-; glyph separator between inline items */
+.divided-item {
 	display: inline;
 
 	@media (width >= 40rem) {
@@ -8,18 +8,22 @@
 	}
 }
 
-.divided::after {
+.divided-item::after {
 	color: var(--color-primary-400);
 	content: var(--content-slash);
 }
 
 /* Glyphs need spacing below sm breakpoint due to jsx whitespace handling */
 @media (width < 40rem) {
-	.divided::after {
+	.divided-item::after {
 		margin-inline: calc(var(--spacing) * 1);
 	}
 }
 
-.divided:last-child::after {
+.divided-item:last-child::after {
 	content: none;
+}
+
+.divided-thin::after {
+	font-weight: var(--font-weight-light);
 }

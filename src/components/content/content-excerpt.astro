@@ -26,8 +26,10 @@ const hasExcerpt = excerptSplit.length > 1;
 <article class:list={[className, MicroformatClassNames.Entry]}>
 	<header class:list={['content-column', description ? undefined : 'mb-2']}>
 		<h2 class="mb-1 text-lg font-semibold md:text-xl">
-			<Anchor class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]} href={entryUrl}
-				><slot name="excerpt-title" /></Anchor
+			<Anchor
+				anchorColor="title"
+				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+				href={entryUrl}><slot name="excerpt-title" /></Anchor
 			>
 		</h2>
 		{

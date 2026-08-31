@@ -47,7 +47,7 @@ const pageBasePath = joinUrl(url.first ?? url.current, '/');
 						<span class="relative inline-flex items-center">
 							<select
 								aria-label={t('aria.pageSelect')}
-								class="pagination-control overflow-hidden rounded-sm border border-primary-300 bg-transparent py-2 pr-6 pl-2 text-ellipsis whitespace-nowrap tabular-nums transition-colors ease-linear open:border-accent-500 not-open:hover:border-primary-400 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-500 md:py-1"
+								class="pagination-control overflow-hidden rounded-sm border border-primary-300 bg-transparent py-2 pr-6 pl-2 text-ellipsis whitespace-nowrap tabular-nums transition-colors ease-linear open:border-accent-500 not-open:hover:border-primary-400 focus-visible:border-primary-400 md:py-1"
 								data-pagination-control
 							/>
 							<span
@@ -69,7 +69,7 @@ const pageBasePath = joinUrl(url.first ?? url.current, '/');
 							</span>
 						</span>
 						<button
-							class="pagination-submit absolute ml-2 cursor-pointer rounded px-2 py-2 font-medium text-accent-500 hover:text-accent-300 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-500 md:py-1"
+							class="pagination-button absolute ml-2 cursor-pointer rounded px-2 py-2 font-medium text-accent-500 hover:text-accent-300 focus-visible:text-accent-300 md:py-1"
 							data-pagination-submit
 							type="submit"
 						>

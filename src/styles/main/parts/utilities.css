@@ -7,3 +7,9 @@
 @utility content-column-fill {
 	@apply mx-auto max-w-content sm:px-4 md:px-8;
 }
+
+/* LQIP backdrop under an Image; the data URI is per instance and stays an inline style */
+@utility bg-placeholder {
+	background-position: center;
+	background-size: cover;
+}

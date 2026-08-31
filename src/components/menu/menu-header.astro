@@ -18,7 +18,7 @@ const { pathname } = Astro.url;
 	class="border-b border-accent-600 bg-linear-to-b from-accent-600 to-accent-500 py-2"
 	{...props}
 >
-	<ul class="mx-auto flex max-w-content items-center gap-4 px-4 md:px-8">
+	<ul class="content-column flex items-center gap-4">
 		{
 			menuHeaderItems.map((item) => {
 				const isActive = isActiveMenuItem(item, pathname);

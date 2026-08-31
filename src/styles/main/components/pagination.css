@@ -8,7 +8,7 @@
 	right: calc(var(--spacing) * 1);
 }
 
-.pagination-submit {
+.pagination-button {
 	top: 50%;
 	left: 100%;
 	visibility: hidden;
@@ -50,7 +50,7 @@
 	}
 
 	.pagination-arrow {
-		@apply transition-transform transition-discrete duration-100;
+		transition: transform 100ms var(--default-transition-timing-function) allow-discrete;
 	}
 
 	.pagination-control:open ~ .pagination-arrow {
@@ -85,10 +85,16 @@
 		cursor: pointer;
 	}
 
-	.pagination-control option:hover,
 	.pagination-control option:focus {
 		color: var(--color-accent-800);
 		background-color: var(--color-accent-100);
+	}
+
+	@media (hover: hover) {
+		.pagination-control option:hover {
+			color: var(--color-accent-800);
+			background-color: var(--color-accent-100);
+		}
 	}
 
 	.pagination-control option:checked {

@@ -39,7 +39,9 @@ const { page } = Astro.props;
 						{item.imageId ? <ContentThumbnail imgAlt={item.title} src={item.imageId} /> : undefined}
 						<div class="flex min-w-0 flex-col gap-1">
 							<h2 class="text-lg font-semibold md:text-xl">
-								<Anchor href={item.url}>{item.title}</Anchor>
+								<Anchor anchorColor="title" href={item.url}>
+									{item.title}
+								</Anchor>
 							</h2>
 							<DateDisplay
 								class="text-xs text-primary-400"

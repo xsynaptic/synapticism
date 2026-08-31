@@ -1,4 +1,4 @@
-/** Note: this CSS file does not import Tailwind but relies on variables in the global context */
+/* Note: this CSS file does not import Tailwind but relies on variables in the global context */
 @import '@pagefind/component-ui/css/pagefind-component-ui.css';
 
 :root {
@@ -12,7 +12,7 @@
 	--pf-skeleton-shine: var(--color-primary-100);
 	--pf-hover: var(--color-primary-200);
 	--pf-mark: var(--color-highlight-600);
-	--pf-scroll-shadow: rgba(0, 0, 0, 0.08);
+	--pf-scroll-shadow: rgb(0 0 0 / 8%);
 	--pf-outline-focus: var(--color-accent-600);
 	--pf-font: var(--font-sans);
 	--pf-input-height: 36px;
@@ -33,7 +33,7 @@ dialog.pf-modal::backdrop {
 	backdrop-filter: blur(4px);
 }
 
-/** Result link colors */
+/* Result link colors */
 .pf-result-link {
 	--pf-text: var(--color-accent-500);
 	&:hover {

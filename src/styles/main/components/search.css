@@ -3,9 +3,14 @@ search-toggle {
 	transition: opacity var(--default-transition-duration) linear;
 }
 
-search-toggle:hover,
 search-toggle:focus-within {
 	opacity: 1;
+}
+
+@media (hover: hover) {
+	search-toggle:hover {
+		opacity: 1;
+	}
 }
 
 search-toggle:not(:defined) {

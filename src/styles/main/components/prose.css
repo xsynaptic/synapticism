@@ -19,7 +19,6 @@
 .prose-x > .expressive-code,
 .prose-x > figure,
 .prose-x > .content-image,
-.prose-x > .figure-group,
 .prose-x > pre,
 .prose-x > table {
 	max-width: none;
@@ -74,19 +73,26 @@
 
 /* Links */
 .prose-x a {
-	@apply transition-colors;
-
 	color: var(--color-accent-700);
 	text-decoration-line: underline;
 	text-decoration-thickness: 2px;
 	text-decoration-color: var(--color-primary-200);
 	text-underline-offset: 2px;
+	transition-timing-function: var(--default-transition-timing-function);
+	transition-duration: var(--default-transition-duration);
+	transition-property: color, text-decoration-color;
 }
 
-.prose-x a:hover,
 .prose-x a:focus-visible {
 	color: var(--color-accent-500);
 	text-decoration-color: var(--color-accent-200);
+}
+
+@media (hover: hover) {
+	.prose-x a:hover {
+		color: var(--color-accent-500);
+		text-decoration-color: var(--color-accent-200);
+	}
 }
 
 /* Emphasis */
@@ -162,8 +168,8 @@
 }
 
 .prose-x table {
-	@apply text-sm;
-
+	font-size: var(--text-sm);
+	line-height: var(--text-sm--line-height);
 	border-collapse: collapse;
 }
 
@@ -197,10 +203,10 @@
 }
 
 .prose-x figcaption {
-	@apply text-xs;
-
 	margin-top: 0.6em;
 	font-family: var(--font-mono);
+	font-size: var(--text-xs);
+	line-height: var(--text-xs--line-height);
 	color: var(--color-primary-600);
 	text-align: center;
 }
@@ -211,18 +217,18 @@
 }
 
 .prose-x .quotation figcaption {
-	@apply text-sm;
-
 	padding-inline-start: 1.5rem;
 	font-family: inherit;
+	font-size: var(--text-sm);
+	line-height: var(--text-sm--line-height);
 	text-align: start;
 }
 
 /* Footnotes */
 .prose-x > .footnotes {
-	@apply text-sm leading-relaxed;
-
 	margin-top: 3em;
+	font-size: var(--text-sm);
+	line-height: var(--leading-relaxed);
 	color: var(--color-primary-600);
 }
 
@@ -231,8 +237,7 @@
 }
 
 .prose-x > .footnotes ol li::marker {
-	@apply text-xs;
-
+	font-size: var(--text-xs);
 	font-style: italic;
 }
 
@@ -242,7 +247,8 @@
 
 .prose-x [data-footnote-ref]::before,
 .prose-x [data-footnote-ref]::after {
-	@apply font-light text-accent-300;
+	font-weight: var(--font-weight-light);
+	color: var(--color-accent-300);
 }
 
 .prose-x [data-footnote-ref]::before {
@@ -256,8 +262,7 @@
 
 .prose-x [data-footnote-ref],
 .prose-x [data-footnote-backref] {
-	@apply font-medium;
-
+	font-weight: var(--font-weight-medium);
 	text-decoration-line: none;
 	user-select: none;
 }

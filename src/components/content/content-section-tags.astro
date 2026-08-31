@@ -27,10 +27,7 @@ const tags = tagIds ? getTagsByIds(tagIds).sort(sortByEntryCount) : undefined;
 				{tags.map((item) => (
 					<DividedItem
 						as="li"
-						class:list={[
-							'font-mono text-sm after:text-sm after:font-light',
-							MicroformatClassNames.Category,
-						]}
+						class:list={['divided-thin font-mono text-sm', MicroformatClassNames.Category]}
 						data-pagefind-filter="tag"
 					>
 						<Anchor anchorColor="accent" href={getContentUrl(item.collection, item.id)}>

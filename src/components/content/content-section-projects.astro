@@ -27,7 +27,7 @@ const projects = projectIds
 		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.projects')}>
 			<ListRow>
 				{projects.map((item) => (
-					<DividedItem as="li" class="font-mono text-sm after:text-sm after:font-light">
+					<DividedItem as="li" class="divided-thin font-mono text-sm">
 						<Anchor anchorColor="accent" href={getContentUrl(item.collection, item.id)}>
 							{item.data.title}
 						</Anchor>

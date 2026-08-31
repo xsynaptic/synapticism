@@ -12,7 +12,7 @@ const { as: Heading = 'h2', class: className, title, ...props } = Astro.props;
 <section class:list={['content-column mb-4', className]} {...props}>
 	<div class="mb-4 flex items-center gap-2">
 		<Heading class="font-mono text-xs font-medium text-primary-600">{title}</Heading>
-		<span aria-hidden="true" class="h-[1px] flex-1 bg-primary-200"></span>
+		<span aria-hidden="true" class="h-px flex-1 bg-primary-200"></span>
 	</div>
 	<slot />
 </section>
