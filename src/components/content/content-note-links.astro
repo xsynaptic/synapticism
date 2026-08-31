@@ -23,9 +23,9 @@ const { links, source } = Astro.props;
 				{links.map((link, index) => (
 					<li>
 						<Anchor
-							class="link-underline"
+							anchorColor="accent"
+							class="anchor-underline"
 							href={link.url}
-							linkColor="accent"
 							rel="noopener"
 							target="_blank"
 						>
@@ -38,9 +38,9 @@ const { links, source } = Astro.props;
 									{t('content.via')}
 									{source.url ? (
 										<Anchor
-											class="link-underline"
+											anchorColor="accent"
+											class="anchor-underline"
 											href={source.url}
-											linkColor="accent"
 											rel="noopener"
 											target="_blank"
 										>

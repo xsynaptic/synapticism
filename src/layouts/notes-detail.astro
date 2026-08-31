@@ -61,11 +61,11 @@ const { Content } = await render(entry);
 	}}
 	schemas={getNoteSchema(entry, { authorName: siteAuthorName, url: Astro.url.toString() })}
 >
-	<article class:list={['entry-detail', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
+	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
 			<Fragment slot="header-subtitle">
 				<DividedItem dividerContent="slash"
-					><Anchor class="font-semibold uppercase" href={getSiteUrl('notes')} linkColor="accent"
+					><Anchor anchorColor="accent" class="font-semibold uppercase" href={getSiteUrl('notes')}
 						>{t('collection.notes.plural')}</Anchor
 					></DividedItem
 				>

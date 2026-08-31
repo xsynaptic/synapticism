@@ -33,7 +33,7 @@ const tags = tagIds ? getTagsByIds(tagIds).sort(sortByEntryCount) : undefined;
 						]}
 						data-pagefind-filter="tag"
 					>
-						<Anchor href={getContentUrl(item.collection, item.id)} linkColor="accent">
+						<Anchor anchorColor="accent" href={getContentUrl(item.collection, item.id)}>
 							{item.data.title}
 						</Anchor>
 					</DividedItem>

@@ -19,16 +19,3 @@ const { class: className, label, parentClass, target = '#main-content', ...props
 		href={target}>{label}</a
 	>
 </div>
-
-<style>
-	:where(.skip-link a) {
-		inset-inline-start: 0;
-		translate: 0 -100vh;
-		transition: translate 0.2s ease-in-out;
-	}
-
-	:where(.skip-link a:hover),
-	:where(.skip-link a:focus-visible) {
-		translate: 0 0;
-	}
-</style>

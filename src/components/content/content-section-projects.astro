@@ -28,7 +28,7 @@ const projects = projectIds
 			<ListRow>
 				{projects.map((item) => (
 					<DividedItem as="li" class="font-mono text-sm after:text-sm after:font-light">
-						<Anchor href={getContentUrl(item.collection, item.id)} linkColor="accent">
+						<Anchor anchorColor="accent" href={getContentUrl(item.collection, item.id)}>
 							{item.data.title}
 						</Anchor>
 					</DividedItem>

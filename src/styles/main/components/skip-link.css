@@ -1,0 +1,10 @@
+.skip-link a {
+	inset-inline-start: 0;
+	translate: 0 -100vh;
+	transition: translate 0.2s ease-in-out;
+}
+
+.skip-link a:hover,
+.skip-link a:focus-visible {
+	translate: 0 0;
+}

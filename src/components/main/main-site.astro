@@ -71,7 +71,10 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			<div class:list={['py-3 lg:py-4', 'bg-linear-to-b from-primary-800 to-primary-700']}>
 				<div class="content-column flex flex-wrap items-center justify-between gap-2">
 					<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
-						<span class="text-primary-500">ꗥ</span>{' '}<Anchor href={siteUrl} linkColor="on-dark">
+						<span class="text-primary-500">ꗥ</span>{' '}<Anchor
+							anchorColor="on-dark"
+							href={siteUrl}
+						>
 							{t('site.title')}
 						</Anchor>
 					</SiteTitleTag>

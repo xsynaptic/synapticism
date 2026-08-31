@@ -1,21 +1,36 @@
 @import 'tailwindcss' source(none);
 
-/* Sources are listed explicitly because `source(none)` disables auto-detection */
-@source './**/*.css';
+/**
+ * Tailwind usually scans everything for class names
+ * For performance reasons we're explicitly naming paths and file types here:
+ * 1) CSS files, for which we need to check @apply rules and CSS variable names
+ * 2) Astro files
+ */
+@source './main/**/*.css';
 @source '../**/*.astro';
-@source '../**/*.tsx';
 
-/* Spacing */
-@theme {
-	--spacing-content: 58rem;
-}
+/** Safelist utilities applied to HTML we don't author directly */
+@source inline('sr-only');
 
-@import './main/theme.css';
-@import './main/utilities.css';
-@import './main/content.css';
-@import './main/divider.css';
-@import './main/link.css';
-@import './main/loading.css';
-@import './main/pagination.css';
-@import './main/progress.css';
-@import './main/various.css';
+/** Theme styling */
+@import './main/parts/theme.css';
+
+/** Tailwind utilities */
+@import './main/parts/utilities.css';
+
+/** Root variables */
+@import './main/parts/root.css';
+
+/** Base layer */
+@import './main/parts/base.css' layer(base);
+
+/** Component layer */
+@import './main/components/anchor.css' layer(components);
+@import './main/components/content.css' layer(components);
+@import './main/components/divider.css' layer(components);
+@import './main/components/loading.css' layer(components);
+@import './main/components/pagination.css' layer(components);
+@import './main/components/progress.css' layer(components);
+@import './main/components/search.css' layer(components);
+@import './main/components/skip-link.css' layer(components);
+@import './main/components/top-button.css' layer(components);

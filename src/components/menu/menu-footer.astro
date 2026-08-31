@@ -19,9 +19,9 @@ const { pathname } = Astro.url;
 			menuFooterItems.map((item) => (
 				<li class="text-xs font-medium sm:text-sm">
 					<Anchor
+						anchorColor="primary"
 						class:list={[isActiveMenuItem(item, pathname) ? 'font-semibold' : undefined]}
 						href={item.url}
-						linkColor="primary"
 						{...(item.rel ? { rel: item.rel } : undefined)}
 					>
 						{item.title}

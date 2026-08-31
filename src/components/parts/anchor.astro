@@ -3,30 +3,27 @@ import type { HTMLAttributes } from 'astro/types';
 
 import { renderSlot } from '#lib/utils/astro.ts';
 
-const LinkColorEnum = {
-	Accent: 'accent',
-	AccentBright: 'accent-bright',
-	Highlight: 'highlight',
-	HighlightBright: 'highlight-bright',
-	OnAccent: 'on-accent',
-	OnDark: 'on-dark',
-	Primary: 'primary',
-	PrimaryBright: 'primary-bright',
-} as const;
-
-type LinkColor = (typeof LinkColorEnum)[keyof typeof LinkColorEnum];
+type AnchorColor =
+	| 'accent'
+	| 'accent-bright'
+	| 'highlight'
+	| 'highlight-bright'
+	| 'on-accent'
+	| 'on-dark'
+	| 'primary'
+	| 'primary-bright';
 
 interface Props extends HTMLAttributes<'a'> {
-	linkColor?: LinkColor | undefined;
+	anchorColor?: AnchorColor | undefined;
 }
 
-const { class: className, href, linkColor = LinkColorEnum.Primary, ...props } = Astro.props;
+const { anchorColor = 'primary', class: className, href, ...props } = Astro.props;
 
 const children = await renderSlot(Astro.slots, 'default');
 ---
 
 <a
-	class:list={['link', `link-${linkColor}`, className]}
+	class:list={['anchor', `anchor-${anchorColor}`, className]}
 	href={href}
 	{...props}
 	set:html={children}

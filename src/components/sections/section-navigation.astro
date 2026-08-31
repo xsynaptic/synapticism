@@ -31,7 +31,11 @@ const { baseUrl, labelPLural, labelSingular, newerItem, olderItem } = Astro.prop
 							<span aria-hidden="true" class="shrink-0 text-primary-600">
 								&larr;
 							</span>
-							<Anchor class="link-underline min-w-0 italic" href={newerItem.url} linkColor="accent">
+							<Anchor
+								anchorColor="accent"
+								class="anchor-underline min-w-0 italic"
+								href={newerItem.url}
+							>
 								<span class="sr-only">
 									{formatStringTemplate(t('section.navigation.label.newer'), {
 										label: labelSingular,
@@ -42,13 +46,17 @@ const { baseUrl, labelPLural, labelSingular, newerItem, olderItem } = Astro.prop
 						</Fragment>
 					) : undefined}
 				</span>
-				<Anchor class="shrink-0" href={baseUrl} linkColor="accent">
+				<Anchor anchorColor="accent" class="shrink-0" href={baseUrl}>
 					{formatStringTemplate(t('section.navigation.label.list'), { label: labelPLural })}
 				</Anchor>
 				<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
 					{olderItem ? (
 						<Fragment>
-							<Anchor class="link-underline min-w-0 italic" href={olderItem.url} linkColor="accent">
+							<Anchor
+								anchorColor="accent"
+								class="anchor-underline min-w-0 italic"
+								href={olderItem.url}
+							>
 								<span class="sr-only">
 									{formatStringTemplate(t('section.navigation.label.older'), {
 										label: labelSingular,

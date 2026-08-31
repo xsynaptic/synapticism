@@ -40,7 +40,7 @@ const { Content } = await render(entry);
 	}}
 >
 	<article
-		class:list={['entry-detail', MicroformatClassNames.Entry]}
+		class:list={['pb-8', MicroformatClassNames.Entry]}
 		{...getPagefindBodyProp(entry.data.hideSearch)}
 	>
 		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>

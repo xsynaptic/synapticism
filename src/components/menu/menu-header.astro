@@ -26,6 +26,7 @@ const { pathname } = Astro.url;
 				return (
 					<li>
 						<Anchor
+							anchorColor="on-accent"
 							aria-current={isActive ? 'page' : undefined}
 							class:list={[
 								'text-sm underline decoration-2 underline-offset-4 sm:text-base',
@@ -34,7 +35,6 @@ const { pathname } = Astro.url;
 									: 'font-medium decoration-transparent hover:decoration-white/55 focus-visible:decoration-white/55',
 							]}
 							href={item.url}
-							linkColor="on-accent"
 						>
 							{item.title}
 						</Anchor>

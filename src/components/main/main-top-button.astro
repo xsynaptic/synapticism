@@ -30,21 +30,3 @@ import { t } from '#lib/i18n/i18n-strings.ts';
 <script>
 	import '#components/main/main-top-button.ts';
 </script>
-
-<style>
-	top-button {
-		translate: 0 150%;
-		transition:
-			translate 200ms ease-out,
-			opacity 200ms ease-out;
-	}
-
-	top-button:not([inert]) {
-		translate: 0 0;
-	}
-
-	top-button:not(:defined) {
-		pointer-events: none;
-		opacity: 0;
-	}
-</style>
