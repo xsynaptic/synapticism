@@ -64,7 +64,7 @@ const { Content } = await render(entry);
 	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
 			<Fragment slot="header-subtitle">
-				<DividedItem dividerContent="slash"
+				<DividedItem
 					><Anchor anchorColor="accent" class="font-semibold uppercase" href={getSiteUrl('notes')}
 						>{t('collection.notes.plural')}</Anchor
 					></DividedItem
@@ -95,7 +95,7 @@ const { Content } = await render(entry);
 				<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
 			) : undefined
 		}
-		<ProseBody class:list={['content', 'e-content', 'pb-4']}>
+		<ProseBody class:list={['e-content', 'pb-4']}>
 			<Content />
 		</ProseBody>
 		<ContentNoteLinks links={entry.data.links} source={entry.data.source} />

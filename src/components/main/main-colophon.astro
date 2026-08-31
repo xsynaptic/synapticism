@@ -10,14 +10,14 @@ const copyrightYears = getCopyrightYears();
 ---
 
 <div class="flex flex-wrap items-center gap-x-1 text-xs text-primary-600">
-	<DividedItem as="span" dividerContent="slash">
+	<DividedItem as="span">
 		{formatStringTemplate(t('footer.copyright'), { years: copyrightYears })}
 	</DividedItem>
-	<DividedItem as="span" dividerContent="slash">
+	<DividedItem as="span">
 		{t('footer.builtWith')}{' '}
 		<Anchor anchorColor="primary-bright" href="https://astro.build">{t('footer.astro')}</Anchor>
 	</DividedItem>
-	<DividedItem as="span" dividerContent="slash">
+	<DividedItem as="span">
 		<Anchor anchorColor="primary-bright" href={`${getSiteUrl()}rss.xml`}>{t('footer.rss')}</Anchor>
 	</DividedItem>
 </div>

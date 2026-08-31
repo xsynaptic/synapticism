@@ -9,8 +9,8 @@
 }
 
 .divided::after {
-	color: var(--divider-color, var(--color-primary-400));
-	content: var(--divider-glyph, var(--content-slash));
+	color: var(--color-primary-400);
+	content: var(--content-slash);
 }
 
 /* Glyphs need spacing below sm breakpoint due to jsx whitespace handling */
@@ -22,32 +22,4 @@
 
 .divided:last-child::after {
 	content: none;
-}
-
-.divided-bar {
-	--divider-glyph: var(--content-bar);
-}
-
-.divided-bullet {
-	--divider-glyph: var(--content-bullet);
-}
-
-.divided-chevron {
-	--divider-glyph: var(--content-chevron);
-}
-
-.divided-chevron::after {
-	translate: 0 -1px;
-}
-
-.divided-dot {
-	--divider-glyph: var(--content-dot);
-}
-
-.divided-lighter {
-	--divider-color: var(--color-primary-300);
-}
-
-.divided-darker {
-	--divider-color: var(--color-primary-500);
 }

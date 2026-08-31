@@ -2,7 +2,8 @@ top-button {
 	translate: 0 150%;
 	transition:
 		translate 200ms ease-out,
-		opacity 200ms ease-out;
+		opacity 200ms ease-out,
+		background-color 200ms ease-out;
 }
 
 top-button:not([inert]) {

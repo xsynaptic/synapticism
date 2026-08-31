@@ -20,37 +20,22 @@
 	--anchor-hover: var(--color-primary-400);
 }
 
-.anchor-highlight {
-	--anchor-color: var(--color-highlight-700);
-	--anchor-hover: var(--color-highlight-500);
-}
-
-.anchor-highlight-bright {
-	--anchor-color: var(--color-highlight-500);
-	--anchor-hover: var(--color-highlight-300);
-}
-
 .anchor-accent {
 	--anchor-color: var(--color-accent-700);
 	--anchor-hover: var(--color-accent-500);
 }
 
-.anchor-accent-bright {
-	--anchor-color: var(--color-accent-500);
-	--anchor-hover: var(--color-accent-300);
-}
-
 .anchor-on-dark {
-	--anchor-color: #fff;
+	--anchor-color: var(--color-white);
 	--anchor-hover: var(--color-primary-300);
 }
 
 .anchor-on-accent {
-	--anchor-color: #fff;
+	--anchor-color: var(--color-white);
 	--anchor-hover: var(--color-accent-100);
 }
 
-/* Matches the prose link treatment in content.css; pair with anchorColor="accent" */
+/* Matches the prose link treatment in prose.css; pair with anchorColor="accent" */
 .anchor-underline {
 	text-decoration-line: underline;
 	text-decoration-thickness: 2px;

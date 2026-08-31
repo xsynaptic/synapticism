@@ -49,10 +49,6 @@
 		content: var(--content-bullet);
 	}
 
-	.pagination-control:open {
-		border-color: var(--color-accent-500);
-	}
-
 	.pagination-arrow {
 		@apply transition-transform transition-discrete duration-100;
 	}

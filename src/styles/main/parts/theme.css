@@ -2,6 +2,12 @@
 	/* Spacing */
 	--spacing-content: 58rem;
 
+	/* Stacking order */
+	--z-index-header: 40;
+	--z-index-top-button: 45;
+	--z-index-progress: 60;
+	--z-index-skip-link: 70;
+
 	/* Fonts */
 	--font-sans: var(--font-aleo);
 	--font-serif: ui-serif, 'Georgia', 'Cambria', 'Times New Roman', 'Times', serif;

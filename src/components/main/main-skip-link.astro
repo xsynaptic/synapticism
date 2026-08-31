@@ -13,7 +13,7 @@ const { class: className, label, parentClass, target = '#main-content', ...props
 <div class:list={['skip-link', parentClass]} {...props}>
 	<a
 		class:list={[
-			'absolute z-9999 hover:outline-2 hover:outline-current focus-visible:outline-2 focus-visible:outline-current',
+			'absolute z-skip-link hover:outline-2 hover:outline-current focus-visible:outline-2 focus-visible:outline-current',
 			className,
 		]}
 		href={target}>{label}</a

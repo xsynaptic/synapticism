@@ -1,72 +1,79 @@
-/* Media (code blocks, images, tables) fills the frame; text wraps at the narrower measure */
-.content {
-	@apply mx-auto px-4 text-base leading-relaxed md:px-8;
-
-	max-width: var(--spacing-content);
+/* Typography only; the frame comes from content-column on the consuming component */
+.prose-x {
+	font-size: var(--text-base);
+	line-height: var(--leading-relaxed);
 	color: var(--color-primary-700);
 }
 
-/* Text wraps at the reading measure, left-aligned within the frame */
-.content > * {
-	max-width: var(--content-measure);
+/* Absolute, not em: this lands on the same element as .prose-x, where an em would resolve against the parent
+   Must follow .prose-x: same specificity, so source order decides */
+.prose-compact {
+	font-size: var(--text-sm);
 }
 
-.content > .expressive-code,
-.content > figure,
-.content > .content-image,
-.content > .figure-group,
-.content > pre,
-.content > table {
+/* Text wraps at the reading measure, left-aligned within the frame */
+.prose-x > * {
+	max-width: var(--prose-measure);
+}
+
+.prose-x > .expressive-code,
+.prose-x > figure,
+.prose-x > .content-image,
+.prose-x > .figure-group,
+.prose-x > pre,
+.prose-x > table {
 	max-width: none;
 }
 
 /* Flow rhythm: generous between blocks, more space above headings */
-.content > * + * {
+.prose-x > * + * {
 	margin-top: 1.2em;
 }
 
-.content > * + :is(h1, h2, h3, h4) {
+.prose-x > * + :is(h1, h2, h3, h4) {
 	margin-top: 2em;
 }
 
-.content > :is(h1, h2, h3, h4) + * {
+.prose-x > :is(h1, h2, h3, h4) + * {
 	margin-top: 0.5em;
 }
 
-.content > .content-image,
-.content > .content-image + p {
+.prose-x > .content-image,
+.prose-x > .content-image + p {
 	margin-top: 0;
 }
 
 /* Headings */
-.content :is(h1, h2, h3, h4) {
+.prose-x :is(h1, h2, h3, h4) {
 	font-weight: 600;
 	color: var(--color-primary-900);
 	text-wrap: balance;
 }
 
-.content h1 {
-	@apply text-3xl leading-tight;
-
+.prose-x h1 {
+	font-size: 1.875em;
+	line-height: var(--leading-tight);
 	letter-spacing: -0.015em;
 }
 
-.content h2 {
-	@apply text-2xl leading-tight;
-
+.prose-x h2 {
+	font-size: 1.5em;
+	line-height: var(--leading-tight);
 	letter-spacing: -0.01em;
 }
 
-.content h3 {
-	@apply text-xl leading-snug;
+.prose-x h3 {
+	font-size: 1.25em;
+	line-height: var(--leading-snug);
 }
 
-.content h4 {
-	@apply text-lg leading-snug;
+.prose-x h4 {
+	font-size: 1.125em;
+	line-height: var(--leading-snug);
 }
 
 /* Links */
-.content a {
+.prose-x a {
 	@apply transition-colors;
 
 	color: var(--color-accent-700);
@@ -76,46 +83,46 @@
 	text-underline-offset: 2px;
 }
 
-.content a:hover,
-.content a:focus-visible {
+.prose-x a:hover,
+.prose-x a:focus-visible {
 	color: var(--color-accent-500);
 	text-decoration-color: var(--color-accent-200);
 }
 
 /* Emphasis */
-.content strong {
+.prose-x strong {
 	font-weight: 700;
 	color: var(--color-primary-900);
 }
 
-.content em {
+.prose-x em {
 	font-style: italic;
 }
 
 /* Lists */
-.content :is(ul, ol) {
+.prose-x :is(ul, ol) {
 	padding-inline-start: 1.5rem;
 }
 
-.content ul {
+.prose-x ul {
 	list-style: disc;
 }
 
-.content ol {
+.prose-x ol {
 	list-style: decimal;
 }
 
-.content li::marker {
+.prose-x li::marker {
 	color: var(--color-primary-400);
 }
 
-.content li + li,
-.content li > :is(ul, ol) {
+.prose-x li + li,
+.prose-x li > :is(ul, ol) {
 	margin-top: 0.4em;
 }
 
 /* Blockquote: indented with a hanging accent quotation mark, never a side-stripe */
-.content blockquote {
+.prose-x blockquote {
 	position: relative;
 	padding-inline-start: 1.25rem;
 	font-size: 0.875em;
@@ -123,7 +130,7 @@
 	color: var(--color-primary-500);
 }
 
-.content blockquote::before {
+.prose-x blockquote::before {
 	position: absolute;
 	inset-inline-start: 0;
 	font-size: 3em;
@@ -134,12 +141,12 @@
 }
 
 /* stylelint-disable-next-line no-descending-specificity -- targets blockquote paragraphs, unrelated to the image-adjacent rule above */
-.content blockquote p + p {
+.prose-x blockquote p + p {
 	margin-top: 0.8em;
 }
 
 /* Inline code */
-.content :not(pre) > code {
+.prose-x :not(pre) > code {
 	padding: 0.15em 0.35em;
 	font-family: var(--font-mono);
 	font-size: 0.875em;
@@ -149,35 +156,35 @@
 }
 
 /* Tables */
-.content > table {
+.prose-x > table {
 	display: block;
 	overflow-x: auto;
 }
 
-.content table {
+.prose-x table {
 	@apply text-sm;
 
 	border-collapse: collapse;
 }
 
-.content :is(th, td) {
+.prose-x :is(th, td) {
 	padding: 0.5em 0.75em;
 	vertical-align: top;
 	text-align: start;
 	border-bottom: 1px solid var(--color-primary-200);
 }
 
-.content th {
+.prose-x th {
 	font-weight: 600;
 	color: var(--color-primary-900);
 }
 
-.content thead th {
+.prose-x thead th {
 	border-bottom: 2px solid var(--color-primary-300);
 }
 
 /* Horizontal rule */
-.content hr {
+.prose-x hr {
 	height: 1px;
 	margin-block: 2.5em;
 	background-color: var(--color-primary-200);
@@ -185,11 +192,11 @@
 }
 
 /* Figures and images */
-.content :is(img, .content-image) {
+.prose-x img {
 	border-radius: var(--radius-sm);
 }
 
-.content figcaption {
+.prose-x figcaption {
 	@apply text-xs;
 
 	margin-top: 0.6em;
@@ -199,11 +206,11 @@
 }
 
 /* Quotations: unlike media figures they stay at the reading measure; the caption overrides the image-caption treatment and aligns with the indented quote text */
-.content > figure.quotation {
-	max-width: var(--content-measure);
+.prose-x > figure.quotation {
+	max-width: var(--prose-measure);
 }
 
-.content .quotation figcaption {
+.prose-x .quotation figcaption {
 	@apply text-sm;
 
 	padding-inline-start: 1.5rem;
@@ -212,43 +219,43 @@
 }
 
 /* Footnotes */
-.content > .footnotes {
+.prose-x > .footnotes {
 	@apply text-sm leading-relaxed;
 
 	margin-top: 3em;
 	color: var(--color-primary-600);
 }
 
-.content > .footnotes ol {
-	max-width: var(--content-measure);
+.prose-x > .footnotes ol {
+	max-width: var(--prose-measure);
 }
 
-.content > .footnotes ol li::marker {
+.prose-x > .footnotes ol li::marker {
 	@apply text-xs;
 
 	font-style: italic;
 }
 
-.content .footnotes li p {
+.prose-x .footnotes li p {
 	margin: 0;
 }
 
-.content [data-footnote-ref]::before,
-.content [data-footnote-ref]::after {
+.prose-x [data-footnote-ref]::before,
+.prose-x [data-footnote-ref]::after {
 	@apply font-light text-accent-300;
 }
 
-.content [data-footnote-ref]::before {
+.prose-x [data-footnote-ref]::before {
 	margin-inline-start: 1px;
 	content: '[';
 }
 
-.content [data-footnote-ref]::after {
+.prose-x [data-footnote-ref]::after {
 	content: ']';
 }
 
-.content [data-footnote-ref],
-.content [data-footnote-backref] {
+.prose-x [data-footnote-ref],
+.prose-x [data-footnote-backref] {
 	@apply font-medium;
 
 	text-decoration-line: none;

@@ -23,7 +23,7 @@ const { Content } = await render(entry);
 
 {
 	hasContent ? (
-		<ProseBody class:list={['content', 'pb-8', className]} data-pagefind-weight="2" {...props}>
+		<ProseBody class:list={['pb-8', className]} data-pagefind-weight="2" {...props}>
 			<Content />
 		</ProseBody>
 	) : undefined

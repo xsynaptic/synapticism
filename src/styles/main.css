@@ -26,11 +26,10 @@
 
 /** Component layer */
 @import './main/components/anchor.css' layer(components);
-@import './main/components/content.css' layer(components);
 @import './main/components/divider.css' layer(components);
-@import './main/components/loading.css' layer(components);
 @import './main/components/pagination.css' layer(components);
 @import './main/components/progress.css' layer(components);
+@import './main/components/prose.css' layer(components);
 @import './main/components/search.css' layer(components);
 @import './main/components/skip-link.css' layer(components);
 @import './main/components/top-button.css' layer(components);

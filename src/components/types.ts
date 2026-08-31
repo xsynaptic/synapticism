@@ -32,24 +32,6 @@ interface MetaImageProps {
 	width?: number;
 }
 
-export const DividerColorEnum = {
-	Darker: 'darker',
-	Default: 'default',
-	Lighter: 'lighter',
-} as const;
-
-export type DividerColor = (typeof DividerColorEnum)[keyof typeof DividerColorEnum];
-
-export const DividerContentEnum = {
-	Bar: 'bar',
-	Bullet: 'bullet',
-	Chevron: 'chevron',
-	Dot: 'dot',
-	Slash: 'slash',
-} as const;
-
-export type DividerContent = (typeof DividerContentEnum)[keyof typeof DividerContentEnum];
-
 export const MicroformatClassNames = {
 	Author: 'p-author',
 	Card: 'h-card',

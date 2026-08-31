@@ -67,7 +67,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			label={t('site.skipToContent')}
 			parentClass="print:hidden"
 		/>
-		<header class:list={['transition-colors', 'z-40', 'print:hidden']}>
+		<header class:list={['transition-colors', 'z-header', 'print:hidden']}>
 			<div class:list={['py-3 lg:py-4', 'bg-linear-to-b from-primary-800 to-primary-700']}>
 				<div class="content-column flex flex-wrap items-center justify-between gap-2">
 					<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
@@ -102,7 +102,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			hasReadingBar ? (
 				<ProgressReading
 					class:list={[
-						'z-98 rounded-br-md shadow-lg shadow-current',
+						'z-progress rounded-br-md shadow-lg shadow-current',
 						'bg-linear-to-r from-highlight-500 to-highlight-300 text-highlight-200',
 						'print:hidden',
 					]}

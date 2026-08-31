@@ -71,7 +71,7 @@ const { Content } = await render(entry);
 				<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
 			) : undefined
 		}
-		<ProseBody class:list={['content', 'e-content', 'pb-4']} data-reading-frame>
+		<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
 			<Content />
 		</ProseBody>
 		<AuthorCard />
