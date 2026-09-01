@@ -1,8 +1,10 @@
 # AGENTS.md
 
-Source for [synapticism.com](https://synapticism.com): a dev blog, tech notebook, and creative coding project. An Astro site in a pnpm workspace: the root is the app (`src/`), and `packages/*` hold the content archive, the creative coding lab, build scripts, and other such things.
+Source for [**synapticism.com**](https://synapticism.com): a dev blog, tech notebook, and creative coding project. An Astro site in a pnpm workspace: the root is the app (`src/`), and `packages/*` hold the content archive, the creative coding lab, build scripts, and other such things.
 
 Vocabulary is fixed. Read [`.claude/context.md`](.claude/context.md) before naming things in code or in prose.
+
+Do not add anything to this file unless it is important and relevant.
 
 ## Commands
 
@@ -21,5 +23,12 @@ Vocabulary is fixed. Read [`.claude/context.md`](.claude/context.md) before nami
 
 ## Styling
 
-- Tailwind v4 carries the styling. Global CSS lives in `src/styles/main/*.css`, imported by `src/styles/main.css`; reach for a scoped `<style>` in an `.astro` file only when a rule cannot live there
-- Compose dynamic classes with Astro's `class:list={[...]}`
+- Tailwind v4 provides the base and should be used when prototyping anything new but we prefer to avoid the more arcane and convoluted syntax where possible. If an atomic class isn't already in the main CSS output consider writing vanilla CSS.
+- Utilities inline by default; a rule in `src/styles/main/components/<component>.css` (registered in `main.css` under `layer(components)`) only when the selector or value cannot sit on the element: content not authored here (MDX, pagefind, maplibre), structural and state selectors, pseudo-elements carrying `content`, values with no theme step.
+- A decoration applied like a utility typically becomes a `@utility` in `parts/utilities.css`.
+- No `<style>` blocks (they bundle into the same file, sit outside the cascade layers, and stop at the component's own template); `main-stylesheet.astro` is the one `is:inline` exception (FOUC guard).
+- A hook class carries only what the stylesheet targets and shares a descriptive prefix or short-form representing the target. Avoid Microformat prefixes (`p-`, `h-`, `u-`, `dt-`, `e-`).
+- Stylesheets read tokens as `var(--…)`; `@apply` where it replaces a media query or composes a project `@utility`.
+- Stacking order is `--z-index-*` applied as `z-*` utilities or `var()`.
+- `main.css` scans `components/`, `layouts/` and `pages/` only. A directory left off that list gets no utilities and cannot reach the production stylesheet, which is what keeps `src/design-system` (the dev-only `/design-system` page) out of a build.
+- Every `hover:` on a focusable element has its `focus-visible:` twin where relevant. A stylesheet `:hover` sits under `@media (hover: hover)`, as Tailwind's `hover:` does; its `:focus-visible` partner stays outside it.
