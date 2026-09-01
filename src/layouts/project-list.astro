@@ -46,7 +46,7 @@ const { page } = Astro.props;
 							<DateDisplay
 								class="text-xs text-primary-400"
 								date={item.dateCreated}
-								datePreset={DatePresetEnum.Medium}
+								datePreset={DatePresetEnum.Long}
 							/>
 							{item.description ? (
 								<p class="text-sm text-primary-500" set:html={item.description} />

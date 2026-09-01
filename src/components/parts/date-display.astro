@@ -18,15 +18,9 @@ const datePresets = {
 		timeZone: 'UTC',
 		year: 'numeric',
 	},
-	[DatePresetEnum.Medium]: {
-		day: 'numeric',
-		month: 'long',
-		timeZone: 'UTC',
-		year: 'numeric',
-	},
 	[DatePresetEnum.Short]: {
-		day: 'numeric',
-		month: 'numeric',
+		day: '2-digit',
+		month: '2-digit',
 		timeZone: 'UTC',
 		year: 'numeric',
 	},
@@ -39,7 +33,7 @@ const timeOptions = {
 	timeZone: 'UTC',
 } satisfies Intl.DateTimeFormatOptions;
 
-const { date, dateOptions, datePreset = DatePresetEnum.Medium, ...props } = Astro.props;
+const { date, dateOptions, datePreset = DatePresetEnum.Long, ...props } = Astro.props;
 
 const dateRaw = parseContentDate(date);
 

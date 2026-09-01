@@ -2,7 +2,6 @@ import { siteYearFounded } from '#constants.ts';
 
 export const DatePresetEnum = {
 	Long: 'long',
-	Medium: 'medium',
 	Short: 'short',
 } as const;
 
