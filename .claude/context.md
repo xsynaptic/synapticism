@@ -45,3 +45,7 @@ The language of the site itself: what an author writes, how it is grouped, and h
 ## Beyond the content model
 
 **Lab**: The body of self-contained creative coding experiments kept outside the content model, each usable on the site and developed against its own set of interactive controls. _Avoid_: demos, sandbox, toys, playground.
+
+**Inventory**: The dev-only page enumerating what the site is built from: every design token and every common component, rendered from its real source against fixture props. It is descriptive, never normative, so it records what the code does rather than prescribing what it should do. _Avoid_: design system, style guide, pattern library, kitchen sink, storybook.
+
+**Specimen**: A single labeled entry in the Inventory: one component or one token set, shown with its name, its source path, and an optional note. _Avoid_: example, demo, sample (a sample is the fixture data a Specimen renders with).

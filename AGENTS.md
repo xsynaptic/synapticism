@@ -30,5 +30,5 @@ Do not add anything to this file unless it is important and relevant.
 - A hook class carries only what the stylesheet targets and shares a descriptive prefix or short-form representing the target. Avoid Microformat prefixes (`p-`, `h-`, `u-`, `dt-`, `e-`).
 - Stylesheets read tokens as `var(--…)`; `@apply` where it replaces a media query or composes a project `@utility`.
 - Stacking order is `--z-index-*` applied as `z-*` utilities or `var()`.
-- `main.css` scans `components/`, `layouts/` and `pages/` only. A directory left off that list gets no utilities and cannot reach the production stylesheet, which is what keeps `src/design-system` (the dev-only `/design-system` page) out of a build.
+- `main.css` scans `components/`, `layouts/` and `pages/` only. A directory left off that list gets no utilities and cannot reach the production stylesheet, which is what keeps `src/inventory` (the dev-only `/inventory` page) out of a build.
 - Every `hover:` on a focusable element has its `focus-visible:` twin where relevant. A stylesheet `:hover` sits under `@media (hover: hover)`, as Tailwind's `hover:` does; its `:focus-visible` partner stays outside it.

@@ -1,14 +1,14 @@
 import type { AstroIntegration } from 'astro';
 
-interface DesignSystemOptions {
+interface InventoryOptions {
 	entrypoint?: string;
 	route?: string;
 }
 
-export default function designSystem({
-	entrypoint = './src/design-system/design-system.astro',
-	route = '/design-system',
-}: DesignSystemOptions = {}): AstroIntegration {
+export default function inventory({
+	entrypoint = './src/inventory/inventory.astro',
+	route = '/inventory',
+}: InventoryOptions = {}): AstroIntegration {
 	return {
 		hooks: {
 			'astro:config:setup': ({ command, injectRoute }) => {
@@ -17,6 +17,6 @@ export default function designSystem({
 				injectRoute({ entrypoint, pattern: route });
 			},
 		},
-		name: 'design-system',
+		name: 'inventory',
 	};
 }

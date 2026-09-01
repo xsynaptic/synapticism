@@ -43,14 +43,14 @@ import {
 	sampleNavigationOlder,
 	sampleRowItems,
 	sampleSource,
-} from '#design-system/design-system-fixtures.ts';
-import ProseSample from '#design-system/design-system-prose-sample.mdx';
-import Section from '#design-system/design-system-section.astro';
-import Specimen from '#design-system/design-system-specimen.astro';
+} from '#inventory/inventory-fixtures.ts';
+import ProseSample from '#inventory/inventory-prose-sample.mdx';
+import Section from '#inventory/inventory-section.astro';
+import Specimen from '#inventory/inventory-specimen.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 
-import './design-system.css';
+import './inventory.css';
 
 // Semantic ramps only; blue-chill and cumin are the primitives accent and highlight alias
 const colorRamps = [
@@ -91,10 +91,10 @@ const samplePageMiddle = createSamplePage(3, 12);
 const sampleItem = sampleCatalogItems[0];
 ---
 
-<MainSite hasReadingBar={true} meta={{ noIndex: true, title: 'Design system' }}>
+<MainSite hasReadingBar={true} meta={{ noIndex: true, title: 'Inventory' }}>
 	<div class="pb-16">
 		<div class="content-column pt-8">
-			<h1 class="font-mono text-base font-medium text-primary-800">Design system</h1>
+			<h1 class="font-mono text-base font-medium text-primary-800">Inventory</h1>
 			<p class="mt-2 max-w-(--prose-measure) text-sm leading-relaxed text-primary-600">
 				Every common component, rendered from its real source with fixture props. Dev only: the
 				route is injected when the command is dev, so nothing here reaches a build.

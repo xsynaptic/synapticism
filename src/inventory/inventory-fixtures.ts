@@ -40,7 +40,7 @@ function createCatalogItem(item: Partial<CatalogItem> & Pick<CatalogItem, 'id' |
 		imageId: sampleImageId,
 		links: undefined,
 		linksExternalCount: 0,
-		url: `/design-system/#${item.id}`,
+		url: `/inventory/#${item.id}`,
 		wordCount: 820,
 		...item,
 	} satisfies CatalogItem;
@@ -73,12 +73,12 @@ export const sampleCatalogItems: Array<CatalogItem> = [
 
 export const sampleNavigationNewer = {
 	title: 'A newer entry, one step forward in the archive',
-	url: '/design-system/#newer',
+	url: '/inventory/#newer',
 } satisfies ContentNavigationItem;
 
 export const sampleNavigationOlder = {
 	title: 'An older entry, one step back',
-	url: '/design-system/#older',
+	url: '/inventory/#older',
 } satisfies ContentNavigationItem;
 
 export const sampleLinks = [
@@ -93,10 +93,10 @@ export const sampleSource = {
 
 // LabeledRow keeps its item interface local, so reach it through the component's own props
 export const sampleRowItems = [
-	{ title: 'typography', url: '/design-system/#tag-typography' },
-	{ title: 'creative coding', url: '/design-system/#tag-creative-coding' },
-	{ title: 'css', url: '/design-system/#tag-css' },
-	{ title: 'astro', url: '/design-system/#tag-astro' },
+	{ title: 'typography', url: '/inventory/#tag-typography' },
+	{ title: 'creative coding', url: '/inventory/#tag-creative-coding' },
+	{ title: 'css', url: '/inventory/#tag-css' },
+	{ title: 'astro', url: '/inventory/#tag-astro' },
 ] satisfies ComponentProps<typeof LabeledRow>['items'];
 
 export function createSamplePage(currentPage: number, lastPage: number): Page<CatalogItem> {
