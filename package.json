@@ -26,19 +26,19 @@
 	},
 	"dependencies": {
 		"@synapticism/lab": "workspace:*",
-		"astro": "^7.2.9"
+		"astro": "^7.2.10"
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.10",
-		"@astrojs/markdown-satteri": "^0.3.8",
-		"@astrojs/mdx": "^7.0.8",
+		"@astrojs/markdown-satteri": "^0.4.0",
+		"@astrojs/mdx": "^8.0.0",
 		"@astrojs/rss": "^4.0.19",
 		"@keyv/sqlite": "^4.0.8",
 		"@pagefind/component-ui": "^1.5.2",
 		"@synapticism/astro-sitemap": "workspace:*",
 		"@tailwindcss/vite": "^4.3.3",
 		"@types/react": "^19.2.18",
-		"@xsynaptic/eslint-config": "^6.2.2",
+		"@xsynaptic/eslint-config": "^6.3.0",
 		"@xsynaptic/mdxlint-config": "^2.0.0",
 		"@xsynaptic/satteri-auto-import": "^0.2.1",
 		"@xsynaptic/satteri-reading-time": "^0.3.1",
