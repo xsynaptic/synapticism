@@ -3,7 +3,9 @@ import type { HTMLAttributes } from 'astro/types';
 
 import type { DatePreset } from '#lib/utils/date.ts';
 
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum, hasUtcTime, parseContentDate } from '#lib/utils/date.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props extends HTMLAttributes<'time'> {
 	date: Date | string;
@@ -47,10 +49,18 @@ const dateDisplay = dateRaw.toLocaleDateString('en-US', {
 });
 
 const timeDisplay = hasUtcTime(dateRaw)
-	? `${dateRaw.toLocaleTimeString('en-US', timeOptions)} UTC`
+	? formatStringTemplate(t('content.timeUtc'), {
+			time: dateRaw.toLocaleTimeString('en-US', timeOptions),
+		})
 	: undefined;
+
+const dateTimeTemplate = t(
+	datePreset === DatePresetEnum.Short ? 'content.dateTimeShort' : 'content.dateTime',
+);
+
+const dateTimeDisplay = timeDisplay
+	? formatStringTemplate(dateTimeTemplate, { date: dateDisplay, time: timeDisplay })
+	: dateDisplay;
 ---
 
-<time datetime={dateTimeAttribute} {...props}
-	>{timeDisplay ? `${dateDisplay} at ${timeDisplay}` : dateDisplay}</time
->
+<time datetime={dateTimeAttribute} {...props}>{dateTimeDisplay}</time>

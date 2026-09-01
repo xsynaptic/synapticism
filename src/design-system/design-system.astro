@@ -1,0 +1,605 @@
+---
+import type { ComponentProps } from 'astro/types';
+
+import ContentDate from '#components/content/content-date.astro';
+import ContentExcerpt from '#components/content/content-excerpt.astro';
+import ContentHeader from '#components/content/content-header.astro';
+import ContentHero from '#components/content/content-hero.astro';
+import ContentImage from '#components/content/content-image.astro';
+import ContentNoteLinks from '#components/content/content-note-links.astro';
+import ContentSection from '#components/content/content-section.astro';
+import ContentThumbnail from '#components/content/content-thumbnail.astro';
+import MainSite from '#components/main/main-site.astro';
+import Img from '#components/mdx/img.astro';
+import Link from '#components/mdx/link.astro';
+import Anchor from '#components/parts/anchor.astro';
+import AuthorCard from '#components/parts/author-card.astro';
+import CardFrame from '#components/parts/card-frame.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import Grid from '#components/parts/grid.astro';
+import LabeledRow from '#components/parts/labeled-row.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
+import ListColumn from '#components/parts/list-column.astro';
+import ListRow from '#components/parts/list-row.astro';
+import PaginationCounter from '#components/parts/pagination-counter.astro';
+import PaginationSelect from '#components/parts/pagination-select.astro';
+import ProseBody from '#components/parts/prose-body.astro';
+import ProseDescription from '#components/parts/prose-description.astro';
+import SectionBacklinks from '#components/sections/section-backlinks.astro';
+import SectionNavigation from '#components/sections/section-navigation.astro';
+import SectionRelatedContent from '#components/sections/section-related-content.astro';
+import {
+	createSamplePage,
+	sampleCatalogItems,
+	sampleDate,
+	sampleDateTime,
+	sampleDateUpdated,
+	sampleImageFeatured,
+	sampleImageId,
+	sampleImageMissingNote,
+	sampleLinks,
+	sampleNavigationNewer,
+	sampleNavigationOlder,
+	sampleRowItems,
+	sampleSource,
+} from '#design-system/design-system-fixtures.ts';
+import ProseSample from '#design-system/design-system-prose-sample.mdx';
+import Section from '#design-system/design-system-section.astro';
+import Specimen from '#design-system/design-system-specimen.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { DatePresetEnum } from '#lib/utils/date.ts';
+
+import './design-system.css';
+
+// Semantic ramps only; blue-chill and cumin are the primitives accent and highlight alias
+const colorRamps = [
+	{ name: 'primary', source: 'zinc' },
+	{ name: 'accent', source: 'blue-chill' },
+	{ name: 'highlight', source: 'cumin' },
+];
+
+const colorSteps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+
+const typeSteps = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'];
+
+const fontFamilies = [
+	{ name: 'font-sans', note: 'Aleo, 300 to 700, normal and italic' },
+	{ name: 'font-mono', note: 'Geist Mono, 300 to 700' },
+];
+
+const sections = ['Foundations', 'Prose', 'Parts', 'Content'];
+
+type AnchorColor = NonNullable<ComponentProps<typeof Anchor>['anchorColor']>;
+
+// Split by the ground each colour is designed for; removing one from the union breaks the build
+const anchorColorsOnLight = [
+	'primary',
+	'primary-bright',
+	'title',
+	'accent',
+] satisfies Array<AnchorColor>;
+
+const anchorColorOnDark = 'on-dark' satisfies AnchorColor;
+const anchorColorOnAccent = 'on-accent' satisfies AnchorColor;
+
+const datePresets = Object.values(DatePresetEnum);
+
+const samplePageFirst = createSamplePage(1, 1);
+const samplePageMiddle = createSamplePage(3, 12);
+
+const sampleItem = sampleCatalogItems[0];
+---
+
+<MainSite hasReadingBar={true} meta={{ noIndex: true, title: 'Design system' }}>
+	<div class="pb-16">
+		<div class="content-column pt-8">
+			<h1 class="font-mono text-base font-medium text-primary-800">Design system</h1>
+			<p class="mt-2 max-w-(--prose-measure) text-sm leading-relaxed text-primary-600">
+				Every common component, rendered from its real source with fixture props. Dev only: the
+				route is injected when the command is dev, so nothing here reaches a build.
+			</p>
+			<nav class="mt-4 flex flex-wrap gap-x-5 font-mono text-sm">
+				{
+					sections.map((section) => (
+						<Anchor anchorColor="accent" href={`#${section.toLowerCase()}`}>
+							{section}
+						</Anchor>
+					))
+				}
+			</nav>
+		</div>
+		<Section id="foundations" title="Foundations">
+			<Specimen
+				name="Color ramps"
+				note="Read straight from the <code>@theme</code> block in <code>styles/main/parts/theme.css</code>."
+				source="styles/main/parts/theme.css"
+			>
+				<div class="flex flex-col gap-5">
+					{
+						colorRamps.map((ramp) => (
+							<div>
+								<div class="font-mono text-xs text-primary-600">
+									--color-{ramp.name}-*{' '}
+									<span class="font-mono text-xs text-primary-500">({ramp.source})</span>
+								</div>
+								<div class="mt-2 grid grid-cols-[repeat(auto-fit,minmax(4rem,1fr))] gap-1">
+									{colorSteps.map((step) => (
+										<div>
+											<div
+												class="h-12 rounded-sm border border-primary-300"
+												style={`background-color: var(--color-${ramp.name}-${String(step)})`}
+											/>
+											<div class="mt-1 font-mono text-[0.6875rem] text-primary-500">{step}</div>
+										</div>
+									))}
+								</div>
+							</div>
+						))
+					}
+				</div>
+			</Specimen>
+			<Specimen
+				name="Type scale"
+				note="Tailwind’s steps as the site uses them. Prose headings size in <code>em</code> against the body, so they are in the prose section rather than here."
+				source="styles/main/parts/theme.css"
+			>
+				<div class="flex flex-col gap-4">
+					{
+						typeSteps.map((step) => (
+							<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
+								<div class="font-mono text-xs text-primary-500">text-{step}</div>
+								<div style={`font-size: var(--text-${step})`}>
+									The quick brown fox jumps over the lazy dog
+								</div>
+							</div>
+						))
+					}
+				</div>
+			</Specimen>
+			<Specimen name="Font families" source="styles/main/parts/theme.css">
+				<div class="flex flex-col gap-4">
+					{
+						fontFamilies.map((family) => (
+							<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
+								<div class="font-mono text-xs text-primary-500">
+									{family.name}, {family.note}
+								</div>
+								<div style={`font-family: var(--${family.name}); font-size: var(--text-xl)`}>
+									Synapticism 0123456789 <em>italic</em> <strong>bold</strong>
+								</div>
+							</div>
+						))
+					}
+				</div>
+			</Specimen>
+		</Section>
+		<Section id="prose" title="Prose">
+			<Specimen
+				fullWidth={true}
+				name="prose-body"
+				note="The <code>.prose-x</code> surface at full size, rendered from an MDX fixture through the real satteri pipeline. Carries <code>data-reading-frame</code>, so the reading bar at the top of the window tracks this block."
+				source="components/parts/prose-body.astro"
+			>
+				<ProseBody data-reading-frame>
+					<ProseSample />
+				</ProseBody>
+			</Specimen>
+			<Specimen
+				name="prose-description"
+				note="The same typography one step down, used for Descriptions and excerpt summaries."
+				source="components/parts/prose-description.astro"
+			>
+				<ProseDescription>
+					<p>
+						A Description renders inline markdown only: <em>emphasis</em>, <strong>strong</strong>,
+						and nothing else survives the sanitizer.
+					</p>
+				</ProseDescription>
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="mdx/img"
+				note="The auto-imported <code>Img</code> component, which delegates to <code>content-image</code>. The caption doubles as the alt text when no <code>alt</code> is given."
+				source="components/mdx/img.astro"
+			>
+				{
+					sampleImageId ? (
+						<ProseBody>
+							<Img src={sampleImageId}>A caption, set in mono beneath the frame</Img>
+						</ProseBody>
+					) : (
+						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+					)
+				}
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="mdx/link"
+				note="Resolves an Entry id against the Catalog. A fixture id has no target, so this shows the fallback branch: the text renders unlinked rather than throwing."
+				source="components/mdx/link.astro"
+			>
+				<ProseBody>
+					<p>
+						An internal <Link id="ds-sample-post">reference to another Entry</Link>, and the same
+						component with an id the Catalog does not hold.
+					</p>
+				</ProseBody>
+			</Specimen>
+		</Section>
+		<Section id="parts" title="Parts">
+			<Specimen
+				name="anchor"
+				note="Every <code>anchorColor</code> on the ground it was designed for. Hover and tab through: each has a <code>focus-visible</code> twin. Add <code>anchor-underline</code> to match the prose link treatment."
+				source="components/parts/anchor.astro"
+			>
+				<div class="flex flex-col gap-4">
+					<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
+						{
+							anchorColorsOnLight.map((anchorColor) => (
+								<Anchor anchorColor={anchorColor} href="#anchor">
+									{anchorColor}
+								</Anchor>
+							))
+						}
+						<Anchor anchorColor="accent" class="anchor-underline" href="#anchor">
+							accent + anchor-underline
+						</Anchor>
+					</div>
+					<div class="rounded-sm bg-primary-800 px-5 py-4">
+						<Anchor anchorColor={anchorColorOnDark} href="#anchor">{anchorColorOnDark}</Anchor>
+					</div>
+					<div class="rounded-sm bg-accent-500 px-5 py-4">
+						<Anchor anchorColor={anchorColorOnAccent} href="#anchor">{anchorColorOnAccent}</Anchor>
+					</div>
+				</div>
+			</Specimen>
+			<Specimen
+				name="date-display"
+				note="Presets read from <code>DatePresetEnum</code>, so a new one appears here on its own. A date authored with a time shows the time; a bare date does not. <code>long</code> is the default and the only preset anything in <code>src</code> passes; <code>short</code> is kept for a use that has not arrived."
+				source="components/parts/date-display.astro"
+			>
+				<table class="w-full border-collapse text-sm">
+					<thead>
+						<tr>
+							<th
+								class="border-b border-primary-200 py-1.5 pr-3 text-start align-top font-mono text-xs font-medium text-primary-600"
+								>Preset</th
+							>
+							<th
+								class="border-b border-primary-200 py-1.5 pr-3 text-start align-top font-mono text-xs font-medium text-primary-600"
+								>Date only</th
+							>
+							<th
+								class="border-b border-primary-200 py-1.5 pr-3 text-start align-top font-mono text-xs font-medium text-primary-600"
+								>Date and time</th
+							>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							datePresets.map((datePreset) => (
+								<tr>
+									<td class="border-b border-primary-200 py-1.5 pr-3 text-start align-top">
+										<code>{datePreset}</code>
+									</td>
+									<td class="border-b border-primary-200 py-1.5 pr-3 text-start align-top">
+										<DateDisplay date={sampleDate} datePreset={datePreset} />
+									</td>
+									<td class="border-b border-primary-200 py-1.5 pr-3 text-start align-top">
+										<DateDisplay date={sampleDateTime} datePreset={datePreset} />
+									</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</Specimen>
+			<Specimen
+				name="divided-item / list-row"
+				note="<code>list-row</code> lays items out inline and wrapping; <code>divided-item</code> puts a slash between them and drops it on the last. <code>divided-thin</code> is the same slash at a lighter weight, which is the whole of the difference: the two rows below are enlarged so it is visible at all."
+				source="components/parts/"
+			>
+				<div class="flex flex-col gap-3 text-lg">
+					<ListRow>
+						<DividedItem as="li">Default</DividedItem>
+						<DividedItem as="li">divider</DividedItem>
+						<DividedItem as="li">weight</DividedItem>
+					</ListRow>
+					<ListRow>
+						<DividedItem as="li" class="divided-thin">Thin</DividedItem>
+						<DividedItem as="li" class="divided-thin">divider</DividedItem>
+						<DividedItem as="li" class="divided-thin">weight</DividedItem>
+					</ListRow>
+				</div>
+			</Specimen>
+			<Specimen
+				name="list-column"
+				note="Polymorphic over <code>ul</code> and <code>ol</code>. Like <code>grid</code>, it has no caller in <code>src</code> yet."
+				source="components/parts/list-column.astro"
+			>
+				<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
+					<ListColumn>
+						<li>An unordered item</li>
+						<li>A second item</li>
+					</ListColumn>
+					<ListColumn as="ol">
+						<li>An ordered item</li>
+						<li>A second item</li>
+					</ListColumn>
+				</div>
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="labeled-section"
+				note="The rule-and-label header used by every section below an Entry. The heading level is a prop; the default is <code>h2</code>."
+				source="components/parts/labeled-section.astro"
+			>
+				<LabeledSection title="Heading level two">
+					<p class="font-mono text-xs text-primary-500">Section body</p>
+				</LabeledSection>
+				<LabeledSection as="h3" title="Heading level three">
+					<p class="font-mono text-xs text-primary-500">Section body</p>
+				</LabeledSection>
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="labeled-row"
+				note="A labeled section wrapping a divided row of links. <code>content-section-tags</code> and{ ' ' } <code>content-section-projects</code> are collection lookups on top of this and produce exactly this shape, so they are not demoed separately."
+				source="components/parts/labeled-row.astro"
+			>
+				<LabeledRow items={sampleRowItems} title="Tags" />
+			</Specimen>
+			<Specimen
+				name="grid / card-frame"
+				note="Neither has a caller in <code>src</code> yet: both are staged for the launch listing design and this page is their only use, so the cards below are dressed to show the intended shape rather than copied from anywhere. <code>grid</code> is one column, two from <code>md</code>, and renders nothing when its slot is empty."
+				source="components/parts/"
+			>
+				<Grid>
+					{
+						sampleCatalogItems.map((item) => (
+							<CardFrame class="flex gap-3">
+								{sampleImageId ? <ContentThumbnail imgAlt="" src={sampleImageId} /> : undefined}
+								<div class="flex flex-col gap-1">
+									<Anchor anchorColor="title" href="#grid">
+										{item.title}
+									</Anchor>
+									<ContentDate date={item.dateCreated} datePreset={DatePresetEnum.Long} />
+								</div>
+							</CardFrame>
+						))
+					}
+				</Grid>
+			</Specimen>
+			<Specimen
+				name="pagination-counter"
+				note="Hides itself on the first page. Below: page 1 of 1 (nothing), then page 3 of 12."
+				source="components/parts/pagination-counter.astro"
+			>
+				<div class="flex flex-col gap-4">
+					<PaginationCounter page={samplePageFirst} />
+					<PaginationCounter page={samplePageMiddle} />
+				</div>
+			</Specimen>
+			<Specimen
+				name="pagination-select"
+				note="Hides itself when there is one page. With JavaScript the counter swaps for a select; without it the counter and the previous/next links stand alone."
+				source="components/parts/pagination-select.astro"
+			>
+				<div class="flex flex-col gap-4">
+					<PaginationSelect page={samplePageFirst} />
+					<PaginationSelect page={samplePageMiddle} />
+				</div>
+			</Specimen>
+			<Specimen
+				name="author-card"
+				note="Rendered exactly as it ships, which in its present form is <code>sr-only</code>: the box below is deliberately empty on screen. It carries the h-card microformat for parsers."
+				source="components/parts/author-card.astro"
+			>
+				<AuthorCard />
+			</Specimen>
+		</Section>
+		<Section id="content" title="Content">
+			<Specimen
+				fullWidth={true}
+				name="content-header"
+				note="The <code>h1</code> of an Entry page. The title links to itself on a detail page; the subtitle slot takes divided items."
+				source="components/content/content-header.astro"
+			>
+				<ContentHeader
+					title="An Entry title long enough to wrap and show the balance"
+					titleUrl="#header"
+				>
+					<Fragment slot="header-subtitle">
+						<DividedItem>
+							<ContentDate
+								date={sampleDate}
+								datePreset={DatePresetEnum.Long}
+								showMicroformats={true}
+							/>
+						</DividedItem>
+						<DividedItem>
+							<ContentDate
+								date={sampleDateUpdated}
+								datePreset={DatePresetEnum.Long}
+								showMicroformats={true}
+								showUpdated={true}
+							/>
+						</DividedItem>
+						<DividedItem>8 minute read</DividedItem>
+					</Fragment>
+				</ContentHeader>
+				<ContentHeader title="The same header with no subtitle and no self-link" />
+			</Specimen>
+			<Specimen
+				name="content-date"
+				note="Wraps <code>date-display</code> with the microformat class and the “Updated” prefix. Renders nothing when the date is undefined."
+				source="components/content/content-date.astro"
+			>
+				<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
+					<ContentDate date={sampleDate} datePreset={DatePresetEnum.Long} />
+					<ContentDate
+						date={sampleDateUpdated}
+						datePreset={DatePresetEnum.Long}
+						showUpdated={true}
+					/>
+					<span class="font-mono text-xs text-primary-500">
+						undefined date: <ContentDate
+							date={undefined}
+							datePreset={DatePresetEnum.Long}
+						/>(nothing)
+					</span>
+				</div>
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="content-hero"
+				note="A Featured Image promoted to the top of an Entry, backed by its LQIP placeholder while it loads. Near-identical to <code>content-image</code> below, and distinct in four ways: it takes an <code>ImageFeaturedObject</code> rather than a path, loads <code>priority</code> as the LCP candidate, has no caption, and wears a small radius with no border."
+				source="components/content/content-hero.astro"
+			>
+				{
+					sampleImageId ? (
+						<ContentHero {...sampleImageFeatured} fallbackAlt="Fallback alt text" />
+					) : (
+						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+					)
+				}
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="content-image"
+				note="The in-body figure, breaking out past the reading measure. Shown inside <code>prose-body</code> because that is where it always sits. Against <code>content-hero</code>: lazy rather than priority, a caption that doubles as alt text, and a larger radius over a bordered, filled frame."
+				source="components/content/content-image.astro"
+			>
+				{
+					sampleImageId ? (
+						<ProseBody>
+							<ContentImage src={sampleImageId}>A caption beneath the frame</ContentImage>
+						</ProseBody>
+					) : (
+						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+					)
+				}
+			</Specimen>
+			<Specimen
+				name="content-thumbnail"
+				note="The square thumbnail beside an item in a list: 4rem across, 5rem from the <code>md</code> breakpoint up."
+				source="components/content/content-thumbnail.astro"
+			>
+				{
+					sampleImageId ? (
+						<ContentThumbnail
+							imgAlt="Thumbnail alt text"
+							showMicroformats={true}
+							src={sampleImageId}
+						/>
+					) : (
+						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+					)
+				}
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="content-section"
+				note="The generic content block. Every part of the header is a slot and each is optional; <code>titleLarge</code>, <code>marginSmall</code> and <code>fillViewport</code> switch the treatment. Renders nothing without a description or children."
+				source="components/content/content-section.astro"
+			>
+				<ContentSection>
+					<Fragment slot="section-title">Default title</Fragment>
+					<Fragment slot="section-subtitle">A subtitle beneath it</Fragment>
+					<Fragment slot="section-description">
+						<p>A description, rendered through prose-description.</p>
+					</Fragment>
+					<p class="font-mono text-xs text-primary-500">Section children</p>
+				</ContentSection>
+				<ContentSection marginSmall={true} titleLarge={true}>
+					<Fragment slot="section-title">titleLarge with marginSmall</Fragment>
+					<p class="font-mono text-xs text-primary-500">Section children</p>
+				</ContentSection>
+				<ContentSection fillViewport={true}>
+					<Fragment slot="section-title">fillViewport</Fragment>
+					<p class="font-mono text-xs text-primary-500">
+						Reaches the viewport edge below the sm breakpoint
+					</p>
+				</ContentSection>
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="content-excerpt"
+				note="A Note in the Stream. The body is cut at the fold the author placed with <code>More</code>, and the “continue reading” link only appears when there is something past it."
+				source="components/content/content-excerpt.astro"
+			>
+				<ContentExcerpt entryUrl="#excerpt">
+					<Fragment slot="excerpt-title">An excerpt title, linked to its Entry</Fragment>
+					<Fragment slot="excerpt-subtitle">
+						<ContentDate date={sampleDate} datePreset={DatePresetEnum.Long} />
+						<span>example.com <span aria-hidden="true">↗</span></span>
+					</Fragment>
+					<ProseSample />
+				</ContentExcerpt>
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="content-note-links"
+				note="The outbound links a Note points at, with the domain beneath each and the Source credited on the first."
+				source="components/content/content-note-links.astro"
+			>
+				<ContentNoteLinks links={sampleLinks} source={sampleSource} />
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="section-backlinks"
+				note="Inbound Links, capped at ten and sorted newest first."
+				source="components/sections/section-backlinks.astro"
+			>
+				<SectionBacklinks backlinks={sampleCatalogItems} />
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="section-related-content"
+				note="The writing that points at a Project."
+				source="components/sections/section-related-content.astro"
+			>
+				<SectionRelatedContent entries={sampleCatalogItems} />
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="section-navigation"
+				note="Previous and next within one collection, plus the link back to the list. Each arm renders alone when the other end of the run is missing."
+				source="components/sections/section-navigation.astro"
+			>
+				<SectionNavigation
+					baseUrl="#navigation"
+					labelPLural={t('collection.posts.plural')}
+					labelSingular={t('collection.posts.singular')}
+					newerItem={sampleNavigationNewer}
+					olderItem={sampleNavigationOlder}
+				/>
+				<SectionNavigation
+					baseUrl="#navigation"
+					labelPLural={t('collection.notes.plural')}
+					labelSingular={t('collection.notes.singular')}
+					newerItem={undefined}
+					olderItem={sampleNavigationOlder}
+				/>
+			</Specimen>
+			<Specimen
+				fullWidth={true}
+				name="content-description"
+				note="Not shown directly: it takes a real Entry and calls <code>render()</code>, which fixtures cannot satisfy. It picks between these two shapes. With a body it renders <code>prose-body</code>; with only a frontmatter Description it renders a <code>content-section</code> holding <code>prose-description</code>."
+				source="components/content/content-description.astro"
+			>
+				<ProseBody>
+					<p>{sampleItem?.title}: the body branch, at full prose size.</p>
+				</ProseBody>
+				<ContentSection>
+					<Fragment slot="section-description">
+						<ProseDescription>
+							<Fragment set:html={sampleItem?.description} />
+						</ProseDescription>
+					</Fragment>
+				</ContentSection>
+			</Specimen>
+		</Section>
+	</div>
+</MainSite>

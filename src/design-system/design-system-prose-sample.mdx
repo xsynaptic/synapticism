@@ -1,0 +1,103 @@
+A paragraph opens the specimen, long enough to wrap at the reading measure and show the
+line height the body copy actually gets. It carries an [inline link](https://example.com/),
+some **bold weight**, some _emphasis_, a bit of `inline code`, and a footnote
+reference[^measure] so the reference markers and the footnotes section below both render.
+
+<More />
+
+## Heading level two
+
+Second-level headings open the major divisions of a Post. The paragraph that follows sits
+tighter against its heading than it does against a preceding paragraph, which is what the
+flow rhythm in `prose.css` is for.
+
+### Heading level three
+
+Third-level headings subdivide a section. They keep the same weight and color as their
+parents and separate on size alone.
+
+#### Heading level four
+
+The smallest heading in the scale, one step above body copy.
+
+## Lists
+
+An unordered list, with a nested level to show the marker color and the indent:
+
+- The first item in the list
+- A second item, long enough to wrap onto a second line so the hanging indent under the
+  marker is visible at the reading measure
+  - A nested item
+  - A second nested item
+- A third item
+
+An ordered list:
+
+1. Establish the constraint
+2. Build the smallest thing that satisfies it
+3. Layer the rest on top
+
+## Quotations
+
+A plain blockquote takes the hanging quotation mark:
+
+> The block quote is set at a smaller size, in italic, indented from the measure. A second
+> paragraph in the same quote picks up its own spacing.
+>
+> This is that second paragraph.
+
+The `Quotation` component adds attribution:
+
+<Quotation
+	author="Edward Tufte"
+	title="The Visual Display of Quantitative Information"
+	url="https://www.edwardtufte.com/book/the-visual-display-of-quantitative-information/"
+	year="1983"
+>
+	Graphical excellence is that which gives to the viewer the greatest number of ideas in the
+	shortest time with the least ink in the smallest space.
+</Quotation>
+
+## Code
+
+Fenced code runs through Expressive Code, which owns highlighting, the frame, and the
+title bar:
+
+```ts title="src/lib/utils/date.ts"
+export function parseContentDate(date: Date | string | undefined) {
+	if (!date) return;
+	if (date instanceof Date) return date;
+
+	return new Date(date);
+}
+```
+
+A block with no language and no title falls back to the plain frame:
+
+```
+pnpm check
+pnpm build
+```
+
+## Tables
+
+| Component        | Where it lives      | Takes                |
+| ---------------- | ------------------- | -------------------- |
+| `Anchor`         | `components/parts`  | An `anchorColor`     |
+| `LabeledSection` | `components/parts`  | A `title` and a slot |
+| `ContentHero`    | `components/content` | An `ImageFeaturedObject` |
+
+## Rules
+
+A horizontal rule separates two runs of text without introducing a heading.
+
+---
+
+Text after the rule, closing the specimen. Strikethrough (~~like this~~) and task lists
+also come from GFM:
+
+- [x] Ships with the rest of the pipeline
+- [ ] Still to be reviewed
+
+[^measure]: Footnotes render at the foot of the prose container, at a smaller size, with
+    the backreference arrow the pipeline appends.

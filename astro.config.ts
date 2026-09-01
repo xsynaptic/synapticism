@@ -1,4 +1,3 @@
-// @ts-check
 import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
 import sitemap from '@synapticism/astro-sitemap';
@@ -10,6 +9,7 @@ import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
 import { expressiveCodeOptions } from './expressive-code.config.mjs';
+import designSystem from './src/design-system/design-system-integration.ts';
 
 export default defineConfig({
 	env: {
@@ -51,6 +51,7 @@ export default defineConfig({
 		responsiveStyles: true,
 	},
 	integrations: [
+		designSystem(),
 		mdx(),
 		sitemap({ excludePrefixes: ['/about/cv'] }),
 		pagefind({

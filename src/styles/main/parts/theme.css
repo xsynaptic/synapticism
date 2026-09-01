@@ -10,7 +10,6 @@
 
 	/* Fonts */
 	--font-sans: var(--font-aleo);
-	--font-serif: ui-serif, 'Georgia', 'Cambria', 'Times New Roman', 'Times', serif;
 	--font-mono: var(--font-geist-mono);
 
 	/* Teal primitive */

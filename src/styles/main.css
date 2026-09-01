@@ -7,7 +7,9 @@
  * 2) Astro files
  */
 @source './main/**/*.css';
-@source '../**/*.astro';
+@source '../components/**/*.astro';
+@source '../layouts/**/*.astro';
+@source '../pages/**/*.astro';
 
 /* Safelist utilities applied to HTML we don't author directly */
 @source inline('sr-only');

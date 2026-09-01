@@ -2,6 +2,7 @@
 const strings = {
 	// Site
 	'site.description': 'A technical blog about web development, design, and creative coding.',
+	'site.pageTitle': '{title} - {siteTitle}',
 	'site.search.placeholder': 'Search...',
 	'site.search.toggle.label': 'Open search',
 	'site.search.toggle.title': 'Search',
@@ -69,7 +70,11 @@ const strings = {
 
 	// Content
 	'content.continueReading': 'Continue reading',
+	'content.dateTime': '{date} at {time}',
+	'content.dateTimeShort': '{date} {time}',
 	'content.minutesRead': '{minutesRead} minute read',
+	'content.quotationAuthor': '― {author}',
+	'content.timeUtc': '{time} UTC',
 	'content.updated': 'Updated',
 	'content.via': ' · via ',
 

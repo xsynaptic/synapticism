@@ -1,0 +1,34 @@
+---
+interface Props {
+	fullWidth?: boolean | undefined;
+	name: string;
+	note?: string | undefined;
+	source?: string | undefined;
+}
+
+const { fullWidth = false, name, note, source } = Astro.props;
+---
+
+<section class="mt-10">
+	<div class="content-column">
+		<h3 class="flex flex-wrap items-baseline gap-x-3 font-mono text-sm font-medium text-accent-700">
+			{name}
+			{source ? <span class="text-xs font-normal text-primary-500">{source}</span> : undefined}
+		</h3>
+		{
+			note ? (
+				<div class="prose-x prose-compact mt-1">
+					<p set:html={note} />
+				</div>
+			) : undefined
+		}
+	</div>
+	<div
+		class:list={[
+			'mt-3',
+			fullWidth ? 'py-5' : 'content-column rounded-sm border border-primary-300 p-5',
+		]}
+	>
+		<slot />
+	</div>
+</section>

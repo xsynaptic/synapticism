@@ -5,7 +5,7 @@ import path from 'node:path';
 
 // Frontmatter stores media as paths relative to packages/content/media (e.g. 2026/05/x.jpg)
 // Astro can only optimize images it discovers statically, so the glob must be a literal
-const mediaRoot = '/packages/content/media';
+export const mediaRoot = '/packages/content/media';
 
 const mediaImages = import.meta.glob<{ default: ImageMetadata }>(
 	'/packages/content/media/**/*.{avif,jpeg,jpg,png,webp}',
@@ -19,6 +19,10 @@ export function getMediaImage(mediaPath: string): ImageMetadata {
 		throw new Error(`Media image not found: "${mediaPath}" (expected a file at ${key})`);
 	}
 	return image.default;
+}
+
+export function hasMediaImage(mediaPath: string): boolean {
+	return Object.hasOwn(mediaImages, `${mediaRoot}/${mediaPath}`);
 }
 
 // The LQIP script regenerates this gitignored cache before each build

@@ -18,7 +18,7 @@ interface FontVariant {
 	weight: number;
 }
 
-// The two faces the site itself serves, via Astro's font provider (see astro.config.mjs)
+// The two faces the site itself serves, via Astro's font provider
 // Only the weights the card renders; every variant is parsed into the renderer
 const fontConfigs: Array<FontsourceConfig> = [
 	{

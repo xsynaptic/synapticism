@@ -1,10 +1,10 @@
 // @ts-check
 
-// Brand ramp hex used by the code theme, mirroring src/styles/theme/colors.css
-// Shiki resolves and does color math on these at build, so they must be literals
+// Shiki does colour math on these at build, so they must be literals rather than var() reads
 const ramp = {
 	accent200: '#b7e6ea',
 	accent300: '#85d3db',
+	accent400: '#4cb6c4',
 	accent600: '#2b7e8f',
 	accent700: '#296775',
 	highlight300: '#e8a578',
@@ -19,7 +19,6 @@ const ramp = {
 	primary900: '#18181b',
 };
 
-// Carbon code-block theme: a dark slab matching the masthead, syntax mapped to the brand ramps
 const carbonCodeTheme = {
 	colors: {
 		'editor.background': ramp.primary800,
@@ -70,7 +69,7 @@ const carbonCodeTheme = {
 		},
 		{
 			scope: ['entity.name.function', 'support.function', 'meta.function-call.generic'],
-			settings: { foreground: ramp.primary100 }, // functions pop by brightness
+			settings: { foreground: ramp.primary100 },
 		},
 		{
 			scope: [
@@ -83,7 +82,7 @@ const carbonCodeTheme = {
 		},
 		{
 			scope: ['punctuation', 'meta.brace', 'keyword.operator'],
-			settings: { foreground: ramp.primary400 }, // quiet operators and brackets
+			settings: { foreground: ramp.primary400 },
 		},
 		{
 			scope: ['entity.name.tag', 'punctuation.definition.tag'],
@@ -105,7 +104,7 @@ export const expressiveCodeOptions = {
 		wrap: false,
 	},
 	styleOverrides: {
-		borderColor: ramp.primary700, // faint machined edge
+		borderColor: ramp.primary700,
 		borderRadius: '0.25rem', // --radius-sm, the system's only radius
 		borderWidth: '1px',
 		codeFontFamily: 'var(--font-mono)',
@@ -114,15 +113,15 @@ export const expressiveCodeOptions = {
 		codePaddingBlock: '1rem',
 		codePaddingInline: '1.25rem',
 		frames: {
-			editorActiveTabBackground: ramp.primary900,
+			editorActiveTabBackground: ramp.accent700,
 			editorActiveTabBorderColor: 'transparent',
-			editorActiveTabForeground: ramp.primary300,
+			editorActiveTabForeground: ramp.primary100,
 			editorActiveTabIndicatorBottomColor: 'transparent',
-			editorActiveTabIndicatorTopColor: ramp.accent600, // teal spark on the tab
+			editorActiveTabIndicatorTopColor: ramp.accent400,
 			editorBackground: ramp.primary800,
 			editorTabBarBackground: ramp.primary900,
 			editorTabBarBorderBottomColor: ramp.primary700,
-			frameBoxShadowCssValue: 'none', // no floating-card shadow
+			frameBoxShadowCssValue: 'none',
 			inlineButtonBackground: ramp.primary400,
 			inlineButtonBorder: ramp.primary600,
 			inlineButtonForeground: ramp.primary300,
@@ -134,16 +133,16 @@ export const expressiveCodeOptions = {
 			tooltipSuccessBackground: ramp.accent700,
 			tooltipSuccessForeground: '#ffffff',
 		},
-		scrollbarThumbColor: 'rgba(161, 161, 170, 0.25)', // primary-400 at low alpha
+		scrollbarThumbColor: 'rgba(161, 161, 170, 0.25)',
 		scrollbarThumbHoverColor: 'rgba(161, 161, 170, 0.45)',
 		textMarkers: {
-			delBackground: 'rgba(200, 120, 110, 0.13)', // muted red diff
+			delBackground: 'rgba(200, 120, 110, 0.13)',
 			delBorderColor: 'rgba(200, 120, 110, 0.45)',
 			delDiffIndicatorColor: '#c8786e',
-			insBackground: 'rgba(122, 180, 140, 0.13)', // muted green diff (semantic exception)
+			insBackground: 'rgba(122, 180, 140, 0.13)',
 			insBorderColor: 'rgba(122, 180, 140, 0.45)',
 			insDiffIndicatorColor: '#7ab48c',
-			markBackground: 'rgba(133, 211, 219, 0.13)', // teal line highlight
+			markBackground: 'rgba(133, 211, 219, 0.13)',
 			markBorderColor: 'rgba(133, 211, 219, 0.45)',
 		},
 		uiFontFamily: 'var(--font-mono)',

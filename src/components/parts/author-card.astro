@@ -10,7 +10,8 @@ import { getSiteUrl } from '#lib/utils/routing.ts';
 	<Anchor class={MicroformatClassNames.Url} href={getSiteUrl('about')} rel="me"
 		><span class={MicroformatClassNames.Name}>{siteAuthorName}</span></Anchor
 	>
-	<span class={MicroformatClassNames.Role}>{t('author.role')}</span>
+	{' '}
+	<span class={MicroformatClassNames.Role}>{t('author.role')}</span>{' '}
 	<Anchor
 		class:list={[MicroformatClassNames.Card, MicroformatClassNames.Organization]}
 		href={getSiteUrl()}>{t('site.title')}</Anchor

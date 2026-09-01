@@ -53,8 +53,13 @@ const hasExcerpt = excerptSplit.length > 1;
 	</ProseBody>
 	{
 		hasExcerpt ? (
-			<div class="content-column text-right font-serif font-medium italic">
-				<Anchor href={entryUrl}>{t('content.continueReading')}</Anchor>&nbsp;&raquo;
+			<div class="content-column flex items-baseline justify-end gap-1 text-sm font-medium italic">
+				<Anchor anchorColor="accent" href={entryUrl}>
+					{t('content.continueReading')}
+				</Anchor>
+				<span aria-hidden="true" class="shrink-0 text-primary-600">
+					&rarr;
+				</span>
 			</div>
 		) : undefined
 	}

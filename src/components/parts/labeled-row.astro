@@ -1,0 +1,43 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import Anchor from '#components/parts/anchor.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
+import ListRow from '#components/parts/list-row.astro';
+
+interface Props extends HTMLAttributes<'section'> {
+	itemProps?: HTMLAttributes<'li'> | undefined;
+	items: Array<RowItem>;
+	title: string;
+}
+
+interface RowItem {
+	title: string;
+	url: string;
+}
+
+const { itemProps, items, title, ...props } = Astro.props;
+
+const { class: itemClassName, ...itemAttributes } = itemProps ?? {};
+---
+
+{
+	items.length > 0 ? (
+		<LabeledSection title={title} {...props}>
+			<ListRow>
+				{items.map((item) => (
+					<DividedItem
+						as="li"
+						class:list={['divided-thin font-mono text-sm', itemClassName]}
+						{...itemAttributes}
+					>
+						<Anchor anchorColor="accent" href={item.url}>
+							{item.title}
+						</Anchor>
+					</DividedItem>
+				))}
+			</ListRow>
+		</LabeledSection>
+	) : undefined
+}

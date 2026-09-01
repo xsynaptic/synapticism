@@ -7,7 +7,7 @@ import type { MetaProps } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSiteUrl } from '#lib/utils/routing.ts';
 import { getSeoImageFallback } from '#lib/utils/seo.ts';
-import { sanitizeAltAttribute } from '#lib/utils/text.ts';
+import { formatStringTemplate, sanitizeAltAttribute } from '#lib/utils/text.ts';
 
 type Props = MetaProps;
 
@@ -48,7 +48,9 @@ const openGraphImage = {
 	openGraph={{
 		basic: {
 			image: openGraphImage.url,
-			title: contentTitle ? `${contentTitle} - ${siteTitle}` : siteTitle,
+			title: contentTitle
+				? formatStringTemplate(t('site.pageTitle'), { siteTitle, title: contentTitle })
+				: siteTitle,
 			type: ogType ?? 'website',
 		},
 		image: openGraphImage,

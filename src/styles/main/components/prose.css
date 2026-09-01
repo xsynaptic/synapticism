@@ -119,6 +119,7 @@
 }
 
 .prose-x li::marker {
+	font-size: var(--text-sm);
 	color: var(--color-primary-400);
 }
 

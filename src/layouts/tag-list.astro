@@ -36,7 +36,7 @@ const groups = groupTagsByLetter(tags);
 							<h2 class="font-mono text-sm font-semibold text-primary-400">{group.letter}</h2>
 							<ListRow>
 								{group.tags.map((tag) => (
-									<DividedItem as="li" class="divided-thin font-serif text-sm">
+									<DividedItem as="li" class="divided-thin text-sm">
 										<Anchor href={getContentUrl(tag.collection, tag.id)}>
 											{tag.data.title}
 											{tag.data._entryCount ? (

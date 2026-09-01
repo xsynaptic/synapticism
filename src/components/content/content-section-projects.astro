@@ -1,8 +1,5 @@
 ---
-import Anchor from '#components/parts/anchor.astro';
-import DividedItem from '#components/parts/divided-item.astro';
-import LabeledSection from '#components/parts/labeled-section.astro';
-import ListRow from '#components/parts/list-row.astro';
+import LabeledRow from '#components/parts/labeled-row.astro';
 import { createProjectsByIdsFunction } from '#lib/collections/projects/projects-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
@@ -19,21 +16,15 @@ const projects = projectIds
 	? getProjectsByIds(projectIds).sort((projectA, projectB) =>
 			projectA.data.title.localeCompare(projectB.data.title),
 		)
-	: undefined;
+	: [];
 ---
 
-{
-	projects && projects.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.projects')}>
-			<ListRow>
-				{projects.map((item) => (
-					<DividedItem as="li" class="divided-thin font-mono text-sm">
-						<Anchor anchorColor="accent" href={getContentUrl(item.collection, item.id)}>
-							{item.data.title}
-						</Anchor>
-					</DividedItem>
-				))}
-			</ListRow>
-		</LabeledSection>
-	) : undefined
-}
+<LabeledRow
+	data-nosnippet
+	data-pagefind-ignore
+	items={projects.map((item) => ({
+		title: item.data.title,
+		url: getContentUrl(item.collection, item.id),
+	}))}
+	title={t('section.projects')}
+/>
