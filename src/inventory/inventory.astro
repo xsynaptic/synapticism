@@ -176,7 +176,7 @@ const sampleItem = sampleCatalogItems[0];
 		</Section>
 		<Section id="prose" title="Prose">
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="prose-body"
 				note="The <code>.prose-x</code> surface at full size, rendered from an MDX fixture through the real satteri pipeline. Carries <code>data-reading-frame</code>, so the reading bar at the top of the window tracks this block."
 				source="components/parts/prose-body.astro"
@@ -198,7 +198,7 @@ const sampleItem = sampleCatalogItems[0];
 				</ProseDescription>
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="mdx/img"
 				note="The auto-imported <code>Img</code> component, which delegates to <code>content-image</code>. The caption doubles as the alt text when no <code>alt</code> is given."
 				source="components/mdx/img.astro"
@@ -214,7 +214,7 @@ const sampleItem = sampleCatalogItems[0];
 				}
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="mdx/link"
 				note="Resolves an Entry id against the Catalog. A fixture id has no target, so this shows the fallback branch: the text renders unlinked rather than throwing."
 				source="components/mdx/link.astro"
@@ -330,7 +330,7 @@ const sampleItem = sampleCatalogItems[0];
 				</div>
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="labeled-section"
 				note="The rule-and-label header used by every section below an Entry. The heading level is a prop; the default is <code>h2</code>."
 				source="components/parts/labeled-section.astro"
@@ -343,7 +343,7 @@ const sampleItem = sampleCatalogItems[0];
 				</LabeledSection>
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="labeled-row"
 				note="A labeled section wrapping a divided row of links. <code>content-section-tags</code> and{ ' ' } <code>content-section-projects</code> are collection lookups on top of this and produce exactly this shape, so they are not demoed separately."
 				source="components/parts/labeled-row.astro"
@@ -401,7 +401,7 @@ const sampleItem = sampleCatalogItems[0];
 		</Section>
 		<Section id="content" title="Content">
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="content-header"
 				note="The <code>h1</code> of an Entry page. The title links to itself on a detail page; the subtitle slot takes divided items."
 				source="components/content/content-header.astro"
@@ -452,7 +452,7 @@ const sampleItem = sampleCatalogItems[0];
 				</div>
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="content-hero"
 				note="A Featured Image promoted to the top of an Entry, backed by its LQIP placeholder while it loads. Near-identical to <code>content-image</code> below, and distinct in four ways: it takes an <code>ImageFeaturedObject</code> rather than a path, loads <code>priority</code> as the LCP candidate, has no caption, and wears a small radius with no border."
 				source="components/content/content-hero.astro"
@@ -466,7 +466,7 @@ const sampleItem = sampleCatalogItems[0];
 				}
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="content-image"
 				note="The in-body figure, breaking out past the reading measure. Shown inside <code>prose-body</code> because that is where it always sits. Against <code>content-hero</code>: lazy rather than priority, a caption that doubles as alt text, and a larger radius over a bordered, filled frame."
 				source="components/content/content-image.astro"
@@ -499,7 +499,7 @@ const sampleItem = sampleCatalogItems[0];
 				}
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="content-section"
 				note="The generic content block. Every part of the header is a slot and each is optional; <code>titleLarge</code>, <code>marginSmall</code> and <code>fillViewport</code> switch the treatment. Renders nothing without a description or children."
 				source="components/content/content-section.astro"
@@ -524,7 +524,7 @@ const sampleItem = sampleCatalogItems[0];
 				</ContentSection>
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="content-excerpt"
 				note="A Note in the Stream. The body is cut at the fold the author placed with <code>More</code>, and the “continue reading” link only appears when there is something past it."
 				source="components/content/content-excerpt.astro"
@@ -539,7 +539,7 @@ const sampleItem = sampleCatalogItems[0];
 				</ContentExcerpt>
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="content-note-links"
 				note="The outbound links a Note points at, with the domain beneath each and the Source credited on the first."
 				source="components/content/content-note-links.astro"
@@ -547,7 +547,7 @@ const sampleItem = sampleCatalogItems[0];
 				<ContentNoteLinks links={sampleLinks} source={sampleSource} />
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="section-backlinks"
 				note="Inbound Links, capped at ten and sorted newest first."
 				source="components/sections/section-backlinks.astro"
@@ -555,7 +555,7 @@ const sampleItem = sampleCatalogItems[0];
 				<SectionBacklinks backlinks={sampleCatalogItems} />
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="section-related-content"
 				note="The writing that points at a Project."
 				source="components/sections/section-related-content.astro"
@@ -563,7 +563,7 @@ const sampleItem = sampleCatalogItems[0];
 				<SectionRelatedContent entries={sampleCatalogItems} />
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="section-navigation"
 				note="Previous and next within one collection, plus the link back to the list. Each arm renders alone when the other end of the run is missing."
 				source="components/sections/section-navigation.astro"
@@ -584,7 +584,7 @@ const sampleItem = sampleCatalogItems[0];
 				/>
 			</Specimen>
 			<Specimen
-				fullWidth={true}
+				bleed={true}
 				name="content-description"
 				note="Not shown directly: it takes a real Entry and calls <code>render()</code>, which fixtures cannot satisfy. It picks between these two shapes. With a body it renders <code>prose-body</code>; with only a frontmatter Description it renders a <code>content-section</code> holding <code>prose-description</code>."
 				source="components/content/content-description.astro"

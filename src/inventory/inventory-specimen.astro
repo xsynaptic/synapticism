@@ -1,12 +1,12 @@
 ---
 interface Props {
-	fullWidth?: boolean | undefined;
+	bleed?: boolean | undefined;
 	name: string;
 	note?: string | undefined;
 	source?: string | undefined;
 }
 
-const { fullWidth = false, name, note, source } = Astro.props;
+const { bleed = false, name, note, source } = Astro.props;
 ---
 
 <section class="mt-10">
@@ -26,7 +26,7 @@ const { fullWidth = false, name, note, source } = Astro.props;
 	<div
 		class:list={[
 			'mt-3',
-			fullWidth ? 'py-5' : 'content-column rounded-sm border border-primary-300 p-5',
+			bleed ? 'py-5' : 'content-column rounded-sm border border-primary-300 p-5',
 		]}
 	>
 		<slot />
