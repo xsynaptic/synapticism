@@ -14,13 +14,10 @@ import Img from '#components/mdx/img.astro';
 import Link from '#components/mdx/link.astro';
 import Anchor from '#components/parts/anchor.astro';
 import AuthorCard from '#components/parts/author-card.astro';
-import CardFrame from '#components/parts/card-frame.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import DividedItem from '#components/parts/divided-item.astro';
-import Grid from '#components/parts/grid.astro';
 import LabeledRow from '#components/parts/labeled-row.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
-import ListColumn from '#components/parts/list-column.astro';
 import ListRow from '#components/parts/list-row.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
@@ -109,7 +106,7 @@ const sampleItem = sampleCatalogItems[0];
 				}
 			</nav>
 		</div>
-		<Section id="foundations" title="Foundations">
+		<Section title="Foundations">
 			<Specimen
 				name="Color ramps"
 				note="Read straight from the <code>@theme</code> block in <code>styles/main/parts/theme.css</code>."
@@ -174,7 +171,7 @@ const sampleItem = sampleCatalogItems[0];
 				</div>
 			</Specimen>
 		</Section>
-		<Section id="prose" title="Prose">
+		<Section title="Prose">
 			<Specimen
 				bleed={true}
 				name="prose-body"
@@ -227,7 +224,7 @@ const sampleItem = sampleCatalogItems[0];
 				</ProseBody>
 			</Specimen>
 		</Section>
-		<Section id="parts" title="Parts">
+		<Section title="Parts">
 			<Specimen
 				name="anchor"
 				note="Every <code>anchorColor</code> on the ground it was designed for. Hover and tab through: each has a <code>focus-visible</code> twin. Add <code>anchor-underline</code> to match the prose link treatment."
@@ -314,22 +311,6 @@ const sampleItem = sampleCatalogItems[0];
 				</div>
 			</Specimen>
 			<Specimen
-				name="list-column"
-				note="Polymorphic over <code>ul</code> and <code>ol</code>. Like <code>grid</code>, it has no caller in <code>src</code> yet."
-				source="components/parts/list-column.astro"
-			>
-				<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
-					<ListColumn>
-						<li>An unordered item</li>
-						<li>A second item</li>
-					</ListColumn>
-					<ListColumn as="ol">
-						<li>An ordered item</li>
-						<li>A second item</li>
-					</ListColumn>
-				</div>
-			</Specimen>
-			<Specimen
 				bleed={true}
 				name="labeled-section"
 				note="The rule-and-label header used by every section below an Entry. The heading level is a prop; the default is <code>h2</code>."
@@ -345,31 +326,10 @@ const sampleItem = sampleCatalogItems[0];
 			<Specimen
 				bleed={true}
 				name="labeled-row"
-				note="A labeled section wrapping a divided row of links. <code>content-section-tags</code> and{ ' ' } <code>content-section-projects</code> are collection lookups on top of this and produce exactly this shape, so they are not demoed separately."
+				note="A labeled section wrapping a divided row of links. <code>content-section-tags</code> and <code>content-section-projects</code> are collection lookups on top of this and produce exactly this shape, so they are not demoed separately."
 				source="components/parts/labeled-row.astro"
 			>
 				<LabeledRow items={sampleRowItems} title="Tags" />
-			</Specimen>
-			<Specimen
-				name="grid / card-frame"
-				note="Neither has a caller in <code>src</code> yet: both are staged for the launch listing design and this page is their only use, so the cards below are dressed to show the intended shape rather than copied from anywhere. <code>grid</code> is one column, two from <code>md</code>, and renders nothing when its slot is empty."
-				source="components/parts/"
-			>
-				<Grid>
-					{
-						sampleCatalogItems.map((item) => (
-							<CardFrame class="flex gap-3">
-								{sampleImageId ? <ContentThumbnail imgAlt="" src={sampleImageId} /> : undefined}
-								<div class="flex flex-col gap-1">
-									<Anchor anchorColor="title" href="#grid">
-										{item.title}
-									</Anchor>
-									<ContentDate date={item.dateCreated} datePreset={DatePresetEnum.Long} />
-								</div>
-							</CardFrame>
-						))
-					}
-				</Grid>
 			</Specimen>
 			<Specimen
 				name="pagination-counter"
@@ -399,7 +359,7 @@ const sampleItem = sampleCatalogItems[0];
 				<AuthorCard />
 			</Specimen>
 		</Section>
-		<Section id="content" title="Content">
+		<Section title="Content">
 			<Specimen
 				bleed={true}
 				name="content-header"
