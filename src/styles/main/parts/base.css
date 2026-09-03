@@ -8,3 +8,15 @@ html {
 	outline-offset: 2px;
 	border-radius: 0.125rem;
 }
+
+/* Blanket guard so animations added later stay covered without revisiting this file */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+	}
+}

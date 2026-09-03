@@ -32,15 +32,20 @@ const { hasReadingBar = false, isHomepage = false, meta, schemas } = Astro.props
 
 const siteUrl = getSiteUrl();
 
+// Tracks --color-primary-800, the band behind the header
+const themeColor = '#27272a';
+
 // The site title is the page h1 on the homepage/stream, plain branding elsewhere
 const SiteTitleTag = isHomepage ? 'h1' : 'div';
 ---
 
 <!doctype html>
-<html lang={Astro.currentLocale}>
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta content="width=device-width,initial-scale=1" name="viewport" />
+		<meta content="light" name="color-scheme" />
+		<meta content={themeColor} name="theme-color" />
 		<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
 		<Font cssVariable="--font-aleo" preload={[{ style: 'normal' }]} />
 		<Font cssVariable="--font-geist-mono" preload />
