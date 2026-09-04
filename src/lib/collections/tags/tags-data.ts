@@ -1,13 +1,13 @@
-import { getCollection } from 'astro:content';
-
-import { createCollectionData } from '#lib/utils/collections.ts';
+import { createCollectionData, getRawCollection } from '#lib/utils/collections.ts';
 
 export const getTagsCollection = createCollectionData({
-	async augment(entries) {
+	collection: 'tags',
+	label: 'Tags',
+	async mutate(entries) {
 		const [posts, notes, projects] = await Promise.all([
-			getCollection('posts'),
-			getCollection('notes'),
-			getCollection('projects'),
+			getRawCollection('posts'),
+			getRawCollection('notes'),
+			getRawCollection('projects'),
 		]);
 
 		const tagged = [...posts, ...notes, ...projects];
@@ -18,6 +18,4 @@ export const getTagsCollection = createCollectionData({
 			).length;
 		}
 	},
-	collection: 'tags',
-	label: 'Tags',
 });
