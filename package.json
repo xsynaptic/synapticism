@@ -37,7 +37,6 @@
 		"@astrojs/mdx": "^8.0.0",
 		"@astrojs/rss": "^4.0.19",
 		"@astrojs/sitemap": "^3.7.4",
-		"@keyv/sqlite": "^4.0.8",
 		"@pagefind/component-ui": "^1.5.2",
 		"@synapticism/scripts": "workspace:*",
 		"@tailwindcss/vite": "^4.3.3",
