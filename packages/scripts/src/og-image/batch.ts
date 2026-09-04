@@ -1,12 +1,14 @@
-import type { OgImageEntry } from './content.js';
+import type { OpenGraphContentEntry } from './types.js';
 
 export interface ImageBatch {
-	entries: Array<OgImageEntry>;
+	entries: Array<OpenGraphContentEntry>;
 	imageId?: string;
 }
 
 // One decode serves every entry sharing a source image, so no raw RGBA outlives its batch
-export function batchEntriesBySourceImage(entries: Array<OgImageEntry>): Array<ImageBatch> {
+export function batchEntriesBySourceImage(
+	entries: Array<OpenGraphContentEntry>,
+): Array<ImageBatch> {
 	const batches = new Map<string, ImageBatch>();
 
 	for (const entry of entries) {

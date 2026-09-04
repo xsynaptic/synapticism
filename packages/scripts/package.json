@@ -4,22 +4,27 @@
 	"description": "Scripts for Synapticism",
 	"type": "module",
 	"private": true,
+	"exports": {
+		"./og-image": "./src/og-image/inventory-exports.ts"
+	},
 	"scripts": {
 		"deploy-site": "tsx --env-file-if-exists=../../.env ./src/deploy/deploy.ts",
 		"deploy-app": "tsx --env-file-if-exists=../../.env ./src/deploy/deploy-app.cli.ts",
 		"lqip": "tsx ./src/lqip/index.ts",
-		"og-image": "tsx ./src/og-image/index.ts"
+		"og-image": "tsx ./src/og-image/index.ts",
+		"sitemap-lastmod": "tsx ./src/sitemap-lastmod/index.cli.ts"
 	},
 	"devDependencies": {
 		"@fontsource/aleo": "^5.3.0",
 		"@fontsource/geist-mono": "^5.3.0",
 		"@types/react": "^19.2.18",
+		"astro": "^7.2.10",
 		"chalk": "^6.0.0",
-		"devalue": "^5.9.2",
 		"react": "^19.2.8",
 		"sharp": "^0.35.4",
 		"takumi-js": "^2.13.3",
 		"tsx": "^4.23.13",
+		"vite": "^8.0.16",
 		"zx": "^8.8.5"
 	}
 }

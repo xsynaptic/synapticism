@@ -5,13 +5,14 @@ import path from 'node:path';
 import { parseArgs } from 'node:util';
 
 import type { ImageBatch } from './batch.js';
-import type { OgImageEntry } from './content.js';
 import type { ProcessedImage } from './generate.js';
+import type { OpenGraphContentEntry } from './types.js';
 
+import { findWorkspaceRoot } from '../shared/utils.js';
 import { batchEntriesBySourceImage } from './batch.js';
-import { astroCacheDir, mediaDir, ogLedgerPath, ogTemplateVersion } from './constants.js';
-import { getOgImageEntries } from './content.js';
-import { loadOgFonts } from './fonts.js';
+import { mediaDir, openGraphLedgerPath, openGraphTemplateVersion } from './constants.js';
+import { getOpenGraphContentEntries } from './content.js';
+import { loadOpenGraphFonts } from './fonts.js';
 import { createRenderer, processImage } from './generate.js';
 import { createOutputCache, getOutputCacheKey } from './output-cache.js';
 
@@ -19,14 +20,14 @@ const { values } = parseArgs({
 	args: process.argv.slice(2),
 	options: {
 		'cache-path': { default: '.cache/og', type: 'string' },
-		'data-store-path': { default: path.join(astroCacheDir, 'data-store.json'), type: 'string' },
 		'media-path': { default: mediaDir, type: 'string' },
 		'output-path': { default: 'dist/og', type: 'string' },
-		'root-path': { default: process.cwd(), type: 'string' },
 	},
 });
 
-function getEntryId(entry: OgImageEntry): string {
+const rootPath = findWorkspaceRoot();
+
+function getEntryId(entry: OpenGraphContentEntry): string {
 	return `${entry.collection}/${entry.id}`;
 }
 
@@ -41,26 +42,24 @@ async function getModifiedTime(filePath: string): Promise<number | undefined> {
 }
 
 async function main() {
-	const rootPath = values['root-path'];
 	const cachePath = path.resolve(rootPath, values['cache-path']);
-	const dataStorePath = path.resolve(rootPath, values['data-store-path']);
-	const ledgerPath = path.resolve(rootPath, ogLedgerPath);
+	const ledgerPath = path.resolve(rootPath, openGraphLedgerPath);
 	const mediaPath = path.resolve(rootPath, values['media-path']);
 	const outputPath = path.resolve(rootPath, values['output-path']);
 
 	console.log(chalk.magenta('=== OpenGraph image generation ===\n'));
 
-	const entries = getOgImageEntries({ dataStorePath, mediaPath });
+	const entries = await getOpenGraphContentEntries({ mediaPath });
 	const batches = batchEntriesBySourceImage(entries);
 	const cache = await createOutputCache({
 		dir: cachePath,
 		ledgerPath,
-		version: ogTemplateVersion,
+		version: openGraphTemplateVersion,
 	});
 
 	console.log(chalk.blue('Loading fonts...'));
 
-	const renderCard = createRenderer(await loadOgFonts());
+	const renderCard = createRenderer(await loadOpenGraphFonts());
 
 	console.log(
 		chalk.blue(
@@ -76,7 +75,7 @@ async function main() {
 		const imageModifiedTime = batch.imageId
 			? await getModifiedTime(path.join(mediaPath, batch.imageId))
 			: undefined;
-		const stale: Array<OgImageEntry> = [];
+		const stale: Array<OpenGraphContentEntry> = [];
 
 		for (const entry of batch.entries) {
 			const key = getOutputCacheKey({

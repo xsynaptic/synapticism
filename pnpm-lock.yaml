@@ -27,15 +27,18 @@ importers:
       '@astrojs/rss':
         specifier: ^4.0.19
         version: 4.0.19
+      '@astrojs/sitemap':
+        specifier: ^3.7.4
+        version: 3.7.4
       '@keyv/sqlite':
         specifier: ^4.0.8
         version: 4.0.8(keyv@5.6.0)(supports-color@10.2.2)
       '@pagefind/component-ui':
         specifier: ^1.5.2
         version: 1.5.2
-      '@synapticism/astro-sitemap':
+      '@synapticism/scripts':
         specifier: workspace:*
-        version: link:packages/astro-sitemap
+        version: link:packages/scripts
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.16(@types/node@25.0.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0))
@@ -133,16 +136,6 @@ importers:
         specifier: ^4.5.4
         version: 4.5.4
 
-  packages/astro-sitemap:
-    dependencies:
-      '@astrojs/sitemap':
-        specifier: ^3.7.4
-        version: 3.7.4
-    devDependencies:
-      astro:
-        specifier: ^7.2.10
-        version: 7.2.10(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(@types/node@25.0.3)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
-
   packages/content:
     devDependencies:
       '@xsynaptic/mdxlint-config':
@@ -168,12 +161,12 @@ importers:
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18
+      astro:
+        specifier: ^7.2.10
+        version: 7.2.10(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(@types/node@25.0.3)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
       chalk:
         specifier: ^6.0.0
         version: 6.0.0
-      devalue:
-        specifier: ^5.9.2
-        version: 5.9.2
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -186,6 +179,9 @@ importers:
       tsx:
         specifier: ^4.23.13
         version: 4.23.13
+      vite:
+        specifier: ^8.0.16
+        version: 8.0.16(@types/node@25.0.3)(esbuild@0.28.1)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
       zx:
         specifier: ^8.8.5
         version: 8.8.5
@@ -4396,10 +4392,6 @@ packages:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
 
-  picomatch@4.0.5:
-    resolution: {integrity: sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==}
-    engines: {node: '>=12'}
-
   picomatch@4.0.7:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
@@ -6416,7 +6408,7 @@ snapshots:
       hast-util-to-html: 9.0.5
       hast-util-to-text: 4.0.2
       hastscript: 9.0.1
-      postcss: 8.5.20
+      postcss: 8.5.26
       postcss-nested: 6.2.0(postcss@8.5.20)
       unist-util-visit: 5.1.0
       unist-util-visit-parents: 6.0.2
@@ -8736,10 +8728,6 @@ snapshots:
     dependencies:
       walk-up-path: 4.0.0
 
-  fdir@6.5.0(picomatch@4.0.5):
-    optionalDependencies:
-      picomatch: 4.0.5
-
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
@@ -10521,8 +10509,6 @@ snapshots:
 
   picomatch@4.0.4: {}
 
-  picomatch@4.0.5: {}
-
   picomatch@4.0.7: {}
 
   pluralize@8.0.0: {}
@@ -11671,8 +11657,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.5)
-      picomatch: 4.0.5
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
 
   to-regex-range@5.0.1:
     dependencies:

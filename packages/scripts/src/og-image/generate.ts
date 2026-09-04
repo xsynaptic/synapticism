@@ -4,10 +4,15 @@ import sharp from 'sharp';
 import { render, setGlyphCacheMaxBytes } from 'takumi-js';
 import { Renderer } from 'takumi-js/node';
 
-import type { OgImageEntry } from './content.js';
+import type { OpenGraphMetadataItem } from './types.js';
 
-import { ogHeight, ogJpegQuality, ogPanelWidth, ogWidth } from './constants.js';
-import { getOgElement } from './element.js';
+import {
+	openGraphImageHeight,
+	openGraphImageWidth,
+	openGraphJpegQuality,
+	openGraphPanelWidth,
+} from './constants.js';
+import { getOpenGraphElement } from './element.js';
 
 // The 8 MiB default evicts outlines mid-run once a corpus draws more than about a thousand glyphs
 const glyphCacheBytes = 64 * 1024 * 1024;
@@ -25,14 +30,14 @@ export function createRenderer(fonts: Array<Font>) {
 
 	const renderer = new Renderer();
 
-	return function renderCard(entry: OgImageEntry, image?: ProcessedImage) {
-		return render(getOgElement(entry, image), {
+	return function renderCard(entry: OpenGraphMetadataItem, image?: ProcessedImage) {
+		return render(getOpenGraphElement(entry, image), {
 			fonts,
 			format: 'jpeg',
-			height: ogHeight,
-			quality: ogJpegQuality,
+			height: openGraphImageHeight,
+			quality: openGraphJpegQuality,
 			renderer,
-			width: ogWidth,
+			width: openGraphImageWidth,
 		});
 	};
 }
@@ -41,7 +46,12 @@ export function createRenderer(fonts: Array<Font>) {
 // Raw RGBA hands off to Takumi without an encode, so the card takes one lossy pass instead of two
 export async function processImage(imagePath: string): Promise<ProcessedImage> {
 	const { data, info } = await sharp(imagePath)
-		.resize({ fit: 'cover', height: ogHeight, position: 'attention', width: ogPanelWidth })
+		.resize({
+			fit: 'cover',
+			height: openGraphImageHeight,
+			position: 'attention',
+			width: openGraphPanelWidth,
+		})
 		.ensureAlpha()
 		.raw()
 		.toBuffer({ resolveWithObject: true });

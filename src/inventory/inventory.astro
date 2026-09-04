@@ -1,6 +1,8 @@
 ---
 import type { ComponentProps } from 'astro/types';
 
+import { openGraphImageHeight, openGraphImageWidth } from '@synapticism/scripts/og-image';
+
 import ContentDate from '#components/content/content-date.astro';
 import ContentExcerpt from '#components/content/content-excerpt.astro';
 import ContentHeader from '#components/content/content-header.astro';
@@ -28,6 +30,7 @@ import SectionNavigation from '#components/sections/section-navigation.astro';
 import SectionRelatedContent from '#components/sections/section-related-content.astro';
 import {
 	createSamplePage,
+	getSampleOpenGraphCards,
 	sampleCatalogItems,
 	sampleDate,
 	sampleDateTime,
@@ -44,6 +47,7 @@ import {
 import ProseSample from '#inventory/inventory-prose-sample.mdx';
 import Section from '#inventory/inventory-section.astro';
 import Specimen from '#inventory/inventory-specimen.astro';
+import { getSectionId } from '#inventory/inventory-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 
@@ -65,7 +69,52 @@ const fontFamilies = [
 	{ name: 'font-mono', note: 'Geist Mono, 300 to 700' },
 ];
 
-const sections = ['Foundations', 'Prose', 'Parts', 'Content'];
+const sections = ['Foundations', 'Prose', 'Parts', 'Content', 'Open Graph'];
+
+interface OpenGraphSpecimen {
+	key: string;
+	missing?: string;
+	name: string;
+	note: string;
+}
+
+// Only the cards needing a Featured Image can go missing, so only those carry a fallback
+const openGraphSpecimens: Array<OpenGraphSpecimen> = [
+	{
+		key: 'image-split',
+		missing: 'No Entry resolves a Featured Image, so the split layout has no panel to fill.',
+		name: 'og-image (split)',
+		note: 'An Entry carrying a Featured Image. The image takes the right panel behind a teal seam, and the text column narrows to what is left.',
+	},
+	{
+		key: 'image-long',
+		missing: 'No Entry resolves a Featured Image, so there is no panel to sit this title beside.',
+		name: 'og-image (split, long title)',
+		note: 'The same image behind a written title. Thresholds ride the text measure, so a column barely half the width steps the title down one size sooner than the full-bleed cards below.',
+	},
+	{
+		key: 'title-only',
+		missing:
+			'Every Entry resolves a Featured Image, so nothing falls back to the full-bleed layout.',
+		name: 'og-image (title only)',
+		note: 'The fallback when no Featured Image resolves: the text column takes the full width and the padding opens up.',
+	},
+	{
+		key: 'title-short',
+		name: 'og-image (72px title)',
+		note: 'The top of the four-step size ramp. Titles from here down are written rather than found, because a corpus this size lands every real title on this first step.',
+	},
+	{
+		key: 'title-medium',
+		name: 'og-image (60px title)',
+		note: 'Past 32 characters.',
+	},
+	{
+		key: 'title-clamped',
+		name: 'og-image (40px title, clamped)',
+		note: 'Past 96 characters, the bottom of the ramp. Long enough to overrun the four-line clamp, which cuts to an ellipsis rather than pushing the wordmark off the foot of the frame.',
+	},
+];
 
 type AnchorColor = NonNullable<ComponentProps<typeof Anchor>['anchorColor']>;
 
@@ -86,6 +135,8 @@ const samplePageFirst = createSamplePage(1, 1);
 const samplePageMiddle = createSamplePage(3, 12);
 
 const sampleItem = sampleCatalogItems[0];
+
+const sampleOpenGraphCards = await getSampleOpenGraphCards();
 ---
 
 <MainSite hasReadingBar={true} meta={{ noIndex: true, title: 'Inventory' }}>
@@ -99,7 +150,7 @@ const sampleItem = sampleCatalogItems[0];
 			<nav class="mt-4 flex flex-wrap gap-x-5 font-mono text-sm">
 				{
 					sections.map((section) => (
-						<Anchor anchorColor="accent" href={`#${section.toLowerCase()}`}>
+						<Anchor anchorColor="accent" href={`#${getSectionId(section)}`}>
 							{section}
 						</Anchor>
 					))
@@ -560,6 +611,33 @@ const sampleItem = sampleCatalogItems[0];
 					</Fragment>
 				</ContentSection>
 			</Specimen>
+		</Section>
+		<Section
+			note="Cards are drawn by a batch script rather than by Astro; the route behind this section renders that same template on demand, against real Entries."
+			title="Open Graph"
+		>
+			{
+				openGraphSpecimens.map(({ key, missing, name, note }) => {
+					const card = sampleOpenGraphCards.find((item) => item.key === key);
+
+					return (
+						<Specimen name={name} note={note} source="packages/scripts/src/og-image/element.tsx">
+							{card ? (
+								<img
+									alt={card.entry.title}
+									class="h-auto w-full rounded-sm border border-primary-300"
+									height={openGraphImageHeight}
+									loading="lazy"
+									src={`/inventory/og/${card.key}.jpg`}
+									width={openGraphImageWidth}
+								/>
+							) : (
+								<p class="font-mono text-xs text-primary-500">{missing}</p>
+							)}
+						</Specimen>
+					);
+				})
+			}
 		</Section>
 	</div>
 </MainSite>

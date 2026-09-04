@@ -1,15 +1,15 @@
 import { Bitmap } from 'takumi-js/helpers/jsx';
 
-import type { OgImageEntry } from './content.js';
 import type { ProcessedImage } from './generate.js';
+import type { OpenGraphMetadataItem } from './types.js';
 
 import {
-	ogHeight,
-	ogPaddingFull,
-	ogPaddingSplit,
-	ogPanelWidth,
-	ogSeamWidth,
-	ogWidth,
+	openGraphImageHeight,
+	openGraphImageWidth,
+	openGraphPaddingFull,
+	openGraphPaddingSplit,
+	openGraphPanelWidth,
+	openGraphSeamWidth,
 } from './constants.js';
 
 // Mirrors src/styles/main/theme.css; scale positions given so they trace back to the site
@@ -20,17 +20,19 @@ const colors = {
 	surface: '#f4f4f5', // primary-100, the reading surface
 } as const;
 
-export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
-	const columnWidth = image ? ogWidth - ogPanelWidth - ogSeamWidth : ogWidth;
-	const padding = image ? ogPaddingSplit : ogPaddingFull;
+export function getOpenGraphElement(entry: OpenGraphMetadataItem, image?: ProcessedImage) {
+	const columnWidth = image
+		? openGraphImageWidth - openGraphPanelWidth - openGraphSeamWidth
+		: openGraphImageWidth;
+	const padding = image ? openGraphPaddingSplit : openGraphPaddingFull;
 
 	return (
 		<div
 			style={{
 				backgroundColor: colors.carbon,
 				display: 'flex',
-				height: px(ogHeight),
-				width: px(ogWidth),
+				height: px(openGraphImageHeight),
+				width: px(openGraphImageWidth),
 			}}
 		>
 			<div
@@ -74,6 +76,7 @@ export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
 						letterSpacing: '-0.01em',
 						lineClamp: 4,
 						lineHeight: 1.15,
+						textOverflow: 'ellipsis',
 					}}
 				>
 					{entry.title}
@@ -98,8 +101,8 @@ export function getOgElement(entry: OgImageEntry, image?: ProcessedImage) {
 						style={{
 							backgroundColor: colors.accent,
 							display: 'flex',
-							height: px(ogHeight),
-							width: px(ogSeamWidth),
+							height: px(openGraphImageHeight),
+							width: px(openGraphSeamWidth),
 						}}
 					/>
 					<Bitmap data={image.data} height={image.height} width={image.width} />
@@ -116,7 +119,7 @@ function px(value: number): string {
 // Scale the title down as it lengthens so short titles stay punchy and long ones still fit
 // Thresholds ride the measure: the split layout gives the text far less room
 function titleFontSize(length: number, columnWidth: number): number {
-	const scale = columnWidth / ogWidth;
+	const scale = columnWidth / openGraphImageWidth;
 
 	if (length <= 32 * scale) return 72;
 	if (length <= 64 * scale) return 60;

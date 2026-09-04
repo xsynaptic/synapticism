@@ -39,7 +39,7 @@ const fontConfigs: Array<FontsourceConfig> = [
 // @fontsource packages resolve by a computed path, so knip can't see them; see knip.config.ts
 const resolver = createRequire(import.meta.url);
 
-export async function loadOgFonts(): Promise<Array<Font>> {
+export async function loadOpenGraphFonts(): Promise<Array<Font>> {
 	const fonts: Array<Font> = [];
 
 	for (const config of fontConfigs) {

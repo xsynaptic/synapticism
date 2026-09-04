@@ -1,19 +1,23 @@
 ---
+import { getSectionId } from '#inventory/inventory-utils.ts';
+
 interface Props {
+	note?: string | undefined;
 	title: string;
 }
 
-const { title } = Astro.props;
+const { note, title } = Astro.props;
 
-const id = title.toLowerCase();
+const id = getSectionId(title);
 ---
 
 <section class="mt-16 scroll-mt-8" id={id}>
-	<h2
-		class="content-column flex items-center gap-3 font-mono text-base font-medium text-primary-800"
-	>
-		{title}
-		<span aria-hidden="true" class="h-0.5 flex-1 bg-primary-300"></span>
-	</h2>
+	<div class="content-column">
+		<h2 class="flex items-center gap-3 font-mono text-base font-medium text-primary-800">
+			{title}
+			<span aria-hidden="true" class="h-0.5 flex-1 bg-primary-300"></span>
+		</h2>
+		{note ? <p class="mt-1 max-w-(--prose-measure) text-sm text-primary-600">{note}</p> : undefined}
+	</div>
 	<slot />
 </section>

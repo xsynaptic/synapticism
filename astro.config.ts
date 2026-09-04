@@ -1,6 +1,6 @@
 import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
-import sitemap from '@synapticism/astro-sitemap';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
 import { readingTime } from '@xsynaptic/satteri-reading-time';
@@ -10,6 +10,17 @@ import expressiveCode from 'satteri-expressive-code';
 
 import { expressiveCodeOptions } from './expressive-code.config.mjs';
 import inventory from './src/inventory/inventory-integration.ts';
+import { isIndexableUrlPath, readSitemapLastmod } from './src/lib/utils/sitemap.ts';
+
+// Per-URL dates, written by the sitemap-lastmod script before the build
+// Read on first use, so loading this config never depends on a file a content script writes
+let sitemapLastmodCache: ReturnType<typeof readSitemapLastmod> | undefined;
+
+function getSitemapLastmod() {
+	if (!sitemapLastmodCache) sitemapLastmodCache = readSitemapLastmod();
+
+	return sitemapLastmodCache;
+}
 
 export default defineConfig({
 	env: {
@@ -53,7 +64,17 @@ export default defineConfig({
 	integrations: [
 		inventory(),
 		mdx(),
-		sitemap({ excludePrefixes: ['/about/cv'] }),
+		sitemap({
+			filter: (page) => isIndexableUrlPath(new URL(page).pathname),
+			serialize: (item) => {
+				const sitemapLastmod = getSitemapLastmod();
+
+				return {
+					...item,
+					lastmod: sitemapLastmod.urls[new URL(item.url).pathname] ?? sitemapLastmod.generatedAt,
+				};
+			},
+		}),
 		pagefind({
 			indexConfig: {
 				excludeSelectors: [
