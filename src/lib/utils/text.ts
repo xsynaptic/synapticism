@@ -1,6 +1,9 @@
 import { stripTags } from '@xsynaptic/unified-tools';
 import { markdownToHtml } from 'satteri';
 
+// Locale-independent word segmentation; split(' ') counts space-free scripts (CJK, Thai) as one word
+const wordSegmenter = new Intl.Segmenter(undefined, { granularity: 'word' });
+
 /** @knipignore staged for the launch design; no view formats counts yet */
 export function formatNumber({
 	locales,
@@ -56,9 +59,10 @@ export function stripFootnotes(input: string): string {
 	return result;
 }
 
+// Lookahead on the opening tag prevents prefix collisions; "Img" would otherwise match "<ImgGroup>"
 export function stripMdxComponents(input: string, componentNames: Array<string>): string {
 	const regex = new RegExp(
-		componentNames.map((name) => `<${name}(?:[^>]*)>|</${name}>`).join('|'),
+		componentNames.map((name) => String.raw`<${name}(?=[\s/>])[^>]*>|</${name}>`).join('|'),
 		'gm',
 	);
 
@@ -69,15 +73,19 @@ export function textClipper(
 	input: string,
 	options: { trailer?: string | undefined; wordCount: number },
 ): string {
-	const words = input.split(' ');
+	let wordIndex = 0;
 
-	if (words.length <= options.wordCount) {
-		return input;
+	for (const segment of wordSegmenter.segment(input)) {
+		if (!segment.isWordLike) continue;
+
+		if (wordIndex === options.wordCount) {
+			return input.slice(0, segment.index).trimEnd() + (options.trailer ?? '...');
+		}
+
+		wordIndex += 1;
 	}
 
-	const trailer = options.trailer ?? '...';
-
-	return words.slice(0, options.wordCount).join(' ') + trailer;
+	return input;
 }
 
 function encodeHtmlEntities(input: string): string {

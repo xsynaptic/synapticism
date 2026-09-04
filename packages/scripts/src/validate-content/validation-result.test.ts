@@ -23,6 +23,16 @@ describe('reportValidationResult', () => {
 		expect(lines).toEqual(['✓ 2 entry IDs unique']);
 	});
 
+  test('marks an advisory result as a warning rather than a pass', () => {
+		reportValidationResult({
+			issues: [],
+			status: 'warn',
+			summary: 'No image files found in packages/content/media',
+		});
+
+		expect(lines).toEqual(['⚠️  No image files found in packages/content/media']);
+	});
+
 	test('prints issues above the summary, with details indented', () => {
 		reportValidationResult({
 			issues: [{ details: ['Line 3: broken link ID "missing"'], message: 'a-post.mdx' }],
