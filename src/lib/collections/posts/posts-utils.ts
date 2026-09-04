@@ -8,7 +8,7 @@ import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { createCollectionLookupByIds } from '#lib/utils/collections.ts';
-import { getDescriptionRenderedText } from '#lib/utils/description.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { buildArticleSchema, buildAuthorSchema } from '#lib/utils/structured-data.ts';
 
 /** @knipignore staged for the launch design; mirrors the lookup other collections already use */

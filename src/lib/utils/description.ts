@@ -1,5 +1,6 @@
+import type Keyv from 'keyv';
+
 import { sanitizeHtml, stripTags } from '@xsynaptic/unified-tools';
-import Keyv from 'keyv';
 import * as R from 'remeda';
 
 import { mdxComponentsToStrip } from '#constants.ts';
@@ -11,14 +12,14 @@ import {
 	textClipper,
 } from '#lib/utils/text.ts';
 
-interface DescriptionCached extends DescriptionRendered {
-	hash: string;
-}
-
-interface DescriptionEntry {
+export interface DescriptionEntry {
 	body?: string | undefined;
 	data: { description?: string | undefined };
 	id: string;
+}
+
+interface DescriptionCached extends DescriptionRendered {
+	hash: string;
 }
 
 interface DescriptionRendered {
@@ -43,7 +44,8 @@ export function createDescriptionRenderers({ cache }: { cache: Keyv }) {
 		if (!source) return undefined;
 
 		// Key by entry ID so edits overwrite the old row; the hash validates cached content
-		const sourceHash = hash(source);
+		// MDX component names participate so render-affecting code changes self-invalidate
+		const sourceHash = hash({ mdxComponentsToStrip, source, version: 1 });
 
 		const cached = await cache.get<DescriptionCached>(entry.id);
 
@@ -97,7 +99,3 @@ function getDescription(
 
 	return undefined;
 }
-
-// In-memory for the life of the build; descriptions are cheap to re-render on the next one
-export const { getDescriptionRenderedHtml, getDescriptionRenderedText } =
-	createDescriptionRenderers({ cache: new Keyv() });

@@ -13,7 +13,7 @@ import { millisecondsPerHour, siteTimezoneOffsetHours } from '#constants.ts';
 import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
-import { getDescriptionRenderedText } from '#lib/utils/description.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 import { stripFootnotes } from '#lib/utils/text.ts';
 

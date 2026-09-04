@@ -31,6 +31,21 @@ export interface ContentEntry {
 	id: string;
 }
 
+// The Astro project root, which need not be the workspace root
+export function findAstroRoot(startDir = process.cwd()) {
+	let current = path.resolve(startDir);
+
+	while (current !== path.dirname(current)) {
+		const hasConfig = configFilenames.some((filename) => existsSync(path.join(current, filename)));
+
+		if (hasConfig) return current;
+
+		current = path.dirname(current);
+	}
+
+	throw new Error(`Could not locate an Astro config above ${startDir}`);
+}
+
 export async function getCollectionEntries<C extends CollectionKey>(
 	{ getCollection }: AstroContent,
 	collections: Array<C>,
@@ -73,19 +88,4 @@ export async function withAstroContent<T>(callback: (content: AstroContent) => P
 		// The process hangs on the open server otherwise
 		await server.close();
 	}
-}
-
-// The Astro project root, which need not be the workspace root
-function findAstroRoot(startDir = process.cwd()) {
-	let current = path.resolve(startDir);
-
-	while (current !== path.dirname(current)) {
-		const hasConfig = configFilenames.some((filename) => existsSync(path.join(current, filename)));
-
-		if (hasConfig) return current;
-
-		current = path.dirname(current);
-	}
-
-	throw new Error(`Could not locate an Astro config above ${startDir}`);
 }

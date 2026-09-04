@@ -2,7 +2,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import type { Thing } from '#lib/utils/structured-data.ts';
 
-import { getDescriptionRenderedText } from '#lib/utils/description.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { buildArticleSchema, buildAuthorSchema } from '#lib/utils/structured-data.ts';
 
 export async function getNoteSchema(
