@@ -118,6 +118,9 @@ export default defineConfig({
 				},
 			},
 		},
+		define: {
+			'import.meta.env.BUILD_VERSION': JSON.stringify(Date.now().toString()),
+		},
 		plugins: [tailwindcss()],
 		// The prerender chunks runtime-import @keyv/sqlite (build-time word-count cache)
 		ssr: {

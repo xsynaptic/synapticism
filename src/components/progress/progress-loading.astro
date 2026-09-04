@@ -1,0 +1,21 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+	class?: string | undefined;
+	height?: string | undefined;
+}
+
+const { class: className, height = '1px', style = {}, ...props } = Astro.props;
+---
+
+<progress-loading
+	aria-hidden="true"
+	class:list={['progress-bar', className]}
+	style={{ height, ...style }}
+	transition:persist
+	{...props}></progress-loading>
+
+<script>
+	import '#components/progress/progress-loading.ts';
+</script>

@@ -18,6 +18,8 @@ const copyrightYears = getCopyrightYears();
 		<Anchor anchorColor="primary-bright" href="https://astro.build">{t('footer.astro')}</Anchor>
 	</DividedItem>
 	<DividedItem as="span">
-		<Anchor anchorColor="primary-bright" href={`${getSiteUrl()}rss.xml`}>{t('footer.rss')}</Anchor>
+		<Anchor anchorColor="primary-bright" data-astro-prefetch="false" href={`${getSiteUrl()}rss.xml`}
+			>{t('footer.rss')}</Anchor
+		>
 	</DividedItem>
 </div>

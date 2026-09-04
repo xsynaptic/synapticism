@@ -16,6 +16,7 @@ import TopButton from '#components/main/main-top-button.astro';
 import MenuFooter from '#components/menu/menu-footer.astro';
 import MenuHeader from '#components/menu/menu-header.astro';
 import Anchor from '#components/parts/anchor.astro';
+import ProgressLoading from '#components/progress/progress-loading.astro';
 import ProgressReading from '#components/progress/progress-reading.astro';
 import Search from '#components/search/search.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
@@ -56,6 +57,18 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			) : undefined
 		}
 		<ClientRouter />
+		<meta content={import.meta.env.BUILD_VERSION} name="build-version" />
+		<script is:inline>
+			// A session older than the deploy soft-navigates onto hashed chunks Cloudflare no longer serves
+			(() => {
+				const version = document.querySelector('meta[name="build-version"]')?.content;
+				if (!version) return;
+				document.addEventListener('astro:before-swap', (event) => {
+					const next = event.newDocument.querySelector('meta[name="build-version"]')?.content;
+					if (next && next !== version) window.location.assign(event.to.href);
+				});
+			})();
+		</script>
 	</head>
 	<body
 		class:list={[
@@ -64,6 +77,14 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			'print:min-h-0 print:bg-white',
 		]}
 	>
+		<ProgressLoading
+			class:list={[
+				'z-progress-loading rounded-br-md shadow-lg shadow-current',
+				'bg-linear-to-r from-highlight-500 to-highlight-300 text-highlight-200',
+				'print:hidden',
+			]}
+			height="2.5px"
+		/>
 		<SkipLink
 			class:list={[
 				'rounded-br-sm px-4 py-1 uppercase',

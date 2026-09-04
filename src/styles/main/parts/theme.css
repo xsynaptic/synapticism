@@ -6,6 +6,7 @@
 	--z-index-header: 40;
 	--z-index-top-button: 45;
 	--z-index-progress: 60;
+	--z-index-progress-loading: 61;
 	--z-index-skip-link: 70;
 
 	/* Fonts */
