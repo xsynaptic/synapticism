@@ -1,5 +1,6 @@
 import type { CollectionEntry, CollectionKey } from 'astro:content';
 
+import { CUSTOM_CACHE_PATH } from 'astro:env/server';
 import { performance } from 'node:perf_hooks';
 
 import type { Catalog } from '#lib/catalog/catalog-factory.ts';
@@ -12,11 +13,16 @@ import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
+import { getSqliteCacheInstance } from '#lib/utils/cache.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
 import { getDescriptionRenderedHtml } from '#lib/utils/description.ts';
 import { getImageFeaturedId } from '#lib/utils/image-featured.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
-import { getWordCount } from '#lib/utils/word-count.ts';
+import { createWordCountFunction } from '#lib/utils/word-count.ts';
+
+const getWordCount = createWordCountFunction({
+	cache: getSqliteCacheInstance(CUSTOM_CACHE_PATH, 'word-counts'),
+});
 
 function getLinksExternalCount(entry: CollectionEntry<CollectionKey>): number {
 	if (!entry.body) return 0;
@@ -51,15 +57,19 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 		),
 	);
 
+	const catalogItems = await Promise.all(
+		catalogEntries.map((entry) => createCatalogItem(entry, wordCountsById)),
+	);
+
 	// Note: name collisions across these collections are prohibited and will throw
-	for (const entry of catalogEntries) {
-		if (catalogItemsById.has(entry.id)) {
+	for (const item of catalogItems) {
+		if (catalogItemsById.has(item.id)) {
 			throw new Error(
-				`[Catalog] Duplicate ID found for "${entry.id}" across different collections!`,
+				`[Catalog] Duplicate ID found for "${item.id}" across different collections!`,
 			);
 		}
 
-		catalogItemsById.set(entry.id, createCatalogItem(entry, wordCountsById));
+		catalogItemsById.set(item.id, item);
 	}
 
 	for (const entry of catalogEntries) {
@@ -71,10 +81,10 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	return [...catalogItemsById.values()];
 }
 
-function createCatalogItem(
+async function createCatalogItem(
 	entry: CollectionEntry<CollectionKey>,
 	wordCountsById: Map<string, number | undefined>,
-): CatalogItem {
+): Promise<CatalogItem> {
 	const { data } = entry;
 
 	return {
@@ -82,7 +92,7 @@ function createCatalogItem(
 		collection: entry.collection,
 		dateCreated: parseContentDate(data.dateCreated) ?? new Date(String(siteYearFounded)),
 		dateUpdated: parseContentDate('dateUpdated' in data ? data.dateUpdated : undefined),
-		description: getDescriptionRenderedHtml(entry),
+		description: await getDescriptionRenderedHtml(entry),
 		entryCount: '_entryCount' in data ? data._entryCount : undefined,
 		entryQuality: 'entryQuality' in data ? data.entryQuality : undefined,
 		id: entry.id,

@@ -42,7 +42,7 @@ const { Content } = await render(entry);
 <MainSite
 	hasReadingBar={true}
 	meta={{
-		description: getDescriptionRenderedText(entry),
+		description: await getDescriptionRenderedText(entry),
 		image: { url: getOgImageUrl(entry.collection, entry.id) },
 		title: entry.data.title,
 	}}

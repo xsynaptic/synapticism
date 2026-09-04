@@ -56,7 +56,7 @@ const minutesRead =
 <MainSite
 	hasReadingBar={true}
 	meta={{
-		description: getDescriptionRenderedText(entry),
+		description: await getDescriptionRenderedText(entry),
 		image: { url: getOgImageUrl(entry.collection, entry.id) },
 		title: entry.data.title,
 		...getSeoArticleProps({
@@ -64,7 +64,7 @@ const minutesRead =
 			dateUpdated: entry.data.dateUpdated,
 		}),
 	}}
-	schemas={getPostSchema(entry, { authorName: siteAuthorName, url: Astro.url.toString() })}
+	schemas={await getPostSchema(entry, { authorName: siteAuthorName, url: Astro.url.toString() })}
 >
 	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>

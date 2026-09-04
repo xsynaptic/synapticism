@@ -14,15 +14,15 @@ import { buildArticleSchema, buildAuthorSchema } from '#lib/utils/structured-dat
 /** @knipignore staged for the launch design; mirrors the lookup other collections already use */
 export const createPostsByIdsFunction = createCollectionLookupByIds('Posts', getPostsCollection);
 
-export function getPostSchema(
+export async function getPostSchema(
 	entry: CollectionEntry<'posts'>,
 	props: { authorName: string; url: string },
-): Array<Thing> {
+): Promise<Array<Thing>> {
 	return [
 		buildArticleSchema({
 			dateCreated: entry.data.dateCreated,
 			dateUpdated: entry.data.dateUpdated,
-			description: getDescriptionRenderedText(entry),
+			description: await getDescriptionRenderedText(entry),
 			imageUrl: undefined,
 			title: entry.data.title,
 			url: props.url,

@@ -26,7 +26,7 @@ const { entry, page } = Astro.props;
 
 <MainSite
 	meta={{
-		description: getDescriptionRenderedText(entry),
+		description: await getDescriptionRenderedText(entry),
 		noIndex: page.currentPage > 1,
 		title: entry.data.title,
 	}}

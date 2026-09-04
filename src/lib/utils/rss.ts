@@ -58,7 +58,7 @@ const generateFeedItem = async ({
 		},
 	);
 
-	const description = getDescriptionRenderedText(entry);
+	const description = await getDescriptionRenderedText(entry);
 
 	const pubDate = parseContentDate(entry.data.dateUpdated ?? entry.data.dateCreated);
 

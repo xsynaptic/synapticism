@@ -51,7 +51,7 @@ const { Content } = await render(entry);
 
 <MainSite
 	meta={{
-		description: getDescriptionRenderedText(entry),
+		description: await getDescriptionRenderedText(entry),
 		image: { url: getOgImageUrl(entry.collection, entry.id) },
 		title: entry.data.title,
 		...getSeoArticleProps({
@@ -59,7 +59,7 @@ const { Content } = await render(entry);
 			dateUpdated: entry.data.dateUpdated,
 		}),
 	}}
-	schemas={getNoteSchema(entry, { authorName: siteAuthorName, url: Astro.url.toString() })}
+	schemas={await getNoteSchema(entry, { authorName: siteAuthorName, url: Astro.url.toString() })}
 >
 	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>

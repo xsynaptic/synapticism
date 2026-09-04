@@ -1,13 +1,25 @@
 import { sanitizeHtml, stripTags } from '@xsynaptic/unified-tools';
+import Keyv from 'keyv';
 import * as R from 'remeda';
 
 import { mdxComponentsToStrip } from '#constants.ts';
+import { hash } from '#lib/utils/cache.ts';
 import {
 	renderMarkdownInline,
 	stripFootnoteReferences,
 	stripMdxComponents,
 	textClipper,
 } from '#lib/utils/text.ts';
+
+interface DescriptionCached extends DescriptionRendered {
+	hash: string;
+}
+
+interface DescriptionEntry {
+	body?: string | undefined;
+	data: { description?: string | undefined };
+	id: string;
+}
 
 interface DescriptionRendered {
 	html: string;
@@ -21,19 +33,48 @@ const wordCountFinal = 100;
 // Keep only inline emphasis in the display form; everything else collapses to plain text
 const descriptionSchema = { tagNames: ['em', 'strong'] };
 
-const cache = new Map<string, DescriptionRendered>();
+export function createDescriptionRenderers({ cache }: { cache: Keyv }) {
+	// Render and cache both the HTML (display) and plain-text (SEO) forms in a single parse
+	async function getDescriptionRendered(
+		entry: DescriptionEntry,
+	): Promise<DescriptionRendered | undefined> {
+		const source = getDescription(entry, { wordCount: wordCountBuffer });
 
-interface DescriptionEntry {
-	body?: string | undefined;
-	data: { description?: string | undefined };
-}
+		if (!source) return undefined;
 
-export function getDescriptionRenderedHtml(entry: DescriptionEntry): string | undefined {
-	return getDescriptionRendered(entry)?.html;
-}
+		// Key by entry ID so edits overwrite the old row; the hash validates cached content
+		const sourceHash = hash(source);
 
-export function getDescriptionRenderedText(entry: DescriptionEntry): string | undefined {
-	return getDescriptionRendered(entry)?.text;
+		const cached = await cache.get<DescriptionCached>(entry.id);
+
+		if (cached?.hash === sourceHash) return { html: cached.html, text: cached.text };
+
+		const rawHtml = renderMarkdownInline(source);
+
+		const html = sanitizeHtml(rawHtml, descriptionSchema);
+		const stripped = stripTags(rawHtml).replaceAll(/\s+/g, ' ').trim();
+		const text = textClipper(stripped, { wordCount: wordCountFinal });
+
+		const rendered: DescriptionRendered = { html, text };
+
+		await cache.set(entry.id, { hash: sourceHash, ...rendered } satisfies DescriptionCached);
+
+		return rendered;
+	}
+
+	async function getDescriptionRenderedHtml(entry: DescriptionEntry): Promise<string | undefined> {
+		const rendered = await getDescriptionRendered(entry);
+
+		return rendered?.html;
+	}
+
+	async function getDescriptionRenderedText(entry: DescriptionEntry): Promise<string | undefined> {
+		const rendered = await getDescriptionRendered(entry);
+
+		return rendered?.text;
+	}
+
+	return { getDescriptionRendered, getDescriptionRenderedHtml, getDescriptionRenderedText };
 }
 
 // Return the frontmatter description or derive a clipped excerpt from the body
@@ -57,24 +98,6 @@ function getDescription(
 	return undefined;
 }
 
-// Render and cache both the HTML (display) and plain-text (SEO) forms in a single parse
-function getDescriptionRendered(entry: DescriptionEntry): DescriptionRendered | undefined {
-	const source = getDescription(entry, { wordCount: wordCountBuffer });
-
-	if (!source) return undefined;
-
-	const cached = cache.get(source);
-	if (cached) return cached;
-
-	const rawHtml = renderMarkdownInline(source);
-
-	const html = sanitizeHtml(rawHtml, descriptionSchema);
-	const stripped = stripTags(rawHtml).replaceAll(/\s+/g, ' ').trim();
-	const text = textClipper(stripped, { wordCount: wordCountFinal });
-
-	const rendered: DescriptionRendered = { html, text };
-
-	cache.set(source, rendered);
-
-	return rendered;
-}
+// In-memory for the life of the build; descriptions are cheap to re-render on the next one
+export const { getDescriptionRenderedHtml, getDescriptionRenderedText } =
+	createDescriptionRenderers({ cache: new Keyv() });
