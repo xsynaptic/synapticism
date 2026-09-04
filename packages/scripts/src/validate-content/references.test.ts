@@ -1,25 +1,21 @@
 import { describe, expect, test } from 'vitest';
 
-import { validateReferences } from './references.js';
+import { collectReferenceIssues } from './references.js';
 import { makeEntry, makeRefs } from './validate-test-utils.js';
 
 // The checked set is whatever collections the passed entries belong to
-function makeEntries(subjects: Array<ReturnType<typeof makeEntry>>) {
-	return [
+function issuesFor(subjects: Array<ReturnType<typeof makeEntry>>) {
+	return collectReferenceIssues([
 		...subjects,
 		makeEntry({ collection: 'projects', id: 'some-project' }),
 		makeEntry({ collection: 'tags', id: 'urbanism' }),
-	];
+	]);
 }
 
-function messagesFor(subjects: Array<ReturnType<typeof makeEntry>>) {
-	return validateReferences(makeEntries(subjects)).issues.map((issue) => issue.message);
-}
-
-describe('validateReferences', () => {
+describe('collectReferenceIssues', () => {
 	test('accepts references that resolve', () => {
-		const result = validateReferences(
-			makeEntries([
+		expect(
+			issuesFor([
 				makeEntry({
 					data: {
 						projects: makeRefs('projects', ['some-project']),
@@ -28,49 +24,46 @@ describe('validateReferences', () => {
 					id: 'a-post',
 				}),
 			]),
-		);
-
-		expect(result.status).toBe('pass');
-		expect(result.issues).toEqual([]);
+		).toEqual([]);
 	});
 
 	test('flags a reference to a missing entry and reports its field path', () => {
 		expect(
-			messagesFor([
+			issuesFor([
 				makeEntry({
 					data: { tags: makeRefs('tags', ['urbanism', 'atlantis']) },
 					filePath: 'posts/a-post.mdx',
 					id: 'a-post',
 				}),
 			]),
-		).toEqual(['posts/a-post.mdx: tags[1] references "atlantis", missing from "tags"']);
+		).toEqual([
+			{ collection: 'tags', field: 'tags[1]', id: 'atlantis', location: 'posts/a-post.mdx' },
+		]);
 	});
 
 	test('flags a reference whose target exists only in another collection', () => {
 		expect(
-			messagesFor([
-				makeEntry({ data: { tags: makeRefs('tags', ['some-project']) }, id: 'a-post' }),
-			]),
-		).toEqual(['a-post: tags[0] references "some-project", missing from "tags"']);
+			issuesFor([makeEntry({ data: { tags: makeRefs('tags', ['some-project']) }, id: 'a-post' })]),
+		).toEqual([{ collection: 'tags', field: 'tags[0]', id: 'some-project', location: 'a-post' }]);
 	});
 
 	test('flags a reference into a collection with no entries at all', () => {
 		expect(
-			messagesFor([makeEntry({ data: { pages: makeRefs('pages', ['colophon']) }, id: 'a-post' })]),
-		).toEqual(['a-post: pages[0] references "colophon", missing from "pages"']);
+			issuesFor([makeEntry({ data: { pages: makeRefs('pages', ['colophon']) }, id: 'a-post' })]),
+		).toEqual([{ collection: 'pages', field: 'pages[0]', id: 'colophon', location: 'a-post' }]);
 	});
 
 	test('walks nested objects', () => {
 		expect(
-			messagesFor([
+			issuesFor([
 				makeEntry({ data: { meta: { tags: makeRefs('tags', ['atlantis']) } }, id: 'a-post' }),
 			]),
-		).toEqual(['a-post: meta.tags[0] references "atlantis", missing from "tags"']);
+		).toEqual([{ collection: 'tags', field: 'meta.tags[0]', id: 'atlantis', location: 'a-post' }]);
 	});
 
 	test('ignores plain data that is not a reference', () => {
 		expect(
-			messagesFor([
+			issuesFor([
 				makeEntry({
 					data: {
 						links: [{ url: 'https://example.test' }],

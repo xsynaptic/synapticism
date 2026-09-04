@@ -3,7 +3,7 @@ import type { ContentEntry } from '../shared/astro-content.js';
 import { toValidationResult } from './validation-result.js';
 
 // IDs form one flat namespace, so a collision silently shadows one Entry with another
-export function validateEntryIds(entries: Array<ContentEntry>) {
+export function collectDuplicateIdIssues(entries: Array<ContentEntry>) {
 	const locationsById = new Map<string, Array<string>>();
 
 	for (const entry of entries) {
@@ -13,12 +13,22 @@ export function validateEntryIds(entries: Array<ContentEntry>) {
 		locationsById.set(entry.id, locations);
 	}
 
-	const issues = [...locationsById]
+	return [...locationsById]
 		.filter(([, locations]) => locations.length > 1)
-		.map(([id, locations]) => ({ details: locations, message: `duplicate entry ID "${id}"` }));
+		.map(([id, locations]) => ({ id, locations }));
+}
 
-	return toValidationResult(issues, {
-		fail: `Found ${String(issues.length)} duplicate entry ID(s)`,
-		pass: `${String(entries.length)} entry IDs unique`,
-	});
+export function validateEntryIds(entries: Array<ContentEntry>) {
+	const issues = collectDuplicateIdIssues(entries);
+
+	return toValidationResult(
+		issues.map(({ id, locations }) => ({
+			details: locations,
+			message: `duplicate entry ID "${id}"`,
+		})),
+		{
+			fail: `Found ${String(issues.length)} duplicate entry ID(s)`,
+			pass: `${String(entries.length)} entry IDs unique`,
+		},
+	);
 }

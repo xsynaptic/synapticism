@@ -23,7 +23,7 @@ describe('reportValidationResult', () => {
 		expect(lines).toEqual(['✓ 2 entry IDs unique']);
 	});
 
-  test('marks an advisory result as a warning rather than a pass', () => {
+	test('marks an advisory result as a warning rather than a pass', () => {
 		reportValidationResult({
 			issues: [],
 			status: 'warn',
