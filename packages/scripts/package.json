@@ -8,7 +8,7 @@
 		"./og-image": "./src/og-image/inventory-exports.ts"
 	},
 	"scripts": {
-		"deploy-site": "tsx --env-file-if-exists=../../.env ./src/deploy/deploy.ts",
+		"deploy-site": "NODE_ENV=production tsx --env-file-if-exists=../../.env ./src/deploy/deploy.ts",
 		"deploy-app": "tsx --env-file-if-exists=../../.env ./src/deploy/deploy-app.cli.ts",
 		"lqip": "tsx ./src/lqip/index.ts",
 		"og-image": "tsx ./src/og-image/index.ts",

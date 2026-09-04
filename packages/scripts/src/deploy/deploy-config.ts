@@ -2,8 +2,12 @@ import chalk from 'chalk';
 
 type AuthMode = 'interactive' | 'token';
 
+// Hardcoded because it never varies; must match `site` in astro.config.ts and the wrangler route
+export const siteUrl = 'https://synapticism.com/';
+
 export function printDeployConfig() {
 	console.log(chalk.blue('Deploy: Cloudflare Workers (static assets)'));
+	console.log(chalk.gray(`  Site: ${siteUrl}`));
 	console.log(
 		chalk.gray(
 			getDeployAuthMode() === 'token'
