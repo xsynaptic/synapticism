@@ -1,10 +1,9 @@
 import { readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
 
-const imageExtensionRegex = /\.(?:avif|gif|jpe?g|png|webp)$/i;
+import { findComponentTags, getTagProp } from './component-tags.js';
 
-const imgTagRegex = /<Img(?:\s+([^>]*?))?\/?>/g;
-const srcPropRegex = /src=["']([^"']+)["']/;
+const imageExtensionRegex = /\.(?:avif|gif|jpe?g|png|webp)$/i;
 
 // Keyed the way frontmatter and `<Img src>` address an Image: a path relative to the media root
 export function collectMediaFiles(mediaPath: string): Set<string> {
@@ -57,13 +56,7 @@ export function extractImageFeaturedIds(data: Record<string, unknown>): Array<st
 }
 
 export function extractMdxImageIds(body: string): Array<string> {
-	const ids: Array<string> = [];
-
-	for (const match of body.matchAll(imgTagRegex)) {
-		const src = srcPropRegex.exec(match[1] ?? '');
-
-		if (src?.[1]) ids.push(src[1]);
-	}
-
-	return ids;
+	return findComponentTags(body, ['Img'])
+		.map((tag) => getTagProp(tag, 'src'))
+		.filter((src) => src !== undefined);
 }

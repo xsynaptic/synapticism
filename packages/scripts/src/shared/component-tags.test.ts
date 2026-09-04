@@ -1,13 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { findComponentTags, getBodyLineOffset, getTagProp } from './component-tags.js';
-import { makeEntry } from './validate-test-utils.js';
-
-const rootPath = import.meta.dirname;
-
-// Mirrors fixtures/offset-sample.mdx, whose frontmatter and the blank line after it run six lines
-const fixtureBody = 'Prose above the component.\n\n<Link>no id here</Link>\n';
-const fixturePath = 'fixtures/offset-sample.mdx';
+import { findComponentTags, getTagProp } from './component-tags.js';
 
 describe('findComponentTags', () => {
 	test('matches a name exactly, so LinkList is not Link', () => {
@@ -50,33 +43,5 @@ describe('getTagProp', () => {
 		const tags = findComponentTags("<Link id='a-note'>text</Link>", ['Link']);
 
 		expect(tags.map((tag) => getTagProp(tag, 'id'))).toEqual(['a-note']);
-	});
-});
-
-describe('getBodyLineOffset', () => {
-	test('measures the frontmatter a body was stripped of', () => {
-		const entry = makeEntry({ body: fixtureBody, filePath: fixturePath, id: 'a-post' });
-
-		expect(getBodyLineOffset(entry, rootPath)).toBe(6);
-	});
-
-	test('is zero for an entry with no file path', () => {
-		expect(getBodyLineOffset(makeEntry({ body: fixtureBody, id: 'a-post' }), rootPath)).toBe(0);
-	});
-
-	test('is zero for a file path that is not on disk', () => {
-		const entry = makeEntry({ body: fixtureBody, filePath: 'fixtures/absent.mdx', id: 'a-post' });
-
-		expect(getBodyLineOffset(entry, rootPath)).toBe(0);
-	});
-
-	test('is zero when the body is not found in the file', () => {
-		const entry = makeEntry({
-			body: 'prose that is not there',
-			filePath: fixturePath,
-			id: 'a-post',
-		});
-
-		expect(getBodyLineOffset(entry, rootPath)).toBe(0);
 	});
 });
