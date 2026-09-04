@@ -8,6 +8,7 @@
 		"lqip": "pnpm --filter @synapticism/scripts run lqip --root-path=$PWD",
 		"og-image": "astro sync && pnpm --filter @synapticism/scripts run og-image",
 		"sitemap-lastmod": "astro sync && pnpm --filter @synapticism/scripts run sitemap-lastmod",
+		"validate-content": "astro sync && pnpm --filter @synapticism/scripts run validate-content",
 		"preview": "astro preview",
 		"astro": "astro",
 		"lint": "eslint",

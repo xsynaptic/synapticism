@@ -22,6 +22,7 @@ const configFilenames = [
 
 // The subset of an entry that consumers read; every `CollectionEntry` satisfies it
 export interface ContentEntry {
+	body?: string | undefined;
 	collection: string;
 	data: Record<string, unknown>;
 	// Astro widens this to `string | number`; file-based collections only ever write a string
@@ -35,8 +36,15 @@ export async function getCollectionEntries<C extends CollectionKey>(
 	collections: Array<C>,
 ) {
 	const entries = await Promise.all(collections.map((collection) => getCollection(collection)));
+	const flattened = entries.flat();
 
-	return entries.flat();
+	if (flattened.length === 0) {
+		throw new Error(
+			`No entries found in: ${collections.join(', ')}. Run \`astro sync\` to write the content store.`,
+		);
+	}
+
+	return flattened;
 }
 
 export async function withAstroContent<T>(callback: (content: AstroContent) => Promise<T>) {

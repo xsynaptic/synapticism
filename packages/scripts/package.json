@@ -12,7 +12,8 @@
 		"deploy-app": "tsx --env-file-if-exists=../../.env ./src/deploy/deploy-app.cli.ts",
 		"lqip": "tsx ./src/lqip/index.ts",
 		"og-image": "tsx ./src/og-image/index.ts",
-		"sitemap-lastmod": "tsx ./src/sitemap-lastmod/index.cli.ts"
+		"sitemap-lastmod": "tsx ./src/sitemap-lastmod/index.cli.ts",
+		"validate-content": "tsx ./src/validate-content/index.ts"
 	},
 	"devDependencies": {
 		"@fontsource/aleo": "^5.3.0",
