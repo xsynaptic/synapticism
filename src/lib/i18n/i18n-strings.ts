@@ -44,6 +44,7 @@ const strings = {
 	'pagination.pageNumber': 'Page {page}',
 	'pagination.previous': 'Previous',
 	'pagination.select.submit': 'Go',
+	'pagination.select.total': 'of {total}',
 
 	// Section labels
 	'section.backlinks': 'Backlinks',

@@ -13,6 +13,7 @@ import { navigate } from 'astro:transitions/client';
  *       <span data-pagination-counter>Page 3 of 100</span>
  *       <form data-pagination-form hidden>              <-- revealed + populated here
  *         <select data-pagination-control></select>
+ *         <span>of 100</span>
  *         <button type="submit">Go</button>
  *       </form>
  *     </div>
@@ -22,13 +23,14 @@ import { navigate } from 'astro:transitions/client';
  *
  * No JS: prev/next links and the counter work, the empty form stays hidden
  * With JS: the <select> is filled from the data attributes (no per-page markup shipped), the form
- * revealed, the counter hidden. Navigation commits only via Go, never on `change`, so keyboard
- * browsing is safe
+ * revealed, the counter hidden. Navigation commits on `change` only for a pointer-driven pick on a
+ * fine pointer, otherwise via Go or Enter
  */
 class PaginationSelect extends HTMLElement {
 	#abortController: AbortController | undefined;
 	#form: HTMLFormElement | undefined;
 	#initialized = false;
+	#isPointerDriven = false;
 	#select: HTMLSelectElement | undefined;
 	#submit: HTMLButtonElement | undefined;
 
@@ -46,6 +48,8 @@ class PaginationSelect extends HTMLElement {
 
 		this.#form.addEventListener('submit', this.#handleSubmit, { signal });
 		this.#select.addEventListener('change', this.#handleChange, { signal });
+		this.#select.addEventListener('pointerdown', this.#handlePointerDown, { signal });
+		this.#select.addEventListener('keydown', this.#handleKeyDown, { signal });
 	}
 
 	disconnectedCallback() {
@@ -100,21 +104,32 @@ class PaginationSelect extends HTMLElement {
 	}
 
 	#handleChange = () => {
+		// A coarse-pointer picker is easy to mis-tap, so touch commits through Go
+		// Firefox changes a closed select on arrow keys and wheel, so keyboard changes never navigate
+		const shouldNavigate = this.#isPointerDriven && !matchMedia('(pointer: coarse)').matches;
+
+		this.#isPointerDriven = false;
+
+		// Syncing here would flash Go while the navigation resolves
+		if (shouldNavigate) {
+			this.#navigateToSelectedPage();
+			return;
+		}
+
 		this.#syncSubmit();
+	};
+
+	#handleKeyDown = () => {
+		this.#isPointerDriven = false;
+	};
+
+	#handlePointerDown = () => {
+		this.#isPointerDriven = true;
 	};
 
 	#handleSubmit = (event: SubmitEvent) => {
 		event.preventDefault();
-
-		if (!this.#select) return;
-
-		const currentPage = Number(this.dataset.currentPage);
-		const pageNumber = Number(this.#select.value);
-
-		if (pageNumber === currentPage || !Number.isSafeInteger(pageNumber)) return;
-
-		// `navigate`, not `location.assign`, so view transitions still run
-		void navigate(this.#getPageUrl(pageNumber));
+		this.#navigateToSelectedPage();
 	};
 
 	// Pin a width floor to the widest label (lastPage) so changing pages never resizes the control
@@ -142,6 +157,18 @@ class PaginationSelect extends HTMLElement {
 				lockWidth();
 			})();
 		}
+	}
+
+	#navigateToSelectedPage() {
+		if (!this.#select) return;
+
+		const currentPage = Number(this.dataset.currentPage);
+		const pageNumber = Number(this.#select.value);
+
+		if (pageNumber === currentPage || !Number.isSafeInteger(pageNumber)) return;
+
+		// `navigate`, not `location.assign`, so view transitions still run
+		void navigate(this.#getPageUrl(pageNumber));
 	}
 
 	#syncSubmit() {
