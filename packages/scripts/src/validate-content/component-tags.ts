@@ -11,16 +11,8 @@ export interface ComponentTag {
 
 const componentTagRegex = /<([A-Z]\w*)((?:\s[^>]*?)?)\/?>/g;
 
-export function findComponentTags(
-	entry: ContentEntry,
-	names: ReadonlyArray<string>,
-	rootPath: string,
-): Array<ComponentTag> {
-	const body = entry.body;
-
-	if (!body) return [];
-
-	const lineOffset = getBodyLineOffset(entry, rootPath);
+// Line numbers are body-relative; a caller adds getBodyLineOffset to point at the file
+export function findComponentTags(body: string, names: ReadonlyArray<string>) {
 	const tags: Array<ComponentTag> = [];
 
 	for (const match of body.matchAll(componentTagRegex)) {
@@ -29,7 +21,7 @@ export function findComponentTags(
 		if (!name || !names.includes(name)) continue;
 
 		tags.push({
-			lineNumber: lineOffset + body.slice(0, match.index).split('\n').length,
+			lineNumber: body.slice(0, match.index).split('\n').length,
 			name,
 			props: match[2] ?? '',
 		});
@@ -38,18 +30,27 @@ export function findComponentTags(
 	return tags;
 }
 
-export function getTagProp({ props }: ComponentTag, name: string): string | undefined {
-	return new RegExp(`${name}=["']([^"']+)["']`).exec(props)?.[1];
-}
-
-// `entry.body` drops the frontmatter, so line numbers need its offset to point at the real file
-function getBodyLineOffset(entry: ContentEntry, rootPath: string) {
+// `entry.body` drops the frontmatter, so a file line number needs its length added back
+export function getBodyLineOffset(entry: ContentEntry, rootPath: string) {
 	if (!entry.filePath || !entry.body) return 0;
 
-	const source = readFileSync(path.join(rootPath, entry.filePath), 'utf8');
+	let source: string;
+
+	// An entry with no file on disk (a test fixture) falls back to body-relative rather than throwing
+	try {
+		source = readFileSync(path.join(rootPath, entry.filePath), 'utf8');
+	} catch {
+		return 0;
+	}
+
 	const bodyIndex = source.indexOf(entry.body);
 
 	if (bodyIndex === -1) return 0;
 
 	return source.slice(0, bodyIndex).split('\n').length - 1;
+}
+
+// Anchored on a boundary so `data-id="x"` is not read as the `id` prop
+export function getTagProp({ props }: ComponentTag, name: string) {
+	return new RegExp(String.raw`(?:^|\s)${name}=["']([^"']+)["']`).exec(props)?.[1];
 }

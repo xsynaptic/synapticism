@@ -1,43 +1,66 @@
 import type { ContentEntry } from '../shared/astro-content.js';
 import type { ValidationIssue } from './validation-result.js';
 
-import { findComponentTags, getTagProp } from './component-tags.js';
+import { findComponentTags, getBodyLineOffset, getTagProp } from './component-tags.js';
 import { toValidationResult } from './validation-result.js';
 
-const requiredProps = { Img: 'src', Link: 'id', Quotation: 'author' } as const;
+// A required prop missing here throws while the component renders, naming only the page path
+const requiredProps: Record<string, string> = { Img: 'src', Link: 'id', Quotation: 'author' };
 
 const componentNames = Object.keys(requiredProps);
+
+interface ComponentIssue {
+	context: string;
+	lineNumber: number;
+	message: string;
+}
+
+export function collectComponentIssues(body: string): Array<ComponentIssue> {
+	const lines = body.split('\n');
+	const issues: Array<ComponentIssue> = [];
+
+	for (const tag of findComponentTags(body, componentNames)) {
+		const prop = requiredProps[tag.name];
+
+		if (!prop || getTagProp(tag, prop)) continue;
+
+		issues.push({
+			context: lines[tag.lineNumber - 1]?.trim() ?? '',
+			lineNumber: tag.lineNumber,
+			message: `${tag.name} component missing ${prop} prop`,
+		});
+	}
+
+	return issues;
+}
 
 export function validateMdxComponents(entries: Array<ContentEntry>, rootPath: string) {
 	const issues: Array<ValidationIssue> = [];
 
-	let errorCount = 0;
+	let issueCount = 0;
 
 	for (const entry of entries) {
-		const details = collectMissingProps(entry, rootPath);
+		if (!entry.body) continue;
 
-		if (details.length === 0) continue;
+		const componentIssues = collectComponentIssues(entry.body);
 
-		issues.push({ details, message: entry.filePath ?? entry.id });
-		errorCount += details.length;
+		if (componentIssues.length === 0) continue;
+
+		const lineOffset = getBodyLineOffset(entry, rootPath);
+
+		issues.push({
+			details: componentIssues.flatMap((issue) => [
+				`Line ${(issue.lineNumber + lineOffset).toString()}: ${issue.message}`,
+				issue.context,
+			]),
+			message: entry.filePath ?? entry.id,
+		});
+
+		issueCount += componentIssues.length;
 	}
 
 	return toValidationResult(issues, {
-		fail: `Found ${String(errorCount)} invalid component(s)`,
+		fail: `Found ${issueCount.toString()} invalid component(s)`,
 		pass: 'MDX components valid',
 	});
-}
-
-function collectMissingProps(entry: ContentEntry, rootPath: string) {
-	const details: Array<string> = [];
-
-	for (const tag of findComponentTags(entry, componentNames, rootPath)) {
-		const prop = requiredProps[tag.name as keyof typeof requiredProps];
-
-		if (getTagProp(tag, prop)) continue;
-
-		details.push(`Line ${String(tag.lineNumber)}: <${tag.name}> missing ${prop} prop`);
-	}
-
-	return details;
 }

@@ -12,13 +12,14 @@
 		"preview": "astro preview",
 		"astro": "astro",
 		"lint": "eslint",
+		"test": "vitest",
 		"check-content": "mdxlint-content packages/content --root-path=$PWD",
 		"fix-content": "mdxlint-content packages/content --fix --root-path=$PWD",
 		"lint-css": "stylelint \"{src,packages}/**/*.{css,astro}\"",
 		"lint-css-fix": "stylelint \"{src,packages}/**/*.{css,astro}\" --fix",
 		"knip": "knip",
 		"fix": "stylelint \"{src,packages}/**/*.{css,astro}\" --fix --cache --cache-location node_modules/.cache/stylelint/ && prettier --write . --cache && eslint --fix --cache --cache-location node_modules/.cache/eslint/ && astro check && tsc --noEmit --extendedDiagnostics && knip",
-		"check": "stylelint \"{src,packages}/**/*.{css,astro}\" --cache --cache-location node_modules/.cache/stylelint/ && prettier --check . --cache && eslint --cache --cache-location node_modules/.cache/eslint/ && astro check && tsc --noEmit --extendedDiagnostics && knip",
+		"check": "stylelint \"{src,packages}/**/*.{css,astro}\" --cache --cache-location node_modules/.cache/stylelint/ && prettier --check . --cache && eslint --cache --cache-location node_modules/.cache/eslint/ && astro check && tsc --noEmit --extendedDiagnostics && knip && vitest run",
 		"check-types": "tsc --noEmit --extendedDiagnostics",
 		"deploy-site": "pnpm --filter @synapticism/scripts run deploy-site --root-path=$PWD",
 		"deploy-app": "pnpm --filter @synapticism/scripts run deploy-app --root-path=$PWD"
@@ -68,6 +69,7 @@
 		"stylelint": "^17.14.1",
 		"tailwindcss": "^4.3.3",
 		"typescript": "^6.0.3",
+		"vitest": "^4.1.11",
 		"wrangler": "^4.128.0",
 		"yaml": "^2.8.3",
 		"zod": "^4.5.4"

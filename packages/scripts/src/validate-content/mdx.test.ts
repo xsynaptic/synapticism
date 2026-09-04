@@ -1,0 +1,111 @@
+import { describe, expect, test } from 'vitest';
+
+import { collectComponentIssues, validateMdxComponents } from './mdx.js';
+import { makeEntry } from './validate-test-utils.js';
+
+const rootPath = import.meta.dirname;
+
+describe('collectComponentIssues', () => {
+	test('accepts components carrying their required prop', () => {
+		const body = [
+			'Filed under <Link id="a-note">a note</Link>.',
+			'<Img src="notes/diagram.jpg">A caption</Img>',
+			'<Quotation author="Ursula Le Guin">A line</Quotation>',
+		].join('\n');
+
+		expect(collectComponentIssues(body)).toEqual([]);
+	});
+
+	test('flags a Link with no props at all', () => {
+		expect(collectComponentIssues('See <Link>this label</Link>.')).toEqual([
+			{
+				context: 'See <Link>this label</Link>.',
+				lineNumber: 1,
+				message: 'Link component missing id prop',
+			},
+		]);
+	});
+
+	test('flags a Link carrying other props but no id', () => {
+		const issues = collectComponentIssues('<Link class="anchor">text</Link>');
+
+		expect(issues).toHaveLength(1);
+		expect(issues[0]?.message).toBe('Link component missing id prop');
+	});
+
+	test('does not read a `data-id` prop as the `id` prop', () => {
+		const issues = collectComponentIssues('<Link data-id="a-note">text</Link>');
+
+		expect(issues).toHaveLength(1);
+		expect(issues[0]?.message).toBe('Link component missing id prop');
+	});
+
+	test('flags an Img with alt but no src', () => {
+		const issues = collectComponentIssues('<Img alt="A diagram">caption</Img>');
+
+		expect(issues).toHaveLength(1);
+		expect(issues[0]?.message).toBe('Img component missing src prop');
+	});
+
+	test('flags a Quotation with no author', () => {
+		const issues = collectComponentIssues('<Quotation>A line</Quotation>');
+
+		expect(issues).toHaveLength(1);
+		expect(issues[0]?.message).toBe('Quotation component missing author prop');
+	});
+
+	test('reports the line the component sits on', () => {
+		const body = ['Intro.', '', 'More prose.', '', '<Link>no id here</Link>'].join('\n');
+
+		expect(collectComponentIssues(body)[0]?.lineNumber).toBe(5);
+	});
+
+	test('does not mistake a longer tag name for the one it checks', () => {
+		expect(collectComponentIssues('<LinkList items="a" />')).toEqual([]);
+	});
+
+	test('orders issues across component types by line', () => {
+		const body = ['<Img alt="first">a</Img>', '<Link>second</Link>'].join('\n');
+
+		expect(collectComponentIssues(body).map((issue) => issue.lineNumber)).toEqual([1, 2]);
+	});
+});
+
+describe('validateMdxComponents', () => {
+	test('passes when every component is well formed', () => {
+		const entries = [makeEntry({ body: '<Link id="a-note">text</Link>', id: 'a-post' })];
+
+		expect(validateMdxComponents(entries, rootPath).status).toBe('pass');
+	});
+
+	test('reports the file and skips an entry with no body', () => {
+		const entries = [
+			makeEntry({ id: 'a-tag' }),
+			makeEntry({
+				body: '<Link>text</Link>',
+				filePath: 'collections/posts/a-post.mdx',
+				id: 'a-post',
+			}),
+		];
+
+		const result = validateMdxComponents(entries, rootPath);
+
+		expect(result.status).toBe('fail');
+		expect(result.issues).toHaveLength(1);
+		expect(result.issues[0]?.message).toBe('collections/posts/a-post.mdx');
+	});
+
+	test('reports a line number that points at the file, not the body', () => {
+		const entries = [
+			makeEntry({
+				body: 'Prose above the component.\n\n<Link>no id here</Link>\n',
+				filePath: 'fixtures/offset-sample.mdx',
+				id: 'a-post',
+			}),
+		];
+
+		const result = validateMdxComponents(entries, rootPath);
+
+		expect(result.issues[0]?.details?.[0]).toBe('Line 9: Link component missing id prop');
+	});
+});

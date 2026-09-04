@@ -35,7 +35,7 @@ const entries = await withAstroContent((content) => getCollectionEntries(content
 const validations = {
 	'entry-ids': () => validateEntryIds(entries),
 	images: () => validateImages(entries, mediaPath),
-	'link-ids': () => validateLinkIds(entries, rootPath),
+	'link-ids': () => validateLinkIds(entries, entries, rootPath),
 	mdx: () => validateMdxComponents(entries, rootPath),
 	references: () => validateReferences(entries),
 } satisfies Record<string, () => ValidationResult>;

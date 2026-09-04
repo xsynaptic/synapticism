@@ -1,48 +1,77 @@
 import type { ContentEntry } from '../shared/astro-content.js';
 import type { ValidationIssue } from './validation-result.js';
 
-import { findComponentTags, getTagProp } from './component-tags.js';
+import { findComponentTags, getBodyLineOffset, getTagProp } from './component-tags.js';
 import { toValidationResult } from './validation-result.js';
 
-// The catalog is flat across every collection, so any Entry is a valid target
-export function validateLinkIds(entries: Array<ContentEntry>, rootPath: string) {
-	const validIds = new Set(entries.map((entry) => entry.id));
+interface LinkIdIssue {
+	id: string;
+	lineNumber: number;
+	location: string;
+}
+
+// An unresolved id renders as plain text with no diagnostic, so this check is the only report
+export function collectLinkIdIssues(
+	entries: Array<ContentEntry>,
+	validTargets: Array<ContentEntry>,
+) {
+	const validIds = new Set(validTargets.map((entry) => entry.id));
+
+	return entries.flatMap((entry) => collectEntryLinkIdIssues(entry, validIds));
+}
+
+export function validateLinkIds(
+	entries: Array<ContentEntry>,
+	validTargets: Array<ContentEntry>,
+	rootPath: string,
+) {
+	const validIds = new Set(validTargets.map((entry) => entry.id));
 	const issues: Array<ValidationIssue> = [];
 
-	let brokenCount = 0;
+	let issueCount = 0;
 
 	for (const entry of entries) {
-		const details = collectBrokenLinkIds(entry, validIds, rootPath);
+		const entryIssues = collectEntryLinkIdIssues(entry, validIds);
 
-		if (details.length === 0) continue;
+		if (entryIssues.length === 0) continue;
 
-		issues.push({ details, message: entry.filePath ?? entry.id });
-		brokenCount += details.length;
+		const lineOffset = getBodyLineOffset(entry, rootPath);
+
+		issues.push({
+			details: entryIssues.map(
+				(issue) =>
+					`Line ${(issue.lineNumber + lineOffset).toString()}: broken link ID "${issue.id}"`,
+			),
+			message: entry.filePath ?? entry.id,
+		});
+
+		issueCount += entryIssues.length;
 	}
 
 	return toValidationResult(issues, {
-		fail: `Found ${String(brokenCount)} broken link ID(s)`,
+		fail: `Found ${issueCount.toString()} broken link ID(s)`,
 		pass: 'Link IDs valid',
 	});
 }
 
-function collectBrokenLinkIds(
-	entry: ContentEntry,
-	validIds: ReadonlySet<string>,
-	rootPath: string,
-) {
-	const details: Array<string> = [];
+function collectEntryLinkIdIssues(entry: ContentEntry, validIds: ReadonlySet<string>) {
+	const body = entry.body;
 
-	const tags = findComponentTags(entry, ['Link'], rootPath);
+	if (!body) return [];
+
+	const location = entry.filePath ?? entry.id;
+
+	const issues: Array<LinkIdIssue> = [];
+	const tags = findComponentTags(body, ['Link']);
 
 	for (const tag of tags) {
 		const id = getTagProp(tag, 'id');
 
-		// A missing id is the mdx check's finding, not this one's
+		// A Link with no id is the mdx check's finding, not this one's
 		if (!id || validIds.has(id)) continue;
 
-		details.push(`Line ${String(tag.lineNumber)}: broken link ID "${id}"`);
+		issues.push({ id, lineNumber: tag.lineNumber, location });
 	}
 
-	return details;
+	return issues;
 }
