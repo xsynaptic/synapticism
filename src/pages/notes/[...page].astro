@@ -2,7 +2,7 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import NoteList from '#layouts/notes-list.astro';
-import { getNotesCollection } from '#lib/collections/notes/notes-data.js';
+import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { sortByDateReverseChronological } from '#lib/utils/date.ts';
 
 export const getStaticPaths = (async ({ paginate }) => {

@@ -5,10 +5,11 @@ import chalk from 'chalk';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 
+import { getCollectionEntries, withAstroContent } from '#shared/astro-content.js';
+import { findWorkspaceRoot } from '#shared/utils.js';
+
 import type { ValidationResult } from './validation-result.js';
 
-import { getCollectionEntries, withAstroContent } from '../shared/astro-content.js';
-import { findWorkspaceRoot } from '../shared/utils.js';
 import { validateEntryIds } from './entry-ids.js';
 import { validateImages } from './images.js';
 import { validateLinkIds } from './link-ids.js';

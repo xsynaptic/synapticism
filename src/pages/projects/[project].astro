@@ -2,10 +2,10 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import ProjectDetail from '#layouts/project-detail.astro';
-import { getCatalog } from '#lib/catalog/catalog-data.js';
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
-import { getProjectsCollection } from '#lib/collections/projects/projects-data.js';
-import { queryProjectEntryContent } from '#lib/collections/projects/projects-utils.js';
+import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
+import { queryProjectEntryContent } from '#lib/collections/projects/projects-utils.ts';
 
 export const getStaticPaths = (async () => {
 	const { entries } = await getProjectsCollection();

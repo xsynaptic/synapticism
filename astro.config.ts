@@ -8,9 +8,10 @@ import pagefind from 'astro-pagefind';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
+import inventory from '#inventory/inventory-integration.ts';
+import { isIndexableUrlPath, readSitemapLastmod } from '#lib/utils/sitemap.ts';
+
 import { expressiveCodeOptions } from './expressive-code.config.mjs';
-import inventory from './src/inventory/inventory-integration.ts';
-import { isIndexableUrlPath, readSitemapLastmod } from './src/lib/utils/sitemap.ts';
 
 // Per-URL dates, written by the sitemap-lastmod script before the build
 // Read on first use, so loading this config never depends on a file a content script writes

@@ -1,8 +1,8 @@
 import { glob } from 'astro/loaders';
 import { defineCollection, reference } from 'astro:content';
 
-import { contentCollectionsPath } from '#constants.js';
-import { contentBaseSchema } from '#lib/schemas/content.js';
+import { contentCollectionsPath } from '#constants.ts';
+import { contentBaseSchema } from '#lib/schemas/content.ts';
 import { generateFlatId } from '#lib/utils/collections.ts';
 
 export const posts = defineCollection({

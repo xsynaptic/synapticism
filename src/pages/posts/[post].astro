@@ -2,9 +2,9 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import PostDetail from '#layouts/post-detail.astro';
-import { getCatalog } from '#lib/catalog/catalog-data.js';
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
-import { getPostsCollection } from '#lib/collections/posts/posts-data.js';
+import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
 export const getStaticPaths = (async () => {

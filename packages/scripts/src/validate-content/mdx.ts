@@ -1,7 +1,9 @@
-import type { ContentEntry } from '../shared/astro-content.js';
+import type { ContentEntry } from '#shared/astro-content.js';
+
+import { findComponentTags, getTagProp } from '#shared/component-tags.js';
+
 import type { ValidationIssue } from './validation-result.js';
 
-import { findComponentTags, getTagProp } from '../shared/component-tags.js';
 import { getBodyLineOffset } from './body-line-offset.js';
 import { toValidationResult } from './validation-result.js';
 

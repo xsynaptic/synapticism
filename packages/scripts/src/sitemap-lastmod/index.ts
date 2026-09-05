@@ -4,8 +4,8 @@ import chalk from 'chalk';
 import { writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { getCollectionEntries, withAstroContent } from '../shared/astro-content.js';
-import { safelyCreateDirectory } from '../shared/utils.js';
+import { getCollectionEntries, withAstroContent } from '#shared/astro-content.js';
+import { safelyCreateDirectory } from '#shared/utils.js';
 
 interface SitemapLastmodOptions {
 	outputPath: string;

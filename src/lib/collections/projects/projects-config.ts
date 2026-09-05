@@ -1,8 +1,8 @@
 import { glob } from 'astro/loaders';
 import { defineCollection, reference } from 'astro:content';
 
-import { contentCollectionsPath } from '#constants.js';
-import { contentBaseSchema } from '#lib/schemas/content.js';
+import { contentCollectionsPath } from '#constants.ts';
+import { contentBaseSchema } from '#lib/schemas/content.ts';
 
 export const projects = defineCollection({
 	loader: glob({ base: `${contentCollectionsPath}/projects`, pattern: '**/[^_]*.(md|mdx)' }),

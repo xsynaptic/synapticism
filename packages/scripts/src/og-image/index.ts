@@ -4,11 +4,12 @@ import { cp, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 
+import { findWorkspaceRoot } from '#shared/utils.js';
+
 import type { ImageBatch } from './batch.js';
 import type { ProcessedImage } from './generate.js';
 import type { OpenGraphContentEntry } from './types.js';
 
-import { findWorkspaceRoot } from '../shared/utils.js';
 import { batchEntriesBySourceImage } from './batch.js';
 import { mediaDir, openGraphLedgerPath, openGraphTemplateVersion } from './constants.js';
 import { getOpenGraphContentEntries } from './content.js';

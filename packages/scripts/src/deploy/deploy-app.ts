@@ -40,11 +40,7 @@ export async function deployApp(options: DeployAppOptions): Promise<void> {
 
 	const start = Date.now();
 
-	// wrangler.jsonc lives at the repo root; run from there so it resolves config + ./dist
-	await $({
-		cwd: rootPath,
-		stdio: 'inherit',
-	})`pnpm exec wrangler deploy ${dryRun ? ['--dry-run'] : []}`;
+	await runWrangler(rootPath, dryRun ? ['deploy', '--dry-run'] : ['deploy']);
 
 	console.log(chalk.green(`Done in ${((Date.now() - start) / 1000).toFixed(1)}s`));
 }
@@ -85,4 +81,23 @@ async function readDistFiles(distPath: string): Promise<Array<DistFile>> {
 	);
 
 	return entries.filter((entry) => entry.isFile);
+}
+
+// wrangler.jsonc lives at the repo root; run from there so it resolves config + ./dist
+// wrangler has no flag for its per-asset `+ path` lines; `--log-level warn` would take the deploy summary with them
+// Piping stdout to filter them costs color unless it is forced
+async function runWrangler(rootPath: string, args: Array<string>): Promise<void> {
+	const wrangler = $({
+		cwd: rootPath,
+		env: process.stdout.isTTY ? { ...process.env, FORCE_COLOR: '1' } : process.env,
+		stdio: ['inherit', 'pipe', 'inherit'],
+	})`pnpm exec wrangler ${args}`;
+
+	for await (const line of wrangler) {
+		if (line.startsWith('+ /') || line.includes('truncating changed assets log')) continue;
+
+		console.log(line);
+	}
+
+	await wrangler;
 }

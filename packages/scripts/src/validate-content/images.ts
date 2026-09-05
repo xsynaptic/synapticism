@@ -1,11 +1,9 @@
-import type { ContentEntry } from '../shared/astro-content.js';
+import type { ContentEntry } from '#shared/astro-content.js';
+
+import { collectMediaFiles, extractImageFeaturedIds, extractMdxImageIds } from '#shared/images.js';
+
 import type { ValidationResult } from './validation-result.js';
 
-import {
-	collectMediaFiles,
-	extractImageFeaturedIds,
-	extractMdxImageIds,
-} from '../shared/images.js';
 import { toValidationResult } from './validation-result.js';
 
 export function validateImages(entries: Array<ContentEntry>, mediaPath: string): ValidationResult {

@@ -3,10 +3,11 @@ import type { CollectionKey } from 'astro:content';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 
-import type { ContentEntry } from '../shared/astro-content.js';
-import type { OpenGraphContentEntry, OpenGraphEntryItem } from './types.js';
+import type { ContentEntry } from '#shared/astro-content.js';
 
-import { getCollectionEntries, withAstroContent } from '../shared/astro-content.js';
+import { getCollectionEntries, withAstroContent } from '#shared/astro-content.js';
+
+import type { OpenGraphContentEntry, OpenGraphEntryItem } from './types.js';
 
 // Singular labels for the card's meta line; kept local because the site's i18n strings
 // sit behind an Astro path alias this script can't resolve

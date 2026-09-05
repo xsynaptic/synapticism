@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
 import { parseArgs } from 'node:util';
 
-import { findWorkspaceRoot } from '../shared/utils.js';
+import { findWorkspaceRoot } from '#shared/utils.js';
+
 import { deployApp } from './deploy-app.js';
 
 const { values } = parseArgs({

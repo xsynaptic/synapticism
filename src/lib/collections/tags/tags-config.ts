@@ -2,9 +2,9 @@ import { glob } from 'astro/loaders';
 import { defineCollection } from 'astro:content';
 import { z } from 'zod';
 
-import { contentCollectionsPath } from '#constants.js';
-import { DateStringSchema, StylizedTextSchema } from '#lib/schemas/content.js';
-import { ImageFeaturedSchema } from '#lib/schemas/image-featured.js';
+import { contentCollectionsPath } from '#constants.ts';
+import { DateStringSchema, StylizedTextSchema } from '#lib/schemas/content.ts';
+import { ImageFeaturedSchema } from '#lib/schemas/image-featured.ts';
 
 export const tags = defineCollection({
 	loader: glob({ base: `${contentCollectionsPath}/tags`, pattern: '**/[^_]*.(md|mdx)' }),

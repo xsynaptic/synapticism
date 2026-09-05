@@ -2,9 +2,9 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import NoteDetail from '#layouts/notes-detail.astro';
-import { getCatalog } from '#lib/catalog/catalog-data.js';
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
-import { getNotesCollection } from '#lib/collections/notes/notes-data.js';
+import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getContentUrl } from '#lib/utils/routing.ts';
 
