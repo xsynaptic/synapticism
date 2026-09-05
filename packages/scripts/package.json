@@ -7,6 +7,9 @@
 	"exports": {
 		"./og-image": "./src/og-image/inventory-exports.ts"
 	},
+	"imports": {
+		"#shared/*": "./src/shared/*"
+	},
 	"scripts": {
 		"deploy-site": "NODE_ENV=production tsx --env-file-if-exists=../../.env ./src/deploy/deploy.ts",
 		"deploy-app": "tsx --env-file-if-exists=../../.env ./src/deploy/deploy-app.cli.ts",
