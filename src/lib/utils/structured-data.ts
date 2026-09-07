@@ -1,4 +1,4 @@
-import { getSiteUrl } from '#lib/utils/routing.ts';
+import { getAbsoluteUrl, getSitePath } from '#lib/utils/routing.ts';
 
 export type Thing = Article | BreadcrumbList | Person | WebSite;
 
@@ -64,10 +64,11 @@ export function buildArticleSchema(props: {
 	title: string;
 	url: string;
 }): Article {
-	const aboutUrl = getSiteUrl('/about');
+	const aboutUrl = getAbsoluteUrl(getSitePath('/about'));
+	const articleUrl = getAbsoluteUrl(props.url);
 
 	return {
-		'@id': `${props.url}${SchemaFragmentIds.Article}`,
+		'@id': `${articleUrl}${SchemaFragmentIds.Article}`,
 		'@type': 'Article',
 		headline: props.title,
 		...(props.description ? { description: props.description } : {}),
@@ -75,12 +76,12 @@ export function buildArticleSchema(props: {
 		datePublished: props.dateCreated.toISOString(),
 		...(props.dateUpdated ? { dateModified: props.dateUpdated.toISOString() } : {}),
 		author: { '@id': `${aboutUrl}${SchemaFragmentIds.Author}` },
-		mainEntityOfPage: { '@id': props.url },
+		mainEntityOfPage: { '@id': articleUrl },
 	};
 }
 
 export function buildAuthorSchema(name: string): Person {
-	const aboutUrl = getSiteUrl('/about');
+	const aboutUrl = getAbsoluteUrl(getSitePath('/about'));
 
 	return {
 		'@id': `${aboutUrl}${SchemaFragmentIds.Author}`,
@@ -96,19 +97,19 @@ export function buildBreadcrumbSchema(
 	pageUrl: string,
 ): BreadcrumbList {
 	return {
-		'@id': `${pageUrl}${SchemaFragmentIds.Breadcrumb}`,
+		'@id': `${getAbsoluteUrl(pageUrl)}${SchemaFragmentIds.Breadcrumb}`,
 		'@type': 'BreadcrumbList',
 		itemListElement: items.map((item, index) => ({
 			'@type': 'ListItem' as const,
 			name: item.name,
 			position: index + 1,
-			...(item.url ? { item: item.url } : {}),
+			...(item.url ? { item: getAbsoluteUrl(item.url) } : {}),
 		})),
 	};
 }
 
 export function buildWebSiteSchema(props: { description: string; name: string }): WebSite {
-	const siteUrl = getSiteUrl();
+	const siteUrl = getAbsoluteUrl(getSitePath());
 
 	return {
 		'@id': `${siteUrl}${SchemaFragmentIds.Website}`,

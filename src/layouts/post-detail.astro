@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import { render } from 'astro:content';
 
-import type { ContentNavigationItem } from '#components/types.ts';
+import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentDate from '#components/content/content-date.astro';
@@ -16,7 +16,7 @@ import AuthorCard from '#components/parts/author-card.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
-import SectionNavigation from '#components/sections/section-navigation.astro';
+import SectionPagination from '#components/sections/section-pagination.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { siteAuthorName } from '#constants.ts';
 import { getPostSchema } from '#lib/collections/posts/posts-utils.ts';
@@ -25,18 +25,18 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getContentUrl } from '#lib/utils/routing.ts';
-import { getOgImageUrl, getSeoArticleProps } from '#lib/utils/seo.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
+import { getOgImagePath, getSeoArticleProps } from '#lib/utils/seo.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
 	entry: CollectionEntry<'posts'>;
-	newerItem: ContentNavigationItem | undefined;
-	olderItem: ContentNavigationItem | undefined;
+	newerEntry: PaginationEntry | undefined;
+	olderEntry: PaginationEntry | undefined;
 }
 
-const { backlinks, entry, newerItem, olderItem } = Astro.props;
+const { backlinks, entry, newerEntry, olderEntry } = Astro.props;
 
 const projectIds = entry.data.projects?.map(({ id }) => id);
 const tagIds = entry.data.tags?.map(({ id }) => id);
@@ -57,7 +57,7 @@ const minutesRead =
 	hasReadingBar={true}
 	meta={{
 		description: await getDescriptionRenderedText(entry),
-		image: { url: getOgImageUrl(entry.collection, entry.id) },
+		image: { url: getOgImagePath(entry.collection, entry.id) },
 		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,
@@ -110,11 +110,11 @@ const minutesRead =
 		<AuthorCard />
 	</article>
 	<SectionBacklinks backlinks={backlinks} />
-	<SectionNavigation
-		baseUrl={getContentUrl('posts')}
-		labelPLural={t('collection.posts.plural')}
+	<SectionPagination
+		baseUrl={getContentPath('posts')}
+		labelPlural={t('collection.posts.plural')}
 		labelSingular={t('collection.posts.singular')}
-		newerItem={newerItem}
-		olderItem={olderItem}
+		newerEntry={newerEntry}
+		olderEntry={olderEntry}
 	/>
 </MainSite>

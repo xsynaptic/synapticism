@@ -10,7 +10,6 @@ import ContentHero from '#components/content/content-hero.astro';
 import ContentImage from '#components/content/content-image.astro';
 import ContentNoteLinks from '#components/content/content-note-links.astro';
 import ContentSection from '#components/content/content-section.astro';
-import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
 import Img from '#components/mdx/img.astro';
 import Link from '#components/mdx/link.astro';
@@ -23,10 +22,11 @@ import LabeledSection from '#components/parts/labeled-section.astro';
 import ListRow from '#components/parts/list-row.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
+import PreviewImage from '#components/parts/preview-image.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
-import SectionNavigation from '#components/sections/section-navigation.astro';
+import SectionPagination from '#components/sections/section-pagination.astro';
 import SectionRelatedContent from '#components/sections/section-related-content.astro';
 import {
 	createSamplePage,
@@ -39,8 +39,8 @@ import {
 	sampleImageId,
 	sampleImageMissingNote,
 	sampleLinks,
-	sampleNavigationNewer,
-	sampleNavigationOlder,
+	samplePaginationNewer,
+	samplePaginationOlder,
 	sampleRowItems,
 	sampleSource,
 } from '#inventory/inventory-fixtures.ts';
@@ -409,6 +409,23 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			>
 				<AuthorCard />
 			</Specimen>
+			<Specimen
+				name="preview-image"
+				note="The square image beside an Entry in a listing: 4rem across, 5rem from the <code>md</code> breakpoint up."
+				source="components/parts/preview-image.astro"
+			>
+				{
+					sampleImageId ? (
+						<PreviewImage
+							imgAlt="Preview image alt text"
+							showMicroformats={true}
+							src={sampleImageId}
+						/>
+					) : (
+						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+					)
+				}
+			</Specimen>
 		</Section>
 		<Section title="Content">
 			<Specimen
@@ -493,23 +510,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				}
 			</Specimen>
 			<Specimen
-				name="content-thumbnail"
-				note="The square thumbnail beside an item in a list: 4rem across, 5rem from the <code>md</code> breakpoint up."
-				source="components/content/content-thumbnail.astro"
-			>
-				{
-					sampleImageId ? (
-						<ContentThumbnail
-							imgAlt="Thumbnail alt text"
-							showMicroformats={true}
-							src={sampleImageId}
-						/>
-					) : (
-						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
-					)
-				}
-			</Specimen>
-			<Specimen
 				bleed={true}
 				name="content-section"
 				note="The generic content block. Every part of the header is a slot and each is optional; <code>titleLarge</code>, <code>marginSmall</code> and <code>fillViewport</code> switch the treatment. Renders nothing without a description or children."
@@ -575,23 +575,23 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				bleed={true}
-				name="section-navigation"
+				name="section-pagination"
 				note="Previous and next within one collection, plus the link back to the list. Each arm renders alone when the other end of the run is missing."
-				source="components/sections/section-navigation.astro"
+				source="components/sections/section-pagination.astro"
 			>
-				<SectionNavigation
+				<SectionPagination
 					baseUrl="#navigation"
-					labelPLural={t('collection.posts.plural')}
+					labelPlural={t('collection.posts.plural')}
 					labelSingular={t('collection.posts.singular')}
-					newerItem={sampleNavigationNewer}
-					olderItem={sampleNavigationOlder}
+					newerEntry={samplePaginationNewer}
+					olderEntry={samplePaginationOlder}
 				/>
-				<SectionNavigation
+				<SectionPagination
 					baseUrl="#navigation"
-					labelPLural={t('collection.notes.plural')}
+					labelPlural={t('collection.notes.plural')}
 					labelSingular={t('collection.notes.singular')}
-					newerItem={undefined}
-					olderItem={sampleNavigationOlder}
+					newerEntry={undefined}
+					olderEntry={samplePaginationOlder}
 				/>
 			</Specimen>
 			<Specimen

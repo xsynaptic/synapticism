@@ -13,7 +13,7 @@ import PaginationSelect from '#components/parts/pagination-select.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
-import { getContentUrl } from '#lib/utils/routing.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
 import { getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
@@ -47,7 +47,7 @@ const items = await Promise.all(
 				const primaryLink = entry.data.links?.[0];
 
 				return (
-					<ContentExcerpt class="mb-8" entryUrl={getContentUrl('notes', entry.id)}>
+					<ContentExcerpt class="mb-8" entryUrl={getContentPath('notes', entry.id)}>
 						<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
 						<Fragment slot="excerpt-subtitle">
 							<DateDisplay

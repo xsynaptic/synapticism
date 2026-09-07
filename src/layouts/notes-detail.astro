@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import { render } from 'astro:content';
 
-import type { ContentNavigationItem } from '#components/types.ts';
+import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentDate from '#components/content/content-date.astro';
@@ -18,7 +18,7 @@ import AuthorCard from '#components/parts/author-card.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
-import SectionNavigation from '#components/sections/section-navigation.astro';
+import SectionPagination from '#components/sections/section-pagination.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { siteAuthorName } from '#constants.ts';
 import { getNoteSchema } from '#lib/collections/notes/notes-utils.ts';
@@ -27,17 +27,17 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getContentUrl, getSiteUrl } from '#lib/utils/routing.ts';
-import { getOgImageUrl, getSeoArticleProps } from '#lib/utils/seo.ts';
+import { getContentPath, getSitePath } from '#lib/utils/routing.ts';
+import { getOgImagePath, getSeoArticleProps } from '#lib/utils/seo.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
 	entry: CollectionEntry<'notes'>;
-	newerItem: ContentNavigationItem | undefined;
-	olderItem: ContentNavigationItem | undefined;
+	newerEntry: PaginationEntry | undefined;
+	olderEntry: PaginationEntry | undefined;
 }
 
-const { backlinks, entry, newerItem, olderItem } = Astro.props;
+const { backlinks, entry, newerEntry, olderEntry } = Astro.props;
 
 const projectIds = entry.data.projects?.map(({ id }) => id);
 const tagIds = entry.data.tags?.map(({ id }) => id);
@@ -52,7 +52,7 @@ const { Content } = await render(entry);
 <MainSite
 	meta={{
 		description: await getDescriptionRenderedText(entry),
-		image: { url: getOgImageUrl(entry.collection, entry.id) },
+		image: { url: getOgImagePath(entry.collection, entry.id) },
 		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,
@@ -65,7 +65,7 @@ const { Content } = await render(entry);
 		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
 			<Fragment slot="header-subtitle">
 				<DividedItem
-					><Anchor anchorColor="accent" class="font-semibold uppercase" href={getSiteUrl('notes')}
+					><Anchor anchorColor="accent" class="font-semibold uppercase" href={getSitePath('notes')}
 						>{t('collection.notes.plural')}</Anchor
 					></DividedItem
 				>
@@ -104,11 +104,11 @@ const { Content } = await render(entry);
 		<AuthorCard />
 	</article>
 	<SectionBacklinks backlinks={backlinks} />
-	<SectionNavigation
-		baseUrl={getContentUrl('notes')}
-		labelPLural={t('collection.notes.plural')}
+	<SectionPagination
+		baseUrl={getContentPath('notes')}
+		labelPlural={t('collection.notes.plural')}
 		labelSingular={t('collection.notes.singular')}
-		newerItem={newerItem}
-		olderItem={olderItem}
+		newerEntry={newerEntry}
+		olderEntry={olderEntry}
 	/>
 </MainSite>

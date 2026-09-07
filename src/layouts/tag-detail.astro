@@ -7,12 +7,12 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import ContentDescription from '#components/content/content-description.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentSection from '#components/content/content-section.astro';
-import ContentThumbnail from '#components/content/content-thumbnail.astro';
 import MainSite from '#components/main/main-site.astro';
 import Anchor from '#components/parts/anchor.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
+import PreviewImage from '#components/parts/preview-image.astro';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 
@@ -40,7 +40,7 @@ const { entry, page } = Astro.props;
 			{
 				page.data.map((item) => (
 					<li class="flex gap-3 sm:gap-4">
-						{item.imageId ? <ContentThumbnail imgAlt={item.title} src={item.imageId} /> : undefined}
+						{item.imageId ? <PreviewImage imgAlt={item.title} src={item.imageId} /> : undefined}
 						<div class="flex min-w-0 flex-col gap-1">
 							<h2 class="text-lg font-semibold md:text-xl">
 								<Anchor anchorColor="title" href={item.url}>

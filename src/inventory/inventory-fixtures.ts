@@ -7,7 +7,7 @@ import { mediaDir, toOpenGraphEntryItem } from '@synapticism/scripts/og-image';
 import path from 'node:path';
 
 import type LabeledRow from '#components/parts/labeled-row.astro';
-import type { ContentNavigationItem } from '#components/types.ts';
+import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import type { LinkItemSchema, SourceSchema } from '#lib/schemas/content.ts';
 import type { ImageFeaturedObject } from '#lib/schemas/image-featured.ts';
@@ -79,15 +79,15 @@ export const sampleCatalogItems: Array<CatalogItem> = [
 	}),
 ];
 
-export const sampleNavigationNewer = {
+export const samplePaginationNewer = {
 	title: 'A newer entry, one step forward in the archive',
 	url: '/inventory/#newer',
-} satisfies ContentNavigationItem;
+} satisfies PaginationEntry;
 
-export const sampleNavigationOlder = {
+export const samplePaginationOlder = {
 	title: 'An older entry, one step back',
 	url: '/inventory/#older',
-} satisfies ContentNavigationItem;
+} satisfies PaginationEntry;
 
 export const sampleLinks = [
 	{ title: 'The source this note points at', url: 'https://example.com/an-article' },

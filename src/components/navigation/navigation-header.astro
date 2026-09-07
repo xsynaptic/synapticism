@@ -1,8 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-import { menuHeaderItems } from '#components/menu/menu-header.ts';
-import { isActiveMenuItem } from '#components/menu/menu-utils.ts';
+import { navigationHeaderItems } from '#components/navigation/navigation-header.ts';
+import { isActiveNavigationItem } from '#components/navigation/navigation-utils.ts';
 import Anchor from '#components/parts/anchor.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
@@ -14,14 +14,14 @@ const { pathname } = Astro.url;
 ---
 
 <nav
-	aria-label={t('aria.mainNav')}
+	aria-label={t('aria.headerNavigation')}
 	class="border-b border-accent-600 bg-linear-to-b from-accent-600 to-accent-500 py-2"
 	{...props}
 >
 	<ul class="content-column flex items-center gap-4">
 		{
-			menuHeaderItems.map((item) => {
-				const isActive = isActiveMenuItem(item, pathname);
+			navigationHeaderItems.map((item) => {
+				const isActive = isActiveNavigationItem(item, pathname);
 
 				return (
 					<li>

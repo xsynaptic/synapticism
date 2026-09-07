@@ -3,7 +3,7 @@ import Anchor from '#components/parts/anchor.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getCopyrightYears } from '#lib/utils/date.ts';
-import { getSiteUrl } from '#lib/utils/routing.ts';
+import { getSitePath } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 const copyrightYears = getCopyrightYears();
@@ -18,8 +18,10 @@ const copyrightYears = getCopyrightYears();
 		<Anchor anchorColor="primary-bright" href="https://astro.build">{t('footer.astro')}</Anchor>
 	</DividedItem>
 	<DividedItem as="span">
-		<Anchor anchorColor="primary-bright" data-astro-prefetch="false" href={`${getSiteUrl()}rss.xml`}
-			>{t('footer.rss')}</Anchor
+		<Anchor
+			anchorColor="primary-bright"
+			data-astro-prefetch="false"
+			href={`${getSitePath()}rss.xml`}>{t('footer.rss')}</Anchor
 		>
 	</DividedItem>
 </div>

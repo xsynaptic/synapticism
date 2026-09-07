@@ -1,8 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-import { menuFooterItems } from '#components/menu/menu-footer.ts';
-import { isActiveMenuItem } from '#components/menu/menu-utils.ts';
+import { navigationFooterItems } from '#components/navigation/navigation-footer.ts';
+import { isActiveNavigationItem } from '#components/navigation/navigation-utils.ts';
 import Anchor from '#components/parts/anchor.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
@@ -13,14 +13,14 @@ const props = Astro.props;
 const { pathname } = Astro.url;
 ---
 
-<nav aria-label={t('aria.footerNav')} class="pb-4 text-sm" data-nosnippet {...props}>
+<nav aria-label={t('aria.footerNavigation')} class="pb-4 text-sm" data-nosnippet {...props}>
 	<ul class="flex flex-wrap gap-x-4 gap-y-2">
 		{
-			menuFooterItems.map((item) => (
+			navigationFooterItems.map((item) => (
 				<li class="text-xs font-medium sm:text-sm">
 					<Anchor
 						anchorColor="primary"
-						class:list={[isActiveMenuItem(item, pathname) ? 'font-semibold' : undefined]}
+						class:list={[isActiveNavigationItem(item, pathname) ? 'font-semibold' : undefined]}
 						href={item.url}
 						{...(item.rel ? { rel: item.rel } : undefined)}
 					>

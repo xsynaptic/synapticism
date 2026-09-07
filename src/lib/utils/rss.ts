@@ -14,7 +14,7 @@ import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
-import { getContentUrl } from '#lib/utils/routing.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
 import { stripFootnotes } from '#lib/utils/text.ts';
 
 type FeedEntry = CollectionEntry<'notes'> | CollectionEntry<'posts'>;
@@ -63,7 +63,7 @@ const generateFeedItem = async ({
 	const pubDate = parseContentDate(entry.data.dateUpdated ?? entry.data.dateCreated);
 
 	const feedItem = {
-		link: getContentUrl(entry.collection, entry.id),
+		link: getContentPath(entry.collection, entry.id),
 		// Dates sit at 00:00 UTC; re-anchor to the site timezone so today's entries are never future-dated
 		pubDate: pubDate
 			? new Date(pubDate.getTime() - siteTimezoneOffsetHours * millisecondsPerHour)

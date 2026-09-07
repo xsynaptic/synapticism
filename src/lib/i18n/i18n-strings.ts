@@ -24,14 +24,14 @@ const strings = {
 	'collection.tags.plural': 'Tags',
 	'collection.tags.singular': 'Tag',
 
-	// Navigation menus
-	'nav.about': 'About',
-	'nav.bluesky': 'Bluesky',
-	'nav.github': 'GitHub',
+	// Navigation
+	'navigation.about.label': 'About',
+	'navigation.bluesky.label': 'Bluesky',
+	'navigation.github.label': 'GitHub',
 
 	// Accessibility (aria-labels, screen-reader text)
-	'aria.footerNav': 'Footer navigation',
-	'aria.mainNav': 'Main navigation',
+	'aria.footerNavigation': 'Footer navigation',
+	'aria.headerNavigation': 'Main navigation',
 	'aria.nextPage': 'Next page',
 	'aria.pageSelect': 'Select a page',
 	'aria.pagination': 'Pagination',
@@ -48,10 +48,10 @@ const strings = {
 
 	// Section labels
 	'section.backlinks': 'Backlinks',
-	'section.navigation.label.list': 'All {label}',
-	'section.navigation.label.newer': 'Newer {label}: ',
-	'section.navigation.label.older': 'Older {label}: ',
-	'section.navigation.title': 'More {label}',
+	'section.pagination.label.list': 'All {label}',
+	'section.pagination.label.newer': 'Newer {label}: ',
+	'section.pagination.label.older': 'Older {label}: ',
+	'section.pagination.title': 'More {label}',
 	'section.projects': 'Projects',
 	'section.relatedWriting': 'Related writing',
 	'section.source': 'Source',

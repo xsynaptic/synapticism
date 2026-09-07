@@ -2,12 +2,10 @@ import * as R from 'remeda';
 
 import { openGraphImageFallbackCount, openGraphImageFallbackPrefix } from '#constants.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
-import { joinUrl } from '#lib/utils/routing.ts';
-
-const { BASE_URL, PROD, SITE } = import.meta.env;
+import { getBasePath } from '#lib/utils/routing.ts';
 
 // Must mirror the og-image script's output path (packages/scripts/src/og-image)
-export function getOgImageUrl(collection: string, id: string): string {
+export function getOgImagePath(collection: string, id: string): string {
 	return `/og/${collection}/${id}.jpg`;
 }
 
@@ -40,8 +38,7 @@ export function getSeoHideSearch(shouldHide: boolean | undefined) {
 }
 
 export function getSeoImageFallback() {
-	return joinUrl(
-		PROD ? SITE : BASE_URL,
+	return getBasePath(
 		`${openGraphImageFallbackPrefix}-${String(R.randomInteger(1, openGraphImageFallbackCount))}.jpg`,
 	);
 }

@@ -1,5 +1,5 @@
 ---
-import type { ContentNavigationItem } from '#components/types.ts';
+import type { PaginationEntry } from '#components/types.ts';
 
 import Anchor from '#components/parts/anchor.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
@@ -8,25 +8,25 @@ import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
 	baseUrl: string;
-	labelPLural: string;
+	labelPlural: string;
 	labelSingular: string;
-	newerItem: ContentNavigationItem | undefined;
-	olderItem: ContentNavigationItem | undefined;
+	newerEntry: PaginationEntry | undefined;
+	olderEntry: PaginationEntry | undefined;
 }
 
-const { baseUrl, labelPLural, labelSingular, newerItem, olderItem } = Astro.props;
+const { baseUrl, labelPlural, labelSingular, newerEntry, olderEntry } = Astro.props;
 ---
 
 {
-	newerItem || olderItem ? (
+	newerEntry || olderEntry ? (
 		<LabeledSection
 			data-nosnippet
 			data-pagefind-ignore
-			title={formatStringTemplate(t('section.navigation.title'), { label: labelPLural })}
+			title={formatStringTemplate(t('section.pagination.title'), { label: labelPlural })}
 		>
 			<nav class="flex items-baseline gap-4 text-sm">
 				<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
-					{newerItem ? (
+					{newerEntry ? (
 						<Fragment>
 							<span aria-hidden="true" class="shrink-0 text-primary-600">
 								&larr;
@@ -34,35 +34,35 @@ const { baseUrl, labelPLural, labelSingular, newerItem, olderItem } = Astro.prop
 							<Anchor
 								anchorColor="accent"
 								class="anchor-underline min-w-0 italic"
-								href={newerItem.url}
+								href={newerEntry.url}
 							>
 								<span class="sr-only">
-									{formatStringTemplate(t('section.navigation.label.newer'), {
+									{formatStringTemplate(t('section.pagination.label.newer'), {
 										label: labelSingular,
 									})}
 								</span>
-								{newerItem.title}
+								{newerEntry.title}
 							</Anchor>
 						</Fragment>
 					) : undefined}
 				</span>
 				<Anchor anchorColor="accent" class="shrink-0" href={baseUrl}>
-					{formatStringTemplate(t('section.navigation.label.list'), { label: labelPLural })}
+					{formatStringTemplate(t('section.pagination.label.list'), { label: labelPlural })}
 				</Anchor>
 				<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
-					{olderItem ? (
+					{olderEntry ? (
 						<Fragment>
 							<Anchor
 								anchorColor="accent"
 								class="anchor-underline min-w-0 italic"
-								href={olderItem.url}
+								href={olderEntry.url}
 							>
 								<span class="sr-only">
-									{formatStringTemplate(t('section.navigation.label.older'), {
+									{formatStringTemplate(t('section.pagination.label.older'), {
 										label: labelSingular,
 									})}
 								</span>
-								{olderItem.title}
+								{olderEntry.title}
 							</Anchor>
 							<span aria-hidden="true" class="shrink-0 text-primary-600">
 								&rarr;

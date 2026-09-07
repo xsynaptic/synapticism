@@ -17,7 +17,7 @@ import { getSqliteCacheInstance } from '#lib/utils/cache.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
 import { getDescriptionRenderedHtml } from '#lib/utils/description-data.ts';
 import { getImageFeaturedId } from '#lib/utils/image-featured.ts';
-import { getContentUrl } from '#lib/utils/routing.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
 import { createWordCountFunction } from '#lib/utils/word-count.ts';
 
 let wordCountFunction: ReturnType<typeof createWordCountFunction> | undefined;
@@ -110,7 +110,7 @@ async function createCatalogItem(
 		links: 'links' in data ? data.links : undefined,
 		linksExternalCount: getLinksExternalCount(entry),
 		title: data.title,
-		url: getContentUrl(entry.collection, entry.id),
+		url: getContentPath(entry.collection, entry.id),
 		wordCount: wordCountsById.get(entry.id),
 	};
 }
