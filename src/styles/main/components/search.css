@@ -18,7 +18,7 @@ search-toggle:not(:defined) {
 	opacity: 0.3;
 }
 
-/* Eager layout rules so the header never shifts while the deferred stylesheet loads */
+/* Eager layout rules; the deferred Pagefind stylesheet is unlayered and overrides these once it loads */
 pagefind-config {
 	display: none;
 }

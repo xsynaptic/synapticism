@@ -18,7 +18,7 @@ import NavigationHeader from '#components/navigation/navigation-header.astro';
 import Anchor from '#components/parts/anchor.astro';
 import ProgressLoading from '#components/progress/progress-loading.astro';
 import ProgressReading from '#components/progress/progress-reading.astro';
-import Search from '#components/search/search.astro';
+import SearchModal from '#components/search/search-modal.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSitePath } from '#lib/utils/routing.ts';
 
@@ -95,7 +95,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 		/>
 		<header class:list={['z-header', 'print:hidden']}>
 			<div class:list={['py-3 lg:py-4', 'bg-linear-to-b from-primary-800 to-primary-700']}>
-				<div class="content-column flex flex-wrap items-center justify-between gap-2">
+				<div class="content-column">
 					<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
 						<span class="text-primary-500">ꗥ</span>{' '}<Anchor
 							anchorColor="on-dark"
@@ -104,7 +104,6 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 							{t('site.title')}
 						</Anchor>
 					</SiteTitleTag>
-					<Search />
 				</div>
 			</div>
 			<NavigationHeader />
@@ -137,6 +136,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			) : undefined
 		}
 		<TopButton />
+		<SearchModal />
 		{schemas && schemas.length > 0 ? <StructuredData schemas={schemas} /> : undefined}
 	</body>
 </html>
