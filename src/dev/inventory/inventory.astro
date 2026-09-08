@@ -11,10 +11,8 @@ import ContentImage from '#components/content/content-image.astro';
 import ContentNoteLinks from '#components/content/content-note-links.astro';
 import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
-import Img from '#components/mdx/img.astro';
 import Link from '#components/mdx/link.astro';
 import Anchor from '#components/parts/anchor.astro';
-import AuthorCard from '#components/parts/author-card.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import LabeledRow from '#components/parts/labeled-row.astro';
@@ -82,22 +80,21 @@ interface OpenGraphSpecimen {
 const openGraphSpecimens: Array<OpenGraphSpecimen> = [
 	{
 		key: 'image-split',
-		missing: 'No Entry resolves a Featured Image, so the split layout has no panel to fill.',
+		missing: 'No Entry resolves a Featured Image, so there is no panel to fill.',
 		name: 'og-image (split)',
-		note: 'An Entry carrying a Featured Image. The image takes the right panel behind a teal seam, and the text column narrows to what is left.',
+		note: 'The image takes the right panel behind a teal seam; the text column narrows to what is left.',
 	},
 	{
 		key: 'image-long',
-		missing: 'No Entry resolves a Featured Image, so there is no panel to sit this title beside.',
+		missing: 'No Entry resolves a Featured Image, so there is no panel to fill.',
 		name: 'og-image (split, long title)',
-		note: 'The same image behind a written title. Thresholds ride the text measure, so a column barely half the width steps the title down one size sooner than the full-bleed cards below.',
+		note: 'Thresholds ride the text measure, so this half-width column steps the title down a size sooner than the full-bleed cards below.',
 	},
 	{
 		key: 'title-only',
-		missing:
-			'Every Entry resolves a Featured Image, so nothing falls back to the full-bleed layout.',
+		missing: 'Every Entry resolves a Featured Image, so nothing falls back to full-bleed.',
 		name: 'og-image (title only)',
-		note: 'The fallback when no Featured Image resolves: the text column takes the full width and the padding opens up.',
+		note: 'No Featured Image: the text column takes the full width and the padding opens up.',
 	},
 	{
 		key: 'label-none',
@@ -107,7 +104,7 @@ const openGraphSpecimens: Array<OpenGraphSpecimen> = [
 	{
 		key: 'title-short',
 		name: 'og-image (72px title)',
-		note: 'The top of the four-step size ramp. Titles from here down are written rather than found, because a corpus this size lands every real title on this first step.',
+		note: 'The top of the four-step size ramp. Written rather than found: every real title lands on this step.',
 	},
 	{
 		key: 'title-medium',
@@ -117,7 +114,7 @@ const openGraphSpecimens: Array<OpenGraphSpecimen> = [
 	{
 		key: 'title-clamped',
 		name: 'og-image (40px title, clamped)',
-		note: 'Past 96 characters, the bottom of the ramp. Long enough to overrun the four-line clamp, which cuts to an ellipsis rather than pushing the wordmark off the foot of the frame.',
+		note: 'Past 96 characters, the bottom of the ramp, overrunning the four-line clamp.',
 	},
 ];
 
@@ -139,8 +136,6 @@ const datePresets = Object.values(DatePresetEnum);
 const samplePageFirst = createSamplePage(1, 1);
 const samplePageMiddle = createSamplePage(3, 12);
 
-const sampleItem = sampleCatalogItems[0];
-
 const sampleOpenGraphCards = await getSampleOpenGraphCards();
 ---
 
@@ -149,8 +144,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 		<div class="content-column pt-8">
 			<h1 class="font-mono text-base font-medium text-primary-800">Inventory</h1>
 			<p class="mt-2 max-w-(--prose-measure) text-sm leading-relaxed text-primary-600">
-				Every common component, rendered from its real source with fixture props. Dev only: the
-				route is injected when the command is dev, so nothing here reaches a build.
+				Every common component, rendered from its real source with fixture props. Dev only.
 			</p>
 			<nav class="mt-4 flex flex-wrap gap-x-5 font-mono text-sm">
 				{
@@ -163,11 +157,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</nav>
 		</div>
 		<Section title="Foundations">
-			<Specimen
-				name="Color ramps"
-				note="Read straight from the <code>@theme</code> block in <code>styles/main/parts/theme.css</code>."
-				source="styles/main/parts/theme.css"
-			>
+			<Specimen name="Color ramps" source="styles/main/parts/theme.css">
 				<div class="flex flex-col gap-5">
 					{
 						colorRamps.map((ramp) => (
@@ -194,7 +184,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				name="Type scale"
-				note="Tailwind’s steps as the site uses them. Prose headings size in <code>em</code> against the body, so they are in the prose section rather than here."
+				note="Prose headings size in <code>em</code> against the body, so they sit in Prose rather than here."
 				source="styles/main/parts/theme.css"
 			>
 				<div class="flex flex-col gap-4">
@@ -231,7 +221,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="prose-body"
-				note="The <code>.prose-x</code> surface at full size, rendered from an MDX fixture through the real satteri pipeline. Carries <code>data-reading-frame</code>, so the reading bar at the top of the window tracks this block."
+				note="The <code>.prose-x</code> surface at full size, from an MDX fixture through the real satteri pipeline. Carries <code>data-reading-frame</code>, so the reading bar tracks it."
 				source="components/parts/prose-body.astro"
 			>
 				<ProseBody data-reading-frame>
@@ -240,7 +230,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				name="prose-description"
-				note="The same typography one step down, used for Descriptions and excerpt summaries."
+				note="The same typography one step down, for Descriptions and excerpt summaries."
 				source="components/parts/prose-description.astro"
 			>
 				<ProseDescription>
@@ -252,38 +242,19 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				bleed={true}
-				name="mdx/img"
-				note="The auto-imported <code>Img</code> component, which delegates to <code>content-image</code>. The caption doubles as the alt text when no <code>alt</code> is given."
-				source="components/mdx/img.astro"
-			>
-				{
-					sampleImageId ? (
-						<ProseBody>
-							<Img src={sampleImageId}>A caption, set in mono beneath the frame</Img>
-						</ProseBody>
-					) : (
-						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
-					)
-				}
-			</Specimen>
-			<Specimen
-				bleed={true}
 				name="mdx/link"
-				note="Resolves an Entry id against the Catalog. A fixture id has no target, so this shows the fallback branch: the text renders unlinked rather than throwing."
+				note="Resolves an Entry id against the Catalog. A fixture id has no target, so this is the fallback: unlinked text rather than a throw."
 				source="components/mdx/link.astro"
 			>
 				<ProseBody>
-					<p>
-						An internal <Link id="ds-sample-post">reference to another Entry</Link>, and the same
-						component with an id the Catalog does not hold.
-					</p>
+					<p>An internal <Link id="sample-post">reference to another Entry</Link>.</p>
 				</ProseBody>
 			</Specimen>
 		</Section>
 		<Section title="Parts">
 			<Specimen
 				name="anchor"
-				note="Every <code>anchorColor</code> on the ground it was designed for. Hover and tab through: each has a <code>focus-visible</code> twin. Add <code>anchor-underline</code> to match the prose link treatment."
+				note="Every <code>anchorColor</code> on the ground it was designed for; each has a <code>focus-visible</code> twin. <code>anchor-underline</code> adds the prose link treatment."
 				source="components/parts/anchor.astro"
 			>
 				<div class="flex flex-col gap-4">
@@ -309,48 +280,26 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				name="date-display"
-				note="Presets read from <code>DatePresetEnum</code>, so a new one appears here on its own. A date authored with a time shows the time; a bare date does not. <code>long</code> is the default and the only preset anything in <code>src</code> passes; <code>short</code> is kept for a use that has not arrived."
+				note="Presets read from <code>DatePresetEnum</code>. A date authored with a time shows the time; a bare date does not."
 				source="components/parts/date-display.astro"
 			>
-				<table class="w-full border-collapse text-sm">
-					<thead>
-						<tr>
-							<th
-								class="border-b border-primary-200 py-1.5 pr-3 text-start align-top font-mono text-xs font-medium text-primary-600"
-								>Preset</th
-							>
-							<th
-								class="border-b border-primary-200 py-1.5 pr-3 text-start align-top font-mono text-xs font-medium text-primary-600"
-								>Date only</th
-							>
-							<th
-								class="border-b border-primary-200 py-1.5 pr-3 text-start align-top font-mono text-xs font-medium text-primary-600"
-								>Date and time</th
-							>
-						</tr>
-					</thead>
-					<tbody>
-						{
-							datePresets.map((datePreset) => (
-								<tr>
-									<td class="border-b border-primary-200 py-1.5 pr-3 text-start align-top">
-										<code>{datePreset}</code>
-									</td>
-									<td class="border-b border-primary-200 py-1.5 pr-3 text-start align-top">
-										<DateDisplay date={sampleDate} datePreset={datePreset} />
-									</td>
-									<td class="border-b border-primary-200 py-1.5 pr-3 text-start align-top">
-										<DateDisplay date={sampleDateTime} datePreset={datePreset} />
-									</td>
-								</tr>
-							))
-						}
-					</tbody>
-				</table>
+				<div class="flex flex-col gap-4">
+					{
+						datePresets.map((datePreset) => (
+							<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
+								<div class="font-mono text-xs text-primary-500">{datePreset}</div>
+								<div class="mt-1 flex flex-wrap gap-x-6 gap-y-1">
+									<DateDisplay date={sampleDate} datePreset={datePreset} />
+									<DateDisplay date={sampleDateTime} datePreset={datePreset} />
+								</div>
+							</div>
+						))
+					}
+				</div>
 			</Specimen>
 			<Specimen
 				name="divided-item / list-row"
-				note="<code>list-row</code> lays items out inline and wrapping; <code>divided-item</code> puts a slash between them and drops it on the last. <code>divided-thin</code> is the same slash at a lighter weight, which is the whole of the difference: the two rows below are enlarged so it is visible at all."
+				note="<code>list-row</code> lays items out inline and wrapping; <code>divided-item</code> puts a slash between them and drops it on the last. Enlarged so <code>divided-thin</code> reads at all."
 				source="components/parts/"
 			>
 				<div class="flex flex-col gap-3 text-lg">
@@ -369,27 +318,27 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="labeled-section"
-				note="The rule-and-label header used by every section below an Entry. The heading level is a prop; the default is <code>h2</code>."
+				note="The rule-and-label header under every Entry. Heading level is a prop, defaulting to <code>h2</code>."
 				source="components/parts/labeled-section.astro"
 			>
 				<LabeledSection title="Heading level two">
-					<p class="font-mono text-xs text-primary-500">Section body</p>
+					<p>Section body</p>
 				</LabeledSection>
 				<LabeledSection as="h3" title="Heading level three">
-					<p class="font-mono text-xs text-primary-500">Section body</p>
+					<p>Section body</p>
 				</LabeledSection>
 			</Specimen>
 			<Specimen
 				bleed={true}
 				name="labeled-row"
-				note="A labeled section wrapping a divided row of links. <code>content-section-tags</code> and <code>content-section-projects</code> are collection lookups on top of this and produce exactly this shape, so they are not demoed separately."
+				note="A labeled section wrapping a divided row of links. <code>content-section-tags</code> and <code>content-section-projects</code> are lookups producing this same shape."
 				source="components/parts/labeled-row.astro"
 			>
 				<LabeledRow items={sampleRowItems} title="Tags" />
 			</Specimen>
 			<Specimen
 				name="pagination-counter"
-				note="Hides itself on the first page. Below: page 1 of 1 (nothing), then page 3 of 12."
+				note="Hides itself on the first page: page 1 of 1, then page 3 of 12."
 				source="components/parts/pagination-counter.astro"
 			>
 				<div class="flex flex-col gap-4">
@@ -399,7 +348,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				name="pagination-select"
-				note="Hides itself when there is one page. With JavaScript the counter swaps for a select; without it the counter and the previous/next links stand alone."
+				note="Hides itself when there is one page. With JavaScript the counter swaps for a select."
 				source="components/parts/pagination-select.astro"
 			>
 				<div class="flex flex-col gap-4">
@@ -408,15 +357,8 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				</div>
 			</Specimen>
 			<Specimen
-				name="author-card"
-				note="Rendered exactly as it ships, which in its present form is <code>sr-only</code>: the box below is deliberately empty on screen. It carries the h-card microformat for parsers."
-				source="components/parts/author-card.astro"
-			>
-				<AuthorCard />
-			</Specimen>
-			<Specimen
 				name="preview-image"
-				note="The square image beside an Entry in a listing: 4rem across, 5rem from the <code>md</code> breakpoint up."
+				note="The square image beside an Entry in a listing: 4rem, 5rem from <code>md</code> up."
 				source="components/parts/preview-image.astro"
 			>
 				{
@@ -436,7 +378,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-header"
-				note="The <code>h1</code> of an Entry page. The title links to itself on a detail page; the subtitle slot takes divided items."
+				note="The <code>h1</code> of an Entry page. The title links to itself; the subtitle slot takes divided items."
 				source="components/content/content-header.astro"
 			>
 				<ContentHeader
@@ -466,7 +408,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				name="content-date"
-				note="Wraps <code>date-display</code> with the microformat class and the “Updated” prefix. Renders nothing when the date is undefined."
+				note="<code>date-display</code> plus the microformat class and the “Updated” prefix. Renders nothing when the date is undefined."
 				source="components/content/content-date.astro"
 			>
 				<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
@@ -487,11 +429,11 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-hero"
-				note="A Featured Image promoted to the top of an Entry, backed by its LQIP placeholder while it loads. Near-identical to <code>content-image</code> below, and distinct in four ways: it takes an <code>ImageFeaturedObject</code> rather than a path, loads <code>priority</code> as the LCP candidate, has no caption, and wears a small radius with no border."
+				note="A Featured Image at the top of an Entry, over its LQIP placeholder. Against <code>content-image</code>: an object rather than a path, <code>priority</code>, no caption, small radius, no border."
 				source="components/content/content-hero.astro"
 			>
 				{
-					sampleImageId ? (
+					sampleImageFeatured ? (
 						<ContentHero {...sampleImageFeatured} fallbackAlt="Fallback alt text" />
 					) : (
 						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
@@ -501,7 +443,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-image"
-				note="The in-body figure, breaking out past the reading measure. Shown inside <code>prose-body</code> because that is where it always sits. Against <code>content-hero</code>: lazy rather than priority, a caption that doubles as alt text, and a larger radius over a bordered, filled frame."
+				note="The in-body figure, breaking out past the reading measure. Against <code>content-hero</code>: lazy, a caption doubling as alt text, larger radius on a bordered frame."
 				source="components/content/content-image.astro"
 			>
 				{
@@ -517,7 +459,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-section"
-				note="The generic content block. Every part of the header is a slot and each is optional; <code>titleLarge</code>, <code>marginSmall</code> and <code>fillViewport</code> switch the treatment. Renders nothing without a description or children."
+				note="Every part of the header is an optional slot; <code>titleLarge</code>, <code>marginSmall</code> and <code>fillViewport</code> switch the treatment."
 				source="components/content/content-section.astro"
 			>
 				<ContentSection>
@@ -526,23 +468,21 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<Fragment slot="section-description">
 						<p>A description, rendered through prose-description.</p>
 					</Fragment>
-					<p class="font-mono text-xs text-primary-500">Section children</p>
+					<p>Section children</p>
 				</ContentSection>
 				<ContentSection marginSmall={true} titleLarge={true}>
 					<Fragment slot="section-title">titleLarge with marginSmall</Fragment>
-					<p class="font-mono text-xs text-primary-500">Section children</p>
+					<p>Section children</p>
 				</ContentSection>
 				<ContentSection fillViewport={true}>
 					<Fragment slot="section-title">fillViewport</Fragment>
-					<p class="font-mono text-xs text-primary-500">
-						Reaches the viewport edge below the sm breakpoint
-					</p>
+					<p>Reaches the viewport edge below the sm breakpoint</p>
 				</ContentSection>
 			</Specimen>
 			<Specimen
 				bleed={true}
 				name="content-excerpt"
-				note="A Note in the Stream. The body is cut at the fold the author placed with <code>More</code>, and the “continue reading” link only appears when there is something past it."
+				note="A Note in the Stream, cut at the fold the author placed with <code>More</code>."
 				source="components/content/content-excerpt.astro"
 			>
 				<ContentExcerpt entryUrl="#excerpt">
@@ -557,7 +497,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-note-links"
-				note="The outbound links a Note points at, with the domain beneath each and the Source credited on the first."
+				note="The outbound links a Note points at, with the Source credited on the first."
 				source="components/content/content-note-links.astro"
 			>
 				<ContentNoteLinks links={sampleLinks} source={sampleSource} />
@@ -565,7 +505,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="section-backlinks"
-				note="Inbound Links, capped at ten and sorted newest first."
+				note="Inbound Links, capped at ten, newest first."
 				source="components/sections/section-backlinks.astro"
 			>
 				<SectionBacklinks backlinks={sampleCatalogItems} />
@@ -581,7 +521,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="section-pagination"
-				note="Previous and next within one collection, plus the link back to the list. Each arm renders alone when the other end of the run is missing."
+				note="Previous and next within one collection. Each arm renders alone when the other end is missing."
 				source="components/sections/section-pagination.astro"
 			>
 				<SectionPagination
@@ -599,26 +539,9 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					olderEntry={samplePaginationOlder}
 				/>
 			</Specimen>
-			<Specimen
-				bleed={true}
-				name="content-description"
-				note="Not shown directly: it takes a real Entry and calls <code>render()</code>, which fixtures cannot satisfy. It picks between these two shapes. With a body it renders <code>prose-body</code>; with only a frontmatter Description it renders a <code>content-section</code> holding <code>prose-description</code>."
-				source="components/content/content-description.astro"
-			>
-				<ProseBody>
-					<p>{sampleItem?.title}: the body branch, at full prose size.</p>
-				</ProseBody>
-				<ContentSection>
-					<Fragment slot="section-description">
-						<ProseDescription>
-							<Fragment set:html={sampleItem?.description} />
-						</ProseDescription>
-					</Fragment>
-				</ContentSection>
-			</Specimen>
 		</Section>
 		<Section
-			note="Cards are drawn by a batch script rather than by Astro; the route behind this section renders that same template on demand, against real Entries."
+			note="Drawn by a batch script rather than by Astro; this route renders that template on demand."
 			title="Open Graph"
 		>
 			{
@@ -630,7 +553,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 							{card ? (
 								<img
 									alt={card.title}
-									class="h-auto w-full rounded-sm border border-primary-300"
+									class="h-auto w-full"
 									height={openGraphImageHeight}
 									loading="lazy"
 									src={`/inventory/og/${card.key}.jpg`}

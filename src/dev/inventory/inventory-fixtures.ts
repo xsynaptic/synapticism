@@ -25,11 +25,13 @@ export const sampleImageId = hasMediaImage(sampleImagePath) ? sampleImagePath : 
 
 export const sampleImageMissingNote = `No image at ${mediaRoot}/${sampleImagePath}, so the media components have nothing to resolve.`;
 
-export const sampleImageFeatured = {
-	hero: true,
-	id: sampleImageId ?? '',
-	title: 'A caption authored on the featured image',
-} satisfies ImageFeaturedObject;
+export const sampleImageFeatured = sampleImageId
+	? ({
+			hero: true,
+			id: sampleImageId,
+			title: 'A caption authored on the featured image',
+		} satisfies ImageFeaturedObject)
+	: undefined;
 
 export const sampleDate = '2026-04-17';
 export const sampleDateTime = '2026-04-17T14:30:00Z';
@@ -56,14 +58,14 @@ function createCatalogItem(item: Partial<CatalogItem> & Pick<CatalogItem, 'id' |
 export const sampleCatalogItems: Array<CatalogItem> = [
 	createCatalogItem({
 		description: 'A <em>rendered</em> description, clipped from the opening of the body.',
-		id: 'ds-sample-post',
+		id: 'sample-post',
 		title: 'Reading the grain of a typeface at small sizes',
 	}),
 	createCatalogItem({
 		collection: 'notes',
 		dateCreated: new Date('2026-02-09'),
 		description: 'A shorter description, the kind a Note carries.',
-		id: 'ds-sample-note',
+		id: 'sample-note',
 		imageId: undefined,
 		title: 'Two hundred words on cascade layers',
 		wordCount: 210,
@@ -71,12 +73,32 @@ export const sampleCatalogItems: Array<CatalogItem> = [
 	createCatalogItem({
 		collection: 'projects',
 		dateCreated: new Date('2025-11-24'),
-		id: 'ds-sample-project',
+		id: 'sample-project',
 		imageId: undefined,
 		title: 'Station tile generator',
 		wordCount: 1450,
 	}),
 ];
+
+export function createSamplePage(currentPage: number, lastPage: number): Page<CatalogItem> {
+	return {
+		currentPage,
+		data: sampleCatalogItems,
+		end: sampleCatalogItems.length - 1,
+		lastPage,
+		size: sampleCatalogItems.length,
+		start: 0,
+		total: sampleCatalogItems.length * lastPage,
+		// Fragments, not paths: the select navigates on change and those pages do not exist
+		url: {
+			current: '#pagination',
+			first: '#pagination',
+			last: '#pagination',
+			next: currentPage < lastPage ? '#pagination' : undefined,
+			prev: currentPage > 1 ? '#pagination' : undefined,
+		},
+	};
+}
 
 export const samplePaginationNewer = {
 	title: 'A newer entry, one step forward in the archive',
@@ -188,26 +210,6 @@ function toOpenGraphCard(
 
 // The page renders one img per card and the route re-enters here for each, so sample once
 let sampleOpenGraphCards: Promise<Array<SampleOpenGraphCard>> | undefined;
-
-export function createSamplePage(currentPage: number, lastPage: number): Page<CatalogItem> {
-	return {
-		currentPage,
-		data: sampleCatalogItems,
-		end: sampleCatalogItems.length - 1,
-		lastPage,
-		size: sampleCatalogItems.length,
-		start: 0,
-		total: sampleCatalogItems.length * lastPage,
-		// Fragments, not paths: the select navigates on change and those pages do not exist
-		url: {
-			current: '#pagination',
-			first: '#pagination',
-			last: '#pagination',
-			next: currentPage < lastPage ? '#pagination' : undefined,
-			prev: currentPage > 1 ? '#pagination' : undefined,
-		},
-	};
-}
 
 export function getSampleOpenGraphCards() {
 	if (!sampleOpenGraphCards) {
