@@ -10,6 +10,7 @@ import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getContentPath, getSitePath } from '#lib/utils/routing.ts';
+import { openGraphIndexIds } from '#lib/utils/seo.ts';
 import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
 import { formatStringTemplate, getSourceDomain } from '#lib/utils/text.ts';
 
@@ -34,6 +35,7 @@ const nextUrl = pageNumber < totalPages ? getSitePath('page', String(pageNumber 
 
 const mainProps = isFirstPage
 	? {
+			meta: { openGraphId: openGraphIndexIds.home },
 			schemas: [
 				buildWebSiteSchema({
 					description: t('site.description'),
@@ -44,6 +46,7 @@ const mainProps = isFirstPage
 	: {
 			meta: {
 				noIndex: true,
+				openGraphId: openGraphIndexIds.home,
 				title: formatStringTemplate(t('index.pageTitle'), { page: pageNumber }),
 			},
 		};

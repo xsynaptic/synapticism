@@ -20,7 +20,7 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getOgImagePath } from '#lib/utils/seo.ts';
+import { getOpenGraphId } from '#lib/utils/seo.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
@@ -43,7 +43,7 @@ const { Content } = await render(entry);
 	hasReadingBar={true}
 	meta={{
 		description: await getDescriptionRenderedText(entry),
-		image: { url: getOgImagePath(entry.collection, entry.id) },
+		openGraphId: getOpenGraphId(entry.collection, entry.id),
 		title: entry.data.title,
 	}}
 >

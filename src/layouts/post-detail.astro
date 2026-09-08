@@ -26,7 +26,7 @@ import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
-import { getOgImagePath, getSeoArticleProps } from '#lib/utils/seo.ts';
+import { getOpenGraphId, getSeoArticleProps } from '#lib/utils/seo.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
@@ -57,7 +57,7 @@ const minutesRead =
 	hasReadingBar={true}
 	meta={{
 		description: await getDescriptionRenderedText(entry),
-		image: { url: getOgImagePath(entry.collection, entry.id) },
+		openGraphId: getOpenGraphId(entry.collection, entry.id),
 		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,

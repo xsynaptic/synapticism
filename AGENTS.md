@@ -12,7 +12,7 @@ Do not add anything to this file unless it is important and relevant.
 
 - `pnpm check` reports, `pnpm fix` mutates. Run `fix` once after a chunk of work, not repeatedly.
 - Neither touches MDX. Content linting is separate: `pnpm check-content` and `pnpm fix-content` (mdxlint over `packages/content`).
-- `pnpm build` is a pipeline, not a synonym for `astro build`: LQIP placeholders (incrementally cached in `.cache/media-lqip.json`), then `astro check`, the build, and OG image generation (cards cached in `.cache/og`, copied into `dist/og`). Calling `astro build` directly skips all three.
+- `pnpm build` is a pipeline, not a synonym for `astro build`: LQIP placeholders (incrementally cached in `.cache/media-lqip.json`), then `astro check`, the build, and OG image generation (cards cached in `.cache/og-image`, published into `dist/og`). Calling `astro build` directly skips all three.
 - `pnpm deploy-site` ships `dist/` to Cloudflare Workers Static Assets per `wrangler.jsonc`. There is no Astro adapter; a prior `wrangler login` is required.
 
 ## Conventions

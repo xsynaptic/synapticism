@@ -14,6 +14,7 @@ import PreviewImage from '#components/parts/preview-image.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { openGraphIndexIds } from '#lib/utils/seo.ts';
 
 interface Props {
 	page: Page<CatalogItem>;
@@ -26,6 +27,7 @@ const { page } = Astro.props;
 	meta={{
 		description: t('posts.description'),
 		noIndex: page.currentPage > 1,
+		openGraphId: openGraphIndexIds.posts,
 		title: t('posts.title'),
 	}}
 >

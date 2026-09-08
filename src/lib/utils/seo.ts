@@ -1,12 +1,13 @@
-import * as R from 'remeda';
+import { getOpenGraphPath, openGraphIndexIds } from '@synapticism/shared/open-graph';
 
-import { openGraphImageFallbackCount, openGraphImageFallbackPrefix } from '#constants.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
-import { getBasePath } from '#lib/utils/routing.ts';
+import { getAbsoluteUrl } from '#lib/utils/routing.ts';
 
-// Must mirror the og-image script's output path (packages/scripts/src/og-image)
-export function getOgImagePath(collection: string, id: string): string {
-	return `/og/${collection}/${id}.jpg`;
+// Re-exported so layouts reach the generator's own definitions rather than a second set
+export { getOpenGraphId, openGraphIndexIds } from '@synapticism/shared/open-graph';
+
+export function getOpenGraphImageUrl(openGraphId: string | undefined): string {
+	return getAbsoluteUrl(getOpenGraphPath(openGraphId ?? openGraphIndexIds.default));
 }
 
 export function getSeoArticleProps({
@@ -35,10 +36,4 @@ export function getSeoHideSearch(shouldHide: boolean | undefined) {
 				noIndex: true,
 			}
 		: undefined;
-}
-
-export function getSeoImageFallback() {
-	return getBasePath(
-		`${openGraphImageFallbackPrefix}-${String(R.randomInteger(1, openGraphImageFallbackCount))}.jpg`,
-	);
 }

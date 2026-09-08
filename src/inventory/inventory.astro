@@ -1,7 +1,7 @@
 ---
 import type { ComponentProps } from 'astro/types';
 
-import { openGraphImageHeight, openGraphImageWidth } from '@synapticism/scripts/og-image';
+import { openGraphImageHeight, openGraphImageWidth } from '@synapticism/shared/constants';
 
 import ContentDate from '#components/content/content-date.astro';
 import ContentExcerpt from '#components/content/content-excerpt.astro';
@@ -98,6 +98,11 @@ const openGraphSpecimens: Array<OpenGraphSpecimen> = [
 			'Every Entry resolves a Featured Image, so nothing falls back to the full-bleed layout.',
 		name: 'og-image (title only)',
 		note: 'The fallback when no Featured Image resolves: the text column takes the full width and the padding opens up.',
+	},
+	{
+		key: 'label-none',
+		name: 'og-image (no label)',
+		note: 'Index cards and Pages carry no label, so the rule stands alone above the title.',
 	},
 	{
 		key: 'title-short',
@@ -624,7 +629,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 						<Specimen name={name} note={note} source="packages/scripts/src/og-image/element.tsx">
 							{card ? (
 								<img
-									alt={card.entry.title}
+									alt={card.title}
 									class="h-auto w-full rounded-sm border border-primary-300"
 									height={openGraphImageHeight}
 									loading="lazy"

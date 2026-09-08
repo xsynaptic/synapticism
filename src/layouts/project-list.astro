@@ -13,6 +13,7 @@ import PaginationSelect from '#components/parts/pagination-select.astro';
 import PreviewImage from '#components/parts/preview-image.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { openGraphIndexIds } from '#lib/utils/seo.ts';
 
 interface Props {
 	page: Page<CatalogItem>;
@@ -25,6 +26,7 @@ const { page } = Astro.props;
 	meta={{
 		description: t('projects.description'),
 		noIndex: page.currentPage > 1,
+		openGraphId: openGraphIndexIds.projects,
 		title: t('projects.title'),
 	}}
 >

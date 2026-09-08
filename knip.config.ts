@@ -42,5 +42,9 @@ export default {
 				'react',
 			],
 		},
+		// An `exports` map makes every file an entry, and entry exports go unchecked by default
+		'packages/shared': {
+			includeEntryExports: true,
+		},
 	},
 } satisfies KnipConfig;

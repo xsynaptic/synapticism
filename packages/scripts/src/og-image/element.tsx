@@ -1,11 +1,14 @@
-import { Bitmap } from 'takumi-js/helpers/jsx';
-
-import type { ProcessedImage } from './generate.js';
-import type { OpenGraphMetadataItem } from './types.js';
-
 import {
 	openGraphImageHeight,
 	openGraphImageWidth,
+	siteTitle,
+} from '@synapticism/shared/constants';
+import { Bitmap } from 'takumi-js/helpers/jsx';
+
+import type { ProcessedImage } from './generate.js';
+import type { OpenGraphEntryItem } from './types.js';
+
+import {
 	openGraphPaddingFull,
 	openGraphPaddingSplit,
 	openGraphPanelWidth,
@@ -20,7 +23,7 @@ const colors = {
 	surface: '#f4f4f5', // primary-100, the reading surface
 } as const;
 
-export function getOpenGraphElement(entry: OpenGraphMetadataItem, image?: ProcessedImage) {
+export function getOpenGraphElement(entry: OpenGraphEntryItem, image?: ProcessedImage) {
 	const columnWidth = image
 		? openGraphImageWidth - openGraphPanelWidth - openGraphSeamWidth
 		: openGraphImageWidth;
@@ -54,18 +57,20 @@ export function getOpenGraphElement(entry: OpenGraphMetadataItem, image?: Proces
 							width: '56px',
 						}}
 					/>
-					<span
-						style={{
-							color: colors.accentBright,
-							fontFamily: 'Geist Mono',
-							fontSize: '22px',
-							fontWeight: 500,
-							letterSpacing: '2px',
-							marginLeft: '20px',
-						}}
-					>
-						{entry.label.toUpperCase()}
-					</span>
+					{entry.label ? (
+						<span
+							style={{
+								color: colors.accentBright,
+								fontFamily: 'Geist Mono',
+								fontSize: '22px',
+								fontWeight: 500,
+								letterSpacing: '2px',
+								marginLeft: '20px',
+							}}
+						>
+							{entry.label.toUpperCase()}
+						</span>
+					) : undefined}
 				</div>
 				<div
 					style={{
@@ -81,7 +86,6 @@ export function getOpenGraphElement(entry: OpenGraphMetadataItem, image?: Proces
 				>
 					{entry.title}
 				</div>
-				{/* Mirrors the site header's brand mark: Aleo, semibold, uppercase, tracking-widest */}
 				<div
 					style={{
 						color: colors.surface,
@@ -92,7 +96,7 @@ export function getOpenGraphElement(entry: OpenGraphMetadataItem, image?: Proces
 						letterSpacing: '0.1em',
 					}}
 				>
-					SYNAPTICISM
+					{siteTitle.toUpperCase()}
 				</div>
 			</div>
 			{image ? (
@@ -116,7 +120,6 @@ function px(value: number): string {
 	return `${String(value)}px`;
 }
 
-// Scale the title down as it lengthens so short titles stay punchy and long ones still fit
 // Thresholds ride the measure: the split layout gives the text far less room
 function titleFontSize(length: number, columnWidth: number): number {
 	const scale = columnWidth / openGraphImageWidth;

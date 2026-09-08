@@ -1,10 +1,9 @@
-import type { OpenGraphMetadataItem } from '@synapticism/scripts/og-image';
+import type { OpenGraphEntryItem } from '@synapticism/scripts/og-image';
 import type { Page } from 'astro';
 import type { ComponentProps } from 'astro/types';
 import type { z } from 'zod';
 
-import { mediaDir, toOpenGraphEntryItem } from '@synapticism/scripts/og-image';
-import path from 'node:path';
+import { toOpenGraphEntryItem } from '@synapticism/scripts/og-image';
 
 import type LabeledRow from '#components/parts/labeled-row.astro';
 import type { PaginationEntry } from '#components/types.ts';
@@ -107,18 +106,10 @@ export const sampleRowItems = [
 	{ title: 'astro', url: '/inventory/#tag-astro' },
 ] satisfies ComponentProps<typeof LabeledRow>['items'];
 
-// The OG card is drawn by a batch script (`packages/scripts/src/og-image`), never by Astro
 // A key doubles as the route param, so `inventory-og-image.ts` resolves one back through this list
-interface OpenGraphCard {
-	entry: OpenGraphMetadataItem;
-	imagePath: string | undefined;
-}
-
-interface SampleOpenGraphCard extends OpenGraphCard {
+interface SampleOpenGraphCard extends OpenGraphEntryItem {
 	key: string;
 }
-
-const mediaPath = path.resolve(mediaDir);
 
 // Written rather than found: the corpus is small enough that every real title lands on one step
 // Lengths ride the thresholds in `titleFontSize`, measured against the full-width text column
@@ -148,23 +139,20 @@ async function createSampleOpenGraphCards() {
 		...pages.entries,
 		...posts.entries,
 		...projects.entries,
-	].flatMap<OpenGraphCard>((entry) => {
-		const item = toOpenGraphEntryItem({ collection: entry.collection, entry, mediaPath });
+	].flatMap<OpenGraphEntryItem>((entry) => {
+		const item = toOpenGraphEntryItem({ collection: entry.collection, entry });
 
-		if (!item) return [];
-
-		return [
-			{ entry: item, imagePath: item.imageId ? path.join(mediaPath, item.imageId) : undefined },
-		];
+		return item ? [item] : [];
 	});
 
 	const titleCards = openGraphTitleSamples.map(({ key, title }) => ({
-		entry: { collection: 'inventory', id: key, label: 'inventory', title },
-		imagePath: undefined,
 		key,
+		label: 'inventory',
+		outputId: key,
+		title,
 	}));
 
-	const imageCard = candidates.find((card) => card.imagePath);
+	const imageCard = candidates.find((card) => card.imageId && hasMediaImage(card.imageId));
 
 	return [
 		...toOpenGraphCard('image-split', imageCard),
@@ -172,26 +160,30 @@ async function createSampleOpenGraphCards() {
 			'image-long',
 			imageCard
 				? {
-						entry: {
-							collection: 'inventory',
-							id: 'image-long',
-							label: 'inventory',
-							title: openGraphImageTitle,
-						},
-						imagePath: imageCard.imagePath,
+						imageId: imageCard.imageId,
+						label: 'inventory',
+						outputId: 'image-long',
+						title: openGraphImageTitle,
 					}
 				: undefined,
 		),
 		...toOpenGraphCard(
 			'title-only',
-			candidates.find((card) => !card.imagePath),
+			candidates.find((card) => !card.imageId),
 		),
+		...toOpenGraphCard('label-none', {
+			outputId: 'label-none',
+			title: 'A card with no eyebrow, as index pages draw',
+		}),
 		...titleCards,
 	];
 }
 
-function toOpenGraphCard(key: string, card: OpenGraphCard | undefined): Array<SampleOpenGraphCard> {
-	return card ? [{ key, ...card }] : [];
+function toOpenGraphCard(
+	key: string,
+	entry: OpenGraphEntryItem | undefined,
+): Array<SampleOpenGraphCard> {
+	return entry ? [{ key, ...entry }] : [];
 }
 
 // The page renders one img per card and the route re-enters here for each, so sample once

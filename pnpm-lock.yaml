@@ -11,6 +11,9 @@ importers:
       '@synapticism/lab':
         specifier: workspace:*
         version: link:packages/lab
+      '@synapticism/shared':
+        specifier: workspace:*
+        version: link:packages/shared
       astro:
         specifier: ^7.3.1
         version: 7.3.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.2)(@types/node@25.0.3)(jiti@2.7.0)(tsx@4.23.13)(yaml@2.9.0)
@@ -161,6 +164,9 @@ importers:
       '@fontsource/geist-mono':
         specifier: ^5.3.0
         version: 5.3.0
+      '@synapticism/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18
@@ -170,6 +176,9 @@ importers:
       chalk:
         specifier: ^6.0.0
         version: 6.0.0
+      p-limit:
+        specifier: ^7.3.2
+        version: 7.3.2
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -188,6 +197,8 @@ importers:
       zx:
         specifier: ^8.8.5
         version: 8.8.5
+
+  packages/shared: {}
 
 packages:
 
@@ -4121,6 +4132,10 @@ packages:
 
   p-limit@7.3.0:
     resolution: {integrity: sha512-7cIXg/Z0M5WZRblrsOla88S4wAK+zOQQWeBYfV3qJuJXMr+LnbYjaadrFaS0JILfEDPVqHyKnZ1Z/1d6J9VVUw==}
+    engines: {node: '>=20'}
+
+  p-limit@7.3.2:
+    resolution: {integrity: sha512-Ll0w3fU24vYpXoZmjjZIee6bJQDgG0oAyo1PdmFYI8UDwJJddaHAypxIH9avUu+t+lSsAwKVsb1jDCMIIChliw==}
     engines: {node: '>=20'}
 
   p-locate@5.0.0:
@@ -9925,6 +9940,10 @@ snapshots:
       yocto-queue: 0.1.0
 
   p-limit@7.3.0:
+    dependencies:
+      yocto-queue: 1.2.2
+
+  p-limit@7.3.2:
     dependencies:
       yocto-queue: 1.2.2
 

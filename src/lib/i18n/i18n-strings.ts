@@ -1,13 +1,15 @@
+import { siteTagline, siteTitle } from '@synapticism/shared/constants';
+
 // Central dictionary of user-facing UI strings
 const strings = {
 	// Site
-	'site.description': 'A technical blog about web development, design, and creative coding.',
+	'site.description': siteTagline,
 	'site.pageTitle': '{title} - {siteTitle}',
 	'site.search.placeholder': 'Search...',
 	'site.search.toggle.label': 'Open search',
 	'site.search.toggle.title': 'Search',
 	'site.skipToContent': 'Skip to content',
-	'site.title': 'Synapticism',
+	'site.title': siteTitle,
 	'site.topButton': 'Back to top',
 
 	// Author

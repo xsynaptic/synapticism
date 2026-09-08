@@ -8,11 +8,10 @@ export interface MetaProps {
 		tags?: Array<string>;
 	};
 	description?: string | undefined;
-	image?: MetaImageProps | undefined;
-	imageAlt?: string | undefined;
 	noFollow?: boolean;
 	noIndex?: boolean;
 	ogType?: 'article' | 'website' | undefined;
+	openGraphId?: string | undefined;
 	prefetchUrls?: Array<string> | undefined;
 	title?: string | undefined;
 }
@@ -21,15 +20,6 @@ export interface MetaProps {
 export interface PaginationEntry {
 	title: string;
 	url: string;
-}
-
-interface MetaImageProps {
-	alt?: string;
-	height?: number;
-	secureUrl?: string | URL;
-	type?: string;
-	url?: string | URL;
-	width?: number;
 }
 
 export const MicroformatClassNames = {

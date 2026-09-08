@@ -15,6 +15,7 @@ import PaginationSelect from '#components/parts/pagination-select.astro';
 import PreviewImage from '#components/parts/preview-image.astro';
 import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
+import { getOpenGraphId } from '#lib/utils/seo.ts';
 
 interface Props {
 	entry: CollectionEntry<'tags'>;
@@ -28,6 +29,7 @@ const { entry, page } = Astro.props;
 	meta={{
 		description: await getDescriptionRenderedText(entry),
 		noIndex: page.currentPage > 1,
+		openGraphId: getOpenGraphId(entry.collection, entry.id),
 		title: entry.data.title,
 	}}
 >

@@ -29,6 +29,7 @@
 	},
 	"dependencies": {
 		"@synapticism/lab": "workspace:*",
+		"@synapticism/shared": "workspace:*",
 		"astro": "^7.3.1"
 	},
 	"devDependencies": {

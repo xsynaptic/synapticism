@@ -28,7 +28,7 @@ import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
 import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
 import { getContentPath, getSitePath } from '#lib/utils/routing.ts';
-import { getOgImagePath, getSeoArticleProps } from '#lib/utils/seo.ts';
+import { getOpenGraphId, getSeoArticleProps } from '#lib/utils/seo.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
@@ -52,7 +52,7 @@ const { Content } = await render(entry);
 <MainSite
 	meta={{
 		description: await getDescriptionRenderedText(entry),
-		image: { url: getOgImagePath(entry.collection, entry.id) },
+		openGraphId: getOpenGraphId(entry.collection, entry.id),
 		title: entry.data.title,
 		...getSeoArticleProps({
 			dateCreated: entry.data.dateCreated,

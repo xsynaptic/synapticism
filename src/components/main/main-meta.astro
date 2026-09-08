@@ -1,12 +1,13 @@
 ---
+import { openGraphImageHeight, openGraphImageWidth } from '@synapticism/shared/constants';
 import { SEO } from 'astro-seo';
 import { WEBMENTION_DOMAIN } from 'astro:env/client';
 
 import type { MetaProps } from '#components/types.ts';
 
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { getAbsoluteUrl, getBasePath } from '#lib/utils/routing.ts';
-import { getSeoImageFallback } from '#lib/utils/seo.ts';
+import { getBasePath } from '#lib/utils/routing.ts';
+import { getOpenGraphImageUrl } from '#lib/utils/seo.ts';
 import { formatStringTemplate, sanitizeAltAttribute } from '#lib/utils/text.ts';
 
 type Props = MetaProps;
@@ -14,11 +15,10 @@ type Props = MetaProps;
 const {
 	article,
 	description: descriptionRaw,
-	image,
-	imageAlt,
 	noFollow,
 	noIndex,
 	ogType,
+	openGraphId,
 	prefetchUrls,
 	title: contentTitle,
 } = Astro.props;
@@ -28,12 +28,13 @@ const siteDescription = t('site.description');
 
 const description = descriptionRaw ?? siteDescription;
 
-const openGraphImageUrl = getAbsoluteUrl(String(image?.url ?? getSeoImageFallback()));
-
+// The card draws the title, not the description
 const openGraphImage = {
-	alt: sanitizeAltAttribute(image?.alt ?? imageAlt ?? description),
+	alt: sanitizeAltAttribute(contentTitle ?? siteTitle),
+	height: openGraphImageHeight,
 	type: 'image/jpeg',
-	url: openGraphImageUrl,
+	url: getOpenGraphImageUrl(openGraphId),
+	width: openGraphImageWidth,
 };
 ---
 
@@ -65,13 +66,9 @@ const openGraphImage = {
 	twitter={{
 		card: 'summary_large_image',
 		description,
+		image: openGraphImage.url,
+		imageAlt: openGraphImage.alt,
 		title: contentTitle ?? siteTitle,
-		...(openGraphImage.url
-			? {
-					image: openGraphImage.url,
-					imageAlt: openGraphImage.alt,
-				}
-			: {}),
 	}}
 	{...noIndex ? { noindex: noIndex } : {}}
 	{...noFollow ? { nofollow: noFollow } : {}}

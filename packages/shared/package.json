@@ -1,0 +1,14 @@
+{
+	"name": "@synapticism/shared",
+	"version": "1.0.0",
+	"description": "Code shared between the Synapticism app and its build scripts",
+	"type": "module",
+	"private": true,
+	"exports": {
+		"./constants": "./src/constants.ts",
+		"./open-graph": "./src/open-graph.ts"
+	},
+	"imports": {
+		"#*": "./src/*"
+	}
+}

@@ -1,35 +1,37 @@
+import {
+	openGraphImageFormat,
+	openGraphImageHeight,
+	openGraphImageWidth,
+} from '@synapticism/shared/constants';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-type Ledger = Record<string, string>;
+type Manifest = Record<string, string>;
+
+// Everything that decides a card's pixels; hashed so a template edit can never be forgotten
+const templateFiles = ['constants.ts', 'element.tsx', 'fonts.ts', 'generate.ts'];
+
+const templateVersion = hashTemplateFiles();
+
+const manifestFile = 'manifest.json';
 
 // Records the key a card was last written under, so freshness survives a wiped dist
-export async function createOutputCache({
-	dir,
-	ledgerPath,
-	version,
-}: {
-	dir: string;
-	ledgerPath: string;
-	version: string;
-}) {
-	const recorded = await loadLedger(ledgerPath);
-	const next: Ledger = {};
+// Orphan keys stay: no card file is ever deleted, so dropping one re-renders bytes already on disk
+export async function createOutputCache(dir: string) {
+	const manifestPath = path.join(dir, manifestFile);
+	const recorded = await loadManifest(manifestPath);
 
-	function filePath(id: string): string {
-		return path.join(dir, `${id}.jpg`);
+	function filePath(outputId: string): string {
+		return path.join(dir, `${outputId}.${openGraphImageFormat}`);
 	}
 
-	// Recording here is what keeps the saved ledger down to the ids this run asked about
-	async function isFresh(id: string, key: string): Promise<boolean> {
-		const effectiveKey = `${version}:${key}`;
-
-		next[id] = effectiveKey;
-
-		if (recorded[id] !== effectiveKey) return false;
+	async function isFresh(outputId: string, key: string): Promise<boolean> {
+		if (recorded[outputId] !== key) return false;
 
 		try {
-			await stat(filePath(id));
+			await stat(filePath(outputId));
 
 			return true;
 		} catch {
@@ -37,23 +39,28 @@ export async function createOutputCache({
 		}
 	}
 
-	async function write(id: string, data: Uint8Array): Promise<void> {
-		const file = filePath(id);
+	async function write(outputId: string, key: string, data: Uint8Array): Promise<void> {
+		await writeFile(filePath(outputId), data);
 
-		await mkdir(path.dirname(file), { recursive: true });
-		await writeFile(file, data);
+		recorded[outputId] = key;
 	}
 
-	// A published OG path is permanent, so cards are never pruned; only the ledger is
 	async function save(): Promise<void> {
-		await mkdir(path.dirname(ledgerPath), { recursive: true });
-		await writeFile(ledgerPath, `${JSON.stringify(next, undefined, '\t')}\n`);
+		const sorted = Object.entries(recorded).sort(([first], [second]) =>
+			first.localeCompare(second),
+		);
+
+		await writeFile(
+			manifestPath,
+			`${JSON.stringify(Object.fromEntries(sorted), undefined, '\t')}\n`,
+		);
 	}
 
-	return { isFresh, save, write };
+	await mkdir(dir, { recursive: true });
+
+	return { filePath, isFresh, save, write };
 }
 
-// A card goes stale when its content, its source image, or the template changes
 export function getOutputCacheKey({
 	digest,
 	imageId,
@@ -63,12 +70,24 @@ export function getOutputCacheKey({
 	imageId: string | undefined;
 	imageModifiedTime: number | undefined;
 }): string {
-	return `${digest}:${imageId ?? ''}:${String(imageModifiedTime ?? '')}`;
+	return [templateVersion, digest, imageId ?? '', imageModifiedTime ?? ''].join(':');
 }
 
-async function loadLedger(ledgerPath: string): Promise<Ledger> {
+function hashTemplateFiles(): string {
+	const hash = createHash('sha256').update(
+		`${String(openGraphImageWidth)}x${String(openGraphImageHeight)}`,
+	);
+
+	for (const file of templateFiles) {
+		hash.update(readFileSync(new URL(file, import.meta.url), 'utf8'));
+	}
+
+	return hash.digest('hex').slice(0, 8);
+}
+
+async function loadManifest(manifestPath: string): Promise<Manifest> {
 	try {
-		return JSON.parse(await readFile(ledgerPath, 'utf8')) as Ledger;
+		return JSON.parse(await readFile(manifestPath, 'utf8')) as Manifest;
 	} catch {
 		return {};
 	}

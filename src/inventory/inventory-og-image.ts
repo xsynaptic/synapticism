@@ -1,19 +1,14 @@
 import type { APIRoute, GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
-import { createRenderer, loadOpenGraphFonts, processImage } from '@synapticism/scripts/og-image';
+import { createCardRenderer } from '@synapticism/scripts/og-image';
 
 import { getSampleOpenGraphCards } from '#inventory/inventory-fixtures.ts';
 
-// Fonts and glyph outlines live on the renderer, so build one and hold it for the dev server
-let renderCard: Promise<ReturnType<typeof createRenderer>> | undefined;
-
-async function createRenderCard() {
-	return createRenderer(await loadOpenGraphFonts());
-}
+let renderCard: ReturnType<typeof createCardRenderer> | undefined;
 
 function getRenderCard() {
 	if (!renderCard) {
-		renderCard = createRenderCard();
+		renderCard = createCardRenderer();
 	}
 
 	return renderCard;
@@ -26,11 +21,10 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 export const GET = (async ({ props: { card } }) => {
-	const image = card.imagePath ? await processImage(card.imagePath) : undefined;
-
 	const render = await getRenderCard();
 
-	return new Response(await render(card.entry, image), {
-		headers: { 'content-type': 'image/jpeg' },
+	// Takumi can hand back a view on a SharedArrayBuffer, which Response rejects
+	return new Response(new Uint8Array(await render(card)), {
+		headers: { 'cache-control': 'no-store', 'content-type': 'image/jpeg' },
 	});
 }) satisfies APIRoute<InferGetStaticPropsType<typeof getStaticPaths>>;
