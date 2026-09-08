@@ -8,7 +8,7 @@ import pagefind from 'astro-pagefind';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
-import inventory from '#inventory/inventory-integration.ts';
+import devInventory from '#dev/inventory/inventory-integration.ts';
 import { isIndexableUrlPath, readSitemapLastmod } from '#lib/utils/sitemap.ts';
 
 import { expressiveCodeOptions } from './expressive-code.config.mjs';
@@ -66,7 +66,7 @@ export default defineConfig({
 		responsiveStyles: true,
 	},
 	integrations: [
-		inventory(),
+		devInventory(),
 		mdx(),
 		sitemap({
 			filter: (page) => isIndexableUrlPath(new URL(page).pathname),

@@ -2,7 +2,7 @@ import type { APIRoute, GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import { createCardRenderer } from '@synapticism/scripts/og-image';
 
-import { getSampleOpenGraphCards } from '#inventory/inventory-fixtures.ts';
+import { getSampleOpenGraphCards } from '#dev/inventory/inventory-fixtures.ts';
 
 let renderCard: ReturnType<typeof createCardRenderer> | undefined;
 
