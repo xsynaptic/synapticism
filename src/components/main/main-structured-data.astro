@@ -9,9 +9,7 @@ interface Props {
 
 const { schemas } = Astro.props;
 
-// prettier-plugin-astro self-closes any set:html element into `<script/>`
-// For <script> (a raw-text element) that is invalid HTML, so this file is prettier-ignored
-// Drop the ignore and this note once the plugin stops self-closing raw-text tags upstream
+// This file is prettier-ignored; the plugin self-closes set:html elements, invalid for a raw-text tag
 ---
 
 <script is:inline set:html={serializeGraph(schemas)} type="application/ld+json"></script>
