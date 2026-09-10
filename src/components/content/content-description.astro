@@ -21,20 +21,17 @@ const hasContent = getHasContent(entry);
 const { Content } = await render(entry);
 ---
 
-{
-	hasContent ? (
-		<ProseBody class:list={['pb-8', className]} data-pagefind-weight="2" {...props}>
-			<Content />
-		</ProseBody>
-	) : undefined
-}{
-	!hasContent && entry.data.description ? (
-		<ContentSection {...props}>
-			<Fragment slot="section-description">
-				<ProseDescription class:list={[className]} data-pagefind-weight="2">
-					<Fragment set:html={renderMarkdownInline(entry.data.description)} />
-				</ProseDescription>
-			</Fragment>
-		</ContentSection>
-	) : undefined
-}
+{hasContent ? (
+	<ProseBody class:list={['pb-8', className]} data-pagefind-weight="2" {...props}>
+		<Content />
+	</ProseBody>
+) : undefined}
+{!hasContent && entry.data.description ? (
+	<ContentSection {...props}>
+		<Fragment slot="section-description">
+			<ProseDescription class:list={[className]} data-pagefind-weight="2">
+				<Fragment set:html={renderMarkdownInline(entry.data.description)} />
+			</ProseDescription>
+		</Fragment>
+	</ContentSection>
+) : undefined}

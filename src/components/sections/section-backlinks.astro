@@ -17,18 +17,16 @@ const { backlinks: backlinksAll } = Astro.props;
 const backlinks = backlinksAll?.slice(0, backlinksDisplayLimit);
 ---
 
-{
-	backlinks && backlinks.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.backlinks')}>
-			<ul class="flex flex-col gap-1 text-sm">
-				{backlinks.map(({ title, url }) => (
-					<li>
-						<Anchor anchorColor="accent" class="anchor-underline" href={url}>
-							{title}
-						</Anchor>
-					</li>
-				))}
-			</ul>
-		</LabeledSection>
-	) : undefined
-}
+{backlinks && backlinks.length > 0 ? (
+	<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.backlinks')}>
+		<ul class="flex flex-col gap-1 text-sm">
+			{backlinks.map(({ title, url }) => (
+				<li>
+					<Anchor anchorColor="accent" class="anchor-underline" href={url}>
+						{title}
+					</Anchor>
+				</li>
+			))}
+		</ul>
+	</LabeledSection>
+) : undefined}

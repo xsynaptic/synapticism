@@ -29,38 +29,34 @@ const hasExcerpt = excerptSplit.length > 1;
 			<Anchor
 				anchorColor="title"
 				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-				href={entryUrl}><slot name="excerpt-title" /></Anchor
+				href={entryUrl}
 			>
+				<slot name="excerpt-title" />
+			</Anchor>
 		</h2>
-		{
-			subtitle ? (
-				<div
-					class="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600"
-					set:html={subtitle}
-				/>
-			) : undefined
-		}
-		{
-			description ? (
-				<ProseDescription class={MicroformatClassNames.Summary}>
-					<Fragment set:html={description} />
-				</ProseDescription>
-			) : undefined
-		}
+		{subtitle ? (
+			<div
+				class="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600"
+				set:html={subtitle}
+			/>
+		) : undefined}
+		{description ? (
+			<ProseDescription class={MicroformatClassNames.Summary}>
+				<Fragment set:html={description} />
+			</ProseDescription>
+		) : undefined}
 	</header>
 	<ProseBody class:list={['e-content', 'pb-4']}>
 		<Fragment set:html={excerptContent} />
 	</ProseBody>
-	{
-		hasExcerpt ? (
-			<div class="content-column flex items-baseline justify-end gap-1 text-sm font-medium italic">
-				<Anchor anchorColor="accent" href={entryUrl}>
-					{t('content.continueReading')}
-				</Anchor>
-				<span aria-hidden="true" class="shrink-0 text-primary-600">
-					&rarr;
-				</span>
-			</div>
-		) : undefined
-	}
+	{hasExcerpt ? (
+		<div class="content-column flex items-baseline justify-end gap-1 text-sm font-medium italic">
+			<Anchor anchorColor="accent" href={entryUrl}>
+				{t('content.continueReading')}
+			</Anchor>
+			<span aria-hidden="true" class="shrink-0 text-primary-600">
+				&rarr;
+			</span>
+		</div>
+	) : undefined}
 </article>

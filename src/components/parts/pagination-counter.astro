@@ -12,13 +12,11 @@ interface Props extends HTMLAttributes<'div'> {
 const { class: className, page, ...props } = Astro.props;
 ---
 
-{
-	page.currentPage > 1 ? (
-		<div class:list={[className, 'text-sm text-primary-500']} {...props}>
-			{formatStringTemplate(t('pagination.counter'), {
-				current: page.currentPage,
-				total: page.lastPage,
-			})}
-		</div>
-	) : undefined
-}
+{page.currentPage > 1 ? (
+	<div class:list={[className, 'text-sm text-primary-500']} {...props}>
+		{formatStringTemplate(t('pagination.counter'), {
+			current: page.currentPage,
+			total: page.lastPage,
+		})}
+	</div>
+) : undefined}

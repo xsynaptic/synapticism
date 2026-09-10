@@ -56,129 +56,123 @@ const showProjects = false as boolean;
 ---
 
 <MainSite isHomepage={true} {...mainProps}>
-	{
-		isFirstPage && showHeadline ? (
-			<section class="content-column pt-8 pb-2 md:pt-14">
-				<p class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]">
-					{t('index.heroHeading')}
-				</p>
-				<p class="mt-4 max-w-[60ch] text-base leading-relaxed text-pretty text-primary-600 md:text-lg">
-					{t('index.heroSubtitle')}
-				</p>
-				<p class="mt-5 font-mono text-xs text-primary-600">
-					<span aria-hidden="true" class="text-accent-700">
-						//
-					</span>{' '}
-					{t('index.tagline')}
-				</p>
-			</section>
-		) : undefined
-	}
-	{
-		streamItems.length > 0 ? (
-			<LabeledSection
-				class:list={[isFirstPage ? 'mt-14 pb-8 md:mt-20' : 'pt-8 md:pt-14']}
-				title={t('index.recently')}
-			>
-				<ul class:list={['mt-2 flex flex-col', MicroformatClassNames.Feed]}>
-					{streamItems.map((item, index) => {
-						const primaryLink = item.links?.[0];
+	{isFirstPage && showHeadline ? (
+		<section class="content-column pt-8 pb-2 md:pt-14">
+			<p class="max-w-[28ch] text-2xl leading-tight font-semibold text-balance text-primary-800 md:text-[clamp(1.65rem,1.2rem+1.6vw,2.15rem)]">
+				{t('index.heroHeading')}
+			</p>
+			<p class="mt-4 max-w-[60ch] text-base leading-relaxed text-pretty text-primary-600 md:text-lg">
+				{t('index.heroSubtitle')}
+			</p>
+			<p class="mt-5 font-mono text-xs text-primary-600">
+				<span aria-hidden="true" class="text-accent-700">
+					//
+				</span>{' '}
+				{t('index.tagline')}
+			</p>
+		</section>
+	) : undefined}
+	{streamItems.length > 0 ? (
+		<LabeledSection
+			class:list={[isFirstPage ? 'mt-14 pb-8 md:mt-20' : 'pt-8 md:pt-14']}
+			title={t('index.recently')}
+		>
+			<ul class:list={['mt-2 flex flex-col', MicroformatClassNames.Feed]}>
+				{streamItems.map((item, index) => {
+					const primaryLink = item.links?.[0];
 
-						return (
-							<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
-								<article class:list={['flex gap-3 sm:gap-4', MicroformatClassNames.Entry]}>
-									{item.imageId ? (
-										<PreviewImage imgAlt={item.title} showMicroformats={true} src={item.imageId} />
-									) : undefined}
-									<div class="flex min-w-0 flex-col gap-2">
-										<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
-											<Anchor
-												anchorColor="title"
-												class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-												href={item.url}
-											>
-												{item.title}
-											</Anchor>
-										</h3>
-										<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
-											<DateDisplay
-												class={MicroformatClassNames.DatePublished}
-												date={item.dateCreated}
-												datePreset={DatePresetEnum.Long}
-											/>
-											{primaryLink ? (
-												<span>
-													{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
-												</span>
-											) : undefined}
-										</div>
-										{item.description ? (
-											<p
-												class:list={[
-													'max-w-[68ch] leading-relaxed text-pretty text-primary-600',
-													MicroformatClassNames.Summary,
-												]}
-												set:html={item.description}
-											/>
+					return (
+						<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
+							<article class:list={['flex gap-3 sm:gap-4', MicroformatClassNames.Entry]}>
+								{item.imageId ? (
+									<PreviewImage imgAlt={item.title} showMicroformats={true} src={item.imageId} />
+								) : undefined}
+								<div class="flex min-w-0 flex-col gap-2">
+									<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
+										<Anchor
+											anchorColor="title"
+											class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+											href={item.url}
+										>
+											{item.title}
+										</Anchor>
+									</h3>
+									<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
+										<DateDisplay
+											class={MicroformatClassNames.DatePublished}
+											date={item.dateCreated}
+											datePreset={DatePresetEnum.Long}
+										/>
+										{primaryLink ? (
+											<span>
+												{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
+											</span>
 										) : undefined}
 									</div>
-								</article>
-							</li>
-						);
-					})}
-				</ul>
-				{totalPages > 1 ? (
-					<nav
-						aria-label={t('aria.streamPagination')}
-						class="mt-10 flex justify-between font-mono text-sm"
-					>
-						{previousUrl ? (
-							<Anchor anchorColor="accent" href={previousUrl}>
-								<span aria-hidden="true">&larr;</span> {t('index.newer')}
-							</Anchor>
-						) : (
-							<span />
-						)}
-						{nextUrl ? (
-							<Anchor anchorColor="accent" href={nextUrl}>
-								{t('index.older')} <span aria-hidden="true">&rarr;</span>
-							</Anchor>
-						) : (
-							<span />
-						)}
-					</nav>
-				) : undefined}
-			</LabeledSection>
-		) : undefined
-	}
-	{
-		isFirstPage && showProjects && selectedProjects && selectedProjects.length > 0 ? (
-			<LabeledSection class="mt-14 pb-8 md:mt-20" title={t('index.selectedWork')}>
-				<ul class="mt-2 flex flex-col gap-5">
-					{selectedProjects.map((item) => (
-						<li>
-							<article class="grid gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-baseline">
-								<h3 class="font-mono text-base font-medium">
-									<Anchor anchorColor="title" href={item.url}>
-										{item.title}
-									</Anchor>
-								</h3>
-								{item.description ? (
-									<p
-										class="max-w-[60ch] text-sm leading-relaxed text-pretty text-primary-600"
-										set:html={item.description}
-									/>
-								) : undefined}
+									{item.description ? (
+										<p
+											class:list={[
+												'max-w-[68ch] leading-relaxed text-pretty text-primary-600',
+												MicroformatClassNames.Summary,
+											]}
+											set:html={item.description}
+										/>
+									) : undefined}
+								</div>
 							</article>
 						</li>
-					))}
-				</ul>
-				<p class="mt-7 font-mono text-sm">
-					<Anchor anchorColor="accent" href={getContentPath('projects')}>
-						{t('index.allProjects')} <span aria-hidden="true">&rarr;</span>
-					</Anchor>
-				</p>
-			</LabeledSection>
-		) : undefined
-	}
+					);
+				})}
+			</ul>
+			{totalPages > 1 ? (
+				<nav
+					aria-label={t('aria.streamPagination')}
+					class="mt-10 flex justify-between font-mono text-sm"
+				>
+					{previousUrl ? (
+						<Anchor anchorColor="accent" href={previousUrl}>
+							<span aria-hidden="true">&larr;</span> {t('index.newer')}
+						</Anchor>
+					) : (
+						<span />
+					)}
+					{nextUrl ? (
+						<Anchor anchorColor="accent" href={nextUrl}>
+							{t('index.older')} <span aria-hidden="true">&rarr;</span>
+						</Anchor>
+					) : (
+						<span />
+					)}
+				</nav>
+			) : undefined}
+		</LabeledSection>
+	) : undefined}
+	{isFirstPage && showProjects && selectedProjects && selectedProjects.length > 0 ? (
+		<LabeledSection class="mt-14 pb-8 md:mt-20" title={t('index.selectedWork')}>
+			<ul class="mt-2 flex flex-col gap-5">
+				{selectedProjects.map((item) => (
+					<li>
+						<article class="grid gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,13rem)_1fr] sm:items-baseline">
+							<h3 class="font-mono text-base font-medium">
+								<Anchor anchorColor="title" href={item.url}>
+									{item.title}
+								</Anchor>
+							</h3>
+							{item.description ? (
+								<p
+									class="max-w-[60ch] text-sm leading-relaxed text-pretty text-primary-600"
+									set:html={item.description}
+								/>
+							) : undefined}
+						</article>
+					</li>
+				))}
+			</ul>
+			<p class="mt-7 font-mono text-sm">
+				<Anchor anchorColor="accent" href={getContentPath('projects')}>
+					{t('index.allProjects')} <span aria-hidden="true">&rarr;</span>
+				</Anchor>
+			</p>
+		</LabeledSection>
+	) : undefined}
 </MainSite>

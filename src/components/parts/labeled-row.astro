@@ -22,22 +22,20 @@ const { itemProps, items, title, ...props } = Astro.props;
 const { class: itemClassName, ...itemAttributes } = itemProps ?? {};
 ---
 
-{
-	items.length > 0 ? (
-		<LabeledSection title={title} {...props}>
-			<ListRow>
-				{items.map((item) => (
-					<DividedItem
-						as="li"
-						class:list={['divided-thin font-mono text-sm', itemClassName]}
-						{...itemAttributes}
-					>
-						<Anchor anchorColor="accent" href={item.url}>
-							{item.title}
-						</Anchor>
-					</DividedItem>
-				))}
-			</ListRow>
-		</LabeledSection>
-	) : undefined
-}
+{items.length > 0 ? (
+	<LabeledSection title={title} {...props}>
+		<ListRow>
+			{items.map((item) => (
+				<DividedItem
+					as="li"
+					class:list={['divided-thin font-mono text-sm', itemClassName]}
+					{...itemAttributes}
+				>
+					<Anchor anchorColor="accent" href={item.url}>
+						{item.title}
+					</Anchor>
+				</DividedItem>
+			))}
+		</ListRow>
+	</LabeledSection>
+) : undefined}

@@ -17,60 +17,58 @@ interface Props {
 const { baseUrl, labelPlural, labelSingular, newerEntry, olderEntry } = Astro.props;
 ---
 
-{
-	newerEntry || olderEntry ? (
-		<LabeledSection
-			data-nosnippet
-			data-pagefind-ignore
-			title={formatStringTemplate(t('section.pagination.title'), { label: labelPlural })}
-		>
-			<nav class="flex items-baseline gap-4 text-sm">
-				<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
-					{newerEntry ? (
-						<Fragment>
-							<span aria-hidden="true" class="shrink-0 text-primary-600">
-								&larr;
+{newerEntry || olderEntry ? (
+	<LabeledSection
+		data-nosnippet
+		data-pagefind-ignore
+		title={formatStringTemplate(t('section.pagination.title'), { label: labelPlural })}
+	>
+		<nav class="flex items-baseline gap-4 text-sm">
+			<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
+				{newerEntry ? (
+					<Fragment>
+						<span aria-hidden="true" class="shrink-0 text-primary-600">
+							&larr;
+						</span>
+						<Anchor
+							anchorColor="accent"
+							class="anchor-underline min-w-0 italic"
+							href={newerEntry.url}
+						>
+							<span class="sr-only">
+								{formatStringTemplate(t('section.pagination.label.newer'), {
+									label: labelSingular,
+								})}
 							</span>
-							<Anchor
-								anchorColor="accent"
-								class="anchor-underline min-w-0 italic"
-								href={newerEntry.url}
-							>
-								<span class="sr-only">
-									{formatStringTemplate(t('section.pagination.label.newer'), {
-										label: labelSingular,
-									})}
-								</span>
-								{newerEntry.title}
-							</Anchor>
-						</Fragment>
-					) : undefined}
-				</span>
-				<Anchor anchorColor="accent" class="shrink-0" href={baseUrl}>
-					{formatStringTemplate(t('section.pagination.label.list'), { label: labelPlural })}
-				</Anchor>
-				<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
-					{olderEntry ? (
-						<Fragment>
-							<Anchor
-								anchorColor="accent"
-								class="anchor-underline min-w-0 italic"
-								href={olderEntry.url}
-							>
-								<span class="sr-only">
-									{formatStringTemplate(t('section.pagination.label.older'), {
-										label: labelSingular,
-									})}
-								</span>
-								{olderEntry.title}
-							</Anchor>
-							<span aria-hidden="true" class="shrink-0 text-primary-600">
-								&rarr;
+							{newerEntry.title}
+						</Anchor>
+					</Fragment>
+				) : undefined}
+			</span>
+			<Anchor anchorColor="accent" class="shrink-0" href={baseUrl}>
+				{formatStringTemplate(t('section.pagination.label.list'), { label: labelPlural })}
+			</Anchor>
+			<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
+				{olderEntry ? (
+					<Fragment>
+						<Anchor
+							anchorColor="accent"
+							class="anchor-underline min-w-0 italic"
+							href={olderEntry.url}
+						>
+							<span class="sr-only">
+								{formatStringTemplate(t('section.pagination.label.older'), {
+									label: labelSingular,
+								})}
 							</span>
-						</Fragment>
-					) : undefined}
-				</span>
-			</nav>
-		</LabeledSection>
-	) : undefined
-}
+							{olderEntry.title}
+						</Anchor>
+						<span aria-hidden="true" class="shrink-0 text-primary-600">
+							&rarr;
+						</span>
+					</Fragment>
+				) : undefined}
+			</span>
+		</nav>
+	</LabeledSection>
+) : undefined}

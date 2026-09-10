@@ -57,25 +57,21 @@ const { Content } = await render(entry);
 						showMicroformats={true}
 					/>
 				</DividedItem>
-				{
-					entry.data.dateUpdated ? (
-						<DividedItem>
-							<ContentDate
-								date={entry.data.dateUpdated}
-								datePreset={DatePresetEnum.Long}
-								showMicroformats={true}
-								showUpdated={true}
-							/>
-						</DividedItem>
-					) : undefined
-				}
+				{entry.data.dateUpdated ? (
+					<DividedItem>
+						<ContentDate
+							date={entry.data.dateUpdated}
+							datePreset={DatePresetEnum.Long}
+							showMicroformats={true}
+							showUpdated={true}
+						/>
+					</DividedItem>
+				) : undefined}
 			</Fragment>
 		</ContentHeader>
-		{
-			imageFeaturedHeroGroup?.[0] ? (
-				<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
-			) : undefined
-		}
+		{imageFeaturedHeroGroup?.[0] ? (
+			<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
+		) : undefined}
 		<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
 			<Content />
 		</ProseBody>

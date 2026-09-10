@@ -31,32 +31,32 @@ const { page } = Astro.props;
 	}}
 >
 	<ContentHeader title={t('projects.title')}>
-		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
+		<Fragment slot="header-subtitle">
+			<PaginationCounter page={page} />
+		</Fragment>
 	</ContentHeader>
 	<ContentSection>
 		<ul class="flex flex-col gap-4">
-			{
-				page.data.map((item) => (
-					<li class="flex gap-3 sm:gap-4">
-						{item.imageId ? <PreviewImage imgAlt={item.title} src={item.imageId} /> : undefined}
-						<div class="flex min-w-0 flex-col gap-1">
-							<h2 class="text-lg font-semibold md:text-xl">
-								<Anchor anchorColor="title" href={item.url}>
-									{item.title}
-								</Anchor>
-							</h2>
-							<DateDisplay
-								class="text-xs text-primary-400"
-								date={item.dateCreated}
-								datePreset={DatePresetEnum.Long}
-							/>
-							{item.description ? (
-								<p class="text-sm text-primary-500" set:html={item.description} />
-							) : undefined}
-						</div>
-					</li>
-				))
-			}
+			{page.data.map((item) => (
+				<li class="flex gap-3 sm:gap-4">
+					{item.imageId ? <PreviewImage imgAlt={item.title} src={item.imageId} /> : undefined}
+					<div class="flex min-w-0 flex-col gap-1">
+						<h2 class="text-lg font-semibold md:text-xl">
+							<Anchor anchorColor="title" href={item.url}>
+								{item.title}
+							</Anchor>
+						</h2>
+						<DateDisplay
+							class="text-xs text-primary-400"
+							date={item.dateCreated}
+							datePreset={DatePresetEnum.Long}
+						/>
+						{item.description ? (
+							<p class="text-sm text-primary-500" set:html={item.description} />
+						) : undefined}
+					</div>
+				</li>
+			))}
 		</ul>
 		<PaginationSelect class="mt-4 md:mt-8" page={page} />
 	</ContentSection>

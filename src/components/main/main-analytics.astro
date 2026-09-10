@@ -18,5 +18,6 @@ const { isViewTransitionsEnabled, umamiDomain, umamiId, ...props } = Astro.props
 	defer
 	src={`${umamiDomain}/script.js`}
 	{...props}
-	{...isViewTransitionsEnabled ? { 'data-astro-rerun': '' } : {}}
-	is:inline></script>
+	{...(isViewTransitionsEnabled ? { 'data-astro-rerun': '' } : {})}
+	is:inline
+></script>

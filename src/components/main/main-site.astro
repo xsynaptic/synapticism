@@ -51,11 +51,9 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 		<Font cssVariable="--font-aleo" preload={[{ style: 'normal' }]} />
 		<Font cssVariable="--font-geist-mono" preload />
 		<Meta {...meta} />
-		{
-			UMAMI_ID && UMAMI_DOMAIN && import.meta.env.PROD ? (
-				<Analytics isViewTransitionsEnabled={true} umamiDomain={UMAMI_DOMAIN} umamiId={UMAMI_ID} />
-			) : undefined
-		}
+		{UMAMI_ID && UMAMI_DOMAIN && import.meta.env.PROD ? (
+			<Analytics isViewTransitionsEnabled={true} umamiDomain={UMAMI_DOMAIN} umamiId={UMAMI_ID} />
+		) : undefined}
 		<ClientRouter />
 		<meta content={import.meta.env.BUILD_VERSION} name="build-version" />
 		<script is:inline>
@@ -97,10 +95,8 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			<div class:list={['py-3 lg:py-4', 'bg-linear-to-b from-primary-800 to-primary-700']}>
 				<div class="content-column">
 					<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
-						<span class="text-primary-500">ꗥ</span>{' '}<Anchor
-							anchorColor="on-dark"
-							href={siteUrl}
-						>
+						<span class="text-primary-500">ꗥ</span>{' '}
+						<Anchor anchorColor="on-dark" href={siteUrl}>
 							{t('site.title')}
 						</Anchor>
 					</SiteTitleTag>
@@ -123,18 +119,16 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 				<Colophon />
 			</div>
 		</footer>
-		{
-			hasReadingBar ? (
-				<ProgressReading
-					class:list={[
-						'z-progress rounded-br-md shadow-lg shadow-current',
-						'bg-linear-to-r from-highlight-500 to-highlight-300 text-highlight-200',
-						'print:hidden',
-					]}
-					height="2.5px"
-				/>
-			) : undefined
-		}
+		{hasReadingBar ? (
+			<ProgressReading
+				class:list={[
+					'z-progress rounded-br-md shadow-lg shadow-current',
+					'bg-linear-to-r from-highlight-500 to-highlight-300 text-highlight-200',
+					'print:hidden',
+				]}
+				height="2.5px"
+			/>
+		) : undefined}
 		<TopButton />
 		<SearchModal />
 		{schemas && schemas.length > 0 ? <StructuredData schemas={schemas} /> : undefined}

@@ -15,13 +15,17 @@ const copyrightYears = getCopyrightYears();
 	</DividedItem>
 	<DividedItem as="span">
 		{t('footer.builtWith')}{' '}
-		<Anchor anchorColor="primary-bright" href="https://astro.build">{t('footer.astro')}</Anchor>
+		<Anchor anchorColor="primary-bright" href="https://astro.build">
+			{t('footer.astro')}
+		</Anchor>
 	</DividedItem>
 	<DividedItem as="span">
 		<Anchor
 			anchorColor="primary-bright"
 			data-astro-prefetch="false"
-			href={`${getSitePath()}rss.xml`}>{t('footer.rss')}</Anchor
+			href={`${getSitePath()}rss.xml`}
 		>
+			{t('footer.rss')}
+		</Anchor>
 	</DividedItem>
 </div>

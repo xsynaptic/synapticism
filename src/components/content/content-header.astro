@@ -18,27 +18,23 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 		class="-ml-0.5 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 md:text-3xl lg:text-4xl"
 		data-pagefind-weight="3"
 	>
-		{
-			titleUrl ? (
-				<a
-					class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-					href={titleUrl}
-					rel="bookmark"
-				>
-					{title}
-				</a>
-			) : (
-				title
-			)
-		}
+		{titleUrl ? (
+			<a
+				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+				href={titleUrl}
+				rel="bookmark"
+			>
+				{title}
+			</a>
+		) : (
+			title
+		)}
 	</h1>
-	{
-		subtitle ? (
-			<div
-				class="items-center gap-1 pt-1 font-mono text-xs sm:flex sm:flex-wrap"
-				data-pagefind-ignore
-				set:html={subtitle}
-			/>
-		) : undefined
-	}
+	{subtitle ? (
+		<div
+			class="items-center gap-1 pt-1 font-mono text-xs sm:flex sm:flex-wrap"
+			data-pagefind-ignore
+			set:html={subtitle}
+		/>
+	) : undefined}
 </div>

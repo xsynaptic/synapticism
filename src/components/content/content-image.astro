@@ -37,11 +37,9 @@ const alt = sanitizeAltAttribute(altProp ?? caption ?? '');
 			width={1600}
 		/>
 	</div>
-	{
-		caption ? (
-			<figcaption>
-				<Fragment set:html={caption} />
-			</figcaption>
-		) : undefined
-	}
+	{caption ? (
+		<figcaption>
+			<Fragment set:html={caption} />
+		</figcaption>
+	) : undefined}
 </figure>

@@ -30,35 +30,33 @@ const groups = groupTagsByLetter(tags);
 >
 	<ContentHeader title={t('tags.title')} />
 	<ContentSection>
-		{
-			groups.length > 0 ? (
-				<div class="flex flex-col gap-8">
-					{groups.map((group) => (
-						<section class="flex flex-col gap-2">
-							<h2 class="font-mono text-sm font-semibold text-primary-400">{group.letter}</h2>
-							<ListRow>
-								{group.tags.map((tag) => (
-									<DividedItem as="li" class="divided-thin text-sm">
-										<Anchor href={getContentPath(tag.collection, tag.id)}>
-											{tag.data.title}
-											{tag.data._entryCount ? (
-												<>
-													{' '}
-													<span class="text-xs text-primary-400">
-														({String(tag.data._entryCount)})
-													</span>
-												</>
-											) : undefined}
-										</Anchor>
-									</DividedItem>
-								))}
-							</ListRow>
-						</section>
-					))}
-				</div>
-			) : (
-				<p class="text-sm text-primary-500">{t('tags.empty')}</p>
-			)
-		}
+		{groups.length > 0 ? (
+			<div class="flex flex-col gap-8">
+				{groups.map((group) => (
+					<section class="flex flex-col gap-2">
+						<h2 class="font-mono text-sm font-semibold text-primary-400">{group.letter}</h2>
+						<ListRow>
+							{group.tags.map((tag) => (
+								<DividedItem as="li" class="divided-thin text-sm">
+									<Anchor href={getContentPath(tag.collection, tag.id)}>
+										{tag.data.title}
+										{tag.data._entryCount ? (
+											<>
+												{' '}
+												<span class="text-xs text-primary-400">
+													({String(tag.data._entryCount)})
+												</span>
+											</>
+										) : undefined}
+									</Anchor>
+								</DividedItem>
+							))}
+						</ListRow>
+					</section>
+				))}
+			</div>
+		) : (
+			<p class="text-sm text-primary-500">{t('tags.empty')}</p>
+		)}
 	</ContentSection>
 </MainSite>

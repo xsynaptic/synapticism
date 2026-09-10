@@ -17,14 +17,12 @@ const { author, title, url, year } = Astro.props;
 		<slot />
 	</blockquote>
 	<figcaption>
-		{
-			[
-				author ? formatStringTemplate(t('content.quotationAuthor'), { author }) : undefined,
-				title ? <cite>{url ? <a href={url}>{title}</a> : title}</cite> : undefined,
-				year,
-			]
-				.filter(Boolean)
-				.flatMap((part, index) => (index === 0 ? [part] : [', ', part]))
-		}
+		{[
+			author ? formatStringTemplate(t('content.quotationAuthor'), { author }) : undefined,
+			title ? <cite>{url ? <a href={url}>{title}</a> : title}</cite> : undefined,
+			year,
+		]
+			.filter(Boolean)
+			.flatMap((part, index) => (index === 0 ? [part] : [', ', part]))}
 	</figcaption>
 </figure>

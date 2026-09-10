@@ -16,45 +16,43 @@ interface Props {
 const { links, source } = Astro.props;
 ---
 
-{
-	links && links.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.source')}>
-			<ul class="flex flex-col gap-3 text-sm">
-				{links.map((link, index) => (
-					<li>
-						<Anchor
-							anchorColor="accent"
-							class="anchor-underline"
-							href={link.url}
-							rel="noopener"
-							target="_blank"
-						>
-							{link.title}
-						</Anchor>
-						<span class="mt-0.5 block font-mono text-xs text-primary-600">
-							{getSourceDomain(link.url)}
-							{index === 0 && source ? (
-								<Fragment>
-									{t('content.via')}
-									{source.url ? (
-										<Anchor
-											anchorColor="accent"
-											class="anchor-underline"
-											href={source.url}
-											rel="noopener"
-											target="_blank"
-										>
-											{source.title}
-										</Anchor>
-									) : (
-										source.title
-									)}
-								</Fragment>
-							) : undefined}
-						</span>
-					</li>
-				))}
-			</ul>
-		</LabeledSection>
-	) : undefined
-}
+{links && links.length > 0 ? (
+	<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.source')}>
+		<ul class="flex flex-col gap-3 text-sm">
+			{links.map((link, index) => (
+				<li>
+					<Anchor
+						anchorColor="accent"
+						class="anchor-underline"
+						href={link.url}
+						rel="noopener"
+						target="_blank"
+					>
+						{link.title}
+					</Anchor>
+					<span class="mt-0.5 block font-mono text-xs text-primary-600">
+						{getSourceDomain(link.url)}
+						{index === 0 && source ? (
+							<Fragment>
+								{t('content.via')}
+								{source.url ? (
+									<Anchor
+										anchorColor="accent"
+										class="anchor-underline"
+										href={source.url}
+										rel="noopener"
+										target="_blank"
+									>
+										{source.title}
+									</Anchor>
+								) : (
+									source.title
+								)}
+							</Fragment>
+						) : undefined}
+					</span>
+				</li>
+			))}
+		</ul>
+	</LabeledSection>
+) : undefined}

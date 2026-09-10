@@ -41,36 +41,36 @@ const items = await Promise.all(
 	}}
 >
 	<ContentHeader title={t('notes.title')}>
-		<Fragment slot="header-subtitle"><PaginationCounter page={page} /></Fragment>
+		<Fragment slot="header-subtitle">
+			<PaginationCounter page={page} />
+		</Fragment>
 	</ContentHeader>
 	<div class={MicroformatClassNames.Feed}>
-		{
-			items.map(({ Content, entry }) => {
-				const primaryLink = entry.data.links?.[0];
+		{items.map(({ Content, entry }) => {
+			const primaryLink = entry.data.links?.[0];
 
-				return (
-					<ContentExcerpt class="mb-8" entryUrl={getContentPath('notes', entry.id)}>
-						<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
-						<Fragment slot="excerpt-subtitle">
-							<DateDisplay
-								class={MicroformatClassNames.DatePublished}
-								date={entry.data.dateCreated}
-								datePreset={DatePresetEnum.Long}
-							/>
-							{primaryLink ? (
-								<span>
-									{getSourceDomain(primaryLink.url)}
-									<span aria-hidden="true" class="ml-1">
-										↗
-									</span>
+			return (
+				<ContentExcerpt class="mb-8" entryUrl={getContentPath('notes', entry.id)}>
+					<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
+					<Fragment slot="excerpt-subtitle">
+						<DateDisplay
+							class={MicroformatClassNames.DatePublished}
+							date={entry.data.dateCreated}
+							datePreset={DatePresetEnum.Long}
+						/>
+						{primaryLink ? (
+							<span>
+								{getSourceDomain(primaryLink.url)}
+								<span aria-hidden="true" class="ml-1">
+									↗
 								</span>
-							) : undefined}
-						</Fragment>
-						<Content />
-					</ContentExcerpt>
-				);
-			})
-		}
+							</span>
+						) : undefined}
+					</Fragment>
+					<Content />
+				</ContentExcerpt>
+			);
+		})}
 	</div>
 	<div class="content-column">
 		<PaginationSelect class="mt-4 mb-8 md:mt-8" page={page} />

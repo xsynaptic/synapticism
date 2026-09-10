@@ -8,8 +8,6 @@ interface Props {
 }
 
 const { schemas } = Astro.props;
-
-// This file is prettier-ignored; the plugin self-closes set:html elements, invalid for a raw-text tag
 ---
 
 <script is:inline set:html={serializeGraph(schemas)} type="application/ld+json"></script>

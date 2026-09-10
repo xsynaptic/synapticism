@@ -13,17 +13,15 @@ if (seed !== undefined) attributes.seed = String(seed);
 const reservedStyle = { display: 'block', minHeight: '838px' };
 ---
 
-{
-	isRss ? (
-		href === undefined ? undefined : (
-			<p>
-				<a href={href}>Open the interactive station tile lab.</a>
-			</p>
-		)
-	) : (
-		<station-tile-lab class:list={[className]} style={reservedStyle} {...attributes} />
+{isRss ? (
+	href === undefined ? undefined : (
+		<p>
+			<a href={href}>Open the interactive station tile lab.</a>
+		</p>
 	)
-}
+) : (
+	<station-tile-lab class:list={[className]} style={reservedStyle} {...attributes} />
+)}
 
 <script>
 	import './client/station-tile-lab.ts';

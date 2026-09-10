@@ -17,23 +17,21 @@ interface Props extends HTMLAttributes<'div'> {
 const { date, datePreset, showMicroformats = false, showUpdated = false } = Astro.props;
 ---
 
-{
-	date ? (
-		showUpdated ? (
-			<>
-				{t('content.updated')}{' '}
-				<DateDisplay
-					class:list={[showMicroformats ? MicroformatClassNames.DateUpdated : undefined]}
-					date={date}
-					datePreset={datePreset}
-				/>
-			</>
-		) : (
+{date ? (
+	showUpdated ? (
+		<>
+			{t('content.updated')}{' '}
 			<DateDisplay
-				class:list={[showMicroformats ? MicroformatClassNames.DatePublished : undefined]}
+				class:list={[showMicroformats ? MicroformatClassNames.DateUpdated : undefined]}
 				date={date}
 				datePreset={datePreset}
 			/>
-		)
-	) : undefined
-}
+		</>
+	) : (
+		<DateDisplay
+			class:list={[showMicroformats ? MicroformatClassNames.DatePublished : undefined]}
+			date={date}
+			datePreset={datePreset}
+		/>
+	)
+) : undefined}

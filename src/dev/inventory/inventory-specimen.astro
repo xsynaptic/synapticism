@@ -15,13 +15,11 @@ const { bleed = false, name, note, source } = Astro.props;
 			{name}
 			{source ? <span class="text-xs font-normal text-primary-500">{source}</span> : undefined}
 		</h3>
-		{
-			note ? (
-				<div class="prose-x prose-compact mt-1">
-					<p set:html={note} />
-				</div>
-			) : undefined
-		}
+		{note ? (
+			<div class="prose-x prose-compact mt-1">
+				<p set:html={note} />
+			</div>
+		) : undefined}
 	</div>
 	<div
 		class:list={[

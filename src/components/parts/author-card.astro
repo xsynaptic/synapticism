@@ -7,13 +7,14 @@ import { getSitePath } from '#lib/utils/routing.ts';
 ---
 
 <div class:list={['sr-only', MicroformatClassNames.Card, MicroformatClassNames.Author]}>
-	<Anchor class={MicroformatClassNames.Url} href={getSitePath('about')} rel="me"
-		><span class={MicroformatClassNames.Name}>{siteAuthorName}</span></Anchor
-	>
-	{' '}
+	<Anchor class={MicroformatClassNames.Url} href={getSitePath('about')} rel="me">
+		<span class={MicroformatClassNames.Name}>{siteAuthorName}</span>
+	</Anchor>{' '}
 	<span class={MicroformatClassNames.Role}>{t('author.role')}</span>{' '}
 	<Anchor
 		class:list={[MicroformatClassNames.Card, MicroformatClassNames.Organization]}
-		href={getSitePath()}>{t('site.title')}</Anchor
+		href={getSitePath()}
 	>
+		{t('site.title')}
+	</Anchor>
 </div>

@@ -64,11 +64,11 @@ const { Content } = await render(entry);
 	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
 		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
 			<Fragment slot="header-subtitle">
-				<DividedItem
-					><Anchor anchorColor="accent" class="font-semibold uppercase" href={getSitePath('notes')}
-						>{t('collection.notes.plural')}</Anchor
-					></DividedItem
-				>
+				<DividedItem>
+					<Anchor anchorColor="accent" class="font-semibold uppercase" href={getSitePath('notes')}>
+						{t('collection.notes.plural')}
+					</Anchor>
+				</DividedItem>
 				<DividedItem class="font-mono text-xs text-primary-500">
 					<ContentDate
 						date={entry.data.dateCreated}
@@ -76,25 +76,21 @@ const { Content } = await render(entry);
 						showMicroformats={true}
 					/>
 				</DividedItem>
-				{
-					entry.data.dateUpdated ? (
-						<DividedItem>
-							<ContentDate
-								date={entry.data.dateUpdated}
-								datePreset={DatePresetEnum.Long}
-								showMicroformats={true}
-								showUpdated={true}
-							/>
-						</DividedItem>
-					) : undefined
-				}
+				{entry.data.dateUpdated ? (
+					<DividedItem>
+						<ContentDate
+							date={entry.data.dateUpdated}
+							datePreset={DatePresetEnum.Long}
+							showMicroformats={true}
+							showUpdated={true}
+						/>
+					</DividedItem>
+				) : undefined}
 			</Fragment>
 		</ContentHeader>
-		{
-			imageFeaturedHeroGroup?.[0] ? (
-				<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
-			) : undefined
-		}
+		{imageFeaturedHeroGroup?.[0] ? (
+			<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
+		) : undefined}
 		<ProseBody class:list={['e-content', 'pb-4']}>
 			<Content />
 		</ProseBody>

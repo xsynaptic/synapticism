@@ -70,13 +70,11 @@ const openGraphImage = {
 		imageAlt: openGraphImage.alt,
 		title: contentTitle ?? siteTitle,
 	}}
-	{...noIndex ? { noindex: noIndex } : {}}
-	{...noFollow ? { nofollow: noFollow } : {}}
+	{...(noIndex ? { noindex: noIndex } : {})}
+	{...(noFollow ? { nofollow: noFollow } : {})}
 />
 <link href={getBasePath('rss.xml')} rel="alternate" title={siteTitle} type="application/rss+xml" />
 <link href={getBasePath('sitemap-index.xml')} rel="sitemap" />
-{
-	WEBMENTION_DOMAIN ? (
-		<link href={`https://webmention.io/${WEBMENTION_DOMAIN}/webmention`} rel="webmention" />
-	) : undefined
-}
+{WEBMENTION_DOMAIN ? (
+	<link href={`https://webmention.io/${WEBMENTION_DOMAIN}/webmention`} rel="webmention" />
+) : undefined}

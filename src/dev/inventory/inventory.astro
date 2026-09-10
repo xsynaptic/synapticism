@@ -147,39 +147,35 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				Every common component, rendered from its real source with fixture props. Dev only.
 			</p>
 			<nav class="mt-4 flex flex-wrap gap-x-5 font-mono text-sm">
-				{
-					sections.map((section) => (
-						<Anchor anchorColor="accent" href={`#${getSectionId(section)}`}>
-							{section}
-						</Anchor>
-					))
-				}
+				{sections.map((section) => (
+					<Anchor anchorColor="accent" href={`#${getSectionId(section)}`}>
+						{section}
+					</Anchor>
+				))}
 			</nav>
 		</div>
 		<Section title="Foundations">
 			<Specimen name="Color ramps" source="styles/main/parts/theme.css">
 				<div class="flex flex-col gap-5">
-					{
-						colorRamps.map((ramp) => (
-							<div>
-								<div class="font-mono text-xs text-primary-600">
-									--color-{ramp.name}-*{' '}
-									<span class="font-mono text-xs text-primary-500">({ramp.source})</span>
-								</div>
-								<div class="mt-2 grid grid-cols-[repeat(auto-fit,minmax(4rem,1fr))] gap-1">
-									{colorSteps.map((step) => (
-										<div>
-											<div
-												class="h-12 rounded-sm border border-primary-300"
-												style={`background-color: var(--color-${ramp.name}-${String(step)})`}
-											/>
-											<div class="mt-1 font-mono text-[0.6875rem] text-primary-500">{step}</div>
-										</div>
-									))}
-								</div>
+					{colorRamps.map((ramp) => (
+						<div>
+							<div class="font-mono text-xs text-primary-600">
+								--color-{ramp.name}-*{' '}
+								<span class="font-mono text-xs text-primary-500">({ramp.source})</span>
 							</div>
-						))
-					}
+							<div class="mt-2 grid grid-cols-[repeat(auto-fit,minmax(4rem,1fr))] gap-1">
+								{colorSteps.map((step) => (
+									<div>
+										<div
+											class="h-12 rounded-sm border border-primary-300"
+											style={`background-color: var(--color-${ramp.name}-${String(step)})`}
+										/>
+										<div class="mt-1 font-mono text-[0.6875rem] text-primary-500">{step}</div>
+									</div>
+								))}
+							</div>
+						</div>
+					))}
 				</div>
 			</Specimen>
 			<Specimen
@@ -188,32 +184,28 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				source="styles/main/parts/theme.css"
 			>
 				<div class="flex flex-col gap-4">
-					{
-						typeSteps.map((step) => (
-							<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
-								<div class="font-mono text-xs text-primary-500">text-{step}</div>
-								<div style={`font-size: var(--text-${step})`}>
-									The quick brown fox jumps over the lazy dog
-								</div>
+					{typeSteps.map((step) => (
+						<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
+							<div class="font-mono text-xs text-primary-500">text-{step}</div>
+							<div style={`font-size: var(--text-${step})`}>
+								The quick brown fox jumps over the lazy dog
 							</div>
-						))
-					}
+						</div>
+					))}
 				</div>
 			</Specimen>
 			<Specimen name="Font families" source="styles/main/parts/theme.css">
 				<div class="flex flex-col gap-4">
-					{
-						fontFamilies.map((family) => (
-							<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
-								<div class="font-mono text-xs text-primary-500">
-									{family.name}, {family.note}
-								</div>
-								<div style={`font-family: var(--${family.name}); font-size: var(--text-xl)`}>
-									Synapticism 0123456789 <em>italic</em> <strong>bold</strong>
-								</div>
+					{fontFamilies.map((family) => (
+						<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
+							<div class="font-mono text-xs text-primary-500">
+								{family.name}, {family.note}
 							</div>
-						))
-					}
+							<div style={`font-family: var(--${family.name}); font-size: var(--text-xl)`}>
+								Synapticism 0123456789 <em>italic</em> <strong>bold</strong>
+							</div>
+						</div>
+					))}
 				</div>
 			</Specimen>
 		</Section>
@@ -247,7 +239,9 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				source="components/mdx/link.astro"
 			>
 				<ProseBody>
-					<p>An internal <Link id="sample-post">reference to another Entry</Link>.</p>
+					<p>
+						An internal <Link id="sample-post">reference to another Entry</Link>.
+					</p>
 				</ProseBody>
 			</Specimen>
 		</Section>
@@ -259,22 +253,24 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			>
 				<div class="flex flex-col gap-4">
 					<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
-						{
-							anchorColorsOnLight.map((anchorColor) => (
-								<Anchor anchorColor={anchorColor} href="#anchor">
-									{anchorColor}
-								</Anchor>
-							))
-						}
+						{anchorColorsOnLight.map((anchorColor) => (
+							<Anchor anchorColor={anchorColor} href="#anchor">
+								{anchorColor}
+							</Anchor>
+						))}
 						<Anchor anchorColor="accent" class="anchor-underline" href="#anchor">
 							accent + anchor-underline
 						</Anchor>
 					</div>
 					<div class="rounded-sm bg-primary-800 px-5 py-4">
-						<Anchor anchorColor={anchorColorOnDark} href="#anchor">{anchorColorOnDark}</Anchor>
+						<Anchor anchorColor={anchorColorOnDark} href="#anchor">
+							{anchorColorOnDark}
+						</Anchor>
 					</div>
 					<div class="rounded-sm bg-accent-500 px-5 py-4">
-						<Anchor anchorColor={anchorColorOnAccent} href="#anchor">{anchorColorOnAccent}</Anchor>
+						<Anchor anchorColor={anchorColorOnAccent} href="#anchor">
+							{anchorColorOnAccent}
+						</Anchor>
 					</div>
 				</div>
 			</Specimen>
@@ -284,17 +280,15 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				source="components/parts/date-display.astro"
 			>
 				<div class="flex flex-col gap-4">
-					{
-						datePresets.map((datePreset) => (
-							<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
-								<div class="font-mono text-xs text-primary-500">{datePreset}</div>
-								<div class="mt-1 flex flex-wrap gap-x-6 gap-y-1">
-									<DateDisplay date={sampleDate} datePreset={datePreset} />
-									<DateDisplay date={sampleDateTime} datePreset={datePreset} />
-								</div>
+					{datePresets.map((datePreset) => (
+						<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
+							<div class="font-mono text-xs text-primary-500">{datePreset}</div>
+							<div class="mt-1 flex flex-wrap gap-x-6 gap-y-1">
+								<DateDisplay date={sampleDate} datePreset={datePreset} />
+								<DateDisplay date={sampleDateTime} datePreset={datePreset} />
 							</div>
-						))
-					}
+						</div>
+					))}
 				</div>
 			</Specimen>
 			<Specimen
@@ -309,9 +303,15 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 						<DividedItem as="li">weight</DividedItem>
 					</ListRow>
 					<ListRow>
-						<DividedItem as="li" class="divided-thin">Thin</DividedItem>
-						<DividedItem as="li" class="divided-thin">divider</DividedItem>
-						<DividedItem as="li" class="divided-thin">weight</DividedItem>
+						<DividedItem as="li" class="divided-thin">
+							Thin
+						</DividedItem>
+						<DividedItem as="li" class="divided-thin">
+							divider
+						</DividedItem>
+						<DividedItem as="li" class="divided-thin">
+							weight
+						</DividedItem>
 					</ListRow>
 				</div>
 			</Specimen>
@@ -361,17 +361,15 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				note="The square image beside an Entry in a listing: 4rem, 5rem from <code>md</code> up."
 				source="components/parts/preview-image.astro"
 			>
-				{
-					sampleImageId ? (
-						<PreviewImage
-							imgAlt="Preview image alt text"
-							showMicroformats={true}
-							src={sampleImageId}
-						/>
-					) : (
-						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
-					)
-				}
+				{sampleImageId ? (
+					<PreviewImage
+						imgAlt="Preview image alt text"
+						showMicroformats={true}
+						src={sampleImageId}
+					/>
+				) : (
+					<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+				)}
 			</Specimen>
 		</Section>
 		<Section title="Content">
@@ -419,10 +417,8 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 						showUpdated={true}
 					/>
 					<span class="font-mono text-xs text-primary-500">
-						undefined date: <ContentDate
-							date={undefined}
-							datePreset={DatePresetEnum.Long}
-						/>(nothing)
+						undefined date: <ContentDate date={undefined} datePreset={DatePresetEnum.Long} />
+						(nothing)
 					</span>
 				</div>
 			</Specimen>
@@ -432,13 +428,11 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				note="A Featured Image at the top of an Entry, over its LQIP placeholder. Against <code>content-image</code>: an object rather than a path, <code>priority</code>, no caption, small radius, no border."
 				source="components/content/content-hero.astro"
 			>
-				{
-					sampleImageFeatured ? (
-						<ContentHero {...sampleImageFeatured} fallbackAlt="Fallback alt text" />
-					) : (
-						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
-					)
-				}
+				{sampleImageFeatured ? (
+					<ContentHero {...sampleImageFeatured} fallbackAlt="Fallback alt text" />
+				) : (
+					<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+				)}
 			</Specimen>
 			<Specimen
 				bleed={true}
@@ -446,15 +440,13 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				note="The in-body figure, breaking out past the reading measure. Against <code>content-hero</code>: lazy, a caption doubling as alt text, larger radius on a bordered frame."
 				source="components/content/content-image.astro"
 			>
-				{
-					sampleImageId ? (
-						<ProseBody>
-							<ContentImage src={sampleImageId}>A caption beneath the frame</ContentImage>
-						</ProseBody>
-					) : (
-						<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
-					)
-				}
+				{sampleImageId ? (
+					<ProseBody>
+						<ContentImage src={sampleImageId}>A caption beneath the frame</ContentImage>
+					</ProseBody>
+				) : (
+					<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+				)}
 			</Specimen>
 			<Specimen
 				bleed={true}
@@ -489,7 +481,9 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<Fragment slot="excerpt-title">An excerpt title, linked to its Entry</Fragment>
 					<Fragment slot="excerpt-subtitle">
 						<ContentDate date={sampleDate} datePreset={DatePresetEnum.Long} />
-						<span>example.com <span aria-hidden="true">↗</span></span>
+						<span>
+							example.com <span aria-hidden="true">↗</span>
+						</span>
 					</Fragment>
 					<ProseSample />
 				</ContentExcerpt>
@@ -544,28 +538,26 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			note="Drawn by a batch script rather than by Astro; this route renders that template on demand."
 			title="Open Graph"
 		>
-			{
-				openGraphSpecimens.map(({ key, missing, name, note }) => {
-					const card = sampleOpenGraphCards.find((item) => item.key === key);
+			{openGraphSpecimens.map(({ key, missing, name, note }) => {
+				const card = sampleOpenGraphCards.find((item) => item.key === key);
 
-					return (
-						<Specimen name={name} note={note} source="packages/scripts/src/og-image/element.tsx">
-							{card ? (
-								<img
-									alt={card.title}
-									class="h-auto w-full"
-									height={openGraphImageHeight}
-									loading="lazy"
-									src={`/inventory/og/${card.key}.jpg`}
-									width={openGraphImageWidth}
-								/>
-							) : (
-								<p class="font-mono text-xs text-primary-500">{missing}</p>
-							)}
-						</Specimen>
-					);
-				})
-			}
+				return (
+					<Specimen name={name} note={note} source="packages/scripts/src/og-image/element.tsx">
+						{card ? (
+							<img
+								alt={card.title}
+								class="h-auto w-full"
+								height={openGraphImageHeight}
+								loading="lazy"
+								src={`/inventory/og/${card.key}.jpg`}
+								width={openGraphImageWidth}
+							/>
+						) : (
+							<p class="font-mono text-xs text-primary-500">{missing}</p>
+						)}
+					</Specimen>
+				);
+			})}
 		</Section>
 	</div>
 </MainSite>

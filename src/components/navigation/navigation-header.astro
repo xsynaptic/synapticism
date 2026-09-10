@@ -20,29 +20,27 @@ const { pathname } = Astro.url;
 	{...props}
 >
 	<ul class="content-column flex items-center gap-4">
-		{
-			navigationHeaderItems.map((item) => {
-				const isActive = isActiveNavigationItem(item, pathname);
+		{navigationHeaderItems.map((item) => {
+			const isActive = isActiveNavigationItem(item, pathname);
 
-				return (
-					<li>
-						<Anchor
-							anchorColor="on-accent"
-							aria-current={isActive ? 'page' : undefined}
-							class:list={[
-								'text-sm underline decoration-2 underline-offset-4 sm:text-base',
-								isActive
-									? 'font-semibold decoration-white/55'
-									: 'font-medium decoration-transparent hover:decoration-white/55 focus-visible:decoration-white/55',
-							]}
-							href={item.url}
-						>
-							{item.title}
-						</Anchor>
-					</li>
-				);
-			})
-		}
+			return (
+				<li>
+					<Anchor
+						anchorColor="on-accent"
+						aria-current={isActive ? 'page' : undefined}
+						class:list={[
+							'text-sm underline decoration-2 underline-offset-4 sm:text-base',
+							isActive
+								? 'font-semibold decoration-white/55'
+								: 'font-medium decoration-transparent hover:decoration-white/55 focus-visible:decoration-white/55',
+						]}
+						href={item.url}
+					>
+						{item.title}
+					</Anchor>
+				</li>
+			);
+		})}
 		<li class="ml-auto">
 			<SearchToggle />
 		</li>

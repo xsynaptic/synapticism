@@ -15,8 +15,6 @@ const style = {
 };
 ---
 
-{
-	isRss ? undefined : (
-		<div aria-hidden="true" class:list={['station-tile', className]} style={style} />
-	)
-}
+{isRss ? undefined : (
+	<div aria-hidden="true" class:list={['station-tile', className]} style={style} />
+)}

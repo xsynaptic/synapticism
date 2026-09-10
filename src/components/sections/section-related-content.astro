@@ -12,18 +12,16 @@ interface Props {
 const { entries } = Astro.props;
 ---
 
-{
-	entries && entries.length > 0 ? (
-		<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.relatedWriting')}>
-			<ul class="flex flex-col gap-1 text-sm">
-				{entries.map(({ title, url }) => (
-					<li>
-						<Anchor anchorColor="accent" class="anchor-underline" href={url}>
-							{title}
-						</Anchor>
-					</li>
-				))}
-			</ul>
-		</LabeledSection>
-	) : undefined
-}
+{entries && entries.length > 0 ? (
+	<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.relatedWriting')}>
+		<ul class="flex flex-col gap-1 text-sm">
+			{entries.map(({ title, url }) => (
+				<li>
+					<Anchor anchorColor="accent" class="anchor-underline" href={url}>
+						{title}
+					</Anchor>
+				</li>
+			))}
+		</ul>
+	</LabeledSection>
+) : undefined}

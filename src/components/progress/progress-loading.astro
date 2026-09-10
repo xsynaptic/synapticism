@@ -14,7 +14,8 @@ const { class: className, height = '1px', style = {}, ...props } = Astro.props;
 	class:list={['progress-bar', className]}
 	style={{ height, ...style }}
 	transition:persist
-	{...props}></progress-loading>
+	{...props}
+></progress-loading>
 
 <script>
 	import '#components/progress/progress-loading.ts';
