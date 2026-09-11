@@ -38,6 +38,13 @@ interface RangeSpec {
 	value: number;
 }
 
+interface SelectSpec {
+	initial: string;
+	label: string;
+	onChange: (value: string) => void;
+	values: ReadonlyArray<string>;
+}
+
 const RANGES: ReadonlyArray<RangeSpec> = [
 	{ key: 'tileSize', label: 'Tile size', max: 64, min: 10, step: 1, value: 28 },
 	{ key: 'jitter', label: 'Jitter', max: 1, min: 0, step: 0.05, value: 0.8 },
@@ -78,28 +85,13 @@ class StationTileLab extends HTMLElement {
 		for (const range of RANGES) this.#input[range.key] = range.value;
 		for (const color of COLORS) this.#input[color.key] = color.value;
 
-		const controls = document.createElement('div');
-		controls.className = 'controls';
-		controls.append(
-			this.#selectField('Theme', Object.keys(TILE_THEMES), initialTheme, (value) => {
-				this.#input.theme = value as TileTheme;
-			}),
-			this.#seedField(initialSeed),
-			...RANGES.map((range) => this.#rangeField(range)),
-			...COLORS.map((color) => this.#colorField(color)),
-			this.#selectField('Gloss blend', GLOSS_BLENDS, DEFAULT_GLOSS_BLEND, (value) => {
-				this.#input.glossBlend = value as GlossBlend;
-			}),
-			this.#seamlessField(),
-		);
-
 		const preview = document.createElement('div');
 		preview.className = 'preview';
 		preview.append(this.#tile);
 
 		const lab = document.createElement('div');
 		lab.className = 'lab';
-		lab.append(preview, controls);
+		lab.append(preview, this.#controls(initialTheme, initialSeed));
 
 		const style = document.createElement('style');
 		style.textContent = styles;
@@ -137,6 +129,34 @@ class StationTileLab extends HTMLElement {
 		});
 
 		return this.#field(color.label, undefined, input);
+	}
+
+	#controls(initialTheme: TileTheme, initialSeed: string): HTMLElement {
+		const controls = document.createElement('div');
+		controls.className = 'controls';
+		controls.append(
+			this.#selectField({
+				initial: initialTheme,
+				label: 'Theme',
+				onChange: (value) => {
+					this.#input.theme = value as TileTheme;
+				},
+				values: Object.keys(TILE_THEMES),
+			}),
+			this.#seedField(initialSeed),
+			...RANGES.map((range) => this.#rangeField(range)),
+			...COLORS.map((color) => this.#colorField(color)),
+			this.#selectField({
+				initial: DEFAULT_GLOSS_BLEND,
+				label: 'Gloss blend',
+				onChange: (value) => {
+					this.#input.glossBlend = value as GlossBlend;
+				},
+				values: GLOSS_BLENDS,
+			}),
+			this.#seamlessField(),
+		);
+		return controls;
 	}
 
 	#field(label: string, value: HTMLElement | undefined, control: HTMLElement): HTMLElement {
@@ -218,12 +238,7 @@ class StationTileLab extends HTMLElement {
 		return this.#field('Seed', undefined, row);
 	}
 
-	#selectField(
-		label: string,
-		values: ReadonlyArray<string>,
-		initial: string,
-		onChange: (value: string) => void,
-	): HTMLElement {
+	#selectField({ initial, label, onChange, values }: SelectSpec): HTMLElement {
 		const select = document.createElement('select');
 		for (const name of values) {
 			const option = document.createElement('option');

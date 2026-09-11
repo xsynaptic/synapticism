@@ -37,12 +37,12 @@ export function hashSeed(seed: number | string): number {
 }
 
 // Apply small HSL deltas. Hue in degrees, sat/lit in absolute units
-export function jitterHsl(rgb: RgbColor, dH: number, dS: number, dL: number): RgbColor {
+export function jitterHsl(rgb: RgbColor, delta: HslColor): RgbColor {
 	const hsl = rgbToHsl(rgb);
 	return hslToRgb({
-		h: hsl.h + dH,
-		l: clamp01(hsl.l + dL),
-		s: clamp01(hsl.s + dS),
+		h: hsl.h + delta.h,
+		l: clamp01(hsl.l + delta.l),
+		s: clamp01(hsl.s + delta.s),
 	});
 }
 

@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 import {
 	openGraphImageHeight,
 	openGraphImageWidth,
@@ -23,6 +25,59 @@ const colors = {
 	surface: '#f4f4f5', // primary-100, the reading surface
 } as const;
 
+const styles = {
+	accentBar: {
+		backgroundColor: colors.accent,
+		borderRadius: '2px',
+		display: 'flex',
+		height: '4px',
+		width: '56px',
+	},
+	canvas: {
+		backgroundColor: colors.carbon,
+		display: 'flex',
+		height: px(openGraphImageHeight),
+		width: px(openGraphImageWidth),
+	},
+	column: {
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+	},
+	header: { alignItems: 'center', display: 'flex' },
+	label: {
+		color: colors.accentBright,
+		fontFamily: 'Geist Mono',
+		fontSize: '22px',
+		fontWeight: 500,
+		letterSpacing: '2px',
+		marginLeft: '20px',
+	},
+	seam: {
+		backgroundColor: colors.accent,
+		display: 'flex',
+		height: px(openGraphImageHeight),
+		width: px(openGraphSeamWidth),
+	},
+	siteTitle: {
+		color: colors.surface,
+		display: 'flex',
+		fontFamily: 'Aleo',
+		fontSize: '22px',
+		fontWeight: 600,
+		letterSpacing: '0.1em',
+	},
+	title: {
+		color: colors.surface,
+		fontFamily: 'Aleo',
+		fontWeight: 600,
+		letterSpacing: '-0.01em',
+		lineClamp: 4,
+		lineHeight: 1.15,
+		textOverflow: 'ellipsis',
+	},
+} satisfies Record<string, CSSProperties>;
+
 export function getOpenGraphElement(entry: OpenGraphEntryItem, image?: ProcessedImage) {
 	const columnWidth = image
 		? openGraphImageWidth - openGraphPanelWidth - openGraphSeamWidth
@@ -30,85 +85,25 @@ export function getOpenGraphElement(entry: OpenGraphEntryItem, image?: Processed
 	const padding = image ? openGraphPaddingSplit : openGraphPaddingFull;
 
 	return (
-		<div
-			style={{
-				backgroundColor: colors.carbon,
-				display: 'flex',
-				height: px(openGraphImageHeight),
-				width: px(openGraphImageWidth),
-			}}
-		>
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					justifyContent: 'space-between',
-					padding: px(padding),
-					width: px(columnWidth),
-				}}
-			>
-				<div style={{ alignItems: 'center', display: 'flex' }}>
-					<div
-						style={{
-							backgroundColor: colors.accent,
-							borderRadius: '2px',
-							display: 'flex',
-							height: '4px',
-							width: '56px',
-						}}
-					/>
-					{entry.label ? (
-						<span
-							style={{
-								color: colors.accentBright,
-								fontFamily: 'Geist Mono',
-								fontSize: '22px',
-								fontWeight: 500,
-								letterSpacing: '2px',
-								marginLeft: '20px',
-							}}
-						>
-							{entry.label.toUpperCase()}
-						</span>
-					) : undefined}
+		<div style={styles.canvas}>
+			<div style={{ ...styles.column, padding: px(padding), width: px(columnWidth) }}>
+				<div style={styles.header}>
+					<div style={styles.accentBar} />
+					{entry.label ? <span style={styles.label}>{entry.label.toUpperCase()}</span> : undefined}
 				</div>
 				<div
 					style={{
-						color: colors.surface,
-						fontFamily: 'Aleo',
+						...styles.title,
 						fontSize: px(titleFontSize(entry.title.length, columnWidth)),
-						fontWeight: 600,
-						letterSpacing: '-0.01em',
-						lineClamp: 4,
-						lineHeight: 1.15,
-						textOverflow: 'ellipsis',
 					}}
 				>
 					{entry.title}
 				</div>
-				<div
-					style={{
-						color: colors.surface,
-						display: 'flex',
-						fontFamily: 'Aleo',
-						fontSize: '22px',
-						fontWeight: 600,
-						letterSpacing: '0.1em',
-					}}
-				>
-					{siteTitle.toUpperCase()}
-				</div>
+				<div style={styles.siteTitle}>{siteTitle.toUpperCase()}</div>
 			</div>
 			{image ? (
 				<>
-					<div
-						style={{
-							backgroundColor: colors.accent,
-							display: 'flex',
-							height: px(openGraphImageHeight),
-							width: px(openGraphSeamWidth),
-						}}
-					/>
+					<div style={styles.seam} />
 					<Bitmap data={image.data} height={image.height} width={image.width} />
 				</>
 			) : undefined}

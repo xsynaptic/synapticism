@@ -28,6 +28,10 @@ export default getConfig(
 				'logical-assignment-operators': ['error', 'never'],
 				// Catches genuinely tangled control flow; unlike `complexity` it ignores JSX ternaries
 				'max-depth': ['warn', 3],
+				// Blank lines after declaration blocks are house style, so only code counts toward length
+				'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
+				'max-params': ['warn', 3],
+				'max-statements': ['warn', 20],
 				// Prefix demand fights idiomatic predicates, getters, schema fields, env (PROD), and CLI flags
 				'unicorn/consistent-boolean-name': 'off',
 				// We use intentional compounds such as schema.org's WebSite type
@@ -36,6 +40,13 @@ export default getConfig(
 				'unicorn/max-nested-calls': ['error', { max: 4 }],
 				// Conflicts with Remeda's sort function
 				'unicorn/no-array-sort': 'off',
+			},
+		},
+		{
+			// A describe callback groups cases rather than holding logic, so its length says nothing
+			files: ['**/*.test.ts'],
+			rules: {
+				'max-lines-per-function': 'off',
 			},
 		},
 		{

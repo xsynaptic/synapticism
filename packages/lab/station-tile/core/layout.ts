@@ -23,14 +23,17 @@ interface GridBounds {
 }
 
 interface MacroField {
+	height: number;
 	samples: Array<number>;
+	strength: number;
+	width: number;
 }
 
 export function layoutTiles(options: ResolvedOptions): Array<Cell> {
-	const { groutWidth, rootSeed, seamless, stagger, tileSize } = options;
+	const { groutWidth, seamless, stagger, tileSize } = options;
 	const cellSize = tileSize + groutWidth;
 	const bounds = getGridBounds(options, cellSize);
-	const macroField = seamless ? undefined : buildMacroField(rootSeed);
+	const macroField = seamless ? undefined : buildMacroField(options);
 	const cells: Array<Cell> = [];
 
 	for (let row = bounds.rowStart; row < bounds.rowEnd; row += 1) {
@@ -51,19 +54,17 @@ export function layoutTiles(options: ResolvedOptions): Array<Cell> {
 function applyMacroLighting(
 	color: RgbColor,
 	macroField: MacroField | undefined,
-	options: ResolvedOptions,
-	centerX: number,
-	centerY: number,
+	center: { x: number; y: number },
 ): RgbColor {
 	if (!macroField) return color;
 
 	const macroValue = sampleMacroField(
 		macroField,
-		centerX / Math.max(1, options.width),
-		centerY / Math.max(1, options.height),
+		center.x / Math.max(1, macroField.width),
+		center.y / Math.max(1, macroField.height),
 	);
 
-	return shiftLightness(color, (macroValue - 0.5) * MACRO.lightnessRange * options.macroLighting);
+	return shiftLightness(color, (macroValue - 0.5) * MACRO.lightnessRange * macroField.strength);
 }
 
 // Every draw pulls from one seeded stream, so the property order below is load-bearing
@@ -89,19 +90,16 @@ function buildCell({
 	const hueShift = signed(rng) * JITTER.hueDegrees * jitter;
 	const saturationShift = signed(rng) * JITTER.saturation * jitter;
 	const lightnessShift = signed(rng) * JITTER.lightness * jitter;
-	const jittered = jitterHsl(baseMix, hueShift, saturationShift, lightnessShift);
+	const jittered = jitterHsl(baseMix, { h: hueShift, l: lightnessShift, s: saturationShift });
 
 	const cellOriginX = col * cellSize + staggerOffsetX;
 	const cellOriginY = row * cellSize;
 
 	return {
-		baseColor: applyMacroLighting(
-			jittered,
-			macroField,
-			options,
-			cellOriginX + cellSize / 2,
-			cellOriginY + cellSize / 2,
-		),
+		baseColor: applyMacroLighting(jittered, macroField, {
+			x: cellOriginX + cellSize / 2,
+			y: cellOriginY + cellSize / 2,
+		}),
 		glossClumpVariant: rng() < GLOSS.variantSplit ? 0 : 1,
 		glossIntensity: GLOSS.intensityMin + rng() * GLOSS.intensityRange,
 		size: tileSize,
@@ -112,7 +110,7 @@ function buildCell({
 	};
 }
 
-function buildMacroField(rootSeed: number): MacroField {
+function buildMacroField({ height, macroLighting, rootSeed, width }: ResolvedOptions): MacroField {
 	const samples: Array<number> = [];
 	for (let y = 0; y <= MACRO.rows; y += 1) {
 		for (let x = 0; x <= MACRO.cols; x += 1) {
@@ -120,7 +118,7 @@ function buildMacroField(rootSeed: number): MacroField {
 			samples.push(mulberry32(seed)());
 		}
 	}
-	return { samples };
+	return { height, samples, strength: macroLighting, width };
 }
 
 function getGridBounds(options: ResolvedOptions, cellSize: number): GridBounds {

@@ -28,6 +28,39 @@ const { values } = parseArgs({
 	},
 });
 
+async function buildLqipMap({
+	cache,
+	files,
+	mediaPath,
+}: {
+	cache: LqipMap;
+	files: Array<string>;
+	mediaPath: string;
+}): Promise<{ generated: number; next: LqipMap; reused: number }> {
+	const sortedFiles = files.sort((a, b) => a.localeCompare(b));
+	const next: LqipMap = {};
+	let generated = 0;
+	let reused = 0;
+
+	for (const relPath of sortedFiles) {
+		const { mtimeMs } = await stat(path.join(mediaPath, relPath));
+		const mtime = Math.round(mtimeMs);
+		const cached = cache[relPath];
+
+		if (cached?.mtime === mtime) {
+			next[relPath] = cached;
+			reused += 1;
+			continue;
+		}
+
+		next[relPath] = { lqip: await generateLqip(path.join(mediaPath, relPath)), mtime };
+		generated += 1;
+		console.log(chalk.green(`✓ ${relPath}`));
+	}
+
+	return { generated, next, reused };
+}
+
 async function generateLqip(filePath: string): Promise<string> {
 	const image = sharp(filePath, { failOn: 'error' });
 	const metadata = await image.metadata();
@@ -67,27 +100,7 @@ async function main(): Promise<void> {
 
 	const files = await glob('**/*.{jpg,jpeg,png,webp,avif}', { cwd: mediaPath });
 	const cache = await loadCache(outputPath);
-
-	const sortedFiles = files.sort((a, b) => a.localeCompare(b));
-	const next: LqipMap = {};
-	let generated = 0;
-	let reused = 0;
-
-	for (const relPath of sortedFiles) {
-		const { mtimeMs } = await stat(path.join(mediaPath, relPath));
-		const mtime = Math.round(mtimeMs);
-		const cached = cache[relPath];
-
-		if (cached?.mtime === mtime) {
-			next[relPath] = cached;
-			reused += 1;
-			continue;
-		}
-
-		next[relPath] = { lqip: await generateLqip(path.join(mediaPath, relPath)), mtime };
-		generated += 1;
-		console.log(chalk.green(`✓ ${relPath}`));
-	}
+	const { generated, next, reused } = await buildLqipMap({ cache, files, mediaPath });
 
 	await mkdir(path.dirname(outputPath), { recursive: true });
 	await writeFile(outputPath, `${JSON.stringify(next, undefined, '\t')}\n`);
