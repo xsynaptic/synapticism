@@ -18,8 +18,8 @@
 		"lint-css": "stylelint \"{src,packages}/**/*.{css,astro}\"",
 		"lint-css-fix": "stylelint \"{src,packages}/**/*.{css,astro}\" --fix",
 		"knip": "knip",
-		"fix": "stylelint \"{src,packages}/**/*.{css,astro}\" --fix --cache --cache-location node_modules/.cache/stylelint/ && prettier --write . --cache --list-different && eslint --fix --cache --cache-location node_modules/.cache/eslint/ && astro check && tsc --noEmit --extendedDiagnostics && knip",
-		"check": "stylelint \"{src,packages}/**/*.{css,astro}\" --cache --cache-location node_modules/.cache/stylelint/ && prettier --check . --cache --log-level warn && eslint --cache --cache-location node_modules/.cache/eslint/ && astro check && tsc --noEmit --extendedDiagnostics && knip && vitest run",
+		"fix": "lefthook run fix",
+		"check": "lefthook run check",
 		"check-types": "tsc --noEmit --extendedDiagnostics",
 		"deploy-site": "pnpm --filter @synapticism/scripts run deploy-site",
 		"deploy-app": "pnpm --filter @synapticism/scripts run deploy-app"
@@ -41,8 +41,8 @@
 		"@pagefind/component-ui": "^1.5.2",
 		"@synapticism/scripts": "workspace:*",
 		"@tailwindcss/vite": "^4.3.3",
-		"@types/react": "^19.2.18",
-		"@xsynaptic/eslint-config": "^6.3.0",
+		"@types/react": "^19.3.0",
+		"@xsynaptic/eslint-config": "^6.3.1",
 		"@xsynaptic/mdxlint-config": "^2.0.0",
 		"@xsynaptic/satteri-auto-import": "^0.2.1",
 		"@xsynaptic/satteri-reading-time": "^0.3.1",
@@ -56,14 +56,14 @@
 		"eslint-plugin-react-hooks": "^7.1.1",
 		"globals": "^17.12.0",
 		"keyv": "^5.6.0",
-		"knip": "^6.34.0",
+		"knip": "^6.35.1",
 		"lefthook": "^2.1.12",
 		"ohash": "^2.0.12",
 		"p-memoize": "^8.0.0",
 		"prettier": "^3.9.6",
 		"prettier-plugin-astro": "^1.0.0",
 		"prettier-plugin-tailwindcss": "^0.8.1",
-		"remeda": "^2.47.0",
+		"remeda": "^2.48.0",
 		"satteri": "^0.10.5",
 		"satteri-expressive-code": "^0.1.24",
 		"sharp": "^0.35.4",
@@ -71,9 +71,9 @@
 		"tailwindcss": "^4.3.3",
 		"typescript": "^6.0.3",
 		"vitest": "^4.1.11",
-		"wrangler": "^4.129.1",
+		"wrangler": "^4.131.1",
 		"yaml": "^2.8.3",
-		"zod": "^4.5.4"
+		"zod": "^4.6.2"
 	},
-	"packageManager": "pnpm@11.21.0"
+	"packageManager": "pnpm@12.4.1"
 }
