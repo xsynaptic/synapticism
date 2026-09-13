@@ -13,6 +13,7 @@ import PaginationSelect from '#components/parts/pagination-select.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { getPagination } from '#lib/utils/pagination.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
 import { openGraphIndexIds } from '#lib/utils/seo.ts';
 import { getSourceDomain } from '#lib/utils/text.ts';
@@ -73,6 +74,6 @@ const items = await Promise.all(
 		})}
 	</div>
 	<div class="content-column">
-		<PaginationSelect class="mt-4 mb-8 md:mt-8" page={page} />
+		<PaginationSelect class="mt-4 mb-8 md:mt-8" pagination={getPagination(page)} />
 	</div>
 </MainSite>

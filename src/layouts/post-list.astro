@@ -14,6 +14,7 @@ import PreviewImage from '#components/parts/preview-image.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
+import { getPagination } from '#lib/utils/pagination.ts';
 import { openGraphIndexIds } from '#lib/utils/seo.ts';
 
 interface Props {
@@ -68,6 +69,6 @@ const { page } = Astro.props;
 				</li>
 			))}
 		</ul>
-		<PaginationSelect class="mt-4 md:mt-8" page={page} />
+		<PaginationSelect class="mt-4 md:mt-8" pagination={getPagination(page)} />
 	</ContentSection>
 </MainSite>

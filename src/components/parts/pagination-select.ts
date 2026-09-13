@@ -1,33 +1,9 @@
 import { navigate } from 'astro:transitions/client';
 
-/**
- * Progressive-enhancement dropdown pagination; DOM contract:
- *
- * <pagination-select
- *   data-current-page="3"
- *   data-last-page="100"
- *   data-base-path="/notes/"        <-- normalized, trailing slash
- *   data-page-label="Page {page}">  <-- option text template
- *   <nav aria-label="Pagination">
- *     <div>
- *       <span data-pagination-counter>Page 3 of 100</span>
- *       <form data-pagination-form hidden>              <-- revealed + populated here
- *         <select data-pagination-control></select>
- *         <span>of 100</span>
- *         <button type="submit">Go</button>
- *       </form>
- *     </div>
- *     <a>Previous</a> <a>Next</a>                       <-- optional
- *   </nav>
- * </pagination-select>
- *
- * No JS: prev/next links and the counter work, the empty form stays hidden
- * With JS: the <select> is filled from the data attributes (no per-page markup shipped), the form
- * revealed, the counter hidden. Navigation commits on `change` only for a pointer-driven pick on a
- * fine pointer, otherwise via Go or Enter
- */
+// Navigation commits on `change` only for a pointer-driven pick on a fine pointer, otherwise via Go or Enter
 class PaginationSelect extends HTMLElement {
 	#abortController: AbortController | undefined;
+	#currentUrl = '';
 	#form: HTMLFormElement | undefined;
 	#initialized = false;
 	#isPointerDriven = false;
@@ -43,7 +19,6 @@ class PaginationSelect extends HTMLElement {
 		if (!this.#form || !this.#select) return;
 
 		this.#abortController = new AbortController();
-
 		const { signal } = this.#abortController;
 
 		this.#form.addEventListener('submit', this.#handleSubmit, { signal });
@@ -54,53 +29,30 @@ class PaginationSelect extends HTMLElement {
 
 	disconnectedCallback() {
 		this.#abortController?.abort();
-		this.#abortController = undefined;
-	}
-
-	#buildOptions(lastPage: number) {
-		const currentPage = Number(this.dataset.currentPage);
-		const pageLabel = this.dataset.pageLabel ?? 'Page {page}';
-		const fragment = document.createDocumentFragment();
-
-		for (let pageNumber = 1; pageNumber <= lastPage; pageNumber += 1) {
-			const option = document.createElement('option');
-
-			option.value = String(pageNumber);
-			option.textContent = pageLabel.replace('{page}', () => String(pageNumber));
-			option.selected = pageNumber === currentPage;
-			if (pageNumber === currentPage) option.dataset.currentPage = '';
-			fragment.append(option);
-		}
-
-		return fragment;
 	}
 
 	#enhance() {
-		const lastPage = Number(this.dataset.lastPage);
-
-		if (!Number.isSafeInteger(lastPage) || lastPage <= 1) return;
-
 		const form = this.querySelector<HTMLFormElement>('[data-pagination-form]');
 		const select = this.querySelector<HTMLSelectElement>('[data-pagination-control]');
 
 		if (!form || !select) return;
 
-		select.append(this.#buildOptions(lastPage));
-		this.querySelector<HTMLElement>('[data-pagination-counter]')?.toggleAttribute('hidden', true);
+		// Restored form state can disagree with `select.value`, so the baseline comes from markup
+		this.#currentUrl = select.querySelector<HTMLOptionElement>('option[data-current]')?.value ?? '';
+
+		const counter = this.querySelector<HTMLElement>('[data-pagination-counter]');
+		const navigation = this.querySelector('nav');
+
+		if (counter) counter.hidden = true;
+		if (navigation) navigation.hidden = false;
 		form.hidden = false;
 
-		this.#lockSelectWidth(select, lastPage);
+		this.#lockSelectWidth(select);
 
 		this.#form = form;
 		this.#select = select;
 		this.#submit = form.querySelector<HTMLButtonElement>('[data-pagination-submit]') ?? undefined;
 		this.#syncSubmit();
-	}
-
-	#getPageUrl(pageNumber: number): string {
-		const basePath = this.dataset.basePath ?? '';
-
-		return pageNumber === 1 ? basePath : `${basePath}${String(pageNumber)}/`;
 	}
 
 	#handleChange = () => {
@@ -112,7 +64,7 @@ class PaginationSelect extends HTMLElement {
 
 		// Syncing here would flash Go while the navigation resolves
 		if (shouldNavigate) {
-			this.#navigateToSelectedPage();
+			this.#navigateToSelectedOption();
 			return;
 		}
 
@@ -129,21 +81,29 @@ class PaginationSelect extends HTMLElement {
 
 	#handleSubmit = (event: SubmitEvent) => {
 		event.preventDefault();
-		this.#navigateToSelectedPage();
+		this.#navigateToSelectedOption();
 	};
 
-	// Pin a width floor to the widest label (lastPage) so changing pages never resizes the control
-	// The 0.5ch buffer absorbs per-digit width variance and font slack, so exact measurement isn't needed
-	#lockSelectWidth(select: HTMLSelectElement, lastPage: number) {
+	// Pin a width floor to the longest label so picking an option never resizes the control
+	// The 0.5ch buffer absorbs per-glyph width variance and font slack, so exact measurement isn't needed
+	#lockSelectWidth(select: HTMLSelectElement) {
+		let widestIndex = 0;
+		let widestLength = 0;
+
+		for (const option of select.options) {
+			if (option.text.length <= widestLength) continue;
+
+			widestIndex = option.index;
+			widestLength = option.text.length;
+		}
+
 		const lockWidth = () => {
-			const selectedValue = select.value;
+			const selectedIndex = select.selectedIndex;
 
 			select.style.minInlineSize = '';
-			select.value = String(lastPage);
-
+			select.selectedIndex = widestIndex;
 			const width = Math.ceil(select.getBoundingClientRect().width);
-
-			select.value = selectedValue;
+			select.selectedIndex = selectedIndex;
 
 			if (width > 0) select.style.minInlineSize = `calc(${String(width)}px + 0.5ch)`;
 		};
@@ -159,24 +119,22 @@ class PaginationSelect extends HTMLElement {
 		}
 	}
 
-	#navigateToSelectedPage() {
+	#navigateToSelectedOption() {
 		if (!this.#select) return;
 
-		const currentPage = Number(this.dataset.currentPage);
-		const pageNumber = Number(this.#select.value);
+		const url = this.#select.value;
 
-		if (pageNumber === currentPage || !Number.isSafeInteger(pageNumber)) return;
+		// An engine that lets the placeholder be picked still gets no navigation from it
+		if (url === '' || url === this.#currentUrl) return;
 
-		// `navigate`, not `location.assign`, so view transitions still run
-		void navigate(this.#getPageUrl(pageNumber));
+		// Using the navigate function (not location.assign) for compatibility with Astro's view transitions
+		void navigate(url);
 	}
 
 	#syncSubmit() {
 		if (!this.#submit || !this.#select) return;
 
-		const isChanged = this.#select.value !== (this.dataset.currentPage ?? '');
-
-		this.#submit.toggleAttribute('data-visible', isChanged);
+		this.#submit.toggleAttribute('data-visible', this.#select.value !== this.#currentUrl);
 	}
 }
 
