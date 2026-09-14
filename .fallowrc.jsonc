@@ -1,0 +1,54 @@
+{
+	// Mirrors the entries and ignores in knip.config.ts, which carries the reasons
+	"entry": [
+		"src/dev/inventory/inventory.astro",
+		"src/dev/inventory/inventory-og-image.ts",
+		"packages/lab/*/*.astro",
+	],
+	"dynamicallyLoaded": ["src/components/mdx/**/*.astro"],
+	"ignorePatterns": ["packages/scripts/src/validate-content/fixtures/**"],
+	"ignoreDependencies": [
+		"@fontsource/aleo",
+		"@fontsource/geist-mono",
+		"@synapticism/lab",
+		"@xsynaptic/stylelint-config",
+		"eslint-plugin-jsx-a11y",
+		"eslint-plugin-react-hooks",
+		"mdxlint",
+		"react",
+		"wrangler",
+	],
+	"ignoreDependencyOverrides": [
+		{ "package": "fallow-type-aware", "source": "pnpm-workspace.yaml" },
+	],
+	"rules": { "dev-dependencies-in-production": "off" },
+	"health": {
+		// Zero disables CRAP, which fallow otherwise estimates without coverage data
+		"maxCrap": 0,
+		"ignore": ["src/dev/**"],
+	},
+	"duplicates": {
+		"minTokens": 40,
+		// A threshold of zero means no limit; this fails on any clone group
+		"threshold": 0.01,
+		"ignore": [
+			// The Inventory renders the same Specimens repeatedly on purpose
+			"src/dev/**",
+			// Sibling custom elements share two one-line style setters
+			"src/components/progress/progress-*.ts",
+		],
+	},
+	"boundaries": {
+		"zones": [
+			{ "name": "packages", "patterns": ["packages/**"] },
+			{ "name": "lib", "patterns": ["src/lib/**"] },
+			{ "name": "components", "patterns": ["src/components/**", "src/layouts/**", "src/pages/**"] },
+		],
+		"rules": [
+			// Vite/Rolldown build breaks when packages import the app
+			{ "from": "packages", "allow": ["packages"] },
+			{ "from": "lib", "allow": ["lib", "packages"] },
+			{ "from": "components", "allow": ["components", "lib", "packages"] },
+		],
+	},
+}

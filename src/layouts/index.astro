@@ -3,16 +3,15 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import MainSite from '#components/main/main-site.astro';
 import Anchor from '#components/parts/anchor.astro';
-import DateDisplay from '#components/parts/date-display.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
-import PreviewImage from '#components/parts/preview-image.astro';
+import StreamItem from '#components/stream/stream-item.astro';
+import StreamPagination from '#components/stream/stream-pagination.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { DatePresetEnum } from '#lib/utils/date.ts';
-import { getContentPath, getSitePath } from '#lib/utils/routing.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
 import { openGraphIndexIds } from '#lib/utils/seo.ts';
 import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
-import { formatStringTemplate, getSourceDomain } from '#lib/utils/text.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
 	pageNumber: number;
@@ -24,14 +23,6 @@ interface Props {
 const { pageNumber, selectedProjects, streamItems, totalPages } = Astro.props;
 
 const isFirstPage = pageNumber === 1;
-
-let previousUrl: string | undefined;
-
-if (!isFirstPage) {
-	previousUrl = pageNumber === 2 ? getSitePath() : getSitePath('page', String(pageNumber - 1));
-}
-
-const nextUrl = pageNumber < totalPages ? getSitePath('page', String(pageNumber + 1)) : undefined;
 
 const mainProps = isFirstPage
 	? {
@@ -78,73 +69,13 @@ const showProjects = false as boolean;
 			title={t('index.recently')}
 		>
 			<ul class:list={['mt-2 flex flex-col', MicroformatClassNames.Feed]}>
-				{streamItems.map((item, index) => {
-					const primaryLink = item.links?.[0];
-
-					return (
-						<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
-							<article class:list={['flex gap-3 sm:gap-4', MicroformatClassNames.Entry]}>
-								{item.imageId ? (
-									<PreviewImage imgAlt={item.title} showMicroformats={true} src={item.imageId} />
-								) : undefined}
-								<div class="flex min-w-0 flex-col gap-2">
-									<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
-										<Anchor
-											anchorColor="title"
-											class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-											href={item.url}
-										>
-											{item.title}
-										</Anchor>
-									</h3>
-									<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
-										<DateDisplay
-											class={MicroformatClassNames.DatePublished}
-											date={item.dateCreated}
-											datePreset={DatePresetEnum.Long}
-										/>
-										{primaryLink ? (
-											<span>
-												{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
-											</span>
-										) : undefined}
-									</div>
-									{item.description ? (
-										<p
-											class:list={[
-												'max-w-[68ch] leading-relaxed text-pretty text-primary-600',
-												MicroformatClassNames.Summary,
-											]}
-											set:html={item.description}
-										/>
-									) : undefined}
-								</div>
-							</article>
-						</li>
-					);
-				})}
+				{streamItems.map((item, index) => (
+					<li class={index > 0 ? 'mt-7 border-t border-primary-200/70 pt-7' : undefined}>
+						<StreamItem item={item} />
+					</li>
+				))}
 			</ul>
-			{totalPages > 1 ? (
-				<nav
-					aria-label={t('aria.streamPagination')}
-					class="mt-10 flex justify-between font-mono text-sm"
-				>
-					{previousUrl ? (
-						<Anchor anchorColor="accent" href={previousUrl}>
-							<span aria-hidden="true">&larr;</span> {t('index.newer')}
-						</Anchor>
-					) : (
-						<span />
-					)}
-					{nextUrl ? (
-						<Anchor anchorColor="accent" href={nextUrl}>
-							{t('index.older')} <span aria-hidden="true">&rarr;</span>
-						</Anchor>
-					) : (
-						<span />
-					)}
-				</nav>
-			) : undefined}
+			<StreamPagination pageNumber={pageNumber} totalPages={totalPages} />
 		</LabeledSection>
 	) : undefined}
 	{isFirstPage && showProjects && selectedProjects && selectedProjects.length > 0 ? (

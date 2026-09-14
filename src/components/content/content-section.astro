@@ -4,52 +4,21 @@ import type { HTMLAttributes } from 'astro/types';
 import ProseDescription from '#components/parts/prose-description.astro';
 import { renderSlot } from '#lib/utils/astro.ts';
 
-interface Props extends HTMLAttributes<'div'> {
-	fillViewport?: boolean | undefined;
-	marginSmall?: boolean | undefined;
-	titleLarge?: boolean | undefined;
-}
+type Props = HTMLAttributes<'div'>;
 
-const { class: className, fillViewport, marginSmall, titleLarge, ...props } = Astro.props;
+const { class: className, ...props } = Astro.props;
 
-const title = await renderSlot(Astro.slots, 'section-title');
-const subtitle = await renderSlot(Astro.slots, 'section-subtitle');
 const description = await renderSlot(Astro.slots, 'section-description');
 const children = await renderSlot(Astro.slots, 'default');
 ---
 
 {description || children ? (
-	<div
-		class:list={[
-			fillViewport ? 'content-column-fill' : 'content-column',
-			marginSmall ? 'mb-4' : 'mb-8',
-			className,
-		]}
-		{...props}
-	>
-		{title || subtitle || description ? (
-			<header
-				class:list={[description ? undefined : 'mb-2', fillViewport ? 'px-4 sm:px-0' : undefined]}
-			>
-				{title ? (
-					<h2
-						class:list={[
-							'mb-1',
-							titleLarge
-								? 'font-sans text-xl font-semibold text-primary-800 md:text-2xl'
-								: 'font-mono text-sm font-medium text-primary-600',
-						]}
-						set:html={title}
-					/>
-				) : undefined}
-				{subtitle ? (
-					<h3 class="mb-1 text-xs font-medium text-primary-600 md:text-sm" set:html={subtitle} />
-				) : undefined}
-				{description ? (
-					<ProseDescription class:list={['mb-4']}>
-						<Fragment set:html={description} />
-					</ProseDescription>
-				) : undefined}
+	<div class:list={['content-column mb-8', className]} {...props}>
+		{description ? (
+			<header>
+				<ProseDescription class:list={['mb-4']}>
+					<Fragment set:html={description} />
+				</ProseDescription>
 			</header>
 		) : undefined}
 		<Fragment set:html={children} />

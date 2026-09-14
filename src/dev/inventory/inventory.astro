@@ -24,8 +24,8 @@ import PreviewImage from '#components/parts/preview-image.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
+import SectionEntryList from '#components/sections/section-entry-list.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
-import SectionRelatedContent from '#components/sections/section-related-content.astro';
 import {
 	createSamplePage,
 	getSampleOpenGraphCards,
@@ -332,7 +332,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="labeled-row"
-				note="A labeled section wrapping a divided row of links. <code>content-section-tags</code> and <code>content-section-projects</code> are lookups producing this same shape."
+				note="A labeled section wrapping a divided row of links. <code>content-section-references</code> looks up Projects and Tags into two of these."
 				source="components/parts/labeled-row.astro"
 			>
 				<LabeledRow items={sampleRowItems} title="Tags" />
@@ -385,21 +385,10 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					titleUrl="#header"
 				>
 					<Fragment slot="header-subtitle">
-						<DividedItem>
-							<ContentDate
-								date={sampleDate}
-								datePreset={DatePresetEnum.Long}
-								showMicroformats={true}
-							/>
-						</DividedItem>
-						<DividedItem>
-							<ContentDate
-								date={sampleDateUpdated}
-								datePreset={DatePresetEnum.Long}
-								showMicroformats={true}
-								showUpdated={true}
-							/>
-						</DividedItem>
+						<ContentDate
+							dateCreated={new Date(sampleDate)}
+							dateUpdated={new Date(sampleDateUpdated)}
+						/>
 						<DividedItem>8 minute read</DividedItem>
 					</Fragment>
 				</ContentHeader>
@@ -407,20 +396,19 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				name="content-date"
-				note="<code>date-display</code> plus the microformat class and the “Updated” prefix. Renders nothing when the date is undefined."
+				note="Divided <code>date-display</code> items carrying the microformat classes: the published date, then the “Updated” one when present."
 				source="components/content/content-date.astro"
 			>
-				<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
-					<ContentDate date={sampleDate} datePreset={DatePresetEnum.Long} />
-					<ContentDate
-						date={sampleDateUpdated}
-						datePreset={DatePresetEnum.Long}
-						showUpdated={true}
-					/>
-					<span class="font-mono text-xs text-primary-500">
-						undefined date: <ContentDate date={undefined} datePreset={DatePresetEnum.Long} />
-						(nothing)
-					</span>
+				<div class="flex flex-col gap-3 font-mono text-xs">
+					<div class="flex flex-wrap items-center gap-1">
+						<ContentDate dateCreated={new Date(sampleDate)} />
+					</div>
+					<div class="flex flex-wrap items-center gap-1">
+						<ContentDate
+							dateCreated={new Date(sampleDate)}
+							dateUpdated={new Date(sampleDateUpdated)}
+						/>
+					</div>
 				</div>
 			</Specimen>
 			<Specimen
@@ -452,24 +440,14 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-section"
-				note="Every part of the header is an optional slot; <code>titleLarge</code>, <code>marginSmall</code> and <code>fillViewport</code> switch the treatment."
+				note="A content column; the optional description slot renders as a header above the children."
 				source="components/content/content-section.astro"
 			>
 				<ContentSection>
-					<Fragment slot="section-title">Default title</Fragment>
-					<Fragment slot="section-subtitle">A subtitle beneath it</Fragment>
 					<Fragment slot="section-description">
 						<p>A description, rendered through prose-description.</p>
 					</Fragment>
 					<p>Section children</p>
-				</ContentSection>
-				<ContentSection marginSmall={true} titleLarge={true}>
-					<Fragment slot="section-title">titleLarge with marginSmall</Fragment>
-					<p>Section children</p>
-				</ContentSection>
-				<ContentSection fillViewport={true}>
-					<Fragment slot="section-title">fillViewport</Fragment>
-					<p>Reaches the viewport edge below the sm breakpoint</p>
 				</ContentSection>
 			</Specimen>
 			<Specimen
@@ -481,7 +459,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				<ContentExcerpt entryUrl="#excerpt">
 					<Fragment slot="excerpt-title">An excerpt title, linked to its Entry</Fragment>
 					<Fragment slot="excerpt-subtitle">
-						<ContentDate date={sampleDate} datePreset={DatePresetEnum.Long} />
+						<DateDisplay date={sampleDate} />
 						<span>
 							example.com <span aria-hidden="true">↗</span>
 						</span>
@@ -507,11 +485,11 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				bleed={true}
-				name="section-related-content"
-				note="The writing that points at a Project."
-				source="components/sections/section-related-content.astro"
+				name="section-entry-list"
+				note="A titled list of Entry links: backlinks, and the writing that points at a Project."
+				source="components/sections/section-entry-list.astro"
 			>
-				<SectionRelatedContent entries={sampleCatalogItems} />
+				<SectionEntryList entries={sampleCatalogItems} title={t('section.relatedWriting')} />
 			</Specimen>
 			<Specimen
 				bleed={true}
@@ -520,16 +498,12 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				source="components/sections/section-pagination.astro"
 			>
 				<SectionPagination
-					baseUrl="#navigation"
-					labelPlural={t('collection.posts.plural')}
-					labelSingular={t('collection.posts.singular')}
+					collection="posts"
 					newerEntry={samplePaginationNewer}
 					olderEntry={samplePaginationOlder}
 				/>
 				<SectionPagination
-					baseUrl="#navigation"
-					labelPlural={t('collection.notes.plural')}
-					labelSingular={t('collection.notes.singular')}
+					collection="notes"
 					newerEntry={undefined}
 					olderEntry={samplePaginationOlder}
 				/>

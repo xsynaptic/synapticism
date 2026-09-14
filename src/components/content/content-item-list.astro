@@ -1,0 +1,48 @@
+---
+import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
+
+import Anchor from '#components/parts/anchor.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import PreviewImage from '#components/parts/preview-image.astro';
+import { MicroformatClassNames } from '#components/types.ts';
+import { DatePresetEnum } from '#lib/utils/date.ts';
+
+interface Props {
+	items: Array<CatalogItem>;
+	showMicroformats?: boolean | undefined;
+}
+
+const { items, showMicroformats = false } = Astro.props;
+
+const microformats = showMicroformats ? MicroformatClassNames : undefined;
+---
+
+<ul class:list={['flex flex-col gap-4', microformats?.Feed]}>
+	{items.map((item) => (
+		<li class:list={['flex gap-3 sm:gap-4', microformats?.Entry]}>
+			<PreviewImage imgAlt={item.title} showMicroformats={showMicroformats} src={item.imageId} />
+			<div class="flex min-w-0 flex-col gap-1">
+				<h2 class="text-lg font-semibold md:text-xl">
+					<Anchor
+						anchorColor="title"
+						class:list={[microformats?.Url, microformats?.Name]}
+						href={item.url}
+					>
+						{item.title}
+					</Anchor>
+				</h2>
+				<DateDisplay
+					class:list={['text-xs text-primary-400', microformats?.DatePublished]}
+					date={item.dateCreated}
+					datePreset={DatePresetEnum.Long}
+				/>
+				{item.description ? (
+					<p
+						class:list={['text-sm text-primary-500', microformats?.Summary]}
+						set:html={item.description}
+					/>
+				) : undefined}
+			</div>
+		</li>
+	))}
+</ul>

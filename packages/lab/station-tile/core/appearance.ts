@@ -1,4 +1,4 @@
-export interface TileThemeColors {
+interface TileThemeColors {
 	colorA: string;
 	colorB: string;
 }

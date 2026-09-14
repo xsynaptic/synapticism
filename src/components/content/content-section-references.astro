@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import LabeledRow from '#components/parts/labeled-row.astro';
+import { MicroformatClassNames } from '#components/types.ts';
+import { createProjectsByIdsFunction } from '#lib/collections/projects/projects-utils.ts';
+import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { sortByEntryCount } from '#lib/utils/collections.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
+
+interface Props {
+	projects?: Array<{ id: string }> | undefined;
+	tags: Array<{ id: string }> | undefined;
+}
+
+const { projects, tags } = Astro.props;
+
+function getRowItems(entries: Array<CollectionEntry<'projects' | 'tags'>>) {
+	return entries.map((item) => ({
+		title: item.data.title,
+		url: getContentPath(item.collection, item.id),
+	}));
+}
+
+const getProjectsByIds = await createProjectsByIdsFunction();
+const getTagsByIds = await createTagsByIdsFunction();
+
+const projectItems = projects
+	? getRowItems(
+			getProjectsByIds(projects.map(({ id }) => id)).sort((projectA, projectB) =>
+				projectA.data.title.localeCompare(projectB.data.title),
+			),
+		)
+	: [];
+
+const tagItems = tags
+	? getRowItems(getTagsByIds(tags.map(({ id }) => id)).sort(sortByEntryCount))
+	: [];
+---
+
+<LabeledRow
+	data-nosnippet
+	data-pagefind-ignore
+	items={projectItems}
+	title={t('section.projects')}
+/>
+<LabeledRow
+	data-nosnippet
+	data-pagefind-ignore
+	itemProps={{ class: MicroformatClassNames.Category, 'data-pagefind-filter': 'tag' }}
+	items={tagItems}
+	title={t('section.tags')}
+/>

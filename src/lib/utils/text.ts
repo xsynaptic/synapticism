@@ -4,7 +4,10 @@ import { markdownToHtml } from 'satteri';
 // Locale-independent word segmentation; split(' ') counts space-free scripts (CJK, Thai) as one word
 const wordSegmenter = new Intl.Segmenter(undefined, { granularity: 'word' });
 
-/** @knipignore staged for the launch design; no view formats counts yet */
+/**
+ * @expected-unused
+ * @knipignore staged for the launch design; no view formats counts yet
+ */
 export function formatNumber({
 	locales,
 	number,

@@ -3,11 +3,6 @@
 	@apply mx-auto max-w-content px-4 md:px-8;
 }
 
-/* Full-bleed variant: drops the base padding so content reaches the edge on mobile */
-@utility content-column-fill {
-	@apply mx-auto max-w-content sm:px-4 md:px-8;
-}
-
 /* LQIP backdrop under an Image; the data URI is per instance and stays an inline style */
 @utility bg-placeholder {
 	background-position: center;

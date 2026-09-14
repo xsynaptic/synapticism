@@ -3,19 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 
 import { render } from 'astro:content';
 
-import ContentDate from '#components/content/content-date.astro';
-import ContentHeader from '#components/content/content-header.astro';
-import ContentHero from '#components/content/content-hero.astro';
-import MainSite from '#components/main/main-site.astro';
-import AuthorCard from '#components/parts/author-card.astro';
-import DividedItem from '#components/parts/divided-item.astro';
+import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ProseBody from '#components/parts/prose-body.astro';
-import { MicroformatClassNames } from '#components/types.ts';
-import { DatePresetEnum } from '#lib/utils/date.ts';
-import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
-import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
-import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getOpenGraphId, getSeoHideSearch } from '#lib/utils/seo.ts';
 
 interface Props {
 	entry: CollectionEntry<'pages'>;
@@ -23,53 +12,16 @@ interface Props {
 
 const { entry } = Astro.props;
 
-const imageFeaturedHeroGroup = getImageFeaturedHeroGroup({
-	imageFeatured: entry.data.imageFeatured,
-});
-
 const { Content } = await render(entry);
 ---
 
-<MainSite
+<ContentEntryDetail
+	entry={entry}
 	hasReadingBar={true}
-	meta={{
-		description: await getDescriptionRenderedText(entry),
-		openGraphId: getOpenGraphId(entry.collection, entry.id),
-		title: entry.data.title,
-		...getSeoHideSearch(entry.data.hideSearch),
-	}}
+	hideSearch={entry.data.hideSearch}
+	isArticle={false}
 >
-	<article
-		class:list={['pb-8', MicroformatClassNames.Entry]}
-		{...getPagefindBodyProp(entry.data.hideSearch)}
-	>
-		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
-			<Fragment slot="header-subtitle">
-				<DividedItem>
-					<ContentDate
-						date={entry.data.dateCreated}
-						datePreset={DatePresetEnum.Long}
-						showMicroformats={true}
-					/>
-				</DividedItem>
-				{entry.data.dateUpdated ? (
-					<DividedItem>
-						<ContentDate
-							date={entry.data.dateUpdated}
-							datePreset={DatePresetEnum.Long}
-							showMicroformats={true}
-							showUpdated={true}
-						/>
-					</DividedItem>
-				) : undefined}
-			</Fragment>
-		</ContentHeader>
-		{imageFeaturedHeroGroup?.[0] ? (
-			<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
-		) : undefined}
-		<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
-			<Content />
-		</ProseBody>
-		<AuthorCard />
-	</article>
-</MainSite>
+	<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
+		<Content />
+	</ProseBody>
+</ContentEntryDetail>

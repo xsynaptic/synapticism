@@ -3,22 +3,22 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import Anchor from '#components/parts/anchor.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
-import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface Props {
 	entries: Array<CatalogItem> | undefined;
+	title: string;
 }
 
-const { entries } = Astro.props;
+const { entries, title } = Astro.props;
 ---
 
 {entries && entries.length > 0 ? (
-	<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.relatedWriting')}>
+	<LabeledSection data-nosnippet data-pagefind-ignore title={title}>
 		<ul class="flex flex-col gap-1 text-sm">
-			{entries.map(({ title, url }) => (
+			{entries.map((entry) => (
 				<li>
-					<Anchor anchorColor="accent" class="anchor-underline" href={url}>
-						{title}
+					<Anchor anchorColor="accent" class="anchor-underline" href={entry.url}>
+						{entry.title}
 					</Anchor>
 				</li>
 			))}

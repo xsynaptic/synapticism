@@ -6,7 +6,10 @@ export interface EntryReference {
 	id: string;
 }
 
-/** @knipignore kept identical to resonance's copy; no located check here yet */
+/**
+ * @expected-unused
+ * @knipignore kept identical to resonance's copy; no located check here yet
+ */
 export interface LocatedIssue {
 	detail: string;
 	location: string;
@@ -53,7 +56,10 @@ export function reportValidationResult({
 	}
 }
 
-/** @knipignore kept identical to resonance's copy; no located check here yet */
+/**
+ * @expected-unused
+ * @knipignore kept identical to resonance's copy; no located check here yet
+ */
 export function toLocatedValidationResult(
 	issues: Array<LocatedIssue>,
 	summaries: { fail: string; pass: string },

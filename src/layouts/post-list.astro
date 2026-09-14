@@ -4,16 +4,12 @@ import type { Page } from 'astro';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentHeader from '#components/content/content-header.astro';
+import ContentItemList from '#components/content/content-item-list.astro';
 import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
-import Anchor from '#components/parts/anchor.astro';
-import DateDisplay from '#components/parts/date-display.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
-import PreviewImage from '#components/parts/preview-image.astro';
-import { MicroformatClassNames } from '#components/types.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getPagination } from '#lib/utils/pagination.ts';
 import { openGraphIndexIds } from '#lib/utils/seo.ts';
 
@@ -38,37 +34,7 @@ const { page } = Astro.props;
 		</Fragment>
 	</ContentHeader>
 	<ContentSection>
-		<ul class:list={['flex flex-col gap-4', MicroformatClassNames.Feed]}>
-			{page.data.map((item) => (
-				<li class:list={['flex gap-3 sm:gap-4', MicroformatClassNames.Entry]}>
-					{item.imageId ? (
-						<PreviewImage imgAlt={item.title} showMicroformats={true} src={item.imageId} />
-					) : undefined}
-					<div class="flex min-w-0 flex-col gap-1">
-						<h2 class="text-lg font-semibold md:text-xl">
-							<Anchor
-								anchorColor="title"
-								class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-								href={item.url}
-							>
-								{item.title}
-							</Anchor>
-						</h2>
-						<DateDisplay
-							class:list={['text-xs text-primary-400', MicroformatClassNames.DatePublished]}
-							date={item.dateCreated}
-							datePreset={DatePresetEnum.Long}
-						/>
-						{item.description ? (
-							<p
-								class:list={['text-sm text-primary-500', MicroformatClassNames.Summary]}
-								set:html={item.description}
-							/>
-						) : undefined}
-					</div>
-				</li>
-			))}
-		</ul>
+		<ContentItemList items={page.data} showMicroformats={true} />
 		<PaginationSelect class="mt-4 md:mt-8" pagination={getPagination(page)} />
 	</ContentSection>
 </MainSite>

@@ -6,27 +6,13 @@ import { render } from 'astro:content';
 import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
-import ContentDate from '#components/content/content-date.astro';
-import ContentHeader from '#components/content/content-header.astro';
-import ContentHero from '#components/content/content-hero.astro';
-import ContentSectionProjects from '#components/content/content-section-projects.astro';
-import ContentSectionTags from '#components/content/content-section-tags.astro';
-import MainSite from '#components/main/main-site.astro';
-import AuthorCard from '#components/parts/author-card.astro';
+import ContentEntryDetail from '#components/content/content-entry-detail.astro';
+import ContentSectionReferences from '#components/content/content-section-references.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
-import { MicroformatClassNames } from '#components/types.ts';
-import { siteAuthorName } from '#constants.ts';
-import { getPostSchema } from '#lib/collections/posts/posts-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { DatePresetEnum } from '#lib/utils/date.ts';
-import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
-import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
-import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getContentPath } from '#lib/utils/routing.ts';
-import { getOpenGraphId, getSeoArticleProps } from '#lib/utils/seo.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
@@ -38,13 +24,6 @@ interface Props {
 
 const { backlinks, entry, newerEntry, olderEntry } = Astro.props;
 
-const projectIds = entry.data.projects?.map(({ id }) => id);
-const tagIds = entry.data.tags?.map(({ id }) => id);
-
-const imageFeaturedHeroGroup = getImageFeaturedHeroGroup({
-	imageFeatured: entry.data.imageFeatured,
-});
-
 const { Content, remarkPluginFrontmatter } = await render(entry);
 
 const minutesRead =
@@ -53,62 +32,21 @@ const minutesRead =
 		: undefined;
 ---
 
-<MainSite
-	hasReadingBar={true}
-	meta={{
-		description: await getDescriptionRenderedText(entry),
-		openGraphId: getOpenGraphId(entry.collection, entry.id),
-		title: entry.data.title,
-		...getSeoArticleProps({
-			dateCreated: entry.data.dateCreated,
-			dateUpdated: entry.data.dateUpdated,
-		}),
-	}}
-	schemas={await getPostSchema(entry, { authorName: siteAuthorName, url: Astro.url.toString() })}
->
-	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
-		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
-			<Fragment slot="header-subtitle">
-				<DividedItem>
-					<ContentDate
-						date={entry.data.dateCreated}
-						datePreset={DatePresetEnum.Long}
-						showMicroformats={true}
-					/>
-				</DividedItem>
-				{entry.data.dateUpdated ? (
-					<DividedItem>
-						<ContentDate
-							date={entry.data.dateUpdated}
-							datePreset={DatePresetEnum.Long}
-							showMicroformats={true}
-							showUpdated={true}
-						/>
-					</DividedItem>
-				) : undefined}
-				{minutesRead ? (
-					<DividedItem>
-						{formatStringTemplate(t('content.minutesRead'), { minutesRead })}
-					</DividedItem>
-				) : undefined}
-			</Fragment>
-		</ContentHeader>
-		{imageFeaturedHeroGroup?.[0] ? (
-			<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
+<ContentEntryDetail entry={entry} hasReadingBar={true} isArticle={true}>
+	<Fragment slot="header-subtitle-end">
+		{minutesRead ? (
+			<DividedItem>{formatStringTemplate(t('content.minutesRead'), { minutesRead })}</DividedItem>
 		) : undefined}
-		<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
-			<Content />
-		</ProseBody>
-		<ContentSectionProjects projectIds={projectIds} />
-		<ContentSectionTags tagIds={tagIds} />
-		<AuthorCard />
-	</article>
-	<SectionBacklinks backlinks={backlinks} />
+	</Fragment>
+	<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
+		<Content />
+	</ProseBody>
+	<ContentSectionReferences projects={entry.data.projects} tags={entry.data.tags} />
+	<SectionBacklinks backlinks={backlinks} slot="after-article" />
 	<SectionPagination
-		baseUrl={getContentPath('posts')}
-		labelPlural={t('collection.posts.plural')}
-		labelSingular={t('collection.posts.singular')}
+		collection="posts"
 		newerEntry={newerEntry}
 		olderEntry={olderEntry}
+		slot="after-article"
 	/>
-</MainSite>
+</ContentEntryDetail>

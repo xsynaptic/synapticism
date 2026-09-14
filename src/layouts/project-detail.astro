@@ -5,22 +5,12 @@ import { render } from 'astro:content';
 
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
-import ContentDate from '#components/content/content-date.astro';
-import ContentHeader from '#components/content/content-header.astro';
-import ContentHero from '#components/content/content-hero.astro';
-import ContentSectionTags from '#components/content/content-section-tags.astro';
-import MainSite from '#components/main/main-site.astro';
-import AuthorCard from '#components/parts/author-card.astro';
-import DividedItem from '#components/parts/divided-item.astro';
+import ContentEntryDetail from '#components/content/content-entry-detail.astro';
+import ContentSectionReferences from '#components/content/content-section-references.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
-import SectionRelatedContent from '#components/sections/section-related-content.astro';
-import { MicroformatClassNames } from '#components/types.ts';
-import { DatePresetEnum } from '#lib/utils/date.ts';
-import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
-import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
-import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getOpenGraphId } from '#lib/utils/seo.ts';
+import SectionEntryList from '#components/sections/section-entry-list.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
@@ -30,54 +20,16 @@ interface Props {
 
 const { backlinks, entry, relatedContent } = Astro.props;
 
-const tagIds = entry.data.tags?.map(({ id }) => id);
-
-const imageFeaturedHeroGroup = getImageFeaturedHeroGroup({
-	imageFeatured: entry.data.imageFeatured,
-});
-
 const { Content } = await render(entry);
 ---
 
-<MainSite
-	hasReadingBar={true}
-	meta={{
-		description: await getDescriptionRenderedText(entry),
-		openGraphId: getOpenGraphId(entry.collection, entry.id),
-		title: entry.data.title,
-	}}
->
-	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp()}>
-		<ContentHeader title={entry.data.title} titleUrl={Astro.url.toString()}>
-			<Fragment slot="header-subtitle">
-				<DividedItem>
-					<ContentDate
-						date={entry.data.dateCreated}
-						datePreset={DatePresetEnum.Long}
-						showMicroformats={true}
-					/>
-				</DividedItem>
-				{entry.data.dateUpdated ? (
-					<DividedItem>
-						<ContentDate
-							date={entry.data.dateUpdated}
-							datePreset={DatePresetEnum.Long}
-							showMicroformats={true}
-							showUpdated={true}
-						/>
-					</DividedItem>
-				) : undefined}
-			</Fragment>
-		</ContentHeader>
-		{imageFeaturedHeroGroup?.[0] ? (
-			<ContentHero {...imageFeaturedHeroGroup[0]} fallbackAlt={entry.data.title} />
-		) : undefined}
-		<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
-			<Content />
-		</ProseBody>
-		<ContentSectionTags tagIds={tagIds} />
-		<AuthorCard />
-	</article>
-	<SectionRelatedContent entries={relatedContent} />
-	<SectionBacklinks backlinks={backlinks} />
-</MainSite>
+<ContentEntryDetail entry={entry} hasReadingBar={true} isArticle={false}>
+	<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
+		<Content />
+	</ProseBody>
+	<ContentSectionReferences tags={entry.data.tags} />
+	<Fragment slot="after-article">
+		<SectionEntryList entries={relatedContent} title={t('section.relatedWriting')} />
+		<SectionBacklinks backlinks={backlinks} />
+	</Fragment>
+</ContentEntryDetail>

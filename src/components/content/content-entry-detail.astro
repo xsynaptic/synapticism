@@ -1,0 +1,67 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import ContentDate from '#components/content/content-date.astro';
+import ContentHeader from '#components/content/content-header.astro';
+import ContentHero from '#components/content/content-hero.astro';
+import MainSite from '#components/main/main-site.astro';
+import AuthorCard from '#components/parts/author-card.astro';
+import { MicroformatClassNames } from '#components/types.ts';
+import { siteAuthorName } from '#constants.ts';
+import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
+import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
+import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
+import { getOpenGraphId, getSeoArticleProps, getSeoHideSearch } from '#lib/utils/seo.ts';
+import { buildArticleSchemas } from '#lib/utils/structured-data.ts';
+
+interface Props {
+	entry: CollectionEntry<'notes' | 'pages' | 'posts' | 'projects'>;
+	hasReadingBar: boolean;
+	hideSearch?: boolean | undefined;
+	isArticle: boolean;
+}
+
+const { entry, hasReadingBar, hideSearch, isArticle } = Astro.props;
+
+const url = Astro.url.toString();
+
+const description = await getDescriptionRenderedText(entry);
+
+const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFeatured })?.[0];
+
+const articleProps = isArticle
+	? {
+			meta: getSeoArticleProps({
+				dateCreated: entry.data.dateCreated,
+				dateUpdated: entry.data.dateUpdated,
+			}),
+			schemas: buildArticleSchemas(entry, { authorName: siteAuthorName, description, url }),
+		}
+	: undefined;
+---
+
+<MainSite
+	hasReadingBar={hasReadingBar}
+	meta={{
+		description,
+		openGraphId: getOpenGraphId(entry.collection, entry.id),
+		title: entry.data.title,
+		...articleProps?.meta,
+		...getSeoHideSearch(hideSearch),
+	}}
+	{...(articleProps ? { schemas: articleProps.schemas } : {})}
+>
+	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp(hideSearch)}>
+		<ContentHeader title={entry.data.title} titleUrl={url}>
+			<Fragment slot="header-subtitle">
+				<slot name="header-subtitle-start" />
+				<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
+				<slot name="header-subtitle-end" />
+			</Fragment>
+		</ContentHeader>
+		{heroImage ? <ContentHero {...heroImage} fallbackAlt={entry.data.title} /> : undefined}
+		<slot />
+		<AuthorCard />
+	</article>
+	<slot name="after-article" />
+</MainSite>

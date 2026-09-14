@@ -1,0 +1,54 @@
+---
+import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
+
+import Anchor from '#components/parts/anchor.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import PreviewImage from '#components/parts/preview-image.astro';
+import { MicroformatClassNames } from '#components/types.ts';
+import { DatePresetEnum } from '#lib/utils/date.ts';
+import { getSourceDomain } from '#lib/utils/text.ts';
+
+interface Props {
+	item: CatalogItem;
+}
+
+const { item } = Astro.props;
+
+const primaryLink = item.links?.[0];
+---
+
+<article class:list={['flex gap-3 sm:gap-4', MicroformatClassNames.Entry]}>
+	<PreviewImage imgAlt={item.title} showMicroformats={true} src={item.imageId} />
+	<div class="flex min-w-0 flex-col gap-2">
+		<h3 class="text-xl leading-snug font-semibold text-balance md:text-2xl">
+			<Anchor
+				anchorColor="title"
+				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+				href={item.url}
+			>
+				{item.title}
+			</Anchor>
+		</h3>
+		<div class="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600">
+			<DateDisplay
+				class={MicroformatClassNames.DatePublished}
+				date={item.dateCreated}
+				datePreset={DatePresetEnum.Long}
+			/>
+			{primaryLink ? (
+				<span>
+					{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
+				</span>
+			) : undefined}
+		</div>
+		{item.description ? (
+			<p
+				class:list={[
+					'max-w-[68ch] leading-relaxed text-pretty text-primary-600',
+					MicroformatClassNames.Summary,
+				]}
+				set:html={item.description}
+			/>
+		) : undefined}
+	</div>
+</article>

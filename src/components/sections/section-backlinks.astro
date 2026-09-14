@@ -1,8 +1,7 @@
 ---
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
-import Anchor from '#components/parts/anchor.astro';
-import LabeledSection from '#components/parts/labeled-section.astro';
+import SectionEntryList from '#components/sections/section-entry-list.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 // The list is a sample, not an inventory
@@ -12,21 +11,10 @@ interface Props {
 	backlinks: Array<CatalogItem> | undefined;
 }
 
-const { backlinks: backlinksAll } = Astro.props;
-
-const backlinks = backlinksAll?.slice(0, backlinksDisplayLimit);
+const { backlinks } = Astro.props;
 ---
 
-{backlinks && backlinks.length > 0 ? (
-	<LabeledSection data-nosnippet data-pagefind-ignore title={t('section.backlinks')}>
-		<ul class="flex flex-col gap-1 text-sm">
-			{backlinks.map(({ title, url }) => (
-				<li>
-					<Anchor anchorColor="accent" class="anchor-underline" href={url}>
-						{title}
-					</Anchor>
-				</li>
-			))}
-		</ul>
-	</LabeledSection>
-) : undefined}
+<SectionEntryList
+	entries={backlinks?.slice(0, backlinksDisplayLimit)}
+	title={t('section.backlinks')}
+/>

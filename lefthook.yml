@@ -23,6 +23,14 @@ check:
             run: tsc --noEmit --extendedDiagnostics
           - name: unused
             run: knip
+          # Dead code stays with knip, which already encodes fallow's false positives
+          - name: dupes
+            run: fallow dupes --quiet
+          # Health prints its report even at zero findings, so output shows only on failure
+          - name: complexity
+            run: out=$(fallow health --complexity --quiet 2>&1) || { printf '%s\n' "$out"; exit 1; }
+          - name: boundaries
+            run: fallow dead-code --boundary-violations --quiet
           - name: test
             run: vitest run
 
@@ -49,3 +57,9 @@ fix:
             run: tsc --noEmit --extendedDiagnostics
           - name: unused
             run: knip
+          - name: dupes
+            run: fallow dupes --quiet
+          - name: complexity
+            run: out=$(fallow health --complexity --quiet 2>&1) || { printf '%s\n' "$out"; exit 1; }
+          - name: boundaries
+            run: fallow dead-code --boundary-violations --quiet

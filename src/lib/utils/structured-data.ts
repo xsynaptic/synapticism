@@ -1,3 +1,5 @@
+import type { CollectionEntry } from 'astro:content';
+
 import { getAbsoluteUrl, getSitePath } from '#lib/utils/routing.ts';
 
 export type Thing = Article | BreadcrumbList | Person | WebSite;
@@ -56,42 +58,27 @@ const SchemaFragmentIds = {
 	Website: '#website',
 } as const;
 
-export function buildArticleSchema(props: {
-	dateCreated: Date;
-	dateUpdated: Date | undefined;
-	description: string | undefined;
-	imageUrl: string | undefined;
-	title: string;
-	url: string;
-}): Article {
-	const aboutUrl = getAbsoluteUrl(getSitePath('/about'));
-	const articleUrl = getAbsoluteUrl(props.url);
-
-	return {
-		'@id': `${articleUrl}${SchemaFragmentIds.Article}`,
-		'@type': 'Article',
-		headline: props.title,
-		...(props.description ? { description: props.description } : {}),
-		...(props.imageUrl ? { image: props.imageUrl } : {}),
-		datePublished: props.dateCreated.toISOString(),
-		...(props.dateUpdated ? { dateModified: props.dateUpdated.toISOString() } : {}),
-		author: { '@id': `${aboutUrl}${SchemaFragmentIds.Author}` },
-		mainEntityOfPage: { '@id': articleUrl },
-	};
+export function buildArticleSchemas(
+	entry: CollectionEntry<'notes' | 'pages' | 'posts' | 'projects'>,
+	props: { authorName: string; description: string | undefined; url: string },
+): Array<Thing> {
+	return [
+		buildArticleSchema({
+			dateCreated: entry.data.dateCreated,
+			dateUpdated: entry.data.dateUpdated,
+			description: props.description,
+			imageUrl: undefined,
+			title: entry.data.title,
+			url: props.url,
+		}),
+		buildAuthorSchema(props.authorName),
+	];
 }
 
-export function buildAuthorSchema(name: string): Person {
-	const aboutUrl = getAbsoluteUrl(getSitePath('/about'));
-
-	return {
-		'@id': `${aboutUrl}${SchemaFragmentIds.Author}`,
-		'@type': 'Person',
-		name,
-		url: aboutUrl,
-	};
-}
-
-/** @knipignore staged for the launch design; the schema graph has no breadcrumb consumer yet */
+/**
+ * @expected-unused
+ * @knipignore staged for the launch design; the schema graph has no breadcrumb consumer yet
+ */
 export function buildBreadcrumbSchema(
 	items: Array<{ name: string; url?: string }>,
 	pageUrl: string,
@@ -130,4 +117,39 @@ export function serializeGraph(entities: Array<Thing>): string {
 		.replaceAll('<', String.raw`\u003c`)
 		.replaceAll('>', String.raw`\u003e`)
 		.replaceAll('&', String.raw`\u0026`);
+}
+
+function buildArticleSchema(props: {
+	dateCreated: Date;
+	dateUpdated: Date | undefined;
+	description: string | undefined;
+	imageUrl: string | undefined;
+	title: string;
+	url: string;
+}): Article {
+	const aboutUrl = getAbsoluteUrl(getSitePath('/about'));
+	const articleUrl = getAbsoluteUrl(props.url);
+
+	return {
+		'@id': `${articleUrl}${SchemaFragmentIds.Article}`,
+		'@type': 'Article',
+		headline: props.title,
+		...(props.description ? { description: props.description } : {}),
+		...(props.imageUrl ? { image: props.imageUrl } : {}),
+		datePublished: props.dateCreated.toISOString(),
+		...(props.dateUpdated ? { dateModified: props.dateUpdated.toISOString() } : {}),
+		author: { '@id': `${aboutUrl}${SchemaFragmentIds.Author}` },
+		mainEntityOfPage: { '@id': articleUrl },
+	};
+}
+
+function buildAuthorSchema(name: string): Person {
+	const aboutUrl = getAbsoluteUrl(getSitePath('/about'));
+
+	return {
+		'@id': `${aboutUrl}${SchemaFragmentIds.Author}`,
+		'@type': 'Person',
+		name,
+		url: aboutUrl,
+	};
 }
