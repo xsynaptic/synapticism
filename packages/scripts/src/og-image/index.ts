@@ -63,8 +63,11 @@ async function main() {
 	console.log(chalk.blue(`Generating ${String(entries.length)} images...\n`));
 
 	const summary = await renderEntries(entries, { cache, renderCard });
+	const pruned = await cache.prune(new Set(entries.map((entry) => entry.outputId)));
 
 	await cache.save();
+
+	if (pruned > 0) console.log(chalk.yellow(`Pruned ${String(pruned)} orphaned card(s)`));
 
 	reportSummary(summary);
 

@@ -1,16 +1,8 @@
 import type { ContentEntry } from '#shared/astro-content.js';
 
-import { toValidationResult } from './validation-result.js';
+import type { EntryReference, ReferenceIssue } from './validation-result.js';
 
-interface EntryReference {
-	collection: string;
-	field: string;
-	id: string;
-}
-
-interface ReferenceIssue extends EntryReference {
-	location: string;
-}
+import { toReferenceValidationResult } from './validation-result.js';
 
 // Astro checks references itself but only logs, leaving a broken reference to ship
 export function collectReferenceIssues(entries: Array<ContentEntry>) {
@@ -22,15 +14,10 @@ export function collectReferenceIssues(entries: Array<ContentEntry>) {
 export function validateReferences(entries: Array<ContentEntry>) {
 	const issues = collectReferenceIssues(entries);
 
-	return toValidationResult(
-		issues.map(({ collection, field, id, location }) => ({
-			message: `${location}: ${field} references "${id}", missing from "${collection}"`,
-		})),
-		{
-			fail: `Found ${String(issues.length)} broken reference(s)`,
-			pass: 'Entry references valid',
-		},
-	);
+	return toReferenceValidationResult(issues, {
+		fail: `Found ${String(issues.length)} broken reference(s)`,
+		pass: 'Entry references valid',
+	});
 }
 
 // Walking for the `{id, collection}` shape avoids a hand-maintained list of reference fields

@@ -7,6 +7,7 @@ const strings = {
 	'site.pageTitle': '{title} - {siteTitle}',
 	'site.search.placeholder': 'Search...',
 	'site.search.toggle.label': 'Open search',
+	'site.search.toggle.shortcut': 'open search',
 	'site.search.toggle.title': 'Search',
 	'site.skipToContent': 'Skip to content',
 	'site.title': siteTitle,

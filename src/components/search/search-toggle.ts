@@ -36,11 +36,11 @@ class SearchToggle extends HTMLElement {
 		registerSearchAnalytics(this.instance);
 
 		// Pagefind exposes no deregisterUtility so each navigation's fresh trigger would pile up
-		// The astro:before-swap handler in search.astro clears the registry to bound it; keep these two in sync
+		// The astro:before-swap handler in search-modal.astro clears the registry to bound it; keep these two in sync
 		this.instance.registerUtility(this, 'modal-trigger', { keyboardNavigation: true });
 
 		this.instance.registerShortcut(
-			{ description: 'open search', label: isMac ? '⌘K' : 'Ctrl+K' },
+			{ description: this.dataset.shortcutDescription ?? '', label: isMac ? '⌘K' : 'Ctrl+K' },
 			this,
 		);
 
