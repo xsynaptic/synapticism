@@ -33,28 +33,27 @@ const mediaPath = path.join(rootPath, values['media-path']);
 
 const entries = await withAstroContent((content) => getCollectionEntries(content, collections));
 
-const validations = {
-	'entry-ids': () => validateEntryIds(entries),
-	images: () => validateImages(entries, mediaPath),
-	'link-ids': () => validateLinkIds(entries, entries, rootPath),
-	mdx: () => validateMdxComponents(entries, rootPath),
-	references: () => validateReferences(entries),
-} satisfies Record<string, () => ValidationResult>;
+// Names are the CLI subcommands; a full run reports in this order
+const validations = [
+	{ name: 'entry-ids', run: () => validateEntryIds(entries) },
+	{ name: 'images', run: () => validateImages(entries, mediaPath) },
+	{ name: 'link-ids', run: () => validateLinkIds(entries, entries, rootPath) },
+	{ name: 'mdx', run: () => validateMdxComponents(entries, rootPath) },
+	{ name: 'references', run: () => validateReferences(entries) },
+] satisfies Array<{ name: string; run: () => ValidationResult }>;
 
-const selected = command
-	? Object.entries(validations).filter(([name]) => name === command)
-	: Object.entries(validations);
+const selected = command ? validations.filter(({ name }) => name === command) : validations;
 
 if (command && selected.length === 0) {
 	console.log(chalk.red(`Unknown command: ${command}`));
-	console.log(chalk.dim(`Available: ${Object.keys(validations).join(', ')}`));
+	console.log(chalk.dim(`Available: ${validations.map(({ name }) => name).join(', ')}`));
 	process.exit(1);
 }
 
 let hasFailure = false;
 
-for (const [, validate] of selected) {
-	const result = validate();
+for (const { run } of selected) {
+	const result = run();
 
 	reportValidationResult(result);
 
