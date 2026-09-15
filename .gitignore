@@ -24,6 +24,7 @@ pnpm-debug.log*
 # LLM helper files
 .claude/tasks*
 .claude/settings*.json
+.claude/worktrees/
 
 # content
 packages/content/collections
