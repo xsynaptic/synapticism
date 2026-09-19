@@ -8,12 +8,12 @@ interface GlitchGraphIslandProps {
 const GlitchGraphApp = lazy(() => import('./app/glitch-graph-app.tsx'));
 
 // Matches the loaded app with an empty results panel at the site's content width
-const reservedStyle = { minHeight: '59.3rem' };
+const reservedStyle = { minHeight: '60.9rem' };
+
+const placeholder = <p>Loading the glitch graph…</p>;
 
 export default function GlitchGraphIsland({ className }: GlitchGraphIslandProps) {
 	const isClient = useIsClient();
-
-	const placeholder = <p>Loading the glitch graph…</p>;
 
 	return (
 		<div

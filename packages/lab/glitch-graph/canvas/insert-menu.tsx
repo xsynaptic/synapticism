@@ -10,6 +10,7 @@ import { useGraphStore } from '../graph/graph-store.ts';
 import {
 	effectDefinitions,
 	effectKinds,
+	getInsertLabel,
 	predicateDefinitions,
 	predicateKinds,
 } from '../graph/param-definitions.ts';
@@ -49,12 +50,13 @@ export function InsertMenu({ edgeId, style }: { edgeId: string; style: CSSProper
 	const container = usePortalContainer();
 	const insertNode = useGraphStore((state) => state.insertNode);
 	const nodeCount = useGraphStore((state) => getNodeCount(state.graph));
+	const label = useGraphStore((state) => getInsertLabel(state.graph, edgeId));
 	const requestFocus = useFlowStore((state) => state.requestFocus);
 
 	return (
 		<Menu.Root>
 			<Menu.Trigger
-				aria-label="Insert a node here"
+				aria-label={label}
 				className="gg-edge-button nodrag nopan"
 				data-edge-id={edgeId}
 				disabled={!canInsert(nodeCount, 'effect')}

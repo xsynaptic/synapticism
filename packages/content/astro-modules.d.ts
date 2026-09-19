@@ -5,6 +5,14 @@ declare module '*.astro' {
 	export default component;
 }
 
+declare module '@synapticism/lab/glitch-graph/glitch-graph.astro' {
+	import type { GlitchGraphProps } from '@synapticism/lab/glitch-graph/glitch-graph-types.ts';
+
+	const component: (props: GlitchGraphProps) => React.JSX.Element;
+
+	export default component;
+}
+
 declare module '@synapticism/lab/station-tile/station-tile.astro' {
 	import type { StationTileProps } from '@synapticism/lab/station-tile/station-tile-types.ts';
 

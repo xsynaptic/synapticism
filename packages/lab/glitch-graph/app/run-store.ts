@@ -4,10 +4,10 @@ import { create } from 'zustand';
 
 import type { Graph } from '../graph/graph-types.ts';
 
-import { run } from '../engine/run.ts';
 import { useGraphStore } from '../graph/graph-store.ts';
 import { getOutputs } from '../graph/graph-utils.ts';
-import { decodeImage, frameToObjectUrl } from './frame-image.ts';
+import { decodeImage } from './frame-image.ts';
+import { runInWorker } from './run-client.ts';
 
 interface OutputResult {
 	id: string;
@@ -77,14 +77,16 @@ export const useRunStore = create<RunState>()((set, get) => ({
 
 		try {
 			const { graph, seed } = useGraphStore.getState();
-			const started = performance.now();
-			const frames = await run(graph, source, seed);
-			const runDuration = performance.now() - started;
-			const results = await encodeOutputs(graph, frames);
+			const { duration, images } = await runInWorker(graph, source, seed);
+			const results = getOutputs(graph).flatMap(({ id, name }) => {
+				const image = images.get(id);
+
+				return image === undefined ? [] : [{ id, name, url: URL.createObjectURL(image) }];
+			});
 
 			for (const result of previous) URL.revokeObjectURL(result.url);
 
-			set({ ranWith: { graph, seed, source }, results, runDuration, status: 'idle' });
+			set({ ranWith: { graph, seed, source }, results, runDuration: duration, status: 'idle' });
 		} catch {
 			set({ runError: 'The run failed. Run again, or Reset the graph.', status: 'idle' });
 		}
@@ -97,12 +99,12 @@ export const useRunStore = create<RunState>()((set, get) => ({
 export function useIsStale() {
 	const ranWith = useRunStore((state) => state.ranWith);
 	const source = useRunStore((state) => state.source);
-	const graph = useGraphStore((state) => state.graph);
-	const seed = useGraphStore((state) => state.seed);
 
-	if (ranWith === undefined) return false;
-
-	return ranWith.graph !== graph || ranWith.seed !== seed || ranWith.source !== source;
+	return useGraphStore(
+		({ graph, seed }) =>
+			ranWith !== undefined &&
+			(ranWith.seed !== seed || ranWith.source !== source || !rendersSame(ranWith.graph, graph)),
+	);
 }
 
 async function decodeSource(read: () => Promise<Blob>, failure: string, advice: string) {
@@ -118,22 +120,20 @@ async function decodeSource(read: () => Promise<Blob>, failure: string, advice: 
 	}
 }
 
-async function encodeOutputs(graph: Graph, frames: ReadonlyMap<string, IntBuffer>) {
-	const outputs = getOutputs(graph).flatMap(({ id, name }) => {
-		const frame = frames.get(id);
-
-		return frame === undefined ? [] : [{ frame, id, name }];
-	});
-
-	return Promise.all(
-		outputs.map(async ({ frame, id, name }) => ({ id, name, url: await frameToObjectUrl(frame) })),
-	);
-}
-
 async function fetchImage(url: string) {
 	const response = await fetch(url);
 
 	if (!response.ok) throw new Error(`Default image returned ${String(response.status)}`);
 
 	return response.blob();
+}
+
+function rendersSame(rendered: Graph, graph: Graph) {
+	if (rendered.edges !== graph.edges) return false;
+
+	return Object.values(graph.nodes).every((node) => {
+		const previous = rendered.nodes[node.id];
+
+		return previous === node || (previous?.kind === 'output' && node.kind === 'output');
+	});
 }

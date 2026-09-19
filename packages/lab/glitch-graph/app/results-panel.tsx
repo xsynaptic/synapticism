@@ -33,7 +33,7 @@ export function ResultsPanel() {
 			) : (
 				<ul className="gg-result-list">
 					{results.map(({ id, name, url }) => (
-						<ResultItem key={id} name={name} url={url} />
+						<ResultItem id={id} key={id} renderedName={name} url={url} />
 					))}
 				</ul>
 			)}
@@ -67,8 +67,17 @@ function EmptyResults() {
 	);
 }
 
-function ResultItem({ name, url }: { name: string; url: string }) {
+function ResultItem({ id, renderedName, url }: { id: string; renderedName: string; url: string }) {
 	const container = usePortalContainer();
+	const renderedEdges = useRunStore((state) => state.ranWith?.graph.edges);
+	// Presets reuse ids, so live names only hold for the structure that was rendered
+	const name = useGraphStore((state) => {
+		const node = state.graph.nodes[id];
+
+		return node?.kind === 'output' && state.graph.edges === renderedEdges
+			? node.name
+			: renderedName;
+	});
 	const fileName = `${name.trim().replaceAll(/\W+/g, '-').toLowerCase() || 'output'}.png`;
 
 	return (

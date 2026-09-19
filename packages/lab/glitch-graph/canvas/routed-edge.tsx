@@ -6,9 +6,9 @@ import type { Graph } from '../graph/graph-types.ts';
 import type { FlowEdge } from './flow-store.ts';
 
 import { useGraphStore } from '../graph/graph-store.ts';
+import { getEdgeWithSource } from '../graph/graph-utils.ts';
 import { getBranchLabel } from '../graph/param-definitions.ts';
 import { buildRoundedPath } from './edge-path.ts';
-import { InsertMenu } from './insert-menu.tsx';
 import { branchLabelSize } from './layout.ts';
 
 const bendRadius = 8;
@@ -19,14 +19,13 @@ export function RoutedEdge({ data, id }: EdgeProps<FlowEdge>) {
 
 	if (route === undefined) return;
 
-	const { x, y } = route.button;
 	const { branchLabel } = route;
 
 	return (
 		<>
 			<BaseEdge id={id} path={buildRoundedPath(route.points, bendRadius)} />
-			<EdgeLabelRenderer>
-				{branchLabel === undefined || branchText === undefined ? undefined : (
+			{branchLabel === undefined || branchText === undefined ? undefined : (
+				<EdgeLabelRenderer>
 					<span
 						className="gg-branch-label"
 						style={{
@@ -36,21 +35,16 @@ export function RoutedEdge({ data, id }: EdgeProps<FlowEdge>) {
 					>
 						{branchText}
 					</span>
-				)}
-				<InsertMenu
-					edgeId={id}
-					style={{ transform: `translate(-50%, -50%) translate(${String(x)}px, ${String(y)}px)` }}
-				/>
-			</EdgeLabelRenderer>
+				</EdgeLabelRenderer>
+			)}
 		</>
 	);
 }
 
 function getEdgeBranchText(graph: Graph, edgeId: string) {
-	const edge = graph.edges.find((candidate) => candidate.id === edgeId);
-	const source = edge === undefined ? undefined : graph.nodes[edge.source];
+	const outlet = getEdgeWithSource(graph, edgeId);
 
-	if (edge === undefined || source?.kind !== 'split') return;
+	if (outlet?.source.kind !== 'split') return;
 
-	return getBranchLabel(source, edge.sourceIndex);
+	return getBranchLabel(outlet.source, outlet.edge.sourceIndex);
 }

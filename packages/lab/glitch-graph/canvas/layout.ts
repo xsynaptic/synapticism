@@ -1,4 +1,4 @@
-import type { ELK, ElkExtendedEdge, ElkNode, ElkPort } from 'elkjs/lib/elk.bundled.js';
+import type { ElkExtendedEdge, ElkNode, ElkPort } from 'elkjs/lib/elk.bundled.js';
 
 import type { Graph, GraphNode } from '../graph/graph-types.ts';
 import type { Point } from './edge-path.ts';
@@ -45,11 +45,10 @@ const layoutOptions = {
 	'elk.spacing.nodeNode': '40',
 };
 
-let elkPromise: Promise<ELK> | undefined;
+// Starts with the app chunk so the download overlaps mounting and measuring
+const elkPromise = createElk();
 
 export async function layoutGraph(graph: Graph, sizes: ReadonlyMap<string, NodeSize>) {
-	if (elkPromise === undefined) elkPromise = createElk();
-
 	const elk = await elkPromise;
 	const started = performance.now();
 	const result = await elk.layout(buildElkGraph(graph, sizes));

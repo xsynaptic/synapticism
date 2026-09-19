@@ -15,5 +15,5 @@ const { isRss } = Astro.locals;
 		</p>
 	)
 ) : (
-	<GlitchGraphIsland className={className} client:visible />
+	<GlitchGraphIsland className={className} client:visible={{ rootMargin: '400px' }} />
 )}

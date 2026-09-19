@@ -15,6 +15,13 @@ export function createEdge(
 	};
 }
 
+export function getEdgeWithSource(graph: Graph, edgeId: string) {
+	const edge = graph.edges.find((candidate) => candidate.id === edgeId);
+	const source = edge === undefined ? undefined : graph.nodes[edge.source];
+
+	return edge === undefined || source === undefined ? undefined : { edge, source };
+}
+
 export function getIncomingEdges(graph: Graph, id: string) {
 	return graph.edges
 		.filter((edge) => edge.target === id)

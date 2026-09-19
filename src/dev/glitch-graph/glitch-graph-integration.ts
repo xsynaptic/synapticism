@@ -7,7 +7,7 @@ interface GlitchGraphOptions {
 
 export default function devGlitchGraph({
 	entrypoint = './src/dev/glitch-graph/glitch-graph.astro',
-	route = '/glitch-graph',
+	route = '/glitch-graph-dev',
 }: GlitchGraphOptions = {}): AstroIntegration {
 	return {
 		hooks: {

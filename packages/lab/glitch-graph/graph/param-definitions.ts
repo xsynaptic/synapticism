@@ -1,6 +1,8 @@
 import type { CosineGradientPreset } from '@thi.ng/color';
 
-import type { ParamValues, SplitNode } from './graph-types.ts';
+import type { Graph, GraphNode, ParamValues, SplitNode } from './graph-types.ts';
+
+import { getEdgeWithSource } from './graph-utils.ts';
 
 export interface ParamDefinition {
 	label: string;
@@ -192,6 +194,14 @@ export function getDefaultParams(definition: ParamDefinition): ParamValues {
 	return Object.fromEntries(definition.params.map((param) => [param.key, param.default]));
 }
 
+export function getInsertLabel(graph: Graph, edgeId: string) {
+	const outlet = getEdgeWithSource(graph, edgeId);
+
+	if (outlet === undefined) return 'Insert a node here';
+
+	return `Insert after ${getOutletLabel(outlet.source, outlet.edge.sourceIndex)}`;
+}
+
 export function readNumber(params: ParamValues, key: string) {
 	const value = params[key];
 
@@ -202,4 +212,28 @@ export function readString(params: ParamValues, key: string) {
 	const value = params[key];
 
 	return typeof value === 'string' ? value : '';
+}
+
+// Branch A (index 0) is laid out on the left
+function getOutletLabel(node: GraphNode, sourceIndex: number) {
+	switch (node.kind) {
+		case 'effect': {
+			return effectDefinitions[node.effect].label;
+		}
+		case 'fork': {
+			return `Fork, ${sourceIndex === 0 ? 'left' : 'right'} branch`;
+		}
+		case 'merge': {
+			return 'Merge';
+		}
+		case 'output': {
+			return node.name;
+		}
+		case 'source': {
+			return 'Source';
+		}
+		case 'split': {
+			return `${predicateDefinitions[node.predicate].label} Split, ${getBranchLabel(node, sourceIndex)} branch`;
+		}
+	}
 }

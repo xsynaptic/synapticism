@@ -1,8 +1,6 @@
-import type { IntBuffer } from '@thi.ng/pixel';
+import { frameFromRgba } from '../engine/frame.ts';
 
-import { frameFromRgba, frameToRgba } from '../engine/frame.ts';
-
-const workingLongEdge = 768;
+const workingLongEdge = 1024;
 
 // `createImageBitmap` already applies EXIF orientation, so rotating again would double it
 export async function decodeImage(blob: Blob) {
@@ -26,20 +24,4 @@ export async function decodeImage(blob: Blob) {
 	bitmap.close();
 
 	return frameFromRgba(context.getImageData(0, 0, width, height).data, width, height);
-}
-
-export async function frameToObjectUrl(frame: IntBuffer) {
-	const { height, width } = frame;
-	const canvas = new OffscreenCanvas(width, height);
-	const context = canvas.getContext('2d');
-
-	if (context === null) throw new Error('2D canvas is unavailable');
-
-	context.putImageData(
-		new ImageData(new Uint8ClampedArray(frameToRgba(frame)), width, height),
-		0,
-		0,
-	);
-
-	return URL.createObjectURL(await canvas.convertToBlob({ type: 'image/png' }));
 }

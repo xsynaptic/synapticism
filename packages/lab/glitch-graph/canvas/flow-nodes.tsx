@@ -1,14 +1,15 @@
 import type { NodeProps, NodeTypes } from '@xyflow/react';
 
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, useEdges } from '@xyflow/react';
 
 import type { ParamValue } from '../graph/graph-types.ts';
-import type { FlowNode } from './flow-store.ts';
+import type { FlowEdge, FlowNode } from './flow-store.ts';
 
 import { useRunStore } from '../app/run-store.ts';
 import { useGraphStore } from '../graph/graph-store.ts';
 import { EffectCard, OutputCard, PillCard, SourceCard, SplitCard } from './cards/node-cards.tsx';
 import { useFlowStore } from './flow-store.ts';
+import { InsertMenu } from './insert-menu.tsx';
 
 const branchHandleOffsets = ['30%', '70%'];
 
@@ -56,6 +57,28 @@ function FlowHandles({ inputs, outputs }: { inputs: number; outputs: number }) {
 	);
 }
 
+// Inside the source node so Tab reaches each "+" in graph order, not all of them first
+// Read from React Flow's store, which also places the node, so the offset never lags a render
+function OutgoingInsertMenus({ id, x, y }: { id: string; x: number; y: number }) {
+	const edges = useEdges<FlowEdge>();
+
+	return edges.map(({ data, id: edgeId, source }) => {
+		if (source !== id || data?.route === undefined) return;
+
+		const { button } = data.route;
+
+		return (
+			<InsertMenu
+				edgeId={edgeId}
+				key={edgeId}
+				style={{
+					transform: `translate(-50%, -50%) translate(${String(button.x - x)}px, ${String(button.y - y)}px)`,
+				}}
+			/>
+		);
+	});
+}
+
 function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const renameOutput = useGraphStore((state) => state.renameOutput);
@@ -75,7 +98,7 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 	);
 }
 
-function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
+function ParamsFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const setParam = useGraphStore((state) => state.setParam);
 	const handleDelete = useDeleteNode(id);
@@ -89,6 +112,7 @@ function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 			<>
 				<FlowHandles inputs={1} outputs={1} />
 				<EffectCard node={node} onDelete={handleDelete} onParamChange={handleParamChange} />
+				<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
 			</>
 		);
 	}
@@ -98,6 +122,7 @@ function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 			<>
 				<FlowHandles inputs={1} outputs={2} />
 				<SplitCard node={node} onDelete={handleDelete} onParamChange={handleParamChange} />
+				<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
 			</>
 		);
 	}
@@ -105,7 +130,7 @@ function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 	return;
 }
 
-function PillFlowNode({ id }: NodeProps<FlowNode>) {
+function PillFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
 	const kind = useGraphStore((state) => state.graph.nodes[id]?.kind);
 	const handleDelete = useDeleteNode(id);
 
@@ -117,11 +142,12 @@ function PillFlowNode({ id }: NodeProps<FlowNode>) {
 		<>
 			<FlowHandles inputs={inputs} outputs={outputs} />
 			<PillCard kind={kind} label={label} onDelete={handleDelete} removalLabel={removalLabel} />
+			<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
 		</>
 	);
 }
 
-function SourceFlowNode() {
+function SourceFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
 	const meta = useRunStore(({ source, sourceError }) => {
 		if (source !== undefined) return `${String(source.width)} × ${String(source.height)}`;
 
@@ -132,6 +158,7 @@ function SourceFlowNode() {
 		<>
 			<FlowHandles inputs={0} outputs={1} />
 			<SourceCard meta={meta} />
+			<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
 		</>
 	);
 }

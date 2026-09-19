@@ -12,6 +12,7 @@ import {
 	useNodesInitialized,
 	useReactFlow,
 	useStore,
+	useStoreApi,
 	ViewportPortal,
 } from '@xyflow/react';
 import { useEffect, useRef } from 'react';
@@ -34,6 +35,10 @@ const edgeTypes = { routed: RoutedEdge } satisfies EdgeTypes;
 const minZoom = 0.1;
 
 const fitViewOptions = { maxZoom: 1, padding: 0.08 };
+
+const readableZoom = 0.5;
+
+const readableTopInset = 24;
 
 // Zooming in stops at twice the whole-graph view, though never short of 1:1
 const zoomInFactor = 2;
@@ -124,6 +129,29 @@ function formatNumber(value: number | undefined) {
 	return value === undefined ? '?' : String(Math.round(value));
 }
 
+function getInitialViewport(nodes: Array<FlowNode>, width: number, height: number) {
+	const bounds = getNodesBounds(nodes);
+	const fit = getViewportForBounds(
+		bounds,
+		width,
+		height,
+		minZoom,
+		fitViewOptions.maxZoom,
+		fitViewOptions.padding,
+	);
+	const source = nodes.find((node) => node.type === 'source-node');
+
+	if (source === undefined || fit.zoom >= readableZoom) return fit;
+
+	const sourceCentre = source.position.x + (source.measured?.width ?? 0) / 2;
+
+	return {
+		x: width / 2 - sourceCentre * readableZoom,
+		y: readableTopInset - bounds.y * readableZoom,
+		zoom: readableZoom,
+	};
+}
+
 function getLayoutSignature(graph: Graph, sizes: ReadonlyMap<string, NodeSize>) {
 	const sizeSignature = [...sizes]
 		.map(([id, { height, width }]) => `${id}:${String(width)}x${String(height)}`)
@@ -185,7 +213,8 @@ function useMeasuredLayout() {
 	const commitLayout = useFlowStore((state) => state.commitLayout);
 	const structureSignature = useGraphStore((state) => getStructureSignature(state.graph));
 	const nodesInitialized = useNodesInitialized();
-	const { fitView, getNodes } = useReactFlow<FlowNode, FlowEdge>();
+	const { getNodes, setViewport } = useReactFlow<FlowNode, FlowEdge>();
+	const storeApi = useStoreApi<FlowNode, FlowEdge>();
 	const layoutRef = useRef({ sequence: 0, signature: '' });
 
 	useEffect(() => {
@@ -216,15 +245,20 @@ function useMeasuredLayout() {
 
 			commitLayout(result);
 
-			if (!hasLayout) void fitView(fitViewOptions);
+			if (hasLayout) return;
+
+			const { height, width } = storeApi.getState();
+
+			void setViewport(getInitialViewport(useFlowStore.getState().nodes, width, height));
 		});
 	}, [
 		commitLayout,
-		fitView,
 		getNodes,
 		hasLayout,
 		nodesInitialized,
+		setViewport,
 		sizeVersion,
+		storeApi,
 		structureSignature,
 	]);
 }
