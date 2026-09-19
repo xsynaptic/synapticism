@@ -1,0 +1,15 @@
+---
+import GlitchGraph from '@synapticism/lab/glitch-graph/glitch-graph.astro';
+
+import MainSite from '#components/main/main-site.astro';
+---
+
+<MainSite meta={{ noIndex: true, title: 'Glitch graph' }}>
+	<div class="content-column pt-8 pb-16">
+		<h1 class="font-mono text-base font-medium text-primary-800">Glitch graph</h1>
+		<p class="mt-2 mb-8 max-w-(--prose-measure) text-sm leading-relaxed text-primary-600">
+			Lab harness for the glitch graph while it is on its branch. Dev only.
+		</p>
+		<GlitchGraph />
+	</div>
+</MainSite>

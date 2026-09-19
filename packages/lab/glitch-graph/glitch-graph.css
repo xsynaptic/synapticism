@@ -1,0 +1,16 @@
+.glitch-graph {
+	--gg-surface: var(--color-primary-50, #fafafa);
+	--gg-ink: var(--color-primary-700, #3f3f46);
+	--gg-hairline: var(--color-primary-200, #e4e4e7);
+	--gg-mono: var(--font-mono, var(--font-geist-mono, ui-monospace, monospace));
+
+	font-family: var(--gg-mono);
+	color: var(--gg-ink);
+	background: var(--gg-surface);
+	border: 1px solid var(--gg-hairline);
+	border-radius: 0.25rem;
+}
+
+.gg-canvas {
+	height: 40rem;
+}

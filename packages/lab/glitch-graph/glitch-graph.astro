@@ -1,0 +1,19 @@
+---
+import type { GlitchGraphProps as Props } from './glitch-graph-types.ts';
+
+import GlitchGraphIsland from './glitch-graph-island.tsx';
+
+const { class: className, href } = Astro.props;
+
+const { isRss } = Astro.locals;
+---
+
+{isRss ? (
+	href === undefined ? undefined : (
+		<p>
+			<a href={href}>Open the interactive glitch graph.</a>
+		</p>
+	)
+) : (
+	<GlitchGraphIsland className={className} client:visible />
+)}

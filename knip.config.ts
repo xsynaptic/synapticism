@@ -10,13 +10,12 @@ export default {
 			// MDX components are provided to <Content> at render time via renderContent (src/lib/utils/astro.ts)
 			entry: [
 				'src/components/mdx/*.astro',
+				'src/dev/glitch-graph/glitch-graph.astro',
 				'src/dev/inventory/inventory.astro',
 				'src/dev/inventory/inventory-og-image.ts',
 			],
 			ignoreDependencies: [
-				'@synapticism/lab', // imported only from posts in packages/content/collections, which knip ignores
 				'eslint-plugin-jsx-a11y', // peer of eslint-plugin-astro's a11y-strict config; referenced by string, not import
-				'eslint-plugin-react-hooks',
 				'wrangler', // used via wrangler.jsonc + the deploy script ($`wrangler deploy`), neither traceable
 			],
 		},
@@ -25,7 +24,6 @@ export default {
 			ignoreBinaries: ['check-content', 'fix-content'],
 			ignoreDependencies: [
 				'mdxlint', // enables knip's MDX plugin here; there is no `astro` devDep to do it
-				'react', // type-only: jsxImportSource + React.JSX in the ambient types for the MDX language server
 			],
 		},
 		'packages/lab': {

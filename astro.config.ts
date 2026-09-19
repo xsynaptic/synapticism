@@ -1,5 +1,6 @@
 import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
+import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
@@ -8,6 +9,7 @@ import pagefind from 'astro-pagefind';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
+import devGlitchGraph from '#dev/glitch-graph/glitch-graph-integration.ts';
 import devInventory from '#dev/inventory/inventory-integration.ts';
 import { isIndexableUrlPath, readSitemapLastmod } from '#lib/utils/sitemap.ts';
 
@@ -66,8 +68,10 @@ export default defineConfig({
 		responsiveStyles: true,
 	},
 	integrations: [
+		devGlitchGraph(),
 		devInventory(),
 		mdx(),
+		react(),
 		sitemap({
 			filter: (page) => isIndexableUrlPath(new URL(page).pathname),
 			serialize: (item) => {

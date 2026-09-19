@@ -4,6 +4,7 @@ import {
 	getWebComponentConfig,
 	restrictedSyntaxDefaults,
 } from '@xsynaptic/eslint-config';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 
 export default getConfig(
@@ -70,6 +71,10 @@ export default getConfig(
 					},
 				],
 			},
+		},
+		{
+			...reactHooks.configs.flat.recommended,
+			files: ['packages/lab/**/*.tsx'],
 		},
 		// These files run in the browser and might need the browser globals
 		{
