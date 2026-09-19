@@ -1,6 +1,7 @@
 import { Field } from '@base-ui/react/field';
 import { NumberField } from '@base-ui/react/number-field';
 import { Select } from '@base-ui/react/select';
+import { Switch } from '@base-ui/react/switch';
 import { Toolbar } from '@base-ui/react/toolbar';
 import { useRef } from 'react';
 
@@ -20,6 +21,7 @@ export function AppToolbar() {
 	const status = useRunStore((state) => state.status);
 	const hasSource = useRunStore((state) => state.source !== undefined);
 	const runGraph = useRunStore((state) => state.runGraph);
+	const sourceError = useRunStore((state) => state.sourceError);
 
 	return (
 		<div className="gg-toolbar-row">
@@ -38,9 +40,35 @@ export function AppToolbar() {
 				<UploadControl isDisabled={status !== 'idle'} />
 				<Toolbar.Separator className="gg-toolbar-separator" />
 				<PresetControl />
+				<Toolbar.Separator className="gg-toolbar-separator" />
+				<DebugSwitch />
 			</Toolbar.Root>
-			<p className="gg-note">Your image never leaves this browser.</p>
+			{sourceError === undefined ? undefined : (
+				<p className="gg-error" role="alert">
+					{sourceError}
+				</p>
+			)}
 		</div>
+	);
+}
+
+// Toolbar.Button replaces the switch role with `button` unless one is passed
+function DebugSwitch() {
+	const isDebug = useFlowStore((state) => state.isDebug);
+	const setDebug = useFlowStore((state) => state.setDebug);
+
+	return (
+		<label className="gg-toolbar-field">
+			<span className="gg-param-label">Debug</span>
+			<Toolbar.Button
+				className="gg-switch"
+				nativeButton={false}
+				render={<Switch.Root checked={isDebug} onCheckedChange={setDebug} />}
+				role="switch"
+			>
+				<Switch.Thumb className="gg-switch-thumb" />
+			</Toolbar.Button>
+		</label>
 	);
 }
 
@@ -160,7 +188,7 @@ function UploadControl({ isDisabled }: { isDisabled: boolean }) {
 				disabled={isDisabled}
 				onClick={() => fileInputRef.current?.click()}
 			>
-				Upload image
+				Open image
 			</Toolbar.Button>
 			<input
 				accept="image/*"

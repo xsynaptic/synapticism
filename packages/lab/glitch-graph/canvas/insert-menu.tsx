@@ -14,6 +14,7 @@ import {
 	predicateKinds,
 } from '../graph/param-definitions.ts';
 import { usePortalContainer } from '../ui/portal-container.ts';
+import { useFlowStore } from './flow-store.ts';
 
 interface InsertOption {
 	insertion: Insertion;
@@ -48,12 +49,14 @@ export function InsertMenu({ edgeId, style }: { edgeId: string; style: CSSProper
 	const container = usePortalContainer();
 	const insertNode = useGraphStore((state) => state.insertNode);
 	const nodeCount = useGraphStore((state) => getNodeCount(state.graph));
+	const requestFocus = useFlowStore((state) => state.requestFocus);
 
 	return (
 		<Menu.Root>
 			<Menu.Trigger
 				aria-label="Insert a node here"
 				className="gg-edge-button nodrag nopan"
+				data-edge-id={edgeId}
 				disabled={!canInsert(nodeCount, 'effect')}
 				style={style}
 			>
@@ -73,7 +76,9 @@ export function InsertMenu({ edgeId, style }: { edgeId: string; style: CSSProper
 											disabled={!canInsert(nodeCount, insertion.kind)}
 											key={key}
 											onClick={() => {
-												insertNode(edgeId, insertion);
+												const nodeId = insertNode(edgeId, insertion);
+
+												if (nodeId !== undefined) requestFocus({ id: nodeId, kind: 'node' });
 											}}
 										>
 											{label}

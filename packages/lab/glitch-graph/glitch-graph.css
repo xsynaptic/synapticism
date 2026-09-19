@@ -2,6 +2,7 @@
 	--gg-surface: var(--color-primary-50, #fafafa);
 	--gg-panel: #fff;
 	--gg-ink: var(--color-primary-700, #3f3f46);
+	--gg-ink-soft: var(--color-primary-600, #52525b);
 	--gg-ink-muted: var(--color-primary-500, #71717a);
 	--gg-hairline: var(--color-primary-200, #e4e4e7);
 	--gg-edge: var(--color-primary-400, #a1a1aa);
@@ -28,11 +29,10 @@
 
 .gg-toolbar-row {
 	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem 1rem;
-	align-items: center;
-	justify-content: space-between;
+	flex-direction: column;
+	gap: 0.5rem;
 	padding: 0.6rem 0.75rem;
+	container-type: inline-size;
 	border-bottom: 1px solid var(--gg-hairline);
 }
 
@@ -47,6 +47,13 @@
 	align-self: stretch;
 	width: 1px;
 	background: var(--gg-hairline);
+}
+
+/* The toolbar wraps below this width, leaving separators at the ends of lines */
+@container (width < 52rem) {
+	.gg-toolbar-separator {
+		display: none;
+	}
 }
 
 .gg-button,
@@ -64,6 +71,7 @@
 }
 
 .gg-button[data-variant='primary'] {
+	min-width: 4.5rem;
 	color: #fff;
 	background: var(--gg-accent);
 	border-color: var(--gg-accent);
@@ -76,7 +84,8 @@
 
 @media (hover: hover) {
 	.gg-button:hover:not(:disabled),
-	.gg-select-trigger:hover {
+	.gg-select-trigger:hover,
+	.gg-seed-input:hover {
 		border-color: var(--gg-accent);
 	}
 }
@@ -88,13 +97,49 @@
 }
 
 .gg-seed-input {
-	width: 7.5rem;
+	width: 6.5rem;
 	padding: 0.3rem 0.45rem;
 	font: inherit;
+	font-variant-numeric: tabular-nums;
 	color: var(--gg-ink);
 	background: var(--gg-panel);
 	border: 1px solid var(--gg-hairline);
 	border-radius: var(--gg-radius);
+}
+
+.gg-switch {
+	box-sizing: border-box;
+	display: flex;
+	flex-shrink: 0;
+	width: 1.9rem;
+	height: 1.1rem;
+	padding: 2px;
+	cursor: pointer;
+	background: var(--gg-hairline);
+	border: 1px solid var(--gg-hairline);
+	border-radius: 999px;
+}
+
+.gg-switch[data-checked] {
+	background: var(--gg-accent);
+	border-color: var(--gg-accent);
+}
+
+.gg-switch-thumb {
+	width: calc(1.1rem - 6px);
+	height: calc(1.1rem - 6px);
+	background: var(--gg-panel);
+	border-radius: 50%;
+}
+
+.gg-switch-thumb[data-checked] {
+	translate: calc(1.9rem - 1.1rem) 0;
+}
+
+@media (hover: hover) {
+	.gg-switch:hover:not([data-checked]) {
+		border-color: var(--gg-accent);
+	}
 }
 
 .gg-note {
@@ -103,7 +148,7 @@
 }
 
 .gg-error {
-	margin: 0 0 0.6rem;
+	margin: 0;
 	color: var(--gg-error);
 }
 
@@ -121,6 +166,43 @@
 
 .gg-canvas .gg-unplaced {
 	visibility: hidden;
+}
+
+.gg-controls {
+	overflow: hidden;
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+}
+
+.gg-controls button {
+	color: var(--gg-ink-soft);
+	cursor: pointer;
+	background: none;
+	border: 0;
+}
+
+.gg-controls button + button {
+	border-top: 1px solid var(--gg-hairline);
+}
+
+@media (hover: hover) {
+	.gg-controls button:hover {
+		color: var(--gg-accent);
+		background: var(--gg-accent-soft);
+	}
+}
+
+.gg-controls button:focus-visible {
+	color: var(--gg-accent);
+	outline: 2px solid var(--gg-accent);
+	outline-offset: -2px;
+	background: var(--gg-accent-soft);
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- React Flow's own class; its default grey fails contrast */
+.gg-canvas .react-flow__attribution a {
+	color: var(--gg-ink-muted);
 }
 
 .gg-handle {
@@ -145,7 +227,8 @@
 	border-radius: 50%;
 }
 
-.gg-edge-button[data-popup-open] {
+.gg-edge-button[data-popup-open],
+.gg-edge-button:focus-visible {
 	color: var(--gg-accent);
 	border-color: var(--gg-accent);
 }
@@ -162,6 +245,7 @@
 	}
 }
 
+/* Edges can pass behind a label, so it carries the canvas colour */
 .gg-branch-label {
 	position: absolute;
 	top: 0;
@@ -169,10 +253,12 @@
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
+	padding-inline: 0.2rem;
 	font-size: 0.7rem;
 	line-height: 1;
-	color: var(--gg-ink-muted);
+	color: var(--gg-ink-soft);
 	white-space: nowrap;
+	background: var(--gg-surface);
 }
 
 /* React Flow turns pointer events off on nodes that are neither draggable nor selectable */
@@ -187,7 +273,7 @@
 
 .gg-node {
 	width: var(--gg-node-width);
-	padding: 0.55rem 0.7rem 0.7rem;
+	padding: 0.5rem 0.65rem 0.6rem;
 }
 
 .gg-pill {
@@ -222,8 +308,12 @@
 
 @media (hover: hover) {
 	.gg-delete-button:hover {
-		color: var(--gg-accent);
+		color: var(--gg-error);
 	}
+}
+
+.gg-delete-button:focus-visible {
+	color: var(--gg-error);
 }
 
 .gg-pill .gg-delete-button {
@@ -247,8 +337,8 @@
 .gg-node-params {
 	display: flex;
 	flex-direction: column;
-	gap: 0.6rem;
-	margin-top: 0.5rem;
+	gap: 0.45rem;
+	margin-top: 0.4rem;
 }
 
 .gg-output-name {
@@ -261,6 +351,12 @@
 	background: transparent;
 	border: 1px solid transparent;
 	border-radius: var(--gg-radius);
+}
+
+@media (hover: hover) {
+	.gg-output-name:hover {
+		border-color: var(--gg-hairline);
+	}
 }
 
 .gg-output-name:focus {
@@ -278,19 +374,20 @@
 }
 
 .gg-param-value {
+	font-variant-numeric: tabular-nums;
 	color: var(--gg-accent);
 }
 
 .gg-slider {
 	display: flex;
 	flex-direction: column;
-	gap: 0.3rem;
+	gap: 0.15rem;
 }
 
 .gg-slider-control {
 	display: flex;
 	align-items: center;
-	height: 1rem;
+	height: 0.9rem;
 	touch-action: none;
 }
 
@@ -313,9 +410,16 @@
 	border-radius: 50%;
 }
 
+@media (hover: hover) {
+	.gg-slider-control:hover .gg-slider-thumb {
+		background: var(--gg-accent-soft);
+	}
+}
+
 .gg-slider-thumb:has(:focus-visible) {
 	outline: 2px solid var(--gg-accent);
 	outline-offset: 2px;
+	background: var(--gg-accent-soft);
 }
 
 .gg-select-trigger {
@@ -324,13 +428,13 @@
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
-	padding: 0.25rem 0.45rem;
-	margin-top: 0.3rem;
+	padding: 0.2rem 0.45rem;
+	margin-top: 0.2rem;
 }
 
 .gg-select-trigger[data-placement='toolbar'] {
 	width: auto;
-	min-width: 11rem;
+	min-width: 10rem;
 	padding: 0.3rem 0.45rem;
 	margin-top: 0;
 }
@@ -377,12 +481,16 @@
 	min-width: 11rem;
 }
 
-.gg-menu-label {
-	padding: 0.3rem 0.6rem 0.15rem;
+.gg-menu-label,
+.gg-results-title {
 	font-size: 0.7rem;
 	color: var(--gg-ink-muted);
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
+}
+
+.gg-menu-label {
+	padding: 0.3rem 0.6rem 0.15rem;
 }
 
 .gg-menu-separator {
@@ -395,18 +503,72 @@
 	color: var(--gg-accent);
 }
 
+.gg-debug-badge {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 0 0.2rem;
+	font-size: 0.65rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.4;
+	color: #fff;
+	white-space: nowrap;
+	pointer-events: none;
+	background: var(--gg-accent);
+	border-radius: var(--gg-radius) var(--gg-radius) 0 0;
+	translate: 0 -100%;
+}
+
+.gg-debug-readout {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+	padding: 0.3rem 0.5rem;
+	font-size: 0.7rem;
+	font-variant-numeric: tabular-nums;
+	color: var(--gg-ink-soft);
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-accent);
+	border-radius: var(--gg-radius);
+}
+
 .gg-results {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
 	padding: 0.75rem;
 }
 
+.gg-results-header {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 1rem;
+	align-items: baseline;
+	justify-content: space-between;
+}
+
+.gg-results-title {
+	margin: 0;
+}
+
 .gg-stale-note {
-	margin: 0 0 0.6rem;
+	margin: 0;
 	color: var(--gg-error);
+}
+
+/* Out of flow rather than hidden, so the live region stays in the accessibility tree */
+.gg-stale-note:empty {
+	position: absolute;
+}
+
+.gg-empty-note {
+	margin: 0;
+	color: var(--gg-ink-soft);
 }
 
 .gg-result-list {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
 	gap: 0.75rem;
 	padding: 0;
 	margin: 0;
@@ -415,6 +577,16 @@
 
 .gg-results[data-stale='true'] .gg-result-list {
 	opacity: 0.45;
+}
+
+.gg-result-frame {
+	background: repeating-linear-gradient(
+		-45deg,
+		transparent 0 0.4rem,
+		var(--gg-hairline) 0.4rem calc(0.4rem + 1px)
+	);
+	border: 1px dashed var(--gg-edge);
+	border-radius: var(--gg-radius);
 }
 
 .gg-result-trigger {
@@ -427,6 +599,12 @@
 	border-radius: var(--gg-radius);
 }
 
+@media (hover: hover) {
+	.gg-result-trigger:hover {
+		border-color: var(--gg-accent);
+	}
+}
+
 .gg-result-image {
 	display: block;
 	width: 100%;
@@ -436,9 +614,22 @@
 
 .gg-result-caption {
 	display: flex;
-	gap: 0.5rem;
-	justify-content: space-between;
+	flex-direction: column;
+	gap: 0.1rem;
+	align-items: flex-start;
 	margin-top: 0.3rem;
+}
+
+.gg-result-name {
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: var(--gg-ink);
+	white-space: nowrap;
+}
+
+.gg-result[data-placeholder] .gg-result-caption {
+	color: var(--gg-ink-muted);
 }
 
 .gg-link {
@@ -484,9 +675,30 @@
 .gg-delete-button:focus-visible,
 .gg-select-trigger:focus-visible,
 .gg-seed-input:focus-visible,
+.gg-switch:focus-visible,
 .gg-output-name:focus-visible,
 .gg-result-trigger:focus-visible,
 .gg-link:focus-visible {
 	outline: 2px solid var(--gg-accent);
 	outline-offset: 1px;
+	border-color: var(--gg-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.gg-button,
+	.gg-select-trigger,
+	.gg-seed-input,
+	.gg-edge-button,
+	.gg-delete-button,
+	.gg-result-trigger,
+	.gg-controls button {
+		transition-duration: 120ms;
+		transition-property: color, background-color, border-color;
+	}
+
+	.gg-switch,
+	.gg-switch-thumb {
+		transition-duration: 120ms;
+		transition-property: background-color, border-color, translate;
+	}
 }

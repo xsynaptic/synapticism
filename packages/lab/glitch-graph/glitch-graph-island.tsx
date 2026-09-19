@@ -7,7 +7,8 @@ interface GlitchGraphIslandProps {
 // React Flow, Base UI, thi.ng and ELK stay out of the hydration bundle until the island is visible
 const GlitchGraphApp = lazy(() => import('./app/glitch-graph-app.tsx'));
 
-const reservedStyle = { minHeight: '52rem' };
+// Matches the loaded app with an empty results panel at the site's content width
+const reservedStyle = { minHeight: '59.3rem' };
 
 export default function GlitchGraphIsland({ className }: GlitchGraphIslandProps) {
 	const isClient = useIsClient();

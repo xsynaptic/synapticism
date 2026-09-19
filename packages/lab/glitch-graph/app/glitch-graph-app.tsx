@@ -16,9 +16,7 @@ export default function GlitchGraphApp() {
 	useEffect(() => {
 		if (useRunStore.getState().source !== undefined) return;
 
-		void fetch(defaultSourceUrl)
-			.then((response) => response.blob())
-			.then((blob) => useRunStore.getState().loadSource(blob));
+		void useRunStore.getState().loadDefaultSource(defaultSourceUrl);
 	}, []);
 
 	return (

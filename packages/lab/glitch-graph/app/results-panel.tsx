@@ -1,27 +1,34 @@
 import { Dialog } from '@base-ui/react/dialog';
+import { useShallow } from 'zustand/react/shallow';
 
+import { useGraphStore } from '../graph/graph-store.ts';
+import { getOutputs } from '../graph/graph-utils.ts';
 import { usePortalContainer } from '../ui/portal-container.ts';
 import { useIsStale, useRunStore } from './run-store.ts';
 
 export function ResultsPanel() {
 	const results = useRunStore((state) => state.results);
-	const error = useRunStore((state) => state.error);
+	const runError = useRunStore((state) => state.runError);
 	const isStale = useIsStale();
 
 	return (
 		<section aria-label="Results" className="gg-results" data-stale={isStale}>
-			{error === undefined ? undefined : (
+			<header className="gg-results-header">
+				<p className="gg-results-title">Results</p>
+				<p className="gg-note">Everything runs in this browser; your image is never uploaded.</p>
+			</header>
+			{runError === undefined ? undefined : (
 				<p className="gg-error" role="alert">
-					{error}
+					{runError}
 				</p>
 			)}
-			{isStale ? (
-				<p className="gg-stale-note" role="status">
-					The graph has changed since these were rendered. Run again to update them.
-				</p>
-			) : undefined}
+			<p className="gg-stale-note" role="status">
+				{isStale
+					? 'The graph has changed since these were rendered. Run again to update them.'
+					: ''}
+			</p>
 			{results.length === 0 ? (
-				<p className="gg-note">Press Run to render one image for each Output.</p>
+				<EmptyResults />
 			) : (
 				<ul className="gg-result-list">
 					{results.map(({ id, name, url }) => (
@@ -30,6 +37,32 @@ export function ResultsPanel() {
 				</ul>
 			)}
 		</section>
+	);
+}
+
+function EmptyResults() {
+	const names = useGraphStore(
+		useShallow((state) => getOutputs(state.graph).map(({ name }) => name)),
+	);
+	const aspectRatio = useRunStore((state) =>
+		state.source === undefined ? 1 : state.source.width / state.source.height,
+	);
+
+	return (
+		<>
+			<p className="gg-empty-note">Press Run to render one image for each Output.</p>
+			<ul aria-hidden="true" className="gg-result-list">
+				{names.map((name, index) => (
+					<li className="gg-result" data-placeholder={true} key={index}>
+						<div className="gg-result-frame" style={{ aspectRatio }} />
+						<div className="gg-result-caption">
+							<span className="gg-result-name">{name}</span>
+							<span>Not rendered yet</span>
+						</div>
+					</li>
+				))}
+			</ul>
+		</>
 	);
 }
 
@@ -53,7 +86,7 @@ function ResultItem({ name, url }: { name: string; url: string }) {
 				</Dialog.Portal>
 			</Dialog.Root>
 			<div className="gg-result-caption">
-				<span>{name}</span>
+				<span className="gg-result-name">{name}</span>
 				<a className="gg-link" download={fileName} href={url}>
 					Download PNG
 				</a>

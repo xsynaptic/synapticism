@@ -30,7 +30,6 @@ function getEffectParams(graph: Graph, id: string) {
 	return node.params;
 }
 
-// FNV-1a over every Output frame in id order
 async function hashRun(graph: Graph, source: IntBuffer, seed: number) {
 	const results = await run(graph, source, seed);
 	let hash = 0x81_1c_9d_c5;

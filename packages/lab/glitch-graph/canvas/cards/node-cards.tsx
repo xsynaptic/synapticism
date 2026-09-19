@@ -13,6 +13,7 @@ interface ParamsCardProps {
 	onDelete: () => void;
 	onParamChange: ParamChangeHandler;
 	params: ParamValues;
+	removalLabel: string;
 	title: string;
 }
 
@@ -33,6 +34,7 @@ export function EffectCard({
 			onDelete={onDelete}
 			onParamChange={onParamChange}
 			params={node.params}
+			removalLabel={`Delete ${definition.label}`}
 			title={definition.label}
 		/>
 	);
@@ -55,26 +57,26 @@ export function PillCard({
 	kind,
 	label,
 	onDelete,
+	removalLabel,
 }: {
 	kind: 'fork' | 'merge';
 	label: string;
 	onDelete: () => void;
+	removalLabel: string;
 }) {
 	return (
 		<div className="gg-pill nokey" data-kind={kind}>
 			<span className="gg-node-title">{label}</span>
-			<DeleteButton label={label} onDelete={onDelete} />
+			<DeleteButton label={removalLabel} onDelete={onDelete} />
 		</div>
 	);
 }
 
-export function SourceCard({ size }: { size: undefined | { height: number; width: number } }) {
+export function SourceCard({ meta }: { meta: string }) {
 	return (
 		<div className="gg-node nokey" data-kind="source">
 			<p className="gg-node-title">Source</p>
-			<p className="gg-node-meta">
-				{size === undefined ? 'Loading image…' : `${String(size.width)} × ${String(size.height)}`}
-			</p>
+			<p className="gg-node-meta">{meta}</p>
 		</div>
 	);
 }
@@ -96,6 +98,7 @@ export function SplitCard({
 			onDelete={onDelete}
 			onParamChange={onParamChange}
 			params={node.params}
+			removalLabel={`Delete this ${definition.label} Split, its Merge and everything between them`}
 			title={`Split · ${definition.label}`}
 		/>
 	);
@@ -104,9 +107,10 @@ export function SplitCard({
 function DeleteButton({ label, onDelete }: { label: string; onDelete: () => void }) {
 	return (
 		<button
-			aria-label={`Delete ${label}`}
+			aria-label={label}
 			className="gg-delete-button nodrag nopan"
 			onClick={onDelete}
+			title={label}
 			type="button"
 		>
 			×
@@ -114,12 +118,19 @@ function DeleteButton({ label, onDelete }: { label: string; onDelete: () => void
 	);
 }
 
-function ParamsCard({ definition, onDelete, onParamChange, params, title }: ParamsCardProps) {
+function ParamsCard({
+	definition,
+	onDelete,
+	onParamChange,
+	params,
+	removalLabel,
+	title,
+}: ParamsCardProps) {
 	return (
 		<div className="gg-node nokey">
 			<div className="gg-node-header">
 				<p className="gg-node-title">{title}</p>
-				<DeleteButton label={title} onDelete={onDelete} />
+				<DeleteButton label={removalLabel} onDelete={onDelete} />
 			</div>
 			<div className="gg-node-params">
 				{definition.params.map((spec) => (

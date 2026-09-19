@@ -1,7 +1,7 @@
 import type { EffectKind, Graph, GraphEdge, GraphNode, PredicateKind } from './graph-types.ts';
 import type { Endpoint } from './graph-utils.ts';
 
-import { createEdge } from './graph-utils.ts';
+import { createEdge, getNodeId } from './graph-utils.ts';
 import { effectDefinitions, getDefaultParams, predicateDefinitions } from './param-definitions.ts';
 
 export type Insertion =
@@ -125,8 +125,8 @@ function buildForkSplice(
 function buildInsertion(graph: Graph, edge: GraphEdge, insertion: Insertion): Splice {
 	const splice: SpliceEnds = {
 		downstream: [edge.target, edge.targetIndex],
-		firstId: `n${String(graph.counter + 1)}`,
-		secondId: `n${String(graph.counter + 2)}`,
+		firstId: getNodeId(graph.counter + 1),
+		secondId: getNodeId(graph.counter + 2),
 		upstream: [edge.source, edge.sourceIndex],
 	};
 

@@ -8,12 +8,23 @@ import type { FlowNode } from './flow-store.ts';
 import { useRunStore } from '../app/run-store.ts';
 import { useGraphStore } from '../graph/graph-store.ts';
 import { EffectCard, OutputCard, PillCard, SourceCard, SplitCard } from './cards/node-cards.tsx';
+import { useFlowStore } from './flow-store.ts';
 
 const branchHandleOffsets = ['30%', '70%'];
 
 const pillShapes = {
-	fork: { inputs: 1, label: 'Fork', outputs: 2 },
-	merge: { inputs: 2, label: 'Merge', outputs: 1 },
+	fork: {
+		inputs: 1,
+		label: 'Fork',
+		outputs: 2,
+		removalLabel: 'Delete this Fork and everything on its branch',
+	},
+	merge: {
+		inputs: 2,
+		label: 'Merge',
+		outputs: 1,
+		removalLabel: 'Delete this Merge, its Split and everything between them',
+	},
 } as const;
 
 function FlowHandles({ inputs, outputs }: { inputs: number; outputs: number }) {
@@ -67,11 +78,7 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const setParam = useGraphStore((state) => state.setParam);
-	const deleteNode = useGraphStore((state) => state.deleteNode);
-
-	function handleDelete() {
-		deleteNode(id);
-	}
+	const handleDelete = useDeleteNode(id);
 
 	function handleParamChange(key: string, value: ParamValue) {
 		setParam(id, key, value);
@@ -100,37 +107,44 @@ function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 
 function PillFlowNode({ id }: NodeProps<FlowNode>) {
 	const kind = useGraphStore((state) => state.graph.nodes[id]?.kind);
-	const deleteNode = useGraphStore((state) => state.deleteNode);
+	const handleDelete = useDeleteNode(id);
 
 	if (kind !== 'fork' && kind !== 'merge') return;
 
-	const { inputs, label, outputs } = pillShapes[kind];
+	const { inputs, label, outputs, removalLabel } = pillShapes[kind];
 
 	return (
 		<>
 			<FlowHandles inputs={inputs} outputs={outputs} />
-			<PillCard
-				kind={kind}
-				label={label}
-				onDelete={() => {
-					deleteNode(id);
-				}}
-			/>
+			<PillCard kind={kind} label={label} onDelete={handleDelete} removalLabel={removalLabel} />
 		</>
 	);
 }
 
 function SourceFlowNode() {
-	const source = useRunStore((state) => state.source);
+	const meta = useRunStore(({ source, sourceError }) => {
+		if (source !== undefined) return `${String(source.width)} × ${String(source.height)}`;
+
+		return sourceError === undefined ? 'Loading image…' : 'No image';
+	});
 
 	return (
 		<>
 			<FlowHandles inputs={0} outputs={1} />
-			<SourceCard
-				size={source === undefined ? undefined : { height: source.height, width: source.width }}
-			/>
+			<SourceCard meta={meta} />
 		</>
 	);
+}
+
+function useDeleteNode(id: string) {
+	const deleteNode = useGraphStore((state) => state.deleteNode);
+	const requestFocus = useFlowStore((state) => state.requestFocus);
+
+	return () => {
+		const bridgeId = deleteNode(id);
+
+		if (bridgeId !== undefined) requestFocus({ id: bridgeId, kind: 'edge' });
+	};
 }
 
 export const nodeTypes = {

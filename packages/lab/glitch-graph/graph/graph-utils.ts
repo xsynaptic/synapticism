@@ -44,6 +44,18 @@ export function getModelOrder(graph: Graph) {
 	return order;
 }
 
+export function getNodeId(counter: number) {
+	return `n${String(counter)}`;
+}
+
+export function getOutputs(graph: Graph) {
+	return getModelOrder(graph).flatMap((id) => {
+		const node = graph.nodes[id];
+
+		return node?.kind === 'output' ? [node] : [];
+	});
+}
+
 export function getStructureSignature(graph: Graph) {
 	return graph.edges.map((edge) => edge.id).join(' ');
 }

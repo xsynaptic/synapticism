@@ -6,7 +6,7 @@ import type { Graph } from '../graph/graph-types.ts';
 
 import { run } from '../engine/run.ts';
 import { useGraphStore } from '../graph/graph-store.ts';
-import { getModelOrder } from '../graph/graph-utils.ts';
+import { getOutputs } from '../graph/graph-utils.ts';
 import { decodeImage, frameToObjectUrl } from './frame-image.ts';
 
 interface OutputResult {
@@ -22,62 +22,69 @@ interface RunInputs {
 }
 
 interface RunState {
-	error: string | undefined;
-	loadSource: (blob: Blob) => Promise<void>;
+	loadDefaultSource: (url: string) => Promise<void>;
+	loadSource: (file: File) => Promise<void>;
 	ranWith: RunInputs | undefined;
 	results: Array<OutputResult>;
+	runDuration: number | undefined;
+	runError: string | undefined;
 	runGraph: () => Promise<void>;
 	source: IntBuffer | undefined;
+	sourceError: string | undefined;
 	status: 'idle' | 'loading' | 'running';
 }
 
-export const useRunStore = create<RunState>()((set, get) => ({
-	error: undefined,
-	loadSource: async (blob) => {
-		set({ error: undefined, status: 'loading' });
+const supportedFormats = 'Try a PNG, JPEG, WebP or GIF.';
 
-		try {
-			set({ source: await decodeImage(blob), status: 'idle' });
-		} catch {
-			set({ error: 'That file could not be read as an image.', status: 'idle' });
+export const useRunStore = create<RunState>()((set, get) => ({
+	loadDefaultSource: async (url) => {
+		await decodeSource(
+			() => fetchImage(url),
+			'The default image did not load.',
+			'Open an image to start.',
+		);
+	},
+	loadSource: async (file) => {
+		// An empty type means the browser does not know the extension, so let the decoder decide
+		if (file.type !== '' && !file.type.startsWith('image/')) {
+			set({ sourceError: `“${file.name}” is not an image. ${supportedFormats}` });
+
+			return;
 		}
+
+		await decodeSource(
+			() => Promise.resolve(file),
+			`“${file.name}” could not be opened in this browser.`,
+			supportedFormats,
+		);
 	},
 	ranWith: undefined,
 	results: [],
+	runDuration: undefined,
+	runError: undefined,
 	runGraph: async () => {
 		const { results: previous, source } = get();
 
 		if (source === undefined) return;
 
-		set({ error: undefined, status: 'running' });
+		set({ runError: undefined, status: 'running' });
 
 		try {
 			const { graph, seed } = useGraphStore.getState();
+			const started = performance.now();
 			const frames = await run(graph, source, seed);
-			const outputs = getModelOrder(graph).flatMap((id) => {
-				const frame = frames.get(id);
-				const node = graph.nodes[id];
-
-				return frame === undefined || node?.kind !== 'output'
-					? []
-					: [{ frame, id, name: node.name }];
-			});
-			const results = await Promise.all(
-				outputs.map(async ({ frame, id, name }) => ({
-					id,
-					name,
-					url: await frameToObjectUrl(frame),
-				})),
-			);
+			const runDuration = performance.now() - started;
+			const results = await encodeOutputs(graph, frames);
 
 			for (const result of previous) URL.revokeObjectURL(result.url);
 
-			set({ ranWith: { graph, seed, source }, results, status: 'idle' });
+			set({ ranWith: { graph, seed, source }, results, runDuration, status: 'idle' });
 		} catch {
-			set({ error: 'The run failed.', status: 'idle' });
+			set({ runError: 'The run failed. Run again, or Reset the graph.', status: 'idle' });
 		}
 	},
 	source: undefined,
+	sourceError: undefined,
 	status: 'idle',
 }));
 
@@ -90,4 +97,37 @@ export function useIsStale() {
 	if (ranWith === undefined) return false;
 
 	return ranWith.graph !== graph || ranWith.seed !== seed || ranWith.source !== source;
+}
+
+async function decodeSource(read: () => Promise<Blob>, failure: string, advice: string) {
+	useRunStore.setState({ sourceError: undefined, status: 'loading' });
+
+	try {
+		useRunStore.setState({ source: await decodeImage(await read()), status: 'idle' });
+	} catch {
+		const kept =
+			useRunStore.getState().source === undefined ? '' : ' The previous image is still loaded.';
+
+		useRunStore.setState({ sourceError: `${failure}${kept} ${advice}`, status: 'idle' });
+	}
+}
+
+async function encodeOutputs(graph: Graph, frames: ReadonlyMap<string, IntBuffer>) {
+	const outputs = getOutputs(graph).flatMap(({ id, name }) => {
+		const frame = frames.get(id);
+
+		return frame === undefined ? [] : [{ frame, id, name }];
+	});
+
+	return Promise.all(
+		outputs.map(async ({ frame, id, name }) => ({ id, name, url: await frameToObjectUrl(frame) })),
+	);
+}
+
+async function fetchImage(url: string) {
+	const response = await fetch(url);
+
+	if (!response.ok) throw new Error(`Default image returned ${String(response.status)}`);
+
+	return response.blob();
 }

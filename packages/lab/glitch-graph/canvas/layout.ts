@@ -12,6 +12,7 @@ export interface EdgeRoute {
 }
 
 export interface LayoutResult {
+	duration: number;
 	positions: Map<string, Point>;
 	routes: Map<string, EdgeRoute>;
 }
@@ -34,8 +35,8 @@ const layoutOptions = {
 	'elk.layered.considerModelOrder.strategy': 'NODES_AND_EDGES',
 	'elk.layered.nodePlacement.bk.fixedAlignment': 'BALANCED',
 	'elk.layered.nodePlacement.strategy': 'BRANDES_KOEPF',
-	'elk.layered.spacing.edgeNodeBetweenLayers': '12',
-	'elk.layered.spacing.nodeNodeBetweenLayers': '20',
+	'elk.layered.spacing.edgeNodeBetweenLayers': '8',
+	'elk.layered.spacing.nodeNodeBetweenLayers': '12',
 	'elk.padding': '[top=24,left=24,bottom=24,right=24]',
 	'elk.randomSeed': '1',
 	'elk.spacing.edgeEdge': '16',
@@ -50,9 +51,10 @@ export async function layoutGraph(graph: Graph, sizes: ReadonlyMap<string, NodeS
 	if (elkPromise === undefined) elkPromise = createElk();
 
 	const elk = await elkPromise;
+	const started = performance.now();
 	const result = await elk.layout(buildElkGraph(graph, sizes));
 
-	return readLayout(result);
+	return { ...readLayout(result), duration: performance.now() - started };
 }
 
 function buildElkEdges(graph: Graph, order: Array<string>): Array<ElkExtendedEdge> {
@@ -175,7 +177,7 @@ function readLabelPosition(edge: ElkExtendedEdge, role: 'branch' | 'plus') {
 	return { x: label.x ?? 0, y: label.y ?? 0 };
 }
 
-function readLayout(result: ElkNode): LayoutResult {
+function readLayout(result: ElkNode) {
 	const positions = new Map<string, Point>();
 	const routes = new Map<string, EdgeRoute>();
 

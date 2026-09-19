@@ -14,13 +14,24 @@ export type FlowEdge = Edge<RoutedEdgeData, 'routed'>;
 // Suffixed so `output` does not pick up React Flow's built-in output node styles
 export type FlowNode = Node<Record<string, never>, `${NodeKind}-node`>;
 
+export interface FocusRequest {
+	id: string;
+	kind: 'edge' | 'node';
+}
+
 interface FlowState {
 	applyNodeChanges: (changes: Array<NodeChange<FlowNode>>) => void;
+	clearFocusRequest: () => void;
 	commitLayout: (result: LayoutResult) => void;
 	edges: Array<FlowEdge>;
+	focusRequest: FocusRequest | undefined;
 	hasLayout: boolean;
+	isDebug: boolean;
+	layoutDuration: number | undefined;
 	nodes: Array<FlowNode>;
+	requestFocus: (request: FocusRequest) => void;
 	resetView: () => void;
+	setDebug: (isDebug: boolean) => void;
 	sizeVersion: number;
 }
 
@@ -50,10 +61,14 @@ export const useFlowStore = create<FlowState>()((set) => {
 				sizeVersion: hasResize ? sizeVersion + 1 : sizeVersion,
 			}));
 		},
-		commitLayout: ({ positions, routes }) => {
+		clearFocusRequest: () => {
+			set({ focusRequest: undefined });
+		},
+		commitLayout: ({ duration, positions, routes }) => {
 			set(({ edges, nodes }) => ({
 				edges: edges.map((edge) => ({ ...edge, data: { route: routes.get(edge.id) } })),
 				hasLayout: true,
+				layoutDuration: duration,
 				nodes: nodes.map((node) => ({
 					...node,
 					className: '',
@@ -62,10 +77,19 @@ export const useFlowStore = create<FlowState>()((set) => {
 			}));
 		},
 		edges: toFlowEdges(graph, new Map()),
+		focusRequest: undefined,
 		hasLayout: false,
+		isDebug: false,
+		layoutDuration: undefined,
 		nodes: toFlowNodes(graph, new Map()),
+		requestFocus: (request) => {
+			set({ focusRequest: request });
+		},
 		resetView: () => {
 			set({ hasLayout: false });
+		},
+		setDebug: (isDebug) => {
+			set({ isDebug });
 		},
 		sizeVersion: 0,
 	};

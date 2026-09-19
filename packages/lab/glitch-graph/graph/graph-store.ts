@@ -6,11 +6,12 @@ import type { Graph, ParamValue } from './graph-types.ts';
 
 import { deleteNode, insertNode } from './graph-operations.ts';
 import { defaultPresetId, getPreset } from './graph-presets.ts';
+import { getNodeId } from './graph-utils.ts';
 
 interface GraphState {
-	deleteNode: (id: string) => void;
+	deleteNode: (id: string) => string | undefined;
 	graph: Graph;
-	insertNode: (edgeId: string, insertion: Insertion) => void;
+	insertNode: (edgeId: string, insertion: Insertion) => string | undefined;
 	loadPreset: (presetId: PresetId) => void;
 	presetId: PresetId;
 	renameOutput: (id: string, name: string) => void;
@@ -19,13 +20,30 @@ interface GraphState {
 	setSeed: (seed: number) => void;
 }
 
-export const useGraphStore = create<GraphState>()((set) => ({
+// Structural edits return what they created so focus can follow the edit
+export const useGraphStore = create<GraphState>()((set, get) => ({
 	deleteNode: (id) => {
-		set(({ graph }) => ({ graph: deleteNode(graph, id) }));
+		const { graph } = get();
+		const next = deleteNode(graph, id);
+
+		if (next === graph) return;
+
+		set({ graph: next });
+
+		const previousIds = new Set(graph.edges.map((edge) => edge.id));
+
+		return next.edges.find((edge) => !previousIds.has(edge.id))?.id;
 	},
 	graph: getPreset(defaultPresetId).create(),
 	insertNode: (edgeId, insertion) => {
-		set(({ graph }) => ({ graph: insertNode(graph, edgeId, insertion) }));
+		const { graph } = get();
+		const next = insertNode(graph, edgeId, insertion);
+
+		if (next === graph) return;
+
+		set({ graph: next });
+
+		return getNodeId(graph.counter + 1);
 	},
 	loadPreset: (presetId) => {
 		set({ graph: getPreset(presetId).create(), presetId });
