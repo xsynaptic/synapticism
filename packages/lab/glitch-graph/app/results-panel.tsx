@@ -16,6 +16,7 @@ export function ResultsPanel() {
 			<header className="gg-results-header">
 				<p className="gg-results-title">Results</p>
 				<p className="gg-note">Everything runs in this browser; your image is never uploaded.</p>
+				<RunButton />
 			</header>
 			{runError === undefined ? undefined : (
 				<p className="gg-error" role="alert">
@@ -92,5 +93,22 @@ function ResultItem({ name, url }: { name: string; url: string }) {
 				</a>
 			</div>
 		</li>
+	);
+}
+
+function RunButton() {
+	const isDisabled = useRunStore((state) => state.source === undefined || state.status !== 'idle');
+	const runGraph = useRunStore((state) => state.runGraph);
+
+	return (
+		<button
+			className="gg-button gg-run-button"
+			data-variant="primary"
+			disabled={isDisabled}
+			onClick={() => void runGraph()}
+			type="button"
+		>
+			Run
+		</button>
 	);
 }

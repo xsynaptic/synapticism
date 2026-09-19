@@ -4,7 +4,7 @@ import type { Insertion } from './graph-operations.ts';
 import type { Graph, GraphNode, NodeKind } from './graph-types.ts';
 
 import { canDelete, deleteNode, getNodeCount, insertNode, nodeCap } from './graph-operations.ts';
-import { createDiamondForkPreset, graphPresets } from './graph-presets.ts';
+import { createBlankGraph, createDiamondForkPreset, graphPresets } from './graph-presets.ts';
 import { effectKinds, predicateKinds } from './param-definitions.ts';
 
 const expectedPorts = {
@@ -135,13 +135,13 @@ function releaseTargets(graph: Graph, id: string | undefined, pending: Map<strin
 }
 
 describe('presets', () => {
-	it.each(graphPresets.map((preset) => [preset.id, preset.create()] as const))(
-		'%s is valid and within the cap',
-		(_, graph) => {
-			expect(getViolations(graph)).toEqual([]);
-			expect(getNodeCount(graph)).toBeLessThanOrEqual(nodeCap);
-		},
-	);
+	it.each([
+		...graphPresets.map((preset) => [preset.id, preset.create()] as const),
+		['blank', createBlankGraph()] as const,
+	])('%s is valid and within the cap', (_, graph) => {
+		expect(getViolations(graph)).toEqual([]);
+		expect(getNodeCount(graph)).toBeLessThanOrEqual(nodeCap);
+	});
 
 	it('builds the dense preset from every one of its edits', () => {
 		expect(getNodeCount(densePreset)).toBe(36);

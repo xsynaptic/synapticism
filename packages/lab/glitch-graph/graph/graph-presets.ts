@@ -34,6 +34,17 @@ export const graphPresets = [
 
 export const defaultPresetId: PresetId = 'diamond-fork';
 
+export function createBlankGraph(): Graph {
+	return {
+		counter: 2,
+		edges: [createEdge(['n1', 0], ['n2', 0])],
+		nodes: {
+			n1: { id: 'n1', kind: 'source' },
+			n2: { id: 'n2', kind: 'output', name: 'Main' },
+		},
+	};
+}
+
 export function createDiamondForkPreset(): Graph {
 	return {
 		counter: 8,

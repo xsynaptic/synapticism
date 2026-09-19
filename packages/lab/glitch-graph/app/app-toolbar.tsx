@@ -9,7 +9,7 @@ import type { PresetId } from '../graph/graph-presets.ts';
 
 import { useFlowStore } from '../canvas/flow-store.ts';
 import { graphPresets } from '../graph/graph-presets.ts';
-import { useGraphStore } from '../graph/graph-store.ts';
+import { useActivePresetId, useGraphStore } from '../graph/graph-store.ts';
 import { usePortalContainer } from '../ui/portal-container.ts';
 import { useRunStore } from './run-store.ts';
 
@@ -19,25 +19,14 @@ const presetItems = graphPresets.map(({ id, label }) => ({ label, value: id }));
 
 export function AppToolbar() {
 	const status = useRunStore((state) => state.status);
-	const hasSource = useRunStore((state) => state.source !== undefined);
-	const runGraph = useRunStore((state) => state.runGraph);
 	const sourceError = useRunStore((state) => state.sourceError);
 
 	return (
 		<div className="gg-toolbar-row">
 			<Toolbar.Root aria-label="Glitch graph controls" className="gg-toolbar">
-				<Toolbar.Button
-					className="gg-button"
-					data-variant="primary"
-					disabled={!hasSource || status !== 'idle'}
-					onClick={() => void runGraph()}
-				>
-					{status === 'running' ? 'Running…' : 'Run'}
-				</Toolbar.Button>
+				<UploadControl isDisabled={status !== 'idle'} />
 				<Toolbar.Separator className="gg-toolbar-separator" />
 				<SeedControl />
-				<Toolbar.Separator className="gg-toolbar-separator" />
-				<UploadControl isDisabled={status !== 'idle'} />
 				<Toolbar.Separator className="gg-toolbar-separator" />
 				<PresetControl />
 				<Toolbar.Separator className="gg-toolbar-separator" />
@@ -73,22 +62,27 @@ function DebugSwitch() {
 }
 
 function PresetControl() {
-	const presetId = useGraphStore((state) => state.presetId);
+	const presetId = useActivePresetId();
 	const loadPreset = useGraphStore((state) => state.loadPreset);
+	const reset = useGraphStore((state) => state.reset);
 	const resetView = useFlowStore((state) => state.resetView);
-
-	function load(id: PresetId) {
-		loadPreset(id);
-		resetView();
-	}
+	const clearResults = useRunStore((state) => state.clearResults);
 
 	return (
 		<>
-			<PresetSelect onSelect={load} presetId={presetId} />
+			<PresetSelect
+				onSelect={(id) => {
+					loadPreset(id);
+					resetView();
+				}}
+				presetId={presetId}
+			/>
 			<Toolbar.Button
 				className="gg-button"
 				onClick={() => {
-					load(presetId);
+					reset();
+					resetView();
+					clearResults();
 				}}
 			>
 				Reset
@@ -102,9 +96,11 @@ function PresetSelect({
 	presetId,
 }: {
 	onSelect: (id: PresetId) => void;
-	presetId: PresetId;
+	presetId: PresetId | undefined;
 }) {
 	const container = usePortalContainer();
+	// eslint-disable-next-line unicorn/no-null -- Base UI Select only shows its placeholder for `null`
+	const value = presetId ?? null;
 
 	return (
 		<Select.Root
@@ -114,7 +110,7 @@ function PresetSelect({
 
 				if (preset !== undefined) onSelect(preset.id);
 			}}
-			value={presetId}
+			value={value}
 		>
 			<div className="gg-toolbar-field">
 				<Select.Label className="gg-param-label">Preset</Select.Label>
@@ -123,7 +119,7 @@ function PresetSelect({
 					data-placement="toolbar"
 					render={<Select.Trigger />}
 				>
-					<Select.Value />
+					<Select.Value placeholder="Custom settings" />
 					<Select.Icon className="gg-select-icon">▾</Select.Icon>
 				</Toolbar.Button>
 			</div>
@@ -150,8 +146,9 @@ function SeedControl() {
 
 	return (
 		<>
-			<Field.Root className="gg-toolbar-field">
+			<Field.Root>
 				<NumberField.Root
+					className="gg-toolbar-field"
 					format={{ useGrouping: false }}
 					max={maxSeed}
 					min={0}
@@ -188,7 +185,7 @@ function UploadControl({ isDisabled }: { isDisabled: boolean }) {
 				disabled={isDisabled}
 				onClick={() => fileInputRef.current?.click()}
 			>
-				Open image
+				Select image…
 			</Toolbar.Button>
 			<input
 				accept="image/*"

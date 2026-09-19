@@ -22,6 +22,7 @@ interface RunInputs {
 }
 
 interface RunState {
+	clearResults: () => void;
 	loadDefaultSource: (url: string) => Promise<void>;
 	loadSource: (file: File) => Promise<void>;
 	ranWith: RunInputs | undefined;
@@ -37,6 +38,11 @@ interface RunState {
 const supportedFormats = 'Try a PNG, JPEG, WebP or GIF.';
 
 export const useRunStore = create<RunState>()((set, get) => ({
+	clearResults: () => {
+		for (const result of get().results) URL.revokeObjectURL(result.url);
+
+		set({ ranWith: undefined, results: [], runDuration: undefined, runError: undefined });
+	},
 	loadDefaultSource: async (url) => {
 		await decodeSource(
 			() => fetchImage(url),

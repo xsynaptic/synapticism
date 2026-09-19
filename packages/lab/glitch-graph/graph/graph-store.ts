@@ -5,72 +5,89 @@ import type { PresetId } from './graph-presets.ts';
 import type { Graph, ParamValue } from './graph-types.ts';
 
 import { deleteNode, insertNode } from './graph-operations.ts';
-import { defaultPresetId, getPreset } from './graph-presets.ts';
+import { createBlankGraph, defaultPresetId, getPreset } from './graph-presets.ts';
 import { getNodeId } from './graph-utils.ts';
 
 interface GraphState {
 	deleteNode: (id: string) => string | undefined;
 	graph: Graph;
 	insertNode: (edgeId: string, insertion: Insertion) => string | undefined;
+	loadedPreset: undefined | { graph: Graph; id: PresetId };
 	loadPreset: (presetId: PresetId) => void;
-	presetId: PresetId;
 	renameOutput: (id: string, name: string) => void;
+	reset: () => void;
 	seed: number;
 	setParam: (id: string, key: string, value: ParamValue) => void;
 	setSeed: (seed: number) => void;
 }
 
 // Structural edits return what they created so focus can follow the edit
-export const useGraphStore = create<GraphState>()((set, get) => ({
-	deleteNode: (id) => {
-		const { graph } = get();
-		const next = deleteNode(graph, id);
+export const useGraphStore = create<GraphState>()((set, get) => {
+	const graph = getPreset(defaultPresetId).create();
 
-		if (next === graph) return;
+	return {
+		deleteNode: (id) => {
+			const { graph } = get();
+			const next = deleteNode(graph, id);
 
-		set({ graph: next });
+			if (next === graph) return;
 
-		const previousIds = new Set(graph.edges.map((edge) => edge.id));
+			set({ graph: next });
 
-		return next.edges.find((edge) => !previousIds.has(edge.id))?.id;
-	},
-	graph: getPreset(defaultPresetId).create(),
-	insertNode: (edgeId, insertion) => {
-		const { graph } = get();
-		const next = insertNode(graph, edgeId, insertion);
+			const previousIds = new Set(graph.edges.map((edge) => edge.id));
 
-		if (next === graph) return;
+			return next.edges.find((edge) => !previousIds.has(edge.id))?.id;
+		},
+		graph,
+		insertNode: (edgeId, insertion) => {
+			const { graph } = get();
+			const next = insertNode(graph, edgeId, insertion);
 
-		set({ graph: next });
+			if (next === graph) return;
 
-		return getNodeId(graph.counter + 1);
-	},
-	loadPreset: (presetId) => {
-		set({ graph: getPreset(presetId).create(), presetId });
-	},
-	presetId: defaultPresetId,
-	renameOutput: (id, name) => {
-		set(({ graph }) => {
-			const node = graph.nodes[id];
+			set({ graph: next });
 
-			if (node?.kind !== 'output') return {};
+			return getNodeId(graph.counter + 1);
+		},
+		loadedPreset: { graph, id: defaultPresetId },
+		loadPreset: (presetId) => {
+			const presetGraph = getPreset(presetId).create();
 
-			return { graph: { ...graph, nodes: { ...graph.nodes, [id]: { ...node, name } } } };
-		});
-	},
-	seed: 1,
-	setParam: (id, key, value) => {
-		set(({ graph }) => {
-			const node = graph.nodes[id];
+			set({ graph: presetGraph, loadedPreset: { graph: presetGraph, id: presetId } });
+		},
+		renameOutput: (id, name) => {
+			set(({ graph }) => {
+				const node = graph.nodes[id];
 
-			if (node?.kind !== 'effect' && node?.kind !== 'split') return {};
+				if (node?.kind !== 'output') return {};
 
-			const params = { ...node.params, [key]: value };
+				return { graph: { ...graph, nodes: { ...graph.nodes, [id]: { ...node, name } } } };
+			});
+		},
+		reset: () => {
+			set({ graph: createBlankGraph(), loadedPreset: undefined });
+		},
+		seed: 1,
+		setParam: (id, key, value) => {
+			set(({ graph }) => {
+				const node = graph.nodes[id];
 
-			return { graph: { ...graph, nodes: { ...graph.nodes, [id]: { ...node, params } } } };
-		});
-	},
-	setSeed: (seed) => {
-		set({ seed });
-	},
-}));
+				if (node?.kind !== 'effect' && node?.kind !== 'split') return {};
+
+				const params = { ...node.params, [key]: value };
+
+				return { graph: { ...graph, nodes: { ...graph.nodes, [id]: { ...node, params } } } };
+			});
+		},
+		setSeed: (seed) => {
+			set({ seed });
+		},
+	};
+});
+
+// Any edit replaces the graph, so a loaded preset only stays active while its graph is untouched
+export function useActivePresetId() {
+	return useGraphStore(({ graph, loadedPreset }) =>
+		loadedPreset?.graph === graph ? loadedPreset.id : undefined,
+	);
+}

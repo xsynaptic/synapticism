@@ -2,11 +2,16 @@ import type { EdgeTypes } from '@xyflow/react';
 import type { RefObject } from 'react';
 
 import {
+	Background,
+	BackgroundVariant,
 	Controls,
+	getNodesBounds,
+	getViewportForBounds,
 	Panel,
 	ReactFlow,
 	useNodesInitialized,
 	useReactFlow,
+	useStore,
 	ViewportPortal,
 } from '@xyflow/react';
 import { useEffect, useRef } from 'react';
@@ -30,6 +35,9 @@ const minZoom = 0.1;
 
 const fitViewOptions = { maxZoom: 1, padding: 0.08 };
 
+// Zooming in stops at twice the whole-graph view, though never short of 1:1
+const zoomInFactor = 2;
+
 // eslint-disable-next-line unicorn/no-null -- React Flow only turns the delete key off with `null`
 const deleteKeyCode = null;
 
@@ -40,6 +48,7 @@ export function GraphCanvas() {
 	const isDebug = useFlowStore((state) => state.isDebug);
 	const applyNodeChanges = useFlowStore((state) => state.applyNodeChanges);
 	const canvasRef = useRef<HTMLDivElement>(null);
+	const maxZoom = useMaxZoom(nodes);
 
 	useMeasuredLayout();
 	useFocusRequest(canvasRef);
@@ -53,7 +62,7 @@ export function GraphCanvas() {
 				edgesFocusable={false}
 				edgeTypes={edgeTypes}
 				elementsSelectable={false}
-				maxZoom={1.5}
+				maxZoom={maxZoom}
 				minZoom={minZoom}
 				nodes={nodes}
 				nodesConnectable={false}
@@ -65,6 +74,7 @@ export function GraphCanvas() {
 				zoomOnDoubleClick={false}
 				zoomOnScroll={false}
 			>
+				<Background gap={16} variant={BackgroundVariant.Dots} />
 				<Controls className="gg-controls" showInteractive={false} />
 				{isDebug ? <DebugOverlay nodes={nodes} /> : undefined}
 			</ReactFlow>
@@ -148,6 +158,24 @@ function useFocusRequest(canvasRef: RefObject<HTMLDivElement | null>) {
 			cancelAnimationFrame(frame);
 		};
 	}, [canvasRef, clearFocusRequest, edges, focusRequest, nodes]);
+}
+
+function useMaxZoom(nodes: Array<FlowNode>) {
+	const width = useStore((state) => state.width);
+	const height = useStore((state) => state.height);
+
+	if (width === 0 || height === 0 || nodes.length === 0) return 1;
+
+	const { zoom } = getViewportForBounds(
+		getNodesBounds(nodes),
+		width,
+		height,
+		minZoom,
+		fitViewOptions.maxZoom,
+		fitViewOptions.padding,
+	);
+
+	return Math.max(1, zoom * zoomInFactor);
 }
 
 // Nodes are read inside the effect rather than depended on, which would loop (xyflow #4153)
