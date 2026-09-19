@@ -1,22 +1,25 @@
-import { ABGR8888, IntBuffer } from '@thi.ng/pixel';
+import type { IntBuffer } from '@thi.ng/pixel';
+
 import { describe, expect, it } from 'vitest';
 
-import type { Graph } from '../graph/graph-types.ts';
+import type { Graph, GraphNode } from '../graph/graph-types.ts';
 
-import { createDiamondForkPreset } from '../graph/graph-presets.ts';
+import { createDiamondForkPreset, graphPresets } from '../graph/graph-presets.ts';
+import { createEdge } from '../graph/graph-utils.ts';
 import { channelShift } from './effects/channel-shift.ts';
 import { run } from './run.ts';
+import { createFrame, createGradientFrame } from './test-frames.ts';
 
-function createGradientFrame(width: number, height: number) {
-	const frame = new IntBuffer(width, height, ABGR8888);
-
-	for (let index = 0; index < width * height; index++) {
-		const value = Math.round((index / (width * height - 1)) * 255);
-
-		frame.data[index] = (0xff_00_00_00 | (value << 16) | ((255 - value) << 8) | value) >>> 0;
-	}
-
-	return frame;
+function createChain(node: GraphNode): Graph {
+	return {
+		counter: 3,
+		edges: [createEdge(['n1', 0], [node.id, 0]), createEdge([node.id, 0], ['n3', 0])],
+		nodes: {
+			n1: { id: 'n1', kind: 'source' },
+			n3: { id: 'n3', kind: 'output', name: 'Main' },
+			[node.id]: node,
+		},
+	};
 }
 
 function getEffectParams(graph: Graph, id: string) {
@@ -25,6 +28,22 @@ function getEffectParams(graph: Graph, id: string) {
 	if (node?.kind !== 'effect') throw new Error(`Preset lost Effect ${id}`);
 
 	return node.params;
+}
+
+// FNV-1a over every Output frame in id order
+async function hashRun(graph: Graph, source: IntBuffer, seed: number) {
+	const results = await run(graph, source, seed);
+	let hash = 0x81_1c_9d_c5;
+
+	const ids = [...results.keys()].toSorted((first, second) => first.localeCompare(second));
+
+	for (const id of ids) {
+		const frame = results.get(id)?.data ?? [];
+
+		for (const pixel of frame) hash = Math.imul(hash ^ pixel, 0x01_00_01_93) >>> 0;
+	}
+
+	return hash;
 }
 
 async function runMain(graph: Graph, source: IntBuffer) {
@@ -65,14 +84,53 @@ describe('run', () => {
 	});
 });
 
+describe('run determinism', () => {
+	const source = createGradientFrame(48, 32);
+	const densePreset = graphPresets[2].create();
+
+	it('gives an identical hash for the same frame, graph and seed, leaving the source untouched', async () => {
+		const before = [...source.data];
+		const first = await hashRun(densePreset, source, 7);
+		const second = await hashRun(graphPresets[2].create(), source, 7);
+
+		expect(second).toBe(first);
+		expect([...source.data]).toEqual(before);
+	});
+
+	it.each([
+		[
+			'slice displacement',
+			createChain({
+				effect: 'slice-displacement',
+				id: 'n2',
+				kind: 'effect',
+				params: { maxOffset: 16, slices: 8 },
+			}),
+		],
+		[
+			'a random Split',
+			{
+				...createDiamondForkPreset(),
+				nodes: {
+					...createDiamondForkPreset().nodes,
+					n3: {
+						id: 'n3',
+						kind: 'split',
+						mergeId: 'n5',
+						params: { blockSize: 4, percentage: 50 },
+						predicate: 'random',
+					},
+				},
+			} satisfies Graph,
+		],
+	])('changes the output of %s with the seed', async (_, graph) => {
+		expect(await hashRun(graph, source, 2)).not.toBe(await hashRun(graph, source, 1));
+	});
+});
+
 describe('channelShift', () => {
 	it('moves only the chosen channel, wrapping at the edge', () => {
-		const frame = new IntBuffer(
-			3,
-			1,
-			ABGR8888,
-			new Uint32Array([0xff_00_00_0a, 0xff_00_00_0b, 0xff_00_00_0c]),
-		);
+		const frame = createFrame(3, 1, [0xff_00_00_0a, 0xff_00_00_0b, 0xff_00_00_0c]);
 		const shifted = channelShift(frame, { channel: 'red', dx: 1, dy: 0 });
 
 		expect([...shifted.data]).toEqual([0xff_00_00_0c, 0xff_00_00_0a, 0xff_00_00_0b]);

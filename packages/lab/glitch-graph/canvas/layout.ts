@@ -6,6 +6,7 @@ import type { Point } from './edge-path.ts';
 import { getModelOrder } from '../graph/graph-utils.ts';
 
 export interface EdgeRoute {
+	branchLabel?: Point;
 	button: Point;
 	points: Array<Point>;
 }
@@ -19,6 +20,8 @@ export interface NodeSize {
 	height: number;
 	width: number;
 }
+
+export const branchLabelSize = { height: 16, width: 48 };
 
 const plusButtonSize = 24;
 
@@ -65,12 +68,22 @@ function buildElkEdges(graph: Graph, order: Array<string>): Array<ElkExtendedEdg
 		labels: [
 			{
 				height: plusButtonSize,
-				id: `${edge.id}:plus`,
+				id: getLabelId(edge.id, 'plus'),
 				layoutOptions: { 'elk.edgeLabels.inline': 'true', 'elk.edgeLabels.placement': 'CENTER' },
 				// ELK skips a label without text, so the reserved space would vanish
 				text: '+',
 				width: plusButtonSize,
 			},
+			...(graph.nodes[edge.source]?.kind === 'split'
+				? [
+						{
+							...branchLabelSize,
+							id: getLabelId(edge.id, 'branch'),
+							layoutOptions: { 'elk.edgeLabels.placement': 'TAIL' },
+							text: 'branch',
+						},
+					]
+				: []),
 		],
 		sources: [
 			getBranchDirection(graph.nodes[edge.source]) === 'out'
@@ -146,8 +159,20 @@ function getBranchDirection(node: GraphNode | undefined) {
 	return;
 }
 
+function getLabelId(edgeId: string, role: 'branch' | 'plus') {
+	return `${edgeId}:${role}`;
+}
+
 function getPortId(id: string, direction: 'in' | 'out', branchIndex: number) {
 	return `${id}:${direction}:${String(branchIndex)}`;
+}
+
+function readLabelPosition(edge: ElkExtendedEdge, role: 'branch' | 'plus') {
+	const label = edge.labels?.find((candidate) => candidate.id === getLabelId(edge.id, role));
+
+	if (label === undefined) return;
+
+	return { x: label.x ?? 0, y: label.y ?? 0 };
 }
 
 function readLayout(result: ElkNode): LayoutResult {
@@ -172,17 +197,15 @@ function readLayout(result: ElkNode): LayoutResult {
 
 function readRoute(edge: ElkExtendedEdge): EdgeRoute | undefined {
 	const section = edge.sections?.[0];
-	const label = edge.labels?.[0];
+	const plusLabel = readLabelPosition(edge, 'plus');
 
-	if (section === undefined || label === undefined) return undefined;
+	if (section === undefined || plusLabel === undefined) return undefined;
 
 	const points = [section.startPoint, ...(section.bendPoints ?? []), section.endPoint].map(
 		({ x, y }) => ({ x, y }),
 	);
-	const button = {
-		x: (label.x ?? 0) + plusButtonSize / 2,
-		y: (label.y ?? 0) + plusButtonSize / 2,
-	};
+	const button = { x: plusLabel.x + plusButtonSize / 2, y: plusLabel.y + plusButtonSize / 2 };
+	const branchLabel = readLabelPosition(edge, 'branch');
 
-	return { button, points };
+	return branchLabel === undefined ? { button, points } : { branchLabel, button, points };
 }

@@ -3,6 +3,7 @@ import type { IntBuffer } from '@thi.ng/pixel';
 import type { ParamValues } from '../../graph/graph-types.ts';
 
 import { readNumber, readString } from '../../graph/param-definitions.ts';
+import { wrap } from '../frame.ts';
 
 const channelBitOffsets: Record<string, number> = { blue: 16, green: 8, red: 0 };
 
@@ -27,8 +28,4 @@ export function channelShift(input: IntBuffer, params: ParamValues) {
 	}
 
 	return output;
-}
-
-function wrap(value: number, size: number) {
-	return ((value % size) + size) % size;
 }

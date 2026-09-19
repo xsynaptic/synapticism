@@ -1,4 +1,6 @@
-import type { ParamValues } from './graph-types.ts';
+import type { CosineGradientPreset } from '@thi.ng/color';
+
+import type { ParamValues, SplitNode } from './graph-types.ts';
 
 export interface ParamDefinition {
 	label: string;
@@ -25,6 +27,17 @@ export interface SelectParam {
 	options: ReadonlyArray<{ label: string; value: string }>;
 }
 
+export const gradientMapPresets = [
+	{ label: 'Heat', value: 'heat1' },
+	{ label: 'Rainbow', value: 'rainbow1' },
+	{ label: 'Blue magenta orange', value: 'blue-magenta-orange' },
+	{ label: 'Purple orange cyan', value: 'purple-orange-cyan' },
+	{ label: 'Yellow purple magenta', value: 'yellow-purple-magenta' },
+	{ label: 'Green blue orange', value: 'green-blue-orange' },
+	{ label: 'Cyan magenta', value: 'cyan-magenta' },
+	{ label: 'Orange blue', value: 'orange-blue' },
+] as const satisfies ReadonlyArray<{ label: string; value: CosineGradientPreset }>;
+
 export const effectDefinitions = {
 	'channel-shift': {
 		label: 'Channel shift',
@@ -44,6 +57,75 @@ export const effectDefinitions = {
 			{ default: 0, key: 'dy', kind: 'range', label: 'Shift y', max: 64, min: -64, step: 1 },
 		],
 	},
+	dither: {
+		label: 'Dither',
+		params: [
+			{
+				default: 'bayer-4',
+				key: 'kernel',
+				kind: 'select',
+				label: 'Kernel',
+				options: [
+					{ label: 'Bayer 4×4', value: 'bayer-4' },
+					{ label: 'Bayer 8×8', value: 'bayer-8' },
+					{ label: 'Floyd–Steinberg', value: 'floyd-steinberg' },
+					{ label: 'Atkinson', value: 'atkinson' },
+				],
+			},
+			{ default: 2, key: 'levels', kind: 'range', label: 'Levels', max: 8, min: 2, step: 1 },
+		],
+	},
+	'gradient-map': {
+		label: 'Gradient map',
+		params: [
+			{
+				default: 'heat1',
+				key: 'preset',
+				kind: 'select',
+				label: 'Gradient',
+				options: gradientMapPresets,
+			},
+		],
+	},
+	'pixel-sort': {
+		label: 'Pixel sort',
+		params: [
+			{
+				default: 96,
+				key: 'threshold',
+				kind: 'range',
+				label: 'Threshold',
+				max: 255,
+				min: 0,
+				step: 1,
+			},
+			{
+				default: 'horizontal',
+				key: 'axis',
+				kind: 'select',
+				label: 'Axis',
+				options: [
+					{ label: 'Rows', value: 'horizontal' },
+					{ label: 'Columns', value: 'vertical' },
+				],
+			},
+		],
+	},
+	'slice-displacement': {
+		label: 'Slice displacement',
+		params: [
+			{ default: 16, key: 'slices', kind: 'range', label: 'Slices', max: 48, min: 2, step: 1 },
+			{
+				default: 64,
+				key: 'maxOffset',
+				kind: 'range',
+				label: 'Max offset',
+				max: 256,
+				min: 0,
+				step: 1,
+			},
+		],
+	},
 } as const satisfies Record<string, ParamDefinition>;
 
 export const predicateDefinitions = {
@@ -61,15 +143,50 @@ export const predicateDefinitions = {
 			},
 		],
 	},
+	random: {
+		label: 'Random',
+		params: [
+			{
+				default: 75,
+				key: 'percentage',
+				kind: 'range',
+				label: 'Percentage',
+				max: 100,
+				min: 0,
+				step: 1,
+			},
+			{
+				default: 16,
+				key: 'blockSize',
+				kind: 'range',
+				label: 'Block size',
+				max: 64,
+				min: 1,
+				step: 1,
+			},
+		],
+	},
 } as const satisfies Record<string, ParamDefinition>;
 
-export const effectKinds = ['channel-shift'] as const satisfies ReadonlyArray<
-	keyof typeof effectDefinitions
->;
+export const effectKinds = [
+	'channel-shift',
+	'pixel-sort',
+	'slice-displacement',
+	'dither',
+	'gradient-map',
+] as const satisfies ReadonlyArray<keyof typeof effectDefinitions>;
 
-export const predicateKinds = ['luminance'] as const satisfies ReadonlyArray<
+export const predicateKinds = ['luminance', 'random'] as const satisfies ReadonlyArray<
 	keyof typeof predicateDefinitions
 >;
+
+export function getBranchLabel(split: SplitNode, branchIndex: number) {
+	if (split.predicate === 'luminance') return branchIndex === 0 ? 'bright' : 'dark';
+
+	const percentage = Math.round(readNumber(split.params, 'percentage'));
+
+	return `${String(branchIndex === 0 ? percentage : 100 - percentage)}%`;
+}
 
 export function getDefaultParams(definition: ParamDefinition): ParamValues {
 	return Object.fromEntries(definition.params.map((param) => [param.key, param.default]));

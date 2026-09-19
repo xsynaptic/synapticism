@@ -5,6 +5,7 @@ import type { Graph, GraphNode, NodeKind } from './graph-types.ts';
 
 import { canDelete, deleteNode, getNodeCount, insertNode, nodeCap } from './graph-operations.ts';
 import { createDiamondForkPreset, graphPresets } from './graph-presets.ts';
+import { effectKinds, predicateKinds } from './param-definitions.ts';
 
 const expectedPorts = {
 	effect: { inputs: [0], outputs: [0] },
@@ -144,6 +145,19 @@ describe('presets', () => {
 
 	it('builds the dense preset from every one of its edits', () => {
 		expect(getNodeCount(densePreset)).toBe(36);
+	});
+
+	it('uses every effect and predicate in the dense preset', () => {
+		const kinds = new Set(
+			Object.values(densePreset.nodes).flatMap((node) => {
+				if (node.kind === 'effect') return [node.effect];
+				if (node.kind === 'split') return [node.predicate];
+
+				return [];
+			}),
+		);
+
+		expect(kinds).toEqual(new Set([...effectKinds, ...predicateKinds]));
 	});
 });
 

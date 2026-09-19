@@ -162,6 +162,19 @@
 	}
 }
 
+.gg-branch-label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	font-size: 0.7rem;
+	line-height: 1;
+	color: var(--gg-ink-muted);
+	white-space: nowrap;
+}
+
 /* React Flow turns pointer events off on nodes that are neither draggable nor selectable */
 .gg-node,
 .gg-pill {

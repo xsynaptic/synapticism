@@ -14,8 +14,13 @@ import type {
 
 import { getIncomingEdges } from '../graph/graph-utils.ts';
 import { channelShift } from './effects/channel-shift.ts';
+import { dither } from './effects/dither.ts';
+import { gradientMap } from './effects/gradient-map.ts';
+import { pixelSort } from './effects/pixel-sort.ts';
+import { sliceDisplacement } from './effects/slice-displacement.ts';
 import { mergeByMask } from './merge.ts';
 import { luminanceMask } from './predicates/luminance.ts';
+import { randomMask } from './predicates/random.ts';
 
 type EffectFunction = (input: IntBuffer, params: ParamValues, random: IRandom) => IntBuffer;
 
@@ -29,10 +34,15 @@ interface RunContext {
 
 const effects: Record<EffectKind, EffectFunction> = {
 	'channel-shift': channelShift,
+	dither,
+	'gradient-map': gradientMap,
+	'pixel-sort': pixelSort,
+	'slice-displacement': sliceDisplacement,
 };
 
 const predicates: Record<PredicateKind, PredicateFunction> = {
 	luminance: luminanceMask,
+	random: randomMask,
 };
 
 export function run(graph: Graph, source: IntBuffer, seed: number) {
