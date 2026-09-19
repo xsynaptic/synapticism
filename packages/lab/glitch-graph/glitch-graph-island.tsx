@@ -5,7 +5,7 @@ interface GlitchGraphIslandProps {
 }
 
 // React Flow, Base UI, thi.ng and ELK stay out of the hydration bundle until the island is visible
-const GlitchGraphApp = lazy(() => import('./app/glitch-graph-app.tsx'));
+const GlitchGraphApp = lazy(() => import('#glitch-graph/app/glitch-graph-app.tsx'));
 
 // Matches the loaded app with an empty results panel at the site's content width
 const reservedStyle = { minHeight: '60.9rem' };

@@ -7,15 +7,15 @@ import {
 } from '@synapticism/shared/constants';
 import { Bitmap } from 'takumi-js/helpers/jsx';
 
-import type { ProcessedImage } from './generate.js';
-import type { OpenGraphEntryItem } from './types.js';
+import type { ProcessedImage } from '#og-image/generate.ts';
+import type { OpenGraphEntryItem } from '#og-image/types.ts';
 
 import {
 	openGraphPaddingFull,
 	openGraphPaddingSplit,
 	openGraphPanelWidth,
 	openGraphSeamWidth,
-} from './constants.js';
+} from '#og-image/constants.ts';
 
 // Mirrors src/styles/main/theme.css; scale positions given so they trace back to the site
 const colors = {

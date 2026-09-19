@@ -1,8 +1,15 @@
-import type { ResolvedOptions } from './options.ts';
-import type { RgbColor } from './utils.ts';
+import type { ResolvedOptions } from '#station-tile/core/options.ts';
+import type { RgbColor } from '#station-tile/core/utils.ts';
 
-import { GLOSS, JITTER, MACRO, TILT } from './appearance.ts';
-import { cellSeed, jitterHsl, lerp, mulberry32, shiftLightness, signed } from './utils.ts';
+import { GLOSS, JITTER, MACRO, TILT } from '#station-tile/core/appearance.ts';
+import {
+	cellSeed,
+	jitterHsl,
+	lerp,
+	mulberry32,
+	shiftLightness,
+	signed,
+} from '#station-tile/core/utils.ts';
 
 export interface Cell {
 	baseColor: RgbColor;

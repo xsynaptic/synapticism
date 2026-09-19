@@ -7,6 +7,9 @@
 	"exports": {
 		"./*": "./*"
 	},
+	"imports": {
+		"#*": "./*"
+	},
 	"dependencies": {
 		"@base-ui/react": "^1.8.0",
 		"@thi.ng/color": "^5.8.33",

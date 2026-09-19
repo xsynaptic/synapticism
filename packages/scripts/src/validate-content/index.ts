@@ -5,17 +5,16 @@ import chalk from 'chalk';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 
-import { getCollectionEntries, withAstroContent } from '#shared/astro-content.js';
-import { findWorkspaceRoot } from '#shared/utils.js';
+import type { ValidationResult } from '#validate-content/validation-result.ts';
 
-import type { ValidationResult } from './validation-result.js';
-
-import { validateEntryIds } from './entry-ids.js';
-import { validateImages } from './images.js';
-import { validateLinkIds } from './link-ids.js';
-import { validateMdxComponents } from './mdx.js';
-import { validateReferences } from './references.js';
-import { reportValidationResult } from './validation-result.js';
+import { getCollectionEntries, withAstroContent } from '#shared/astro-content.ts';
+import { findWorkspaceRoot } from '#shared/utils.ts';
+import { validateEntryIds } from '#validate-content/entry-ids.ts';
+import { validateImages } from '#validate-content/images.ts';
+import { validateLinkIds } from '#validate-content/link-ids.ts';
+import { validateMdxComponents } from '#validate-content/mdx.ts';
+import { validateReferences } from '#validate-content/references.ts';
+import { reportValidationResult } from '#validate-content/validation-result.ts';
 
 const collections = ['notes', 'pages', 'posts', 'projects', 'tags'] satisfies Array<CollectionKey>;
 

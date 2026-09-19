@@ -1,10 +1,15 @@
 import { Input } from '@base-ui/react/input';
 
-import type { EffectNode, ParamValue, ParamValues, SplitNode } from '../../graph/graph-types.ts';
-import type { ParamDefinition } from '../../graph/param-definitions.ts';
+import type {
+	EffectNode,
+	ParamValue,
+	ParamValues,
+	SplitNode,
+} from '#glitch-graph/graph/graph-types.ts';
+import type { ParamDefinition } from '#glitch-graph/graph/param-definitions.ts';
 
-import { effectDefinitions, predicateDefinitions } from '../../graph/param-definitions.ts';
-import { ParamControl } from '../../ui/param-control.tsx';
+import { effectDefinitions, predicateDefinitions } from '#glitch-graph/graph/param-definitions.ts';
+import { ParamControl } from '#glitch-graph/ui/param-control.tsx';
 
 type ParamChangeHandler = (key: string, value: ParamValue) => void;
 

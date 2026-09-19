@@ -1,9 +1,9 @@
 import type { IntBuffer } from '@thi.ng/pixel';
 
-import type { ParamValues } from '../../graph/graph-types.ts';
+import type { ParamValues } from '#glitch-graph/graph/graph-types.ts';
 
-import { readNumber, readString } from '../../graph/param-definitions.ts';
-import { getLuma } from '../frame.ts';
+import { getLuma } from '#glitch-graph/engine/frame.ts';
+import { readNumber, readString } from '#glitch-graph/graph/param-definitions.ts';
 
 const pixelRange = 2 ** 32;
 

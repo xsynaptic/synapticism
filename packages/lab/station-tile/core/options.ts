@@ -1,8 +1,13 @@
-import type { GlossBlend, TileTheme } from './appearance.ts';
-import type { RgbColor } from './utils.ts';
+import type { GlossBlend, TileTheme } from '#station-tile/core/appearance.ts';
+import type { RgbColor } from '#station-tile/core/utils.ts';
 
-import { DEFAULT_TILE_THEME, GEOMETRY, TILE_DEFAULTS, TILE_THEMES } from './appearance.ts';
-import { hashSeed, parseHex } from './utils.ts';
+import {
+	DEFAULT_TILE_THEME,
+	GEOMETRY,
+	TILE_DEFAULTS,
+	TILE_THEMES,
+} from '#station-tile/core/appearance.ts';
+import { hashSeed, parseHex } from '#station-tile/core/utils.ts';
 
 export interface ResolvedOptions extends ResolvedColors, ResolvedGeometry, ResolvedGloss {
 	bevel: number;

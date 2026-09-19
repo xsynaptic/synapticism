@@ -1,9 +1,9 @@
 import type { IntBuffer } from '@thi.ng/pixel';
 import type { IRandom } from '@thi.ng/random';
 
-import type { ParamValues } from '../../graph/graph-types.ts';
+import type { ParamValues } from '#glitch-graph/graph/graph-types.ts';
 
-import { readNumber } from '../../graph/param-definitions.ts';
+import { readNumber } from '#glitch-graph/graph/param-definitions.ts';
 
 export function randomMask(input: IntBuffer, params: ParamValues, random: IRandom) {
 	const { height, width } = input;

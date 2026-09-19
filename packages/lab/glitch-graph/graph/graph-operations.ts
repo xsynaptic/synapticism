@@ -1,8 +1,18 @@
-import type { EffectKind, Graph, GraphEdge, GraphNode, PredicateKind } from './graph-types.ts';
-import type { Endpoint } from './graph-utils.ts';
+import type {
+	EffectKind,
+	Graph,
+	GraphEdge,
+	GraphNode,
+	PredicateKind,
+} from '#glitch-graph/graph/graph-types.ts';
+import type { Endpoint } from '#glitch-graph/graph/graph-utils.ts';
 
-import { createEdge, getNodeId } from './graph-utils.ts';
-import { effectDefinitions, getDefaultParams, predicateDefinitions } from './param-definitions.ts';
+import { createEdge, getNodeId } from '#glitch-graph/graph/graph-utils.ts';
+import {
+	effectDefinitions,
+	getDefaultParams,
+	predicateDefinitions,
+} from '#glitch-graph/graph/param-definitions.ts';
 
 export type Insertion =
 	| { effect: EffectKind; kind: 'effect' }

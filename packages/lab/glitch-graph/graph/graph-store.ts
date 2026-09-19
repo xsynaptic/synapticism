@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
-import type { Insertion } from './graph-operations.ts';
-import type { PresetId } from './graph-presets.ts';
-import type { Graph, ParamValue } from './graph-types.ts';
+import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
+import type { PresetId } from '#glitch-graph/graph/graph-presets.ts';
+import type { Graph, ParamValue } from '#glitch-graph/graph/graph-types.ts';
 
-import { deleteNode, insertNode } from './graph-operations.ts';
-import { createBlankGraph, defaultPresetId, getPreset } from './graph-presets.ts';
-import { getNodeId } from './graph-utils.ts';
+import { deleteNode, insertNode } from '#glitch-graph/graph/graph-operations.ts';
+import { createBlankGraph, defaultPresetId, getPreset } from '#glitch-graph/graph/graph-presets.ts';
+import { getNodeId } from '#glitch-graph/graph/graph-utils.ts';
 
 interface GraphState {
 	deleteNode: (id: string) => string | undefined;

@@ -3,9 +3,9 @@ import type { DitherKernel } from '@thi.ng/pixel-dither';
 
 import { ATKINSON, FLOYD_STEINBERG, orderedDither } from '@thi.ng/pixel-dither';
 
-import type { ParamValues } from '../../graph/graph-types.ts';
+import type { ParamValues } from '#glitch-graph/graph/graph-types.ts';
 
-import { readNumber, readString } from '../../graph/param-definitions.ts';
+import { readNumber, readString } from '#glitch-graph/graph/param-definitions.ts';
 
 const bayerSizes: Record<string, 4 | 8> = { 'bayer-4': 4, 'bayer-8': 8 };
 

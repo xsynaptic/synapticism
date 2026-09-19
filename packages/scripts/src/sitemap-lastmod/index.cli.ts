@@ -1,9 +1,8 @@
 #!/usr/bin/env tsx
 import { parseArgs } from 'node:util';
 
-import { findWorkspaceRoot } from '#shared/utils.js';
-
-import { generateSitemapLastmod } from './index.js';
+import { findWorkspaceRoot } from '#shared/utils.ts';
+import { generateSitemapLastmod } from '#sitemap-lastmod/index.ts';
 
 const { values } = parseArgs({
 	args: process.argv.slice(2),

@@ -1,9 +1,13 @@
-import type { Insertion } from './graph-operations.ts';
-import type { Graph } from './graph-types.ts';
+import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
+import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
-import { insertNode } from './graph-operations.ts';
-import { createEdge } from './graph-utils.ts';
-import { effectDefinitions, getDefaultParams, predicateDefinitions } from './param-definitions.ts';
+import { insertNode } from '#glitch-graph/graph/graph-operations.ts';
+import { createEdge } from '#glitch-graph/graph/graph-utils.ts';
+import {
+	effectDefinitions,
+	getDefaultParams,
+	predicateDefinitions,
+} from '#glitch-graph/graph/param-definitions.ts';
 
 export type PresetId = (typeof graphPresets)[number]['id'];
 

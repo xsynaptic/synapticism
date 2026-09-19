@@ -1,5 +1,5 @@
-import type { TileTheme } from './core/appearance.ts';
-import type { TileInput } from './core/options.ts';
+import type { TileTheme } from '#station-tile/core/appearance.ts';
+import type { TileInput } from '#station-tile/core/options.ts';
 
 export interface StationTileLabProps {
 	class?: string | undefined;

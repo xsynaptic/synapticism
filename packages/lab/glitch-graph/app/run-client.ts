@@ -1,7 +1,7 @@
 import type { IntBuffer } from '@thi.ng/pixel';
 
-import type { RunRequest, RunResponse } from '../engine/run-worker.ts';
-import type { Graph } from '../graph/graph-types.ts';
+import type { RunRequest, RunResponse } from '#glitch-graph/engine/run-worker.ts';
+import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
 const pending = new Map<number, (response: RunResponse | undefined) => void>();
 

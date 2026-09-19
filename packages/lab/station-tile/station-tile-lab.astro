@@ -1,5 +1,5 @@
 ---
-import type { StationTileLabProps as Props } from './station-tile-types.ts';
+import type { StationTileLabProps as Props } from '#station-tile/station-tile-types.ts';
 
 const { class: className, href, seed, theme } = Astro.props;
 
@@ -24,5 +24,5 @@ const reservedStyle = { display: 'block', minHeight: '838px' };
 )}
 
 <script>
-	import './client/station-tile-lab.ts';
+	import '#station-tile/client/station-tile-lab.ts';
 </script>

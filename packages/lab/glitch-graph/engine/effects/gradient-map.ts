@@ -2,10 +2,10 @@ import type { IntBuffer } from '@thi.ng/pixel';
 
 import { COSINE_GRADIENTS, cosineGradient } from '@thi.ng/color';
 
-import type { ParamValues } from '../../graph/graph-types.ts';
+import type { ParamValues } from '#glitch-graph/graph/graph-types.ts';
 
-import { gradientMapPresets, readString } from '../../graph/param-definitions.ts';
-import { getLuma } from '../frame.ts';
+import { getLuma } from '#glitch-graph/engine/frame.ts';
+import { gradientMapPresets, readString } from '#glitch-graph/graph/param-definitions.ts';
 
 const lookupSize = 256;
 

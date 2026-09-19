@@ -2,14 +2,14 @@ import type { EdgeProps } from '@xyflow/react';
 
 import { BaseEdge, EdgeLabelRenderer } from '@xyflow/react';
 
-import type { Graph } from '../graph/graph-types.ts';
-import type { FlowEdge } from './flow-store.ts';
+import type { FlowEdge } from '#glitch-graph/canvas/flow-store.ts';
+import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
-import { useGraphStore } from '../graph/graph-store.ts';
-import { getEdgeWithSource } from '../graph/graph-utils.ts';
-import { getBranchLabel } from '../graph/param-definitions.ts';
-import { buildRoundedPath } from './edge-path.ts';
-import { branchLabelSize } from './layout.ts';
+import { buildRoundedPath } from '#glitch-graph/canvas/edge-path.ts';
+import { branchLabelSize } from '#glitch-graph/canvas/layout.ts';
+import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import { getEdgeWithSource } from '#glitch-graph/graph/graph-utils.ts';
+import { getBranchLabel } from '#glitch-graph/graph/param-definitions.ts';
 
 const bendRadius = 8;
 

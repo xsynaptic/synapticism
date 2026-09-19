@@ -5,13 +5,13 @@ import { Switch } from '@base-ui/react/switch';
 import { Toolbar } from '@base-ui/react/toolbar';
 import { useRef } from 'react';
 
-import type { PresetId } from '../graph/graph-presets.ts';
+import type { PresetId } from '#glitch-graph/graph/graph-presets.ts';
 
-import { useFlowStore } from '../canvas/flow-store.ts';
-import { graphPresets } from '../graph/graph-presets.ts';
-import { useActivePresetId, useGraphStore } from '../graph/graph-store.ts';
-import { usePortalContainer } from '../ui/portal-container.ts';
-import { useRunStore } from './run-store.ts';
+import { useRunStore } from '#glitch-graph/app/run-store.ts';
+import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
+import { graphPresets } from '#glitch-graph/graph/graph-presets.ts';
+import { useActivePresetId, useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 
 const maxSeed = 2 ** 32 - 1;
 

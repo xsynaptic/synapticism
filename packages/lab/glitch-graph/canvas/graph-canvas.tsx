@@ -17,17 +17,17 @@ import {
 } from '@xyflow/react';
 import { useEffect, useRef } from 'react';
 
-import type { Graph } from '../graph/graph-types.ts';
-import type { FlowEdge, FlowNode, FocusRequest } from './flow-store.ts';
-import type { NodeSize } from './layout.ts';
+import type { FlowEdge, FlowNode, FocusRequest } from '#glitch-graph/canvas/flow-store.ts';
+import type { NodeSize } from '#glitch-graph/canvas/layout.ts';
+import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
-import { useRunStore } from '../app/run-store.ts';
-import { useGraphStore } from '../graph/graph-store.ts';
-import { getStructureSignature } from '../graph/graph-utils.ts';
-import { nodeTypes } from './flow-nodes.tsx';
-import { useFlowStore } from './flow-store.ts';
-import { layoutGraph } from './layout.ts';
-import { RoutedEdge } from './routed-edge.tsx';
+import { useRunStore } from '#glitch-graph/app/run-store.ts';
+import { nodeTypes } from '#glitch-graph/canvas/flow-nodes.tsx';
+import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
+import { layoutGraph } from '#glitch-graph/canvas/layout.ts';
+import { RoutedEdge } from '#glitch-graph/canvas/routed-edge.tsx';
+import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import { getStructureSignature } from '#glitch-graph/graph/graph-utils.ts';
 
 const edgeTypes = { routed: RoutedEdge } satisfies EdgeTypes;
 

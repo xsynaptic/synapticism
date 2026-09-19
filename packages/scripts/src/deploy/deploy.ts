@@ -3,10 +3,9 @@ import chalk from 'chalk';
 import { parseArgs } from 'node:util';
 import { $ } from 'zx';
 
-import { findWorkspaceRoot } from '#shared/utils.js';
-
-import { deployApp } from './deploy-app.js';
-import { printDeployConfig, siteUrl } from './deploy-config.js';
+import { deployApp } from '#deploy/deploy-app.ts';
+import { printDeployConfig, siteUrl } from '#deploy/deploy-config.ts';
+import { findWorkspaceRoot } from '#shared/utils.ts';
 
 const rootPath = findWorkspaceRoot();
 

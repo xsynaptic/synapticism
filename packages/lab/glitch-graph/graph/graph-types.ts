@@ -1,4 +1,7 @@
-import type { effectDefinitions, predicateDefinitions } from './param-definitions.ts';
+import type {
+	effectDefinitions,
+	predicateDefinitions,
+} from '#glitch-graph/graph/param-definitions.ts';
 
 export type EffectKind = keyof typeof effectDefinitions;
 

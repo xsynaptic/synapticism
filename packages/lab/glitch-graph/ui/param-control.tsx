@@ -1,10 +1,10 @@
 import { Select } from '@base-ui/react/select';
 import { Slider } from '@base-ui/react/slider';
 
-import type { ParamValue } from '../graph/graph-types.ts';
-import type { ParamSpec, RangeParam, SelectParam } from '../graph/param-definitions.ts';
+import type { ParamValue } from '#glitch-graph/graph/graph-types.ts';
+import type { ParamSpec, RangeParam, SelectParam } from '#glitch-graph/graph/param-definitions.ts';
 
-import { usePortalContainer } from './portal-container.ts';
+import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 
 interface ParamControlProps<Spec extends ParamSpec = ParamSpec> {
 	onChange: (value: ParamValue) => void;

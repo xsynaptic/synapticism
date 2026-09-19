@@ -10,17 +10,17 @@ import type {
 	GraphNode,
 	ParamValues,
 	PredicateKind,
-} from '../graph/graph-types.ts';
+} from '#glitch-graph/graph/graph-types.ts';
 
-import { getIncomingEdges } from '../graph/graph-utils.ts';
-import { channelShift } from './effects/channel-shift.ts';
-import { dither } from './effects/dither.ts';
-import { gradientMap } from './effects/gradient-map.ts';
-import { pixelSort } from './effects/pixel-sort.ts';
-import { sliceDisplacement } from './effects/slice-displacement.ts';
-import { mergeByMask } from './merge.ts';
-import { luminanceMask } from './predicates/luminance.ts';
-import { randomMask } from './predicates/random.ts';
+import { channelShift } from '#glitch-graph/engine/effects/channel-shift.ts';
+import { dither } from '#glitch-graph/engine/effects/dither.ts';
+import { gradientMap } from '#glitch-graph/engine/effects/gradient-map.ts';
+import { pixelSort } from '#glitch-graph/engine/effects/pixel-sort.ts';
+import { sliceDisplacement } from '#glitch-graph/engine/effects/slice-displacement.ts';
+import { mergeByMask } from '#glitch-graph/engine/merge.ts';
+import { luminanceMask } from '#glitch-graph/engine/predicates/luminance.ts';
+import { randomMask } from '#glitch-graph/engine/predicates/random.ts';
+import { getIncomingEdges } from '#glitch-graph/graph/graph-utils.ts';
 
 type EffectFunction = (input: IntBuffer, params: ParamValues, random: IRandom) => IntBuffer;
 

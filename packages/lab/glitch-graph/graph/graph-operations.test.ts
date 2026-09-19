@@ -1,11 +1,21 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Insertion } from './graph-operations.ts';
-import type { Graph, GraphNode, NodeKind } from './graph-types.ts';
+import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
+import type { Graph, GraphNode, NodeKind } from '#glitch-graph/graph/graph-types.ts';
 
-import { canDelete, deleteNode, getNodeCount, insertNode, nodeCap } from './graph-operations.ts';
-import { createBlankGraph, createDiamondForkPreset, graphPresets } from './graph-presets.ts';
-import { effectKinds, predicateKinds } from './param-definitions.ts';
+import {
+	canDelete,
+	deleteNode,
+	getNodeCount,
+	insertNode,
+	nodeCap,
+} from '#glitch-graph/graph/graph-operations.ts';
+import {
+	createBlankGraph,
+	createDiamondForkPreset,
+	graphPresets,
+} from '#glitch-graph/graph/graph-presets.ts';
+import { effectKinds, predicateKinds } from '#glitch-graph/graph/param-definitions.ts';
 
 const expectedPorts = {
 	effect: { inputs: [0], outputs: [0] },

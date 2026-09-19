@@ -3,11 +3,11 @@ import type { Edge, Node, NodeChange } from '@xyflow/react';
 import { applyNodeChanges } from '@xyflow/react';
 import { create } from 'zustand';
 
-import type { Graph, NodeKind } from '../graph/graph-types.ts';
-import type { EdgeRoute, LayoutResult } from './layout.ts';
+import type { EdgeRoute, LayoutResult } from '#glitch-graph/canvas/layout.ts';
+import type { Graph, NodeKind } from '#glitch-graph/graph/graph-types.ts';
 
-import { useGraphStore } from '../graph/graph-store.ts';
-import { getModelOrder } from '../graph/graph-utils.ts';
+import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import { getModelOrder } from '#glitch-graph/graph/graph-utils.ts';
 
 export type FlowEdge = Edge<RoutedEdgeData, 'routed'>;
 

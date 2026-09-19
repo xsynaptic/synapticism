@@ -1,9 +1,9 @@
 import { ABGR8888, IntBuffer } from '@thi.ng/pixel';
 
-import type { Graph } from '../graph/graph-types.ts';
+import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
-import { frameToRgba } from './frame.ts';
-import { run } from './run.ts';
+import { frameToRgba } from '#glitch-graph/engine/frame.ts';
+import { run } from '#glitch-graph/engine/run.ts';
 
 export interface RunRequest {
 	graph: Graph;

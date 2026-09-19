@@ -2,13 +2,13 @@ import type { IntBuffer } from '@thi.ng/pixel';
 
 import { describe, expect, it } from 'vitest';
 
-import type { Graph, GraphNode } from '../graph/graph-types.ts';
+import type { Graph, GraphNode } from '#glitch-graph/graph/graph-types.ts';
 
-import { createDiamondForkPreset, graphPresets } from '../graph/graph-presets.ts';
-import { createEdge } from '../graph/graph-utils.ts';
-import { channelShift } from './effects/channel-shift.ts';
-import { run } from './run.ts';
-import { createFrame, createGradientFrame } from './test-frames.ts';
+import { channelShift } from '#glitch-graph/engine/effects/channel-shift.ts';
+import { run } from '#glitch-graph/engine/run.ts';
+import { createFrame, createGradientFrame } from '#glitch-graph/engine/test-frames.ts';
+import { createDiamondForkPreset, graphPresets } from '#glitch-graph/graph/graph-presets.ts';
+import { createEdge } from '#glitch-graph/graph/graph-utils.ts';
 
 function createChain(node: GraphNode): Graph {
 	return {

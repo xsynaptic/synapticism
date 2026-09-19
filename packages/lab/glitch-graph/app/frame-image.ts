@@ -1,4 +1,4 @@
-import { frameFromRgba } from '../engine/frame.ts';
+import { frameFromRgba } from '#glitch-graph/engine/frame.ts';
 
 const workingLongEdge = 1024;
 

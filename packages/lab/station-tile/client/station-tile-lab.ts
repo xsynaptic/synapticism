@@ -1,15 +1,15 @@
-import './station-tile.ts';
+import '#station-tile/client/station-tile.ts';
 
-import type { GlossBlend, TileTheme } from '../core/appearance.ts';
-import type { TileInput } from '../core/options.ts';
+import type { GlossBlend, TileTheme } from '#station-tile/core/appearance.ts';
+import type { TileInput } from '#station-tile/core/options.ts';
 
+import styles from '#station-tile/client/station-tile-lab.css?inline';
 import {
 	DEFAULT_TILE_THEME,
 	GLOSS_BLENDS,
 	TILE_DEFAULTS,
 	TILE_THEMES,
-} from '../core/appearance.ts';
-import styles from './station-tile-lab.css?inline';
+} from '#station-tile/core/appearance.ts';
 
 interface ColorSpec {
 	key: 'glossColor' | 'grout';

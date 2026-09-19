@@ -1,6 +1,6 @@
-import type { ContentEntry } from '#shared/astro-content.js';
+import type { ContentEntry } from '#shared/astro-content.ts';
 
-import { toValidationResult } from './validation-result.js';
+import { toValidationResult } from '#validate-content/validation-result.ts';
 
 // IDs form one flat namespace, so a collision silently shadows one Entry with another
 export function collectDuplicateIdIssues(entries: Array<ContentEntry>) {

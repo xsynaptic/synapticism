@@ -5,13 +5,12 @@ import { copyFile, mkdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import pLimit from 'p-limit';
 
-import { findWorkspaceRoot } from '#shared/utils.js';
+import type { OpenGraphContentEntry } from '#og-image/types.ts';
 
-import type { OpenGraphContentEntry } from './types.js';
-
-import { getBuiltEntries } from './built-entries.js';
-import { createCardRenderer, resolveMediaPath } from './generate.js';
-import { createOutputCache, getOutputCacheKey } from './output-cache.js';
+import { getBuiltEntries } from '#og-image/built-entries.ts';
+import { createCardRenderer, resolveMediaPath } from '#og-image/generate.ts';
+import { createOutputCache, getOutputCacheKey } from '#og-image/output-cache.ts';
+import { findWorkspaceRoot } from '#shared/utils.ts';
 
 // Rendering is CPU-bound and each entry decodes its own image, so one bound serves both
 const concurrency = 12;

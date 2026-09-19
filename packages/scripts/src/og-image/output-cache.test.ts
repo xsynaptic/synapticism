@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-import { createOutputCache, getOutputCacheKey } from './output-cache.js';
+import { createOutputCache, getOutputCacheKey } from '#og-image/output-cache.ts';
 
 describe('getOutputCacheKey', () => {
 	const base = { digest: 'digest', imageId: 'image/entry.jpg', imageModifiedTime: 1000 };

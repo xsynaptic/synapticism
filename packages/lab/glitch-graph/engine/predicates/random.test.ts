@@ -1,8 +1,8 @@
 import { SFC32 } from '@thi.ng/random';
 import { describe, expect, it } from 'vitest';
 
-import { createGradientFrame } from '../test-frames.ts';
-import { randomMask } from './random.ts';
+import { randomMask } from '#glitch-graph/engine/predicates/random.ts';
+import { createGradientFrame } from '#glitch-graph/engine/test-frames.ts';
 
 const frame = createGradientFrame(10, 8);
 

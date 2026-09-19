@@ -1,11 +1,9 @@
-import type { ContentEntry } from '#shared/astro-content.js';
+import type { ContentEntry } from '#shared/astro-content.ts';
+import type { ValidationIssue } from '#validate-content/validation-result.ts';
 
-import { findComponentTags, getTagProp } from '#shared/component-tags.js';
-
-import type { ValidationIssue } from './validation-result.js';
-
-import { getBodyLineOffset } from './body-line-offset.js';
-import { toValidationResult } from './validation-result.js';
+import { findComponentTags, getTagProp } from '#shared/component-tags.ts';
+import { getBodyLineOffset } from '#validate-content/body-line-offset.ts';
+import { toValidationResult } from '#validate-content/validation-result.ts';
 
 // A required prop missing here throws while the component renders, naming only the page path
 const requiredProps: Record<string, string> = { Img: 'src', Link: 'id', Quotation: 'author' };

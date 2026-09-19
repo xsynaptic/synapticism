@@ -1,8 +1,7 @@
-import type { ContentEntry } from '#shared/astro-content.js';
+import type { ContentEntry } from '#shared/astro-content.ts';
+import type { EntryReference, ReferenceIssue } from '#validate-content/validation-result.ts';
 
-import type { EntryReference, ReferenceIssue } from './validation-result.js';
-
-import { toReferenceValidationResult } from './validation-result.js';
+import { toReferenceValidationResult } from '#validate-content/validation-result.ts';
 
 // Astro checks references itself but only logs, leaving a broken reference to ship
 export function collectReferenceIssues(entries: Array<ContentEntry>) {

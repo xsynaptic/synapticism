@@ -2,13 +2,13 @@ import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/base.css';
 import { useEffect, useRef } from 'react';
 
-import defaultSourceUrl from '../assets/default-source.jpg?url';
-import { GraphCanvas } from '../canvas/graph-canvas.tsx';
-import '../glitch-graph.css';
-import { PortalContainerContext } from '../ui/portal-container.ts';
-import { AppToolbar } from './app-toolbar.tsx';
-import { ResultsPanel } from './results-panel.tsx';
-import { useRunStore } from './run-store.ts';
+import { AppToolbar } from '#glitch-graph/app/app-toolbar.tsx';
+import { ResultsPanel } from '#glitch-graph/app/results-panel.tsx';
+import '#glitch-graph/glitch-graph.css';
+import { useRunStore } from '#glitch-graph/app/run-store.ts';
+import defaultSourceUrl from '#glitch-graph/assets/default-source.jpg?url';
+import { GraphCanvas } from '#glitch-graph/canvas/graph-canvas.tsx';
+import { PortalContainerContext } from '#glitch-graph/ui/portal-container.ts';
 
 export default function GlitchGraphApp() {
 	const portalRef = useRef<HTMLDivElement>(null);

@@ -3,19 +3,19 @@ import type { CSSProperties } from 'react';
 import { Menu } from '@base-ui/react/menu';
 import { Fragment } from 'react';
 
-import type { Insertion } from '../graph/graph-operations.ts';
+import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
 
-import { canInsert, getNodeCount } from '../graph/graph-operations.ts';
-import { useGraphStore } from '../graph/graph-store.ts';
+import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
+import { canInsert, getNodeCount } from '#glitch-graph/graph/graph-operations.ts';
+import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
 import {
 	effectDefinitions,
 	effectKinds,
 	getInsertLabel,
 	predicateDefinitions,
 	predicateKinds,
-} from '../graph/param-definitions.ts';
-import { usePortalContainer } from '../ui/portal-container.ts';
-import { useFlowStore } from './flow-store.ts';
+} from '#glitch-graph/graph/param-definitions.ts';
+import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 
 interface InsertOption {
 	insertion: Insertion;

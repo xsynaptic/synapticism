@@ -1,6 +1,6 @@
-import type { TileInput } from '../core/options.ts';
+import type { TileInput } from '#station-tile/core/options.ts';
 
-import { generateTileSvg, tileBackgroundStyle } from '../core/render.ts';
+import { generateTileSvg, tileBackgroundStyle } from '#station-tile/core/render.ts';
 
 class StationTile extends HTMLElement {
 	get options() {

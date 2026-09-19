@@ -5,13 +5,12 @@ import sharp from 'sharp';
 import { render, setGlyphCacheMaxBytes } from 'takumi-js';
 import { Renderer } from 'takumi-js/node';
 
-import { findWorkspaceRoot } from '#shared/utils.js';
+import type { OpenGraphEntryItem } from '#og-image/types.ts';
 
-import type { OpenGraphEntryItem } from './types.js';
-
-import { openGraphJpegQuality, openGraphPanelWidth } from './constants.js';
-import { getOpenGraphElement } from './element.js';
-import { loadOpenGraphFonts } from './fonts.js';
+import { openGraphJpegQuality, openGraphPanelWidth } from '#og-image/constants.ts';
+import { getOpenGraphElement } from '#og-image/element.tsx';
+import { loadOpenGraphFonts } from '#og-image/fonts.ts';
+import { findWorkspaceRoot } from '#shared/utils.ts';
 
 // The 8 MiB default evicts outlines mid-run once a corpus draws more than about a thousand glyphs
 const glyphCacheBytes = 64 * 1024 * 1024;

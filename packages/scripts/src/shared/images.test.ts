@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { extractImageFeaturedIds, extractMdxImageIds } from './images.js';
+import { extractImageFeaturedIds, extractMdxImageIds } from '#shared/images.ts';
 
 describe('extractMdxImageIds', () => {
 	test('reads the src of every Img in document order', () => {

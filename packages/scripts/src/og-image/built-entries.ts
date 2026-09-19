@@ -3,9 +3,9 @@ import { openGraphIndexIds } from '@synapticism/shared/open-graph';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import type { OpenGraphContentEntry } from './types.js';
+import type { OpenGraphContentEntry } from '#og-image/types.ts';
 
-import { getOpenGraphContentEntries } from './content.js';
+import { getOpenGraphContentEntries } from '#og-image/content.ts';
 
 // astro-seo writes `property` before `content`; the closing quote keeps og:image:url|type|alt out
 const openGraphMetaPattern = /<meta property="og:image" content="([^"]+)"\s*\/?>/g;

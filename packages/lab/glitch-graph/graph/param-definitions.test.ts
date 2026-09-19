@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { createDiamondForkPreset } from './graph-presets.ts';
-import { getInsertLabel } from './param-definitions.ts';
+import { createDiamondForkPreset } from '#glitch-graph/graph/graph-presets.ts';
+import { getInsertLabel } from '#glitch-graph/graph/param-definitions.ts';
 
 describe('getInsertLabel', () => {
 	const graph = createDiamondForkPreset();

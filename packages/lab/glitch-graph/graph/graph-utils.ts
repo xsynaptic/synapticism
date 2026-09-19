@@ -1,4 +1,4 @@
-import type { Graph, GraphEdge } from './graph-types.ts';
+import type { Graph, GraphEdge } from '#glitch-graph/graph/graph-types.ts';
 
 export type Endpoint = readonly [id: string, index: number];
 

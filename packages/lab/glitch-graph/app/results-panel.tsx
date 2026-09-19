@@ -1,10 +1,10 @@
 import { Dialog } from '@base-ui/react/dialog';
 import { useShallow } from 'zustand/react/shallow';
 
-import { useGraphStore } from '../graph/graph-store.ts';
-import { getOutputs } from '../graph/graph-utils.ts';
-import { usePortalContainer } from '../ui/portal-container.ts';
-import { useIsStale, useRunStore } from './run-store.ts';
+import { useIsStale, useRunStore } from '#glitch-graph/app/run-store.ts';
+import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import { getOutputs } from '#glitch-graph/graph/graph-utils.ts';
+import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 
 export function ResultsPanel() {
 	const results = useRunStore((state) => state.results);

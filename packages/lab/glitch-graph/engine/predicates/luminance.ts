@@ -1,9 +1,9 @@
 import type { IntBuffer } from '@thi.ng/pixel';
 
-import type { ParamValues } from '../../graph/graph-types.ts';
+import type { ParamValues } from '#glitch-graph/graph/graph-types.ts';
 
-import { readNumber } from '../../graph/param-definitions.ts';
-import { getLuma } from '../frame.ts';
+import { getLuma } from '#glitch-graph/engine/frame.ts';
+import { readNumber } from '#glitch-graph/graph/param-definitions.ts';
 
 export function luminanceMask(input: IntBuffer, params: ParamValues) {
 	const threshold = readNumber(params, 'threshold');

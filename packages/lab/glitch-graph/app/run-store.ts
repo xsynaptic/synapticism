@@ -2,12 +2,12 @@ import type { IntBuffer } from '@thi.ng/pixel';
 
 import { create } from 'zustand';
 
-import type { Graph } from '../graph/graph-types.ts';
+import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
-import { useGraphStore } from '../graph/graph-store.ts';
-import { getOutputs } from '../graph/graph-utils.ts';
-import { decodeImage } from './frame-image.ts';
-import { runInWorker } from './run-client.ts';
+import { decodeImage } from '#glitch-graph/app/frame-image.ts';
+import { runInWorker } from '#glitch-graph/app/run-client.ts';
+import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import { getOutputs } from '#glitch-graph/graph/graph-utils.ts';
 
 interface OutputResult {
 	id: string;

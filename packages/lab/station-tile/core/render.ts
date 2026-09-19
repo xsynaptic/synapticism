@@ -1,10 +1,10 @@
-import type { Cell } from './layout.ts';
-import type { ResolvedOptions, TileInput } from './options.ts';
+import type { Cell } from '#station-tile/core/layout.ts';
+import type { ResolvedOptions, TileInput } from '#station-tile/core/options.ts';
 
-import { BEVEL, GEOMETRY, GLOSS, GRAIN, TILT } from './appearance.ts';
-import { layoutTiles } from './layout.ts';
-import { resolveOptions } from './options.ts';
-import { formatSvgCoord, formatSvgNumber, toHex } from './utils.ts';
+import { BEVEL, GEOMETRY, GLOSS, GRAIN, TILT } from '#station-tile/core/appearance.ts';
+import { layoutTiles } from '#station-tile/core/layout.ts';
+import { resolveOptions } from '#station-tile/core/options.ts';
+import { formatSvgCoord, formatSvgNumber, toHex } from '#station-tile/core/utils.ts';
 
 export interface GeneratedTile {
 	height: number;

@@ -1,9 +1,9 @@
 import type { ElkExtendedEdge, ElkNode, ElkPort } from 'elkjs/lib/elk.bundled.js';
 
-import type { Graph, GraphNode } from '../graph/graph-types.ts';
-import type { Point } from './edge-path.ts';
+import type { Point } from '#glitch-graph/canvas/edge-path.ts';
+import type { Graph, GraphNode } from '#glitch-graph/graph/graph-types.ts';
 
-import { getModelOrder } from '../graph/graph-utils.ts';
+import { getModelOrder } from '#glitch-graph/graph/graph-utils.ts';
 
 export interface EdgeRoute {
 	branchLabel?: Point;

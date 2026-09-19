@@ -1,8 +1,8 @@
 import type { CosineGradientPreset } from '@thi.ng/color';
 
-import type { Graph, GraphNode, ParamValues, SplitNode } from './graph-types.ts';
+import type { Graph, GraphNode, ParamValues, SplitNode } from '#glitch-graph/graph/graph-types.ts';
 
-import { getEdgeWithSource } from './graph-utils.ts';
+import { getEdgeWithSource } from '#glitch-graph/graph/graph-utils.ts';
 
 export interface ParamDefinition {
 	label: string;

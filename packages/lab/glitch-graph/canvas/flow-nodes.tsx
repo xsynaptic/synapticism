@@ -2,14 +2,20 @@ import type { NodeProps, NodeTypes } from '@xyflow/react';
 
 import { Handle, Position, useEdges } from '@xyflow/react';
 
-import type { ParamValue } from '../graph/graph-types.ts';
-import type { FlowEdge, FlowNode } from './flow-store.ts';
+import type { FlowEdge, FlowNode } from '#glitch-graph/canvas/flow-store.ts';
+import type { ParamValue } from '#glitch-graph/graph/graph-types.ts';
 
-import { useRunStore } from '../app/run-store.ts';
-import { useGraphStore } from '../graph/graph-store.ts';
-import { EffectCard, OutputCard, PillCard, SourceCard, SplitCard } from './cards/node-cards.tsx';
-import { useFlowStore } from './flow-store.ts';
-import { InsertMenu } from './insert-menu.tsx';
+import { useRunStore } from '#glitch-graph/app/run-store.ts';
+import {
+	EffectCard,
+	OutputCard,
+	PillCard,
+	SourceCard,
+	SplitCard,
+} from '#glitch-graph/canvas/cards/node-cards.tsx';
+import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
+import { InsertMenu } from '#glitch-graph/canvas/insert-menu.tsx';
+import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
 
 const branchHandleOffsets = ['30%', '70%'];
 

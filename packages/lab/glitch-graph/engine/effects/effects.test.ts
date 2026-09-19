@@ -3,11 +3,11 @@ import type { IntBuffer } from '@thi.ng/pixel';
 import { SFC32 } from '@thi.ng/random';
 import { describe, expect, it } from 'vitest';
 
-import { createFrame, createGradientFrame, createGray } from '../test-frames.ts';
-import { dither } from './dither.ts';
-import { gradientMap } from './gradient-map.ts';
-import { pixelSort } from './pixel-sort.ts';
-import { sliceDisplacement } from './slice-displacement.ts';
+import { dither } from '#glitch-graph/engine/effects/dither.ts';
+import { gradientMap } from '#glitch-graph/engine/effects/gradient-map.ts';
+import { pixelSort } from '#glitch-graph/engine/effects/pixel-sort.ts';
+import { sliceDisplacement } from '#glitch-graph/engine/effects/slice-displacement.ts';
+import { createFrame, createGradientFrame, createGray } from '#glitch-graph/engine/test-frames.ts';
 
 function getColourValues(frame: IntBuffer) {
 	return new Set(

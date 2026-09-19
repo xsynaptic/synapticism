@@ -1,9 +1,9 @@
 import type { IntBuffer } from '@thi.ng/pixel';
 
-import type { ParamValues } from '../../graph/graph-types.ts';
+import type { ParamValues } from '#glitch-graph/graph/graph-types.ts';
 
-import { readNumber, readString } from '../../graph/param-definitions.ts';
-import { wrap } from '../frame.ts';
+import { wrap } from '#glitch-graph/engine/frame.ts';
+import { readNumber, readString } from '#glitch-graph/graph/param-definitions.ts';
 
 const channelBitOffsets: Record<string, number> = { blue: 16, green: 8, red: 0 };
 

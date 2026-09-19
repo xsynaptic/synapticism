@@ -2,11 +2,10 @@ import type { CollectionKey } from 'astro:content';
 
 import { getOpenGraphId } from '@synapticism/shared/open-graph';
 
-import type { ContentEntry } from '#shared/astro-content.js';
+import type { OpenGraphContentEntry, OpenGraphEntryItem } from '#og-image/types.ts';
+import type { ContentEntry } from '#shared/astro-content.ts';
 
-import { getCollectionEntries, withAstroContent } from '#shared/astro-content.js';
-
-import type { OpenGraphContentEntry, OpenGraphEntryItem } from './types.js';
+import { getCollectionEntries, withAstroContent } from '#shared/astro-content.ts';
 
 // Doubles as the collection filter; `undefined` draws the card with no label
 const openGraphCollections = {

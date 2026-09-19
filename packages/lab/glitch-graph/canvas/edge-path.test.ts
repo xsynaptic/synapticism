@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildRoundedPath } from './edge-path.ts';
+import { buildRoundedPath } from '#glitch-graph/canvas/edge-path.ts';
 
 describe('buildRoundedPath', () => {
 	it('draws a straight segment as a single line', () => {
