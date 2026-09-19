@@ -43,14 +43,14 @@ if (!dateRaw) throw new Error(`Invalid date: "${JSON.stringify(date)}"`);
 
 const dateTimeAttribute = dateRaw.toISOString();
 
-const dateDisplay = dateRaw.toLocaleDateString('en-US', {
+const dateDisplay = dateRaw.toLocaleDateString('en', {
 	...datePresets[datePreset],
 	...dateOptions,
 });
 
 const timeDisplay = hasUtcTime(dateRaw)
 	? formatStringTemplate(t('content.timeUtc'), {
-			time: dateRaw.toLocaleTimeString('en-US', timeOptions),
+			time: dateRaw.toLocaleTimeString('en', timeOptions),
 		})
 	: undefined;
 

@@ -88,13 +88,13 @@ const { basics, education, projects, skills, work } = cv;
 							{job.company}, <span class="italic">{job.position}</span>
 						</h3>
 						<span class="text-sm text-neutral-500">
-							{new Date(job.startDate).toLocaleDateString('en-US', {
+							{new Date(job.startDate).toLocaleDateString('en', {
 								month: 'long',
 								year: 'numeric',
 							})}
 							&ndash;
 							{job.endDate
-								? new Date(job.endDate).toLocaleDateString('en-US', {
+								? new Date(job.endDate).toLocaleDateString('en', {
 										month: 'long',
 										year: 'numeric',
 									})
