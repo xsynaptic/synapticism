@@ -1,16 +1,379 @@
 .glitch-graph {
 	--gg-surface: var(--color-primary-50, #fafafa);
+	--gg-panel: #fff;
 	--gg-ink: var(--color-primary-700, #3f3f46);
+	--gg-ink-muted: var(--color-primary-500, #71717a);
 	--gg-hairline: var(--color-primary-200, #e4e4e7);
+	--gg-edge: var(--color-primary-400, #a1a1aa);
+	--gg-accent: var(--color-accent-600, #2b7e8f);
+	--gg-accent-soft: var(--color-accent-50, #f0fafb);
+	--gg-error: var(--color-highlight-700, #98421d);
 	--gg-mono: var(--font-mono, var(--font-geist-mono, ui-monospace, monospace));
+	--gg-node-width: 13rem;
+	--gg-pill-width: 8rem;
+	--gg-radius: 0.25rem;
 
 	font-family: var(--gg-mono);
+	font-size: 0.8rem;
 	color: var(--gg-ink);
 	background: var(--gg-surface);
 	border: 1px solid var(--gg-hairline);
-	border-radius: 0.25rem;
+	border-radius: var(--gg-radius);
+}
+
+.gg-app {
+	display: flex;
+	flex-direction: column;
+}
+
+.gg-toolbar-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.6rem 0.75rem;
+	border-bottom: 1px solid var(--gg-hairline);
+}
+
+.gg-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.gg-toolbar-separator {
+	align-self: stretch;
+	width: 1px;
+	background: var(--gg-hairline);
+}
+
+.gg-button,
+.gg-select-trigger {
+	font: inherit;
+	color: var(--gg-ink);
+	cursor: pointer;
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+}
+
+.gg-button {
+	padding: 0.3rem 0.6rem;
+}
+
+.gg-button[data-variant='primary'] {
+	color: #fff;
+	background: var(--gg-accent);
+	border-color: var(--gg-accent);
+}
+
+.gg-button:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
+
+@media (hover: hover) {
+	.gg-button:hover:not(:disabled),
+	.gg-select-trigger:hover {
+		border-color: var(--gg-accent);
+	}
+}
+
+.gg-seed {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+}
+
+.gg-seed-input {
+	width: 7.5rem;
+	padding: 0.3rem 0.45rem;
+	font: inherit;
+	color: var(--gg-ink);
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+}
+
+.gg-note {
+	margin: 0;
+	color: var(--gg-ink-muted);
+}
+
+.gg-error {
+	margin: 0 0 0.6rem;
+	color: var(--gg-error);
 }
 
 .gg-canvas {
+	--xy-edge-stroke: var(--gg-edge);
+	--xy-edge-stroke-width: 1.25;
+
 	height: 40rem;
+	border-bottom: 1px solid var(--gg-hairline);
+}
+
+.gg-canvas[data-ready='false'] {
+	opacity: 0;
+}
+
+.gg-handle {
+	pointer-events: none;
+	opacity: 0;
+}
+
+.gg-edge-button {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	font: inherit;
+	line-height: 1;
+	color: var(--gg-ink-muted);
+	pointer-events: all;
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: 50%;
+}
+
+/* React Flow turns pointer events off on nodes that are neither draggable nor selectable */
+.gg-node,
+.gg-pill {
+	color: var(--gg-ink);
+	pointer-events: auto;
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+}
+
+.gg-node {
+	width: var(--gg-node-width);
+	padding: 0.55rem 0.7rem 0.7rem;
+}
+
+.gg-pill {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--gg-pill-width);
+	padding: 0.3rem 0.6rem;
+	border-radius: 999px;
+}
+
+.gg-node-title {
+	margin: 0;
+	font-weight: 500;
+	color: var(--gg-ink);
+}
+
+.gg-node-meta {
+	margin: 0.2rem 0 0;
+	color: var(--gg-ink-muted);
+}
+
+.gg-node-params {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	margin-top: 0.5rem;
+}
+
+.gg-output-name {
+	width: 100%;
+	min-width: 0;
+	padding: 0.1rem 0.25rem;
+	font: inherit;
+	color: var(--gg-ink);
+	text-align: center;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: var(--gg-radius);
+}
+
+.gg-output-name:focus {
+	border-color: var(--gg-hairline);
+}
+
+.gg-param-header {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: space-between;
+}
+
+.gg-param-label {
+	color: var(--gg-ink-muted);
+}
+
+.gg-param-value {
+	color: var(--gg-accent);
+}
+
+.gg-slider {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+}
+
+.gg-slider-control {
+	display: flex;
+	align-items: center;
+	height: 1rem;
+	touch-action: none;
+}
+
+.gg-slider-track {
+	position: relative;
+	width: 100%;
+	height: 2px;
+	background: var(--gg-hairline);
+}
+
+.gg-slider-indicator {
+	background: var(--gg-accent);
+}
+
+.gg-slider-thumb {
+	width: 0.8rem;
+	height: 0.8rem;
+	background: var(--gg-panel);
+	border: 2px solid var(--gg-accent);
+	border-radius: 50%;
+}
+
+.gg-slider-thumb:has(:focus-visible) {
+	outline: 2px solid var(--gg-accent);
+	outline-offset: 2px;
+}
+
+.gg-select-trigger {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 0.25rem 0.45rem;
+	margin-top: 0.3rem;
+}
+
+.gg-select-icon {
+	color: var(--gg-ink-muted);
+}
+
+.gg-positioner {
+	z-index: 1;
+}
+
+.gg-select-popup {
+	min-width: var(--anchor-width);
+	padding: 0.2rem 0;
+	font-family: var(--gg-mono);
+	font-size: 0.8rem;
+	color: var(--gg-ink);
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+	box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 8%);
+}
+
+.gg-select-item {
+	padding: 0.3rem 0.6rem;
+	cursor: default;
+	outline: none;
+}
+
+.gg-select-item[data-highlighted] {
+	background: var(--gg-accent-soft);
+}
+
+.gg-select-item[data-selected] {
+	color: var(--gg-accent);
+}
+
+.gg-results {
+	padding: 0.75rem;
+}
+
+.gg-result-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+	gap: 0.75rem;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.gg-result-trigger {
+	display: block;
+	width: 100%;
+	padding: 0;
+	cursor: zoom-in;
+	background: none;
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+}
+
+.gg-result-image {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--gg-radius);
+}
+
+.gg-result-caption {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: space-between;
+	margin-top: 0.3rem;
+}
+
+.gg-link {
+	color: var(--gg-accent);
+}
+
+.gg-dialog-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--z-index-top-button, 45) + 1);
+	background: rgb(0 0 0 / 40%);
+}
+
+.gg-dialog-popup {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: calc(var(--z-index-top-button, 45) + 1);
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	align-items: flex-start;
+	max-width: calc(100vw - 2rem);
+	max-height: calc(100vh - 2rem);
+	padding: 0.75rem;
+	font-family: var(--gg-mono);
+	font-size: 0.8rem;
+	color: var(--gg-ink);
+	background: var(--gg-panel);
+	border-radius: var(--gg-radius);
+	transform: translate(-50%, -50%);
+}
+
+.gg-dialog-image {
+	max-width: 100%;
+	min-height: 0;
+	max-height: calc(100vh - 7rem);
+	image-rendering: pixelated;
+}
+
+.gg-button:focus-visible,
+.gg-select-trigger:focus-visible,
+.gg-seed-input:focus-visible,
+.gg-output-name:focus-visible,
+.gg-result-trigger:focus-visible,
+.gg-link:focus-visible {
+	outline: 2px solid var(--gg-accent);
+	outline-offset: 1px;
 }

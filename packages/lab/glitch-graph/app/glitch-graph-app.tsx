@@ -1,21 +1,36 @@
-import { Controls, ReactFlow } from '@xyflow/react';
+import { ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/base.css';
+import { useEffect, useRef } from 'react';
 
+import defaultSourceUrl from '../assets/default-source.jpg?url';
+import { GraphCanvas } from '../canvas/graph-canvas.tsx';
 import '../glitch-graph.css';
+import { PortalContainerContext } from '../ui/portal-container.ts';
+import { AppToolbar } from './app-toolbar.tsx';
+import { ResultsPanel } from './results-panel.tsx';
+import { useRunStore } from './run-store.ts';
 
 export default function GlitchGraphApp() {
+	const portalRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (useRunStore.getState().source !== undefined) return;
+
+		void fetch(defaultSourceUrl)
+			.then((response) => response.blob())
+			.then((blob) => useRunStore.getState().loadSource(blob));
+	}, []);
+
 	return (
-		<div className="gg-canvas">
-			<ReactFlow
-				edges={[]}
-				nodes={[]}
-				nodesConnectable={false}
-				nodesDraggable={false}
-				preventScrolling={false}
-				zoomOnScroll={false}
-			>
-				<Controls showInteractive={false} />
-			</ReactFlow>
-		</div>
+		<PortalContainerContext value={portalRef}>
+			<div className="gg-app">
+				<AppToolbar />
+				<ReactFlowProvider>
+					<GraphCanvas />
+				</ReactFlowProvider>
+				<ResultsPanel />
+				<div ref={portalRef} />
+			</div>
+		</PortalContainerContext>
 	);
 }
