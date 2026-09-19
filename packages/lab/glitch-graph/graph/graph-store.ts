@@ -1,11 +1,18 @@
 import { create } from 'zustand';
 
+import type { Insertion } from './graph-operations.ts';
+import type { PresetId } from './graph-presets.ts';
 import type { Graph, ParamValue } from './graph-types.ts';
 
-import { createDiamondForkPreset } from './graph-presets.ts';
+import { deleteNode, insertNode } from './graph-operations.ts';
+import { defaultPresetId, getPreset } from './graph-presets.ts';
 
 interface GraphState {
+	deleteNode: (id: string) => void;
 	graph: Graph;
+	insertNode: (edgeId: string, insertion: Insertion) => void;
+	loadPreset: (presetId: PresetId) => void;
+	presetId: PresetId;
 	renameOutput: (id: string, name: string) => void;
 	seed: number;
 	setParam: (id: string, key: string, value: ParamValue) => void;
@@ -13,7 +20,17 @@ interface GraphState {
 }
 
 export const useGraphStore = create<GraphState>()((set) => ({
-	graph: createDiamondForkPreset(),
+	deleteNode: (id) => {
+		set(({ graph }) => ({ graph: deleteNode(graph, id) }));
+	},
+	graph: getPreset(defaultPresetId).create(),
+	insertNode: (edgeId, insertion) => {
+		set(({ graph }) => ({ graph: insertNode(graph, edgeId, insertion) }));
+	},
+	loadPreset: (presetId) => {
+		set({ graph: getPreset(presetId).create(), presetId });
+	},
+	presetId: defaultPresetId,
 	renameOutput: (id, name) => {
 		set(({ graph }) => {
 			const node = graph.nodes[id];

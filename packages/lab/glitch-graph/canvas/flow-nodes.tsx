@@ -11,6 +11,11 @@ import { EffectCard, OutputCard, PillCard, SourceCard, SplitCard } from './cards
 
 const branchHandleOffsets = ['30%', '70%'];
 
+const pillShapes = {
+	fork: { inputs: 1, label: 'Fork', outputs: 2 },
+	merge: { inputs: 2, label: 'Merge', outputs: 1 },
+} as const;
+
 function FlowHandles({ inputs, outputs }: { inputs: number; outputs: number }) {
 	return (
 		<>
@@ -40,24 +45,6 @@ function FlowHandles({ inputs, outputs }: { inputs: number; outputs: number }) {
 	);
 }
 
-function ForkFlowNode() {
-	return (
-		<>
-			<FlowHandles inputs={1} outputs={2} />
-			<PillCard kind="fork" label="Fork" />
-		</>
-	);
-}
-
-function MergeFlowNode() {
-	return (
-		<>
-			<FlowHandles inputs={2} outputs={1} />
-			<PillCard kind="merge" label="Merge" />
-		</>
-	);
-}
-
 function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const renameOutput = useGraphStore((state) => state.renameOutput);
@@ -80,6 +67,11 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const setParam = useGraphStore((state) => state.setParam);
+	const deleteNode = useGraphStore((state) => state.deleteNode);
+
+	function handleDelete() {
+		deleteNode(id);
+	}
 
 	function handleParamChange(key: string, value: ParamValue) {
 		setParam(id, key, value);
@@ -89,7 +81,7 @@ function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 		return (
 			<>
 				<FlowHandles inputs={1} outputs={1} />
-				<EffectCard node={node} onParamChange={handleParamChange} />
+				<EffectCard node={node} onDelete={handleDelete} onParamChange={handleParamChange} />
 			</>
 		);
 	}
@@ -98,12 +90,34 @@ function ParamsFlowNode({ id }: NodeProps<FlowNode>) {
 		return (
 			<>
 				<FlowHandles inputs={1} outputs={2} />
-				<SplitCard node={node} onParamChange={handleParamChange} />
+				<SplitCard node={node} onDelete={handleDelete} onParamChange={handleParamChange} />
 			</>
 		);
 	}
 
 	return;
+}
+
+function PillFlowNode({ id }: NodeProps<FlowNode>) {
+	const kind = useGraphStore((state) => state.graph.nodes[id]?.kind);
+	const deleteNode = useGraphStore((state) => state.deleteNode);
+
+	if (kind !== 'fork' && kind !== 'merge') return;
+
+	const { inputs, label, outputs } = pillShapes[kind];
+
+	return (
+		<>
+			<FlowHandles inputs={inputs} outputs={outputs} />
+			<PillCard
+				kind={kind}
+				label={label}
+				onDelete={() => {
+					deleteNode(id);
+				}}
+			/>
+		</>
+	);
 }
 
 function SourceFlowNode() {
@@ -121,8 +135,8 @@ function SourceFlowNode() {
 
 export const nodeTypes = {
 	'effect-node': ParamsFlowNode,
-	'fork-node': ForkFlowNode,
-	'merge-node': MergeFlowNode,
+	'fork-node': PillFlowNode,
+	'merge-node': PillFlowNode,
 	'output-node': OutputFlowNode,
 	'source-node': SourceFlowNode,
 	'split-node': ParamsFlowNode,

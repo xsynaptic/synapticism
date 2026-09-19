@@ -67,16 +67,21 @@ function getLayoutSignature(graph: Graph, sizes: ReadonlyMap<string, NodeSize>) 
 // Nodes are read inside the effect rather than depended on, which would loop (xyflow #4153)
 function useMeasuredLayout() {
 	const sizeVersion = useFlowStore((state) => state.sizeVersion);
+	const hasLayout = useFlowStore((state) => state.hasLayout);
 	const commitLayout = useFlowStore((state) => state.commitLayout);
+	const structureSignature = useGraphStore((state) => getStructureSignature(state.graph));
 	const nodesInitialized = useNodesInitialized();
 	const { fitView, getNodes } = useReactFlow<FlowNode, FlowEdge>();
 	const layoutRef = useRef({ sequence: 0, signature: '' });
 
 	useEffect(() => {
-		if (!nodesInitialized) return;
+		const flowNodes = getNodes();
+
+		// `useNodesInitialized` lags one render behind an insert, so an unmeasured node can still be here
+		if (!nodesInitialized || flowNodes.some((node) => node.measured?.height === undefined)) return;
 
 		const sizes = new Map(
-			getNodes().map((node) => [
+			flowNodes.map((node) => [
 				node.id,
 				{ height: node.measured?.height ?? 0, width: node.measured?.width ?? 0 },
 			]),
@@ -85,20 +90,27 @@ function useMeasuredLayout() {
 		const signature = getLayoutSignature(graph, sizes);
 		const layoutState = layoutRef.current;
 
-		if (signature === layoutState.signature) return;
+		if (hasLayout && signature === layoutState.signature) return;
 
 		layoutState.signature = signature;
 		layoutState.sequence += 1;
 
 		const { sequence } = layoutState;
-		const isFirstLayout = !useFlowStore.getState().hasLayout;
 
 		void layoutGraph(graph, sizes).then((result) => {
 			if (sequence !== layoutState.sequence) return;
 
 			commitLayout(result);
 
-			if (isFirstLayout) void fitView(fitViewOptions);
+			if (!hasLayout) void fitView(fitViewOptions);
 		});
-	}, [commitLayout, fitView, getNodes, nodesInitialized, sizeVersion]);
+	}, [
+		commitLayout,
+		fitView,
+		getNodes,
+		hasLayout,
+		nodesInitialized,
+		sizeVersion,
+		structureSignature,
+	]);
 }

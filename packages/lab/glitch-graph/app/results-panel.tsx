@@ -1,32 +1,32 @@
 import { Dialog } from '@base-ui/react/dialog';
 
-import { useGraphStore } from '../graph/graph-store.ts';
 import { usePortalContainer } from '../ui/portal-container.ts';
-import { useRunStore } from './run-store.ts';
+import { useIsStale, useRunStore } from './run-store.ts';
 
 export function ResultsPanel() {
 	const results = useRunStore((state) => state.results);
 	const error = useRunStore((state) => state.error);
-	const nodes = useGraphStore((state) => state.graph.nodes);
+	const isStale = useIsStale();
 
 	return (
-		<section aria-label="Results" className="gg-results">
+		<section aria-label="Results" className="gg-results" data-stale={isStale}>
 			{error === undefined ? undefined : (
 				<p className="gg-error" role="alert">
 					{error}
 				</p>
 			)}
+			{isStale ? (
+				<p className="gg-stale-note" role="status">
+					The graph has changed since these were rendered. Run again to update them.
+				</p>
+			) : undefined}
 			{results.length === 0 ? (
 				<p className="gg-note">Press Run to render one image for each Output.</p>
 			) : (
 				<ul className="gg-result-list">
-					{results.map(({ id, url }) => {
-						const node = nodes[id];
-
-						return (
-							<ResultItem key={id} name={node?.kind === 'output' ? node.name : id} url={url} />
-						);
-					})}
+					{results.map(({ id, name, url }) => (
+						<ResultItem key={id} name={name} url={url} />
+					))}
 				</ul>
 			)}
 		</section>

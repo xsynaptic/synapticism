@@ -1,6 +1,6 @@
 import type { Graph, GraphEdge } from './graph-types.ts';
 
-type Endpoint = readonly [id: string, index: number];
+export type Endpoint = readonly [id: string, index: number];
 
 export function createEdge(
 	[source, sourceIndex]: Endpoint,

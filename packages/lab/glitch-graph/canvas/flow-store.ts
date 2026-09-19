@@ -20,6 +20,7 @@ interface FlowState {
 	edges: Array<FlowEdge>;
 	hasLayout: boolean;
 	nodes: Array<FlowNode>;
+	resetView: () => void;
 	sizeVersion: number;
 }
 
@@ -30,6 +31,15 @@ type RoutedEdgeData = {
 
 export const useFlowStore = create<FlowState>()((set) => {
 	const { graph } = useGraphStore.getState();
+
+	useGraphStore.subscribe(({ graph: nextGraph }, previous) => {
+		if (nextGraph.edges === previous.graph.edges) return;
+
+		set(({ edges, nodes }) => ({
+			edges: toFlowEdges(nextGraph, new Map(edges.map((edge) => [edge.id, edge]))),
+			nodes: toFlowNodes(nextGraph, new Map(nodes.map((node) => [node.id, node]))),
+		}));
+	});
 
 	return {
 		applyNodeChanges: (changes) => {
@@ -46,35 +56,48 @@ export const useFlowStore = create<FlowState>()((set) => {
 				hasLayout: true,
 				nodes: nodes.map((node) => ({
 					...node,
+					className: '',
 					position: positions.get(node.id) ?? node.position,
 				})),
 			}));
 		},
-		edges: toFlowEdges(graph),
+		edges: toFlowEdges(graph, new Map()),
 		hasLayout: false,
-		nodes: toFlowNodes(graph),
+		nodes: toFlowNodes(graph, new Map()),
+		resetView: () => {
+			set({ hasLayout: false });
+		},
 		sizeVersion: 0,
 	};
 });
 
-function toFlowEdges(graph: Graph): Array<FlowEdge> {
-	return graph.edges.map((edge) => ({
-		data: { route: undefined },
-		id: edge.id,
-		source: edge.source,
-		sourceHandle: `out-${String(edge.sourceIndex)}`,
-		target: edge.target,
-		targetHandle: `in-${String(edge.targetIndex)}`,
-		type: 'routed',
-	}));
+function toFlowEdges(graph: Graph, previous: ReadonlyMap<string, FlowEdge>): Array<FlowEdge> {
+	return graph.edges.map(
+		(edge) =>
+			previous.get(edge.id) ?? {
+				data: { route: undefined },
+				id: edge.id,
+				source: edge.source,
+				sourceHandle: `out-${String(edge.sourceIndex)}`,
+				target: edge.target,
+				targetHandle: `in-${String(edge.targetIndex)}`,
+				type: 'routed',
+			},
+	);
 }
 
-function toFlowNodes(graph: Graph): Array<FlowNode> {
+// Reusing node objects keeps `measured`; new nodes stay hidden until a layout places them
+function toFlowNodes(graph: Graph, previous: ReadonlyMap<string, FlowNode>): Array<FlowNode> {
 	return getModelOrder(graph).flatMap((id) => {
 		const node = graph.nodes[id];
 
 		if (node === undefined) return [];
 
-		return [{ data: {}, id, position: { x: 0, y: 0 }, type: `${node.kind}-node` as const }];
+		const type = `${node.kind}-node` as const;
+		const existing = previous.get(id);
+
+		if (existing?.type === type) return [existing];
+
+		return [{ className: 'gg-unplaced', data: {}, id, position: { x: 0, y: 0 }, type }];
 	});
 }

@@ -81,7 +81,7 @@
 	}
 }
 
-.gg-seed {
+.gg-toolbar-field {
 	display: flex;
 	gap: 0.4rem;
 	align-items: center;
@@ -119,6 +119,10 @@
 	opacity: 0;
 }
 
+.gg-canvas .gg-unplaced {
+	visibility: hidden;
+}
+
 .gg-handle {
 	pointer-events: none;
 	opacity: 0;
@@ -135,9 +139,27 @@
 	line-height: 1;
 	color: var(--gg-ink-muted);
 	pointer-events: all;
+	cursor: pointer;
 	background: var(--gg-panel);
 	border: 1px solid var(--gg-hairline);
 	border-radius: 50%;
+}
+
+.gg-edge-button[data-popup-open] {
+	color: var(--gg-accent);
+	border-color: var(--gg-accent);
+}
+
+.gg-edge-button:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
+
+@media (hover: hover) {
+	.gg-edge-button:hover:not(:disabled) {
+		color: var(--gg-accent);
+		border-color: var(--gg-accent);
+	}
 }
 
 /* React Flow turns pointer events off on nodes that are neither draggable nor selectable */
@@ -156,12 +178,46 @@
 }
 
 .gg-pill {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	width: var(--gg-pill-width);
 	padding: 0.3rem 0.6rem;
 	border-radius: 999px;
+}
+
+.gg-node-header {
+	display: flex;
+	gap: 0.5rem;
+	align-items: flex-start;
+	justify-content: space-between;
+}
+
+.gg-delete-button {
+	width: 1.1rem;
+	height: 1.1rem;
+	padding: 0;
+	font: inherit;
+	line-height: 1;
+	color: var(--gg-ink-muted);
+	cursor: pointer;
+	background: none;
+	border: 0;
+	border-radius: var(--gg-radius);
+}
+
+@media (hover: hover) {
+	.gg-delete-button:hover {
+		color: var(--gg-accent);
+	}
+}
+
+.gg-pill .gg-delete-button {
+	position: absolute;
+	top: 50%;
+	right: 0.35rem;
+	transform: translateY(-50%);
 }
 
 .gg-node-title {
@@ -259,6 +315,13 @@
 	margin-top: 0.3rem;
 }
 
+.gg-select-trigger[data-placement='toolbar'] {
+	width: auto;
+	min-width: 11rem;
+	padding: 0.3rem 0.45rem;
+	margin-top: 0;
+}
+
 .gg-select-icon {
 	color: var(--gg-ink-muted);
 }
@@ -267,7 +330,8 @@
 	z-index: 1;
 }
 
-.gg-select-popup {
+.gg-select-popup,
+.gg-menu-popup {
 	min-width: var(--anchor-width);
 	padding: 0.2rem 0;
 	font-family: var(--gg-mono);
@@ -279,14 +343,39 @@
 	box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 8%);
 }
 
-.gg-select-item {
+.gg-select-item,
+.gg-menu-item {
 	padding: 0.3rem 0.6rem;
 	cursor: default;
 	outline: none;
 }
 
-.gg-select-item[data-highlighted] {
+.gg-select-item[data-highlighted],
+.gg-menu-item[data-highlighted] {
 	background: var(--gg-accent-soft);
+}
+
+.gg-menu-item[data-disabled] {
+	color: var(--gg-ink-muted);
+	opacity: 0.6;
+}
+
+.gg-menu-popup {
+	min-width: 11rem;
+}
+
+.gg-menu-label {
+	padding: 0.3rem 0.6rem 0.15rem;
+	font-size: 0.7rem;
+	color: var(--gg-ink-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.gg-menu-separator {
+	height: 1px;
+	margin: 0.2rem 0;
+	background: var(--gg-hairline);
 }
 
 .gg-select-item[data-selected] {
@@ -297,6 +386,11 @@
 	padding: 0.75rem;
 }
 
+.gg-stale-note {
+	margin: 0 0 0.6rem;
+	color: var(--gg-error);
+}
+
 .gg-result-list {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
@@ -304,6 +398,10 @@
 	padding: 0;
 	margin: 0;
 	list-style: none;
+}
+
+.gg-results[data-stale='true'] .gg-result-list {
+	opacity: 0.45;
 }
 
 .gg-result-trigger {
@@ -369,6 +467,8 @@
 }
 
 .gg-button:focus-visible,
+.gg-edge-button:focus-visible,
+.gg-delete-button:focus-visible,
 .gg-select-trigger:focus-visible,
 .gg-seed-input:focus-visible,
 .gg-output-name:focus-visible,

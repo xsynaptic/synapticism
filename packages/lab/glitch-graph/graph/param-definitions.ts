@@ -63,6 +63,14 @@ export const predicateDefinitions = {
 	},
 } as const satisfies Record<string, ParamDefinition>;
 
+export const effectKinds = ['channel-shift'] as const satisfies ReadonlyArray<
+	keyof typeof effectDefinitions
+>;
+
+export const predicateKinds = ['luminance'] as const satisfies ReadonlyArray<
+	keyof typeof predicateDefinitions
+>;
+
 export function getDefaultParams(definition: ParamDefinition): ParamValues {
 	return Object.fromEntries(definition.params.map((param) => [param.key, param.default]));
 }
