@@ -13,6 +13,8 @@ Do not add anything to this file unless it is important and relevant.
 - `pnpm check` reports, `pnpm fix` mutates. Run `fix` once after a chunk of work, not repeatedly.
 - Neither touches MDX. Content linting is separate: `pnpm check-content` and `pnpm fix-content` (mdxlint over `packages/content`).
 - `pnpm build` is a pipeline, not a synonym for `astro build`: LQIP placeholders (incrementally cached in `.cache/media-lqip.json`), then `astro check`, the build, and OG image generation (cards cached in `.cache/og-image`, published into `dist/og`). Calling `astro build` directly skips all three.
+- `pnpm test-e2e-smoke` runs the Playwright smoke suite in `tests/e2e/` against `dist/`, so build first. It sits outside `check`; `deploy-site` runs it (`--skip-smoke` opts out), and `pnpm test-e2e-smoke-prod` points the same suite at the live site.
+- `/content-manifest.json` lists every indexable Entry as `{ title, url }`, filtered through `isIndexableUrlPath` so it agrees with the sitemap. It feeds the 404 page's suggestions element, and the smoke suite discovers its Entry paths from it.
 - `pnpm deploy-site` ships `dist/` to Cloudflare Workers Static Assets per `wrangler.jsonc`. There is no Astro adapter; a prior `wrangler login` is required.
 
 ## Conventions

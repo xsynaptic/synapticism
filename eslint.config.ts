@@ -90,6 +90,15 @@ export default getConfig(
 				'unicorn/prefer-global-this': 'off',
 			},
 		},
+		{
+			files: ['tests/e2e/**/*', 'playwright.config.ts'],
+			languageOptions: {
+				globals: { ...globals.node, ...globals.browser },
+			},
+			rules: {
+				'unicorn/prefer-global-this': 'off',
+			},
+		},
 		getWebComponentConfig(['src/components/**/*.ts', 'packages/lab/**/client/**/*.ts']),
 		...getAstroConfig({ a11y: 'strict' }),
 	],
