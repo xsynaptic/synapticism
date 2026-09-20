@@ -98,6 +98,8 @@ const strings = {
 	'notFound.body':
 		'The page you were looking for could not be found. It may have been moved or deleted.',
 	'notFound.description': 'The page you were looking for could not be found.',
+	'notFound.suggestions': 'Did you mean one of these?',
+	'notFound.suggestionsLoading': 'Looking for close matches...',
 	'notFound.title': 'Page Not Found',
 
 	// Footer colophon
