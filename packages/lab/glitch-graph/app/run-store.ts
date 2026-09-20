@@ -2,10 +2,11 @@ import type { IntBuffer } from '@thi.ng/pixel';
 
 import { create } from 'zustand';
 
-import type { Graph } from '#glitch-graph/graph/graph-types.ts';
+import type { RunInputs } from '#glitch-graph/app/run-staleness.ts';
 
 import { decodeImage } from '#glitch-graph/app/frame-image.ts';
 import { runInWorker } from '#glitch-graph/app/run-client.ts';
+import { isStale } from '#glitch-graph/app/run-staleness.ts';
 import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
 import { getOutputs } from '#glitch-graph/graph/graph-utils.ts';
 
@@ -13,12 +14,6 @@ interface OutputResult {
 	id: string;
 	name: string;
 	url: string;
-}
-
-interface RunInputs {
-	graph: Graph;
-	seed: number;
-	source: IntBuffer;
 }
 
 interface RunState {
@@ -100,11 +95,7 @@ export function useIsStale() {
 	const ranWith = useRunStore((state) => state.ranWith);
 	const source = useRunStore((state) => state.source);
 
-	return useGraphStore(
-		({ graph, seed }) =>
-			ranWith !== undefined &&
-			(ranWith.seed !== seed || ranWith.source !== source || !rendersSame(ranWith.graph, graph)),
-	);
+	return useGraphStore(({ graph, seed }) => isStale(ranWith, { graph, seed, source }));
 }
 
 async function decodeSource(read: () => Promise<Blob>, failure: string, advice: string) {
@@ -126,14 +117,4 @@ async function fetchImage(url: string) {
 	if (!response.ok) throw new Error(`Default image returned ${String(response.status)}`);
 
 	return response.blob();
-}
-
-function rendersSame(rendered: Graph, graph: Graph) {
-	if (rendered.edges !== graph.edges) return false;
-
-	return Object.values(graph.nodes).every((node) => {
-		const previous = rendered.nodes[node.id];
-
-		return previous === node || (previous?.kind === 'output' && node.kind === 'output');
-	});
 }

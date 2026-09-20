@@ -70,19 +70,27 @@
 	padding: 0.3rem 0.6rem;
 }
 
+.gg-glyph-button {
+	min-width: 2rem;
+	padding-inline: 0.4rem;
+	line-height: 1;
+}
+
 .gg-button[data-variant='primary'] {
 	color: #fff;
 	background: var(--gg-accent);
 	border-color: var(--gg-accent);
 }
 
-.gg-button:disabled {
+/* Base UI toolbar buttons stay focusable when disabled, so they carry the state as an attribute */
+.gg-button:disabled,
+.gg-button[data-disabled] {
 	cursor: default;
 	opacity: 0.5;
 }
 
 @media (hover: hover) {
-	.gg-button:hover:not(:disabled),
+	.gg-button:hover:not(:disabled, [data-disabled]),
 	.gg-select-trigger:hover,
 	.gg-seed-input:hover {
 		border-color: var(--gg-accent);

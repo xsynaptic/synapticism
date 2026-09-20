@@ -10,7 +10,12 @@ import type { PresetId } from '#glitch-graph/graph/graph-presets.ts';
 import { useRunStore } from '#glitch-graph/app/run-store.ts';
 import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
 import { graphPresets } from '#glitch-graph/graph/graph-presets.ts';
-import { useActivePresetId, useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import {
+	getRedoLabel,
+	getUndoLabel,
+	useActivePresetId,
+	useGraphStore,
+} from '#glitch-graph/graph/graph-store.ts';
 import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 
 const maxSeed = 2 ** 32 - 1;
@@ -29,6 +34,8 @@ export function AppToolbar() {
 				<SeedControl />
 				<Toolbar.Separator className="gg-toolbar-separator" />
 				<PresetControl />
+				<Toolbar.Separator className="gg-toolbar-separator" />
+				<HistoryControl />
 				<Toolbar.Separator className="gg-toolbar-separator" />
 				<DebugSwitch />
 			</Toolbar.Root>
@@ -58,6 +65,46 @@ function DebugSwitch() {
 				<Switch.Thumb className="gg-switch-thumb" />
 			</Toolbar.Button>
 		</label>
+	);
+}
+
+function HistoryButton({
+	glyph,
+	label,
+	onClick,
+	verb,
+}: {
+	glyph: string;
+	label: string | undefined;
+	onClick: () => void;
+	verb: string;
+}) {
+	const title = label === undefined ? verb : `${verb}: ${label}`;
+
+	return (
+		<Toolbar.Button
+			aria-label={title}
+			className="gg-button gg-glyph-button"
+			disabled={label === undefined}
+			onClick={onClick}
+			title={title}
+		>
+			{glyph}
+		</Toolbar.Button>
+	);
+}
+
+function HistoryControl() {
+	const undoLabel = useGraphStore(getUndoLabel);
+	const redoLabel = useGraphStore(getRedoLabel);
+	const undo = useGraphStore((state) => state.undo);
+	const redo = useGraphStore((state) => state.redo);
+
+	return (
+		<>
+			<HistoryButton glyph="↺" label={undoLabel} onClick={undo} verb="Undo" />
+			<HistoryButton glyph="↻" label={redoLabel} onClick={redo} verb="Redo" />
+		</>
 	);
 }
 
@@ -143,6 +190,7 @@ function PresetSelect({
 function SeedControl() {
 	const seed = useGraphStore((state) => state.seed);
 	const setSeed = useGraphStore((state) => state.setSeed);
+	const commitEdit = useGraphStore((state) => state.commitEdit);
 
 	return (
 		<>
@@ -155,6 +203,9 @@ function SeedControl() {
 					onValueChange={(value) => {
 						if (value !== null) setSeed(value);
 					}}
+					onValueCommitted={() => {
+						commitEdit('Set seed');
+					}}
 					step={1}
 					value={seed}
 				>
@@ -166,6 +217,7 @@ function SeedControl() {
 				className="gg-button"
 				onClick={() => {
 					setSeed(crypto.getRandomValues(new Uint32Array(1))[0] ?? 0);
+					commitEdit('Reseed');
 				}}
 			>
 				Reseed

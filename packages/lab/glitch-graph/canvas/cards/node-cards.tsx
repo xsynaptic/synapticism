@@ -13,24 +13,25 @@ import { ParamControl } from '#glitch-graph/ui/param-control.tsx';
 
 type ParamChangeHandler = (key: string, value: ParamValue) => void;
 
-interface ParamsCardProps {
+interface ParamsCardProps extends ParamsNodeProps {
 	definition: ParamDefinition;
-	onDelete: () => void;
-	onParamChange: ParamChangeHandler;
 	params: ParamValues;
 	removalLabel: string;
 	title: string;
+}
+
+interface ParamsNodeProps {
+	onDelete: () => void;
+	onParamChange: ParamChangeHandler;
+	onParamCommit: (label: string) => void;
 }
 
 export function EffectCard({
 	node,
 	onDelete,
 	onParamChange,
-}: {
-	node: EffectNode;
-	onDelete: () => void;
-	onParamChange: ParamChangeHandler;
-}) {
+	onParamCommit,
+}: ParamsNodeProps & { node: EffectNode }) {
 	const definition = effectDefinitions[node.effect];
 
 	return (
@@ -38,6 +39,7 @@ export function EffectCard({
 			definition={definition}
 			onDelete={onDelete}
 			onParamChange={onParamChange}
+			onParamCommit={onParamCommit}
 			params={node.params}
 			removalLabel={`Delete ${definition.label}`}
 			title={definition.label}
@@ -45,12 +47,21 @@ export function EffectCard({
 	);
 }
 
-export function OutputCard({ name, onRename }: { name: string; onRename: (name: string) => void }) {
+export function OutputCard({
+	name,
+	onCommit,
+	onRename,
+}: {
+	name: string;
+	onCommit: () => void;
+	onRename: (name: string) => void;
+}) {
 	return (
 		<div className="gg-pill nokey" data-kind="output">
 			<Input
 				aria-label="Output name"
 				className="gg-output-name nodrag nopan"
+				onBlur={onCommit}
 				onValueChange={onRename}
 				value={name}
 			/>
@@ -90,11 +101,8 @@ export function SplitCard({
 	node,
 	onDelete,
 	onParamChange,
-}: {
-	node: SplitNode;
-	onDelete: () => void;
-	onParamChange: ParamChangeHandler;
-}) {
+	onParamCommit,
+}: ParamsNodeProps & { node: SplitNode }) {
 	const definition = predicateDefinitions[node.predicate];
 
 	return (
@@ -102,6 +110,7 @@ export function SplitCard({
 			definition={definition}
 			onDelete={onDelete}
 			onParamChange={onParamChange}
+			onParamCommit={onParamCommit}
 			params={node.params}
 			removalLabel={`Delete this ${definition.label} Split, its Merge and everything between them`}
 			title={`Split · ${definition.label}`}
@@ -127,6 +136,7 @@ function ParamsCard({
 	definition,
 	onDelete,
 	onParamChange,
+	onParamCommit,
 	params,
 	removalLabel,
 	title,
@@ -144,6 +154,7 @@ function ParamsCard({
 						onChange={(value) => {
 							onParamChange(spec.key, value);
 						}}
+						onCommit={onParamCommit}
 						spec={spec}
 						value={params[spec.key]}
 					/>

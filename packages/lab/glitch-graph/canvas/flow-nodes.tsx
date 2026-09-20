@@ -88,6 +88,7 @@ function OutgoingInsertMenus({ id, x, y }: { id: string; x: number; y: number })
 function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const renameOutput = useGraphStore((state) => state.renameOutput);
+	const commitEdit = useGraphStore((state) => state.commitEdit);
 
 	if (node?.kind !== 'output') return;
 
@@ -96,6 +97,9 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 			<FlowHandles inputs={1} outputs={0} />
 			<OutputCard
 				name={node.name}
+				onCommit={() => {
+					commitEdit('Rename Output');
+				}}
 				onRename={(name) => {
 					renameOutput(id, name);
 				}}
@@ -107,17 +111,27 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 function ParamsFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const setParam = useGraphStore((state) => state.setParam);
+	const commitEdit = useGraphStore((state) => state.commitEdit);
 	const handleDelete = useDeleteNode(id);
 
 	function handleParamChange(key: string, value: ParamValue) {
 		setParam(id, key, value);
 	}
 
+	function handleParamCommit(label: string) {
+		commitEdit(`Set ${label}`);
+	}
+
 	if (node?.kind === 'effect') {
 		return (
 			<>
 				<FlowHandles inputs={1} outputs={1} />
-				<EffectCard node={node} onDelete={handleDelete} onParamChange={handleParamChange} />
+				<EffectCard
+					node={node}
+					onDelete={handleDelete}
+					onParamChange={handleParamChange}
+					onParamCommit={handleParamCommit}
+				/>
 				<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
 			</>
 		);
@@ -127,7 +141,12 @@ function ParamsFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<
 		return (
 			<>
 				<FlowHandles inputs={1} outputs={2} />
-				<SplitCard node={node} onDelete={handleDelete} onParamChange={handleParamChange} />
+				<SplitCard
+					node={node}
+					onDelete={handleDelete}
+					onParamChange={handleParamChange}
+					onParamCommit={handleParamCommit}
+				/>
 				<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
 			</>
 		);

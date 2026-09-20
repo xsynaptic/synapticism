@@ -8,24 +8,30 @@ import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 
 interface ParamControlProps<Spec extends ParamSpec = ParamSpec> {
 	onChange: (value: ParamValue) => void;
+	onCommit: (label: string) => void;
 	spec: Spec;
 	value: ParamValue | undefined;
 }
 
-export function ParamControl({ onChange, spec, value }: ParamControlProps) {
-	if (spec.kind === 'select') return <ParamSelect onChange={onChange} spec={spec} value={value} />;
+export function ParamControl({ onChange, onCommit, spec, value }: ParamControlProps) {
+	if (spec.kind === 'select') {
+		return <ParamSelect onChange={onChange} onCommit={onCommit} spec={spec} value={value} />;
+	}
 
-	return <ParamSlider onChange={onChange} spec={spec} value={value} />;
+	return <ParamSlider onChange={onChange} onCommit={onCommit} spec={spec} value={value} />;
 }
 
-function ParamSelect({ onChange, spec, value }: ParamControlProps<SelectParam>) {
+function ParamSelect({ onChange, onCommit, spec, value }: ParamControlProps<SelectParam>) {
 	const container = usePortalContainer();
 
 	return (
 		<Select.Root
 			items={spec.options}
 			onValueChange={(next) => {
-				if (typeof next === 'string') onChange(next);
+				if (typeof next !== 'string') return;
+
+				onChange(next);
+				onCommit(spec.label);
 			}}
 			value={typeof value === 'string' ? value : spec.default}
 		>
@@ -51,7 +57,7 @@ function ParamSelect({ onChange, spec, value }: ParamControlProps<SelectParam>) 
 	);
 }
 
-function ParamSlider({ onChange, spec, value }: ParamControlProps<RangeParam>) {
+function ParamSlider({ onChange, onCommit, spec, value }: ParamControlProps<RangeParam>) {
 	return (
 		<Slider.Root
 			className="gg-slider"
@@ -59,6 +65,9 @@ function ParamSlider({ onChange, spec, value }: ParamControlProps<RangeParam>) {
 			min={spec.min}
 			onValueChange={(next) => {
 				if (typeof next === 'number') onChange(next);
+			}}
+			onValueCommitted={() => {
+				onCommit(spec.label);
 			}}
 			step={spec.step}
 			value={typeof value === 'number' ? value : spec.default}
