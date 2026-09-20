@@ -12,5 +12,4 @@ path-suggestions ul {
 	display: grid;
 	gap: var(--spacing);
 	margin-block-start: calc(var(--spacing) * 2);
-	font-weight: 600;
 }

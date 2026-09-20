@@ -59,7 +59,7 @@ export async function generateSitemapLastmod({
 	console.log(chalk.gray(`Output: ${resolvedPath}`));
 }
 
-// Frontmatter, not git history: packages/content/collections is gitignored, so there is none to read
+// Frontmatter, not git history: a commit date records an edit, not a meaningful update
 function getEntryDate(data: Record<string, unknown>): Date | undefined {
 	const date = data.dateUpdated ?? data.dateCreated;
 

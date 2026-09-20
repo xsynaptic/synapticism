@@ -5,7 +5,7 @@ export const localUrl = `http://localhost:${String(localPort)}`;
 export const isProd = process.env.TEST_ENV === 'prod';
 
 // Must match `siteUrl` in packages/scripts/src/deploy/deploy-config.ts
-const prodUrl = 'https://synapticism.com';
+const prodUrl = 'https://synapticism.com/';
 
 export const contentManifestPath = '/content-manifest.json';
 export const feedPath = '/rss.xml';

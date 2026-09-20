@@ -30,6 +30,4 @@ pnpm-debug.log*
 .claude/worktrees/
 
 # content
-packages/content/collections
-packages/content/data
-packages/content/media
+/packages/content
