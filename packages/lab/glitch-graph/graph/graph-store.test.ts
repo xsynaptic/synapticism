@@ -12,10 +12,16 @@ import {
 	historyCap,
 	useGraphStore,
 } from '#glitch-graph/graph/graph-store.ts';
-import { readNumber } from '#glitch-graph/graph/param-definitions.ts';
+import { readNumber, readString } from '#glitch-graph/graph/param-definitions.ts';
 import { getViolations } from '#glitch-graph/graph/test-validity.ts';
 
 const channelShift = { effect: 'channel-shift', kind: 'effect' } as const;
+
+function getBlend(id: string) {
+	const node = useGraphStore.getState().graph.nodes[id];
+
+	return node?.kind === 'merge' ? readString(node.params, 'blend') : undefined;
+}
 
 function getCurrentInputs(source: IntBuffer) {
 	const { graph, seed } = useGraphStore.getState();
@@ -141,6 +147,19 @@ describe('undo and redo', () => {
 		undo();
 
 		expect(getShiftX('n2')).toBe(12);
+	});
+
+	it('steps a Merge blend back, so a Merge edits like any params node', () => {
+		const { commitEdit, setParam, undo } = useGraphStore.getState();
+
+		setParam('n5', 'blend', 'difference');
+		commitEdit('Set Blend');
+
+		expect(getBlend('n5')).toBe('difference');
+
+		undo();
+
+		expect(getBlend('n5')).toBe('normal');
 	});
 });
 

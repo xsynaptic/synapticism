@@ -3,36 +3,106 @@ import type { NodeProps, NodeTypes } from '@xyflow/react';
 import { Handle, Position, useEdges } from '@xyflow/react';
 
 import type { FlowEdge, FlowNode } from '#glitch-graph/canvas/flow-store.ts';
-import type { ParamValue } from '#glitch-graph/graph/graph-types.ts';
+import type { GraphNode, ParamValue } from '#glitch-graph/graph/graph-types.ts';
 
-import { useRunStore } from '#glitch-graph/app/run-store.ts';
+import { inspectStage, useRunStore } from '#glitch-graph/app/run-store.ts';
 import {
 	EffectCard,
+	ForkCard,
+	MergeCard,
 	OutputCard,
-	PillCard,
 	SourceCard,
 	SplitCard,
 } from '#glitch-graph/canvas/cards/node-cards.tsx';
 import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
 import { InsertMenu } from '#glitch-graph/canvas/insert-menu.tsx';
 import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
+import { effectDefinitions, predicateDefinitions } from '#glitch-graph/graph/param-definitions.ts';
+
+interface EditableCardProps {
+	node: Extract<GraphNode, { kind: 'effect' | 'fork' | 'merge' | 'split' }>;
+	onDelete: () => void;
+	onParamChange: (key: string, value: ParamValue) => void;
+	onParamCommit: (label: string) => void;
+}
 
 const branchHandleOffsets = ['30%', '70%'];
 
-const pillShapes = {
-	fork: {
-		inputs: 1,
-		label: 'Fork',
-		outputs: 2,
-		removalLabel: 'Delete this Fork and everything on its branch',
-	},
-	merge: {
-		inputs: 2,
-		label: 'Merge',
-		outputs: 1,
-		removalLabel: 'Delete this Merge, its Split and everything between them',
-	},
+const portCounts = {
+	effect: { inputs: 1, outputs: 1 },
+	fork: { inputs: 1, outputs: 2 },
+	merge: { inputs: 2, outputs: 1 },
+	split: { inputs: 1, outputs: 2 },
 } as const;
+
+function EditableCard({ node, onDelete, onParamChange, onParamCommit }: EditableCardProps) {
+	switch (node.kind) {
+		case 'effect': {
+			const { label } = effectDefinitions[node.effect];
+
+			return (
+				<EffectCard
+					node={node}
+					onDelete={onDelete}
+					onInspect={() => void inspectStage(node.id, label)}
+					onParamChange={onParamChange}
+					onParamCommit={onParamCommit}
+				/>
+			);
+		}
+		// A Fork passes its input through, so there is nothing of its own to look at
+		case 'fork': {
+			return <ForkCard onDelete={onDelete} />;
+		}
+		case 'merge': {
+			return (
+				<MergeCard
+					onDelete={onDelete}
+					onInspect={() => void inspectStage(node.id, 'Merge')}
+					onParamChange={onParamChange}
+					onParamCommit={onParamCommit}
+					params={node.params}
+				/>
+			);
+		}
+		case 'split': {
+			const { label } = predicateDefinitions[node.predicate];
+
+			return (
+				<SplitCard
+					node={node}
+					onDelete={onDelete}
+					onInspect={() => void inspectStage(node.id, `${label} Split mask`)}
+					onParamChange={onParamChange}
+					onParamCommit={onParamCommit}
+				/>
+			);
+		}
+	}
+}
+
+function EditableFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
+	const node = useGraphStore((state) => state.graph.nodes[id]);
+	const { handleParamChange, handleParamCommit } = useNodeParams(id);
+	const handleDelete = useDeleteNode(id);
+
+	if (node === undefined || node.kind === 'output' || node.kind === 'source') return;
+
+	const { inputs, outputs } = portCounts[node.kind];
+
+	return (
+		<>
+			<FlowHandles inputs={inputs} outputs={outputs} />
+			<EditableCard
+				node={node}
+				onDelete={handleDelete}
+				onParamChange={handleParamChange}
+				onParamCommit={handleParamCommit}
+			/>
+			<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
+		</>
+	);
+}
 
 function FlowHandles({ inputs, outputs }: { inputs: number; outputs: number }) {
 	return (
@@ -108,70 +178,6 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 	);
 }
 
-function ParamsFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
-	const node = useGraphStore((state) => state.graph.nodes[id]);
-	const setParam = useGraphStore((state) => state.setParam);
-	const commitEdit = useGraphStore((state) => state.commitEdit);
-	const handleDelete = useDeleteNode(id);
-
-	function handleParamChange(key: string, value: ParamValue) {
-		setParam(id, key, value);
-	}
-
-	function handleParamCommit(label: string) {
-		commitEdit(`Set ${label}`);
-	}
-
-	if (node?.kind === 'effect') {
-		return (
-			<>
-				<FlowHandles inputs={1} outputs={1} />
-				<EffectCard
-					node={node}
-					onDelete={handleDelete}
-					onParamChange={handleParamChange}
-					onParamCommit={handleParamCommit}
-				/>
-				<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
-			</>
-		);
-	}
-
-	if (node?.kind === 'split') {
-		return (
-			<>
-				<FlowHandles inputs={1} outputs={2} />
-				<SplitCard
-					node={node}
-					onDelete={handleDelete}
-					onParamChange={handleParamChange}
-					onParamCommit={handleParamCommit}
-				/>
-				<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
-			</>
-		);
-	}
-
-	return;
-}
-
-function PillFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
-	const kind = useGraphStore((state) => state.graph.nodes[id]?.kind);
-	const handleDelete = useDeleteNode(id);
-
-	if (kind !== 'fork' && kind !== 'merge') return;
-
-	const { inputs, label, outputs, removalLabel } = pillShapes[kind];
-
-	return (
-		<>
-			<FlowHandles inputs={inputs} outputs={outputs} />
-			<PillCard kind={kind} label={label} onDelete={handleDelete} removalLabel={removalLabel} />
-			<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
-		</>
-	);
-}
-
 function SourceFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<FlowNode>) {
 	const meta = useRunStore(({ source, sourceError }) => {
 		if (source !== undefined) return `${String(source.width)} × ${String(source.height)}`;
@@ -199,11 +205,25 @@ function useDeleteNode(id: string) {
 	};
 }
 
+function useNodeParams(id: string) {
+	const setParam = useGraphStore((state) => state.setParam);
+	const commitEdit = useGraphStore((state) => state.commitEdit);
+
+	return {
+		handleParamChange: (key: string, value: ParamValue) => {
+			setParam(id, key, value);
+		},
+		handleParamCommit: (label: string) => {
+			commitEdit(`Set ${label}`);
+		},
+	};
+}
+
 export const nodeTypes = {
-	'effect-node': ParamsFlowNode,
-	'fork-node': PillFlowNode,
-	'merge-node': PillFlowNode,
+	'effect-node': EditableFlowNode,
+	'fork-node': EditableFlowNode,
+	'merge-node': EditableFlowNode,
 	'output-node': OutputFlowNode,
 	'source-node': SourceFlowNode,
-	'split-node': ParamsFlowNode,
+	'split-node': EditableFlowNode,
 } satisfies NodeTypes;

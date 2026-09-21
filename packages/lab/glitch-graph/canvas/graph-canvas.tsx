@@ -57,6 +57,7 @@ export function GraphCanvas() {
 
 	useMeasuredLayout();
 	useFocusRequest(canvasRef);
+	useResetViewOnUnmount();
 
 	return (
 		<div className="gg-canvas" data-ready={hasLayout} ref={canvasRef}>
@@ -261,4 +262,15 @@ function useMeasuredLayout() {
 		storeApi,
 		structureSignature,
 	]);
+}
+
+// The stores outlive the island, which `<ClientRouter />` remounts; a kept `hasLayout` skips the initial view
+function useResetViewOnUnmount() {
+	const resetView = useFlowStore((state) => state.resetView);
+
+	useEffect(() => {
+		return () => {
+			resetView();
+		};
+	}, [resetView]);
 }

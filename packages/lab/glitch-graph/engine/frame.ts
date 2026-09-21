@@ -1,5 +1,15 @@
 import { ABGR8888, IntBuffer } from '@thi.ng/pixel';
 
+export function frameFromMask(mask: Uint8Array, width: number, height: number) {
+	const data = new Uint32Array(width * height);
+
+	for (let index = 0; index < data.length; index++) {
+		data[index] = mask[index] === 0 ? 0xff_00_00_00 : 0xff_ff_ff_ff;
+	}
+
+	return new IntBuffer(width, height, ABGR8888, data);
+}
+
 // ABGR8888 over RGBA bytes assumes a little-endian host, which every shipping browser is
 export function frameFromRgba(bytes: Uint8ClampedArray, width: number, height: number) {
 	return new IntBuffer(

@@ -8,13 +8,20 @@ import type {
 } from '#glitch-graph/graph/graph-types.ts';
 import type { ParamDefinition } from '#glitch-graph/graph/param-definitions.ts';
 
-import { effectDefinitions, predicateDefinitions } from '#glitch-graph/graph/param-definitions.ts';
+import {
+	effectDefinitions,
+	mergeDefinition,
+	predicateDefinitions,
+} from '#glitch-graph/graph/param-definitions.ts';
 import { ParamControl } from '#glitch-graph/ui/param-control.tsx';
 
 type ParamChangeHandler = (key: string, value: ParamValue) => void;
 
+const [blendSpec] = mergeDefinition.params;
+
 interface ParamsCardProps extends ParamsNodeProps {
 	definition: ParamDefinition;
+	inspectLabel: string;
 	params: ParamValues;
 	removalLabel: string;
 	title: string;
@@ -22,6 +29,7 @@ interface ParamsCardProps extends ParamsNodeProps {
 
 interface ParamsNodeProps {
 	onDelete: () => void;
+	onInspect: () => void;
 	onParamChange: ParamChangeHandler;
 	onParamCommit: (label: string) => void;
 }
@@ -29,6 +37,7 @@ interface ParamsNodeProps {
 export function EffectCard({
 	node,
 	onDelete,
+	onInspect,
 	onParamChange,
 	onParamCommit,
 }: ParamsNodeProps & { node: EffectNode }) {
@@ -37,13 +46,50 @@ export function EffectCard({
 	return (
 		<ParamsCard
 			definition={definition}
+			inspectLabel={`View the frame leaving ${definition.label}`}
 			onDelete={onDelete}
+			onInspect={onInspect}
 			onParamChange={onParamChange}
 			onParamCommit={onParamCommit}
 			params={node.params}
 			removalLabel={`Delete ${definition.label}`}
 			title={definition.label}
 		/>
+	);
+}
+
+export function ForkCard({ onDelete }: { onDelete: () => void }) {
+	return (
+		<div className="gg-pill nokey" data-kind="fork">
+			<span className="gg-node-title">Fork</span>
+			<DeleteButton label="Delete this Fork and everything on its branch" onDelete={onDelete} />
+		</div>
+	);
+}
+
+export function MergeCard({
+	onDelete,
+	onInspect,
+	onParamChange,
+	onParamCommit,
+	params,
+}: ParamsNodeProps & { params: ParamValues }) {
+	return (
+		<div className="gg-pill nokey" data-kind="merge">
+			<InspectButton label="View the frame leaving this Merge" onInspect={onInspect} />
+			<ParamControl
+				onChange={(value) => {
+					onParamChange(blendSpec.key, value);
+				}}
+				onCommit={onParamCommit}
+				spec={blendSpec}
+				value={params[blendSpec.key]}
+			/>
+			<DeleteButton
+				label="Delete this Merge, its Split and everything between them"
+				onDelete={onDelete}
+			/>
+		</div>
 	);
 }
 
@@ -69,25 +115,6 @@ export function OutputCard({
 	);
 }
 
-export function PillCard({
-	kind,
-	label,
-	onDelete,
-	removalLabel,
-}: {
-	kind: 'fork' | 'merge';
-	label: string;
-	onDelete: () => void;
-	removalLabel: string;
-}) {
-	return (
-		<div className="gg-pill nokey" data-kind={kind}>
-			<span className="gg-node-title">{label}</span>
-			<DeleteButton label={removalLabel} onDelete={onDelete} />
-		</div>
-	);
-}
-
 export function SourceCard({ meta }: { meta: string }) {
 	return (
 		<div className="gg-node nokey" data-kind="source">
@@ -100,6 +127,7 @@ export function SourceCard({ meta }: { meta: string }) {
 export function SplitCard({
 	node,
 	onDelete,
+	onInspect,
 	onParamChange,
 	onParamCommit,
 }: ParamsNodeProps & { node: SplitNode }) {
@@ -108,7 +136,9 @@ export function SplitCard({
 	return (
 		<ParamsCard
 			definition={definition}
+			inspectLabel={`View the mask this ${definition.label} Split selects`}
 			onDelete={onDelete}
+			onInspect={onInspect}
 			onParamChange={onParamChange}
 			onParamCommit={onParamCommit}
 			params={node.params}
@@ -132,9 +162,25 @@ function DeleteButton({ label, onDelete }: { label: string; onDelete: () => void
 	);
 }
 
+function InspectButton({ label, onInspect }: { label: string; onInspect: () => void }) {
+	return (
+		<button
+			aria-label={label}
+			className="gg-inspect-button nodrag nopan"
+			onClick={onInspect}
+			title={label}
+			type="button"
+		>
+			◎
+		</button>
+	);
+}
+
 function ParamsCard({
 	definition,
+	inspectLabel,
 	onDelete,
+	onInspect,
 	onParamChange,
 	onParamCommit,
 	params,
@@ -145,7 +191,10 @@ function ParamsCard({
 		<div className="gg-node nokey">
 			<div className="gg-node-header">
 				<p className="gg-node-title">{title}</p>
-				<DeleteButton label={removalLabel} onDelete={onDelete} />
+				<div className="gg-node-actions">
+					<InspectButton label={inspectLabel} onInspect={onInspect} />
+					<DeleteButton label={removalLabel} onDelete={onDelete} />
+				</div>
 			</div>
 			<div className="gg-node-params">
 				{definition.params.map((spec) => (

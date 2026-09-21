@@ -52,6 +52,7 @@ interface ForkNode {
 interface MergeNode {
 	id: string;
 	kind: 'merge';
+	params: ParamValues;
 	splitId: string;
 }
 

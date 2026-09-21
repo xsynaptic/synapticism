@@ -6,6 +6,7 @@ import { createEdge } from '#glitch-graph/graph/graph-utils.ts';
 import {
 	effectDefinitions,
 	getDefaultParams,
+	mergeDefinition,
 	predicateDefinitions,
 } from '#glitch-graph/graph/param-definitions.ts';
 
@@ -83,7 +84,12 @@ export function createDiamondForkPreset(): Graph {
 				kind: 'effect',
 				params: { channel: 'blue', dx: -24, dy: 8 },
 			},
-			n5: { id: 'n5', kind: 'merge', splitId: 'n3' },
+			n5: {
+				id: 'n5',
+				kind: 'merge',
+				params: getDefaultParams(mergeDefinition),
+				splitId: 'n3',
+			},
 			n6: { id: 'n6', kind: 'fork' },
 			n7: { id: 'n7', kind: 'output', name: 'Main' },
 			n8: { id: 'n8', kind: 'output', name: 'Variant' },

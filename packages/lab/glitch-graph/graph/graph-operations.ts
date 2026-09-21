@@ -11,6 +11,7 @@ import { createEdge, getNodeId } from '#glitch-graph/graph/graph-utils.ts';
 import {
 	effectDefinitions,
 	getDefaultParams,
+	mergeDefinition,
 	predicateDefinitions,
 } from '#glitch-graph/graph/param-definitions.ts';
 
@@ -172,7 +173,12 @@ function buildSplitSplice(
 				params: getDefaultParams(predicateDefinitions[predicate]),
 				predicate,
 			},
-			{ id: secondId, kind: 'merge', splitId: firstId },
+			{
+				id: secondId,
+				kind: 'merge',
+				params: getDefaultParams(mergeDefinition),
+				splitId: firstId,
+			},
 		],
 	};
 }

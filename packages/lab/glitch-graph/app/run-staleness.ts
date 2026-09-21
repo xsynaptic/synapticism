@@ -21,7 +21,7 @@ export function isStale(
 	);
 }
 
-function rendersSame(rendered: Graph, graph: Graph) {
+export function rendersSame(rendered: Graph, graph: Graph) {
 	if (rendered.edges !== graph.edges) return false;
 
 	return Object.values(graph.nodes).every((node) => {

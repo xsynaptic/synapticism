@@ -50,7 +50,7 @@
 }
 
 /* The toolbar wraps below this width, leaving separators at the ends of lines */
-@container (width < 52rem) {
+@container (width < 57rem) {
 	.gg-toolbar-separator {
 		display: none;
 	}
@@ -302,7 +302,14 @@
 	justify-content: space-between;
 }
 
-.gg-delete-button {
+.gg-node-actions {
+	display: flex;
+	gap: 0.1rem;
+	align-items: flex-start;
+}
+
+.gg-delete-button,
+.gg-inspect-button {
 	width: 1.1rem;
 	height: 1.1rem;
 	padding: 0;
@@ -319,16 +326,31 @@
 	.gg-delete-button:hover {
 		color: var(--gg-error);
 	}
+
+	.gg-inspect-button:hover {
+		color: var(--gg-accent);
+	}
 }
 
 .gg-delete-button:focus-visible {
 	color: var(--gg-error);
 }
 
+.gg-inspect-button:focus-visible {
+	color: var(--gg-accent);
+}
+
 .gg-pill .gg-delete-button {
 	position: absolute;
 	top: 50%;
 	right: 0.35rem;
+	transform: translateY(-50%);
+}
+
+.gg-pill .gg-inspect-button {
+	position: absolute;
+	top: 50%;
+	left: 0.35rem;
 	transform: translateY(-50%);
 }
 
@@ -450,6 +472,43 @@
 
 .gg-select-icon {
 	color: var(--gg-ink-muted);
+}
+
+/* The pill has no room for a visible label, which still names the trigger */
+.gg-pill .gg-param-label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	white-space: nowrap;
+	clip-path: inset(50%);
+}
+
+/* Inherited font size keeps the line box, and so the measured height, identical to a Fork's title */
+.gg-pill .gg-select-trigger {
+	justify-content: center;
+	width: auto;
+	max-width: calc(100% - 1.7rem);
+	padding: 0;
+	margin-top: 0;
+	overflow: hidden;
+	color: var(--gg-ink);
+	white-space: nowrap;
+	text-decoration: underline dotted;
+	text-underline-offset: 0.25em;
+	background: none;
+	border: 0;
+}
+
+/* The caret would not leave room for the longest mode name */
+.gg-pill .gg-select-icon {
+	display: none;
+}
+
+@media (hover: hover) {
+	.gg-pill .gg-select-trigger:hover {
+		color: var(--gg-accent);
+	}
 }
 
 .gg-positioner {
@@ -682,9 +741,15 @@
 	image-rendering: pixelated;
 }
 
+.gg-stage-note {
+	margin: 0;
+	color: var(--gg-ink-muted);
+}
+
 .gg-button:focus-visible,
 .gg-edge-button:focus-visible,
 .gg-delete-button:focus-visible,
+.gg-inspect-button:focus-visible,
 .gg-select-trigger:focus-visible,
 .gg-seed-input:focus-visible,
 .gg-switch:focus-visible,
@@ -702,6 +767,7 @@
 	.gg-seed-input,
 	.gg-edge-button,
 	.gg-delete-button,
+	.gg-inspect-button,
 	.gg-result-trigger,
 	.gg-controls button {
 		transition-duration: 120ms;

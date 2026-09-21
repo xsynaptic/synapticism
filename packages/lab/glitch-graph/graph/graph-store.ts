@@ -227,7 +227,7 @@ function withOutputName(graph: Graph, id: string, name: string) {
 function withParams(graph: Graph, id: string, params: ParamValues) {
 	const node = graph.nodes[id];
 
-	if (node?.kind !== 'effect' && node?.kind !== 'split') return graph;
+	if (node?.kind !== 'effect' && node?.kind !== 'merge' && node?.kind !== 'split') return graph;
 
 	const merged = { ...node.params, ...params };
 

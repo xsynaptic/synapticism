@@ -40,6 +40,22 @@ export const gradientMapPresets = [
 	{ label: 'Orange blue', value: 'orange-blue' },
 ] as const satisfies ReadonlyArray<{ label: string; value: CosineGradientPreset }>;
 
+export const blendModes = [
+	{ label: 'Normal', value: 'normal' },
+	{ label: 'Multiply', value: 'multiply' },
+	{ label: 'Screen', value: 'screen' },
+	{ label: 'Difference', value: 'difference' },
+	{ label: 'Lighten', value: 'lighten' },
+	{ label: 'Darken', value: 'darken' },
+] as const;
+
+export const mergeDefinition = {
+	label: 'Merge',
+	params: [
+		{ default: 'normal', key: 'blend', kind: 'select', label: 'Blend', options: blendModes },
+	],
+} as const satisfies ParamDefinition;
+
 export const effectDefinitions = {
 	'channel-shift': {
 		label: 'Channel shift',

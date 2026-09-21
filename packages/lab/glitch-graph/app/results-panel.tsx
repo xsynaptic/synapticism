@@ -114,7 +114,7 @@ function RunButton() {
 			className="gg-button gg-run-button"
 			data-variant="primary"
 			disabled={isDisabled}
-			onClick={() => void runGraph()}
+			onClick={runGraph}
 			type="button"
 		>
 			Run

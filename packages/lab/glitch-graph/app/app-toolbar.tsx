@@ -37,6 +37,7 @@ export function AppToolbar() {
 				<Toolbar.Separator className="gg-toolbar-separator" />
 				<HistoryControl />
 				<Toolbar.Separator className="gg-toolbar-separator" />
+				<LiveSwitch />
 				<DebugSwitch />
 			</Toolbar.Root>
 			{sourceError === undefined ? undefined : (
@@ -48,24 +49,11 @@ export function AppToolbar() {
 	);
 }
 
-// Toolbar.Button replaces the switch role with `button` unless one is passed
 function DebugSwitch() {
 	const isDebug = useFlowStore((state) => state.isDebug);
 	const setDebug = useFlowStore((state) => state.setDebug);
 
-	return (
-		<label className="gg-toolbar-field">
-			<span className="gg-param-label">Debug</span>
-			<Toolbar.Button
-				className="gg-switch"
-				nativeButton={false}
-				render={<Switch.Root checked={isDebug} onCheckedChange={setDebug} />}
-				role="switch"
-			>
-				<Switch.Thumb className="gg-switch-thumb" />
-			</Toolbar.Button>
-		</label>
-	);
+	return <ToolbarSwitch isChecked={isDebug} label="Debug" onChange={setDebug} />;
 }
 
 function HistoryButton({
@@ -106,6 +94,13 @@ function HistoryControl() {
 			<HistoryButton glyph="↻" label={redoLabel} onClick={redo} verb="Redo" />
 		</>
 	);
+}
+
+function LiveSwitch() {
+	const isLive = useRunStore((state) => state.isLive);
+	const setLive = useRunStore((state) => state.setLive);
+
+	return <ToolbarSwitch isChecked={isLive} label="Live" onChange={setLive} />;
 }
 
 function PresetControl() {
@@ -223,6 +218,31 @@ function SeedControl() {
 				Reseed
 			</Toolbar.Button>
 		</>
+	);
+}
+
+// Toolbar.Button replaces the switch role with `button` unless one is passed
+function ToolbarSwitch({
+	isChecked,
+	label,
+	onChange,
+}: {
+	isChecked: boolean;
+	label: string;
+	onChange: (isChecked: boolean) => void;
+}) {
+	return (
+		<label className="gg-toolbar-field">
+			<span className="gg-param-label">{label}</span>
+			<Toolbar.Button
+				className="gg-switch"
+				nativeButton={false}
+				render={<Switch.Root checked={isChecked} onCheckedChange={onChange} />}
+				role="switch"
+			>
+				<Switch.Thumb className="gg-switch-thumb" />
+			</Toolbar.Button>
+		</label>
 	);
 }
 

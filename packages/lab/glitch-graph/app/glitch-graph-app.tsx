@@ -4,8 +4,9 @@ import { useEffect, useRef } from 'react';
 
 import { AppToolbar } from '#glitch-graph/app/app-toolbar.tsx';
 import { ResultsPanel } from '#glitch-graph/app/results-panel.tsx';
-import '#glitch-graph/glitch-graph.css';
 import { useRunStore } from '#glitch-graph/app/run-store.ts';
+import { StageDialog } from '#glitch-graph/app/stage-dialog.tsx';
+import '#glitch-graph/glitch-graph.css';
 import defaultSourceUrl from '#glitch-graph/assets/default-source.jpg?url';
 import { GraphCanvas } from '#glitch-graph/canvas/graph-canvas.tsx';
 import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
@@ -36,6 +37,7 @@ export default function GlitchGraphApp() {
 					<GraphCanvas />
 				</ReactFlowProvider>
 				<ResultsPanel />
+				<StageDialog />
 				<div ref={portalRef} />
 			</div>
 		</PortalContainerContext>

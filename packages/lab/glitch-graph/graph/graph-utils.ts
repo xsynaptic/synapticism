@@ -15,6 +15,24 @@ export function createEdge(
 	};
 }
 
+export function getAncestors(graph: Graph, id: string) {
+	const ancestors = new Set([id]);
+	const stack = [id];
+
+	while (stack.length > 0) {
+		const current = stack.pop();
+
+		if (current === undefined) continue;
+
+		for (const source of getUnseenParents(graph, current, ancestors)) {
+			ancestors.add(source);
+			stack.push(source);
+		}
+	}
+
+	return ancestors;
+}
+
 export function getEdgeWithSource(graph: Graph, edgeId: string) {
 	const edge = graph.edges.find((candidate) => candidate.id === edgeId);
 	const source = edge === undefined ? undefined : graph.nodes[edge.source];
@@ -75,4 +93,10 @@ function getOutgoingEdges(graph: Graph, id: string) {
 
 function getSourceId(graph: Graph) {
 	return Object.values(graph.nodes).find((node) => node.kind === 'source')?.id;
+}
+
+function getUnseenParents(graph: Graph, id: string, seen: ReadonlySet<string>) {
+	return getIncomingEdges(graph, id)
+		.map((edge) => edge.source)
+		.filter((source) => !seen.has(source));
 }

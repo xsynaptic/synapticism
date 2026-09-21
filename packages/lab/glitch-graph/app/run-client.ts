@@ -1,7 +1,5 @@
-import type { IntBuffer } from '@thi.ng/pixel';
-
 import type { RunRequest, RunResponse } from '#glitch-graph/engine/run-worker.ts';
-import type { Graph } from '#glitch-graph/graph/graph-types.ts';
+import type { RunInput } from '#glitch-graph/engine/run.ts';
 
 const pending = new Map<number, (response: RunResponse | undefined) => void>();
 
@@ -10,17 +8,17 @@ let nextId = 0;
 // Created when the app chunk evaluates so the engine is loaded before the first Run
 let worker: undefined | Worker = createWorker();
 
-export async function runInWorker(graph: Graph, source: IntBuffer, seed: number) {
+export async function runInWorker({ graph, seed, source }: RunInput, stageId?: string) {
 	const activeWorker = getWorker();
 	const id = (nextId += 1);
+	const pixels = { data: source.data, height: source.height, width: source.width };
+	const request: RunRequest =
+		stageId === undefined
+			? { graph, id, kind: 'graph', seed, source: pixels }
+			: { graph, id, kind: 'stage', seed, source: pixels, stageId };
 	const response = await new Promise<RunResponse | undefined>((resolve) => {
 		pending.set(id, resolve);
-		activeWorker.postMessage({
-			graph,
-			id,
-			seed,
-			source: { data: source.data, height: source.height, width: source.width },
-		} satisfies RunRequest);
+		activeWorker.postMessage(request);
 	});
 
 	if (response?.kind !== 'done') throw new Error('The run failed in the worker');
