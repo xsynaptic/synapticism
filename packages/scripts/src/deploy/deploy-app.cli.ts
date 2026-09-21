@@ -2,6 +2,7 @@
 import { parseArgs } from 'node:util';
 
 import { deployApp } from '#deploy/deploy-app.ts';
+import { assertDeployAuth } from '#deploy/deploy-config.ts';
 import { findWorkspaceRoot } from '#shared/utils.ts';
 
 const { values } = parseArgs({
@@ -10,6 +11,8 @@ const { values } = parseArgs({
 		'dry-run': { default: false, type: 'boolean' },
 	},
 });
+
+assertDeployAuth();
 
 await deployApp({
 	dryRun: values['dry-run'],

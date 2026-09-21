@@ -4,7 +4,7 @@ import { parseArgs } from 'node:util';
 import { $ } from 'zx';
 
 import { deployApp } from '#deploy/deploy-app.ts';
-import { printDeployConfig, siteUrl } from '#deploy/deploy-config.ts';
+import { assertDeployAuth, printDeployConfig, siteUrl } from '#deploy/deploy-config.ts';
 import { findWorkspaceRoot } from '#shared/utils.ts';
 
 const rootPath = findWorkspaceRoot();
@@ -21,8 +21,6 @@ const { values } = parseArgs({
 const dryRun = values['dry-run'];
 const skipBuild = values['skip-build'];
 const skipSmoke = values['skip-smoke'];
-
-printDeployConfig();
 
 async function build() {
 	if (skipBuild) {
@@ -57,6 +55,9 @@ async function smoke() {
 }
 
 try {
+	assertDeployAuth();
+	printDeployConfig();
+
 	await build();
 	await smoke();
 	await deployApp({ dryRun, rootPath });

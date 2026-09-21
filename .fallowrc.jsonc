@@ -1,27 +1,24 @@
 {
-	// Mirrors the entries and ignores in knip.config.ts, which carries the reasons
-	"entry": [
-		"src/dev/inventory/inventory.astro",
-		"src/dev/inventory/inventory-og-image.ts",
-		"packages/lab/*/*.astro",
-	],
-	"dynamicallyLoaded": ["src/components/mdx/**/*.astro"],
 	"ignorePatterns": ["packages/scripts/src/validate-content/fixtures/**"],
-	"ignoreDependencies": [
-		"@fontsource/aleo",
-		"@fontsource/geist-mono",
-		"@synapticism/lab",
-		"@xsynaptic/stylelint-config",
-		"eslint-plugin-jsx-a11y",
-		"eslint-plugin-react-hooks",
-		"mdxlint",
-		"react",
-		"wrangler",
-	],
-	"ignoreDependencyOverrides": [
-		{ "package": "fallow-type-aware", "source": "pnpm-workspace.yaml" },
-	],
-	"rules": { "dev-dependencies-in-production": "off" },
+	"rules": {
+		// Dead code and dependency hygiene belong to knip
+		"unused-files": "off",
+		"unused-exports": "off",
+		"unused-types": "off",
+		"unused-enum-members": "off",
+		"unused-class-members": "off",
+		"unused-dependencies": "off",
+		"unused-dev-dependencies": "off",
+		"unused-optional-dependencies": "off",
+		"unlisted-dependencies": "off",
+		"unresolved-imports": "off",
+		"duplicate-exports": "off",
+		"type-only-dependencies": "off",
+		"test-only-dependencies": "off",
+		"dev-dependencies-in-production": "off",
+		"unused-dependency-overrides": "off",
+		"misconfigured-dependency-overrides": "off",
+	},
 	"health": {
 		// Zero disables CRAP, which fallow otherwise estimates without coverage data
 		"maxCrap": 0,
