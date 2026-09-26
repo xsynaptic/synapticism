@@ -1,3 +1,4 @@
+import { reference } from 'astro:content';
 import { z } from 'zod';
 
 import { ImageFeaturedSchema } from '#lib/schemas/image-featured.ts';
@@ -28,25 +29,17 @@ export const DateStringSchema = z
 	)
 	.transform((value) => (value instanceof Date ? value : parseFrontmatterDate(value)));
 
-const NumericScaleSchema = z.number().int().min(1).max(5);
-
-// An external link: the thing a note points to
-export const LinkItemSchema = z.object({
-	title: z.string(),
-	url: z.url(),
-});
-
-// Where a note was found; URL optional so a name-only credit works
-export const SourceSchema = z.object({
-	title: z.string(),
-	url: z.url().optional(),
-});
-
 export const contentBaseSchema = z.object({
 	dateCreated: DateStringSchema,
 	dateUpdated: DateStringSchema.optional(),
 	description: DescriptionSchema.optional(),
-	entryQuality: NumericScaleSchema,
 	imageFeatured: ImageFeaturedSchema.optional(),
 	title: StylizedTextSchema,
 });
+
+export const articleSchema = contentBaseSchema
+	.extend({
+		projects: reference('projects').array().optional(),
+		tags: reference('tags').array().optional(),
+	})
+	.strict();

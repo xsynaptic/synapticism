@@ -1,7 +1,4 @@
 import type { CollectionKey } from 'astro:content';
-import type { z } from 'zod';
-
-import type { LinkItemSchema } from '#lib/schemas/content.ts';
 
 export type CatalogCaption = Pick<CatalogItem, 'id' | 'title' | 'url'>;
 
@@ -17,10 +14,8 @@ export interface CatalogItem<T extends CatalogCollectionKey = CatalogCollectionK
 	dateUpdated: Date | undefined;
 	description: string | undefined;
 	entryCount: number | undefined;
-	entryQuality: number | undefined;
 	id: string;
 	imageId: string | undefined;
-	links: Array<z.infer<typeof LinkItemSchema>> | undefined;
 	linksExternalCount: number | undefined;
 	title: string;
 	url: string;

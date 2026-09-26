@@ -1,14 +1,12 @@
 import type { OpenGraphEntryItem } from '@synapticism/scripts/og-image';
 import type { Page } from 'astro';
 import type { ComponentProps } from 'astro/types';
-import type { z } from 'zod';
 
 import { toOpenGraphEntryItem } from '@synapticism/scripts/og-image';
 
 import type LabeledRow from '#components/parts/labeled-row.astro';
 import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
-import type { LinkItemSchema, SourceSchema } from '#lib/schemas/content.ts';
 import type { ImageFeaturedObject } from '#lib/schemas/image-featured.ts';
 
 import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
@@ -45,9 +43,7 @@ function createCatalogItem(item: Partial<CatalogItem> & Pick<CatalogItem, 'id' |
 		dateUpdated: undefined,
 		description: undefined,
 		entryCount: undefined,
-		entryQuality: 3,
 		imageId: sampleImageId,
-		links: undefined,
 		linksExternalCount: 0,
 		url: `/inventory/#${item.id}`,
 		wordCount: 820,
@@ -109,16 +105,6 @@ export const samplePaginationOlder = {
 	title: 'An older entry, one step back',
 	url: '/inventory/#older',
 } satisfies PaginationEntry;
-
-export const sampleLinks = [
-	{ title: 'The source this note points at', url: 'https://example.com/an-article' },
-	{ title: 'A second link on the same note', url: 'https://another-example.org/follow-up' },
-] satisfies Array<z.infer<typeof LinkItemSchema>>;
-
-export const sampleSource = {
-	title: 'Where it was found',
-	url: 'https://example.net/',
-} satisfies z.infer<typeof SourceSchema>;
 
 // LabeledRow keeps its item interface local, so reach it through the component's own props
 export const sampleRowItems = [

@@ -6,15 +6,12 @@ import DateDisplay from '#components/parts/date-display.astro';
 import PreviewImage from '#components/parts/preview-image.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { DatePresetEnum } from '#lib/utils/date.ts';
-import { getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
 	item: CatalogItem;
 }
 
 const { item } = Astro.props;
-
-const primaryLink = item.links?.[0];
 ---
 
 <article class:list={['flex gap-3 sm:gap-4', MicroformatClassNames.Entry]}>
@@ -35,11 +32,6 @@ const primaryLink = item.links?.[0];
 				date={item.dateCreated}
 				datePreset={DatePresetEnum.Long}
 			/>
-			{primaryLink ? (
-				<span>
-					{getSourceDomain(primaryLink.url)} <span aria-hidden="true">↗</span>
-				</span>
-			) : undefined}
 		</div>
 		{item.description ? (
 			<p

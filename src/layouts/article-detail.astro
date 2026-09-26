@@ -7,7 +7,6 @@ import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
-import ContentNoteLinks from '#components/content/content-note-links.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
 import Anchor from '#components/parts/anchor.astro';
 import DividedItem from '#components/parts/divided-item.astro';
@@ -16,35 +15,49 @@ import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getSitePath } from '#lib/utils/routing.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
-	entry: CollectionEntry<'notes'>;
+	entry: CollectionEntry<'notes' | 'posts'>;
 	newerEntry: PaginationEntry | undefined;
 	olderEntry: PaginationEntry | undefined;
 }
 
 const { backlinks, entry, newerEntry, olderEntry } = Astro.props;
 
-const { Content } = await render(entry);
+const { Content, remarkPluginFrontmatter } = await render(entry);
+
+const isPost = entry.collection === 'posts';
+
+const minutesRead =
+	isPost && typeof remarkPluginFrontmatter.minutesRead === 'number'
+		? remarkPluginFrontmatter.minutesRead
+		: undefined;
 ---
 
-<ContentEntryDetail entry={entry} hasReadingBar={false} isArticle={true}>
+<ContentEntryDetail entry={entry} hasReadingBar={isPost} isArticle={true}>
 	<Fragment slot="header-subtitle-start">
-		<DividedItem>
-			<Anchor anchorColor="accent" class="font-semibold uppercase" href={getSitePath('notes')}>
-				{t('collection.notes.plural')}
-			</Anchor>
-		</DividedItem>
+		{isPost ? undefined : (
+			<DividedItem>
+				<Anchor anchorColor="accent" class="font-semibold uppercase" href={getSitePath('notes')}>
+					{t('collection.notes.plural')}
+				</Anchor>
+			</DividedItem>
+		)}
 	</Fragment>
-	<ProseBody class:list={['e-content', 'pb-4']}>
+	<Fragment slot="header-subtitle-end">
+		{minutesRead ? (
+			<DividedItem>{formatStringTemplate(t('content.minutesRead'), { minutesRead })}</DividedItem>
+		) : undefined}
+	</Fragment>
+	<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame={isPost || undefined}>
 		<Content />
 	</ProseBody>
-	<ContentNoteLinks links={entry.data.links} source={entry.data.source} />
 	<ContentSectionReferences projects={entry.data.projects} tags={entry.data.tags} />
 	<SectionBacklinks backlinks={backlinks} slot="after-article" />
 	<SectionPagination
-		collection="notes"
+		collection={entry.collection}
 		newerEntry={newerEntry}
 		olderEntry={olderEntry}
 		slot="after-article"

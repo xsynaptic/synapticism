@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
-import PostDetail from '#layouts/post-detail.astro';
+import ArticleDetail from '#layouts/article-detail.astro';
 import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
@@ -34,4 +34,4 @@ export const getStaticPaths = (async () => {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 ---
 
-<PostDetail {...Astro.props} />
+<ArticleDetail {...Astro.props} />

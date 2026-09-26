@@ -101,13 +101,11 @@ async function createCatalogItem(
 		dateUpdated: parseContentDate('dateUpdated' in data ? data.dateUpdated : undefined),
 		description: await getDescriptionRenderedHtml(entry),
 		entryCount: '_entryCount' in data ? data._entryCount : undefined,
-		entryQuality: 'entryQuality' in data ? data.entryQuality : undefined,
 		id: entry.id,
 		imageId:
 			'imageFeatured' in data
 				? getImageFeaturedId({ imageFeatured: data.imageFeatured })
 				: undefined,
-		links: 'links' in data ? data.links : undefined,
 		linksExternalCount: getLinksExternalCount(entry),
 		title: data.title,
 		url: getContentPath(entry.collection, entry.id),

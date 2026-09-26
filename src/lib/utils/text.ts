@@ -27,10 +27,6 @@ export function formatStringTemplate(
 	return template.replaceAll(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ''));
 }
 
-export function getSourceDomain(url: string): string {
-	return new URL(url).hostname.replace(/^www\./, '');
-}
-
 // Typographic refinement for short text: smart quotes, en/em dashes, ellipses
 // This negates the need for a full-blown unified pipeline for titles and such
 export function refineTypography(input: string): string {

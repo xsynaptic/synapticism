@@ -8,7 +8,7 @@ The language of the site itself: what an author writes, how it is grouped, and h
 
 **Collection**: A named set of Entries sharing one schema (Posts, Notes, Projects, Pages, Tags). _Avoid_: content type, model.
 
-**Post**: A long-form article, the site's principal form of writing. _Avoid_: article, blog post, story.
+**Post**: A long-form article, the site's principal form of writing. In code, "article" names what Posts and Notes share (`article-detail.astro`, `articleSchema`), never a Post alone. _Avoid_: blog post, story.
 
 **Note**: A short Entry: an observation or a piece of commentary that does not justify a full article. The distinction from a Post is length and ambition, not kind. _Avoid_: snippet, micropost, aside.
 
@@ -25,8 +25,6 @@ The language of the site itself: what an author writes, how it is grouped, and h
 **Excerpt**: The opening portion of an Entry's body shown in the Stream, ending where the author places the fold. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).
 
 **Description**: A short summary of an Entry, either authored in frontmatter or derived by clipping the opening of the body. Appears in listings, social previews, and search results. _Avoid_: summary, blurb, abstract, excerpt.
-
-**Entry Quality**: How complete and well-developed the writing on an Entry is, on a scale of 1 to 5. An editorial self-assessment of the text, not of its subject. _Avoid_: quality, score, rating.
 
 ## Reference and connection
 

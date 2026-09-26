@@ -16,7 +16,6 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getPagination } from '#lib/utils/pagination.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
 import { openGraphIndexIds } from '#lib/utils/seo.ts';
-import { getSourceDomain } from '#lib/utils/text.ts';
 
 interface Props {
 	page: Page<CollectionEntry<'notes'>>;
@@ -48,8 +47,6 @@ const items = await Promise.all(
 	</ContentHeader>
 	<div class={MicroformatClassNames.Feed}>
 		{items.map(({ Content, entry }) => {
-			const primaryLink = entry.data.links?.[0];
-
 			return (
 				<ContentExcerpt class="mb-8" entryUrl={getContentPath('notes', entry.id)}>
 					<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
@@ -59,14 +56,6 @@ const items = await Promise.all(
 							date={entry.data.dateCreated}
 							datePreset={DatePresetEnum.Long}
 						/>
-						{primaryLink ? (
-							<span>
-								{getSourceDomain(primaryLink.url)}
-								<span aria-hidden="true" class="ml-1">
-									↗
-								</span>
-							</span>
-						) : undefined}
 					</Fragment>
 					<Content />
 				</ContentExcerpt>

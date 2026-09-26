@@ -8,7 +8,6 @@ import ContentExcerpt from '#components/content/content-excerpt.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentHero from '#components/content/content-hero.astro';
 import ContentImage from '#components/content/content-image.astro';
-import ContentNoteLinks from '#components/content/content-note-links.astro';
 import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
 import Link from '#components/mdx/link.astro';
@@ -36,11 +35,9 @@ import {
 	sampleImageFeatured,
 	sampleImageId,
 	sampleImageMissingNote,
-	sampleLinks,
 	samplePaginationNewer,
 	samplePaginationOlder,
 	sampleRowItems,
-	sampleSource,
 } from '#dev/inventory/inventory-fixtures.ts';
 import ProseSample from '#dev/inventory/inventory-prose-sample.mdx';
 import Section from '#dev/inventory/inventory-section.astro';
@@ -459,20 +456,9 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<Fragment slot="excerpt-title">An excerpt title, linked to its Entry</Fragment>
 					<Fragment slot="excerpt-subtitle">
 						<DateDisplay date={sampleDate} />
-						<span>
-							example.com <span aria-hidden="true">↗</span>
-						</span>
 					</Fragment>
 					<ProseSample />
 				</ContentExcerpt>
-			</Specimen>
-			<Specimen
-				bleed={true}
-				name="content-note-links"
-				note="The outbound links a Note points at, with the Source credited on the first."
-				source="components/content/content-note-links.astro"
-			>
-				<ContentNoteLinks links={sampleLinks} source={sampleSource} />
 			</Specimen>
 			<Specimen
 				bleed={true}
