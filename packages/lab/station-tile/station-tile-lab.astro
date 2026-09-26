@@ -1,16 +1,29 @@
 ---
 import type { StationTileLabProps as Props } from '#station-tile/station-tile-types.ts';
 
-const { class: className, href, seed, theme } = Astro.props;
+import styles from '#station-tile/client/station-tile-lab.css?inline';
+import {
+	DEFAULT_TILE_THEME,
+	GLOSS_BLENDS,
+	TILE_DEFAULTS,
+	TILE_THEMES,
+} from '#station-tile/core/appearance.ts';
+import {
+	formatRangeValue,
+	LAB_COLORS,
+	LAB_RANGES,
+} from '#station-tile/station-tile-lab-controls.ts';
+
+// Declarative shadow DOM lays the lab out at full height before its script loads
+// A shadow root cannot read the page cascade, so its styles ship inline with it
+const {
+	class: className,
+	href,
+	seed = TILE_DEFAULTS.seed,
+	theme = DEFAULT_TILE_THEME,
+} = Astro.props;
 
 const { isRss } = Astro.locals;
-
-const attributes: Record<string, string> = {};
-
-if (theme !== undefined) attributes.theme = theme;
-if (seed !== undefined) attributes.seed = String(seed);
-
-const reservedStyle = { display: 'block', minHeight: '838px' };
 ---
 
 {isRss ? (
@@ -20,7 +33,78 @@ const reservedStyle = { display: 'block', minHeight: '838px' };
 		</p>
 	)
 ) : (
-	<station-tile-lab class:list={[className]} style={reservedStyle} {...attributes} />
+	<station-tile-lab class:list={[className]}>
+		<template shadowrootmode="open">
+			<Fragment set:html={`<style>${styles}</style>`} />
+			<div class="lab">
+				<div class="preview">
+					<station-tile />
+				</div>
+				<form class="controls">
+					<label class="field">
+						<span class="field-head">
+							<span class="field-name">Theme</span>
+						</span>
+						<select name="theme">
+							{Object.keys(TILE_THEMES).map((name) => (
+								<option selected={name === theme}>{name}</option>
+							))}
+						</select>
+					</label>
+					<div class="field">
+						<label class="field-head" for="seed">
+							<span class="field-name">Seed</span>
+						</label>
+						<div class="seed-row">
+							<input id="seed" name="seed" type="text" value={String(seed)} />
+							<button aria-label="Randomize seed" type="button">
+								↻
+							</button>
+						</div>
+					</div>
+					{LAB_RANGES.map((range) => (
+						<label class="field">
+							<span class="field-head">
+								<span class="field-name">{range.label}</span>
+								<span class="field-value">{formatRangeValue(range.value)}</span>
+							</span>
+							<input
+								aria-label={range.label}
+								max={range.max}
+								min={range.min}
+								name={range.key}
+								step={range.step}
+								type="range"
+								value={range.value}
+							/>
+						</label>
+					))}
+					{LAB_COLORS.map((color) => (
+						<label class="field">
+							<span class="field-head">
+								<span class="field-name">{color.label}</span>
+							</span>
+							<input aria-label={color.label} name={color.key} type="color" value={color.value} />
+						</label>
+					))}
+					<label class="field">
+						<span class="field-head">
+							<span class="field-name">Gloss blend</span>
+						</span>
+						<select name="glossBlend">
+							{GLOSS_BLENDS.map((name) => (
+								<option selected={name === TILE_DEFAULTS.glossBlend}>{name}</option>
+							))}
+						</select>
+					</label>
+					<label class="field toggle">
+						<input name="seamless" type="checkbox" />
+						<span class="field-name">Seamless</span>
+					</label>
+				</form>
+			</div>
+		</template>
+	</station-tile-lab>
 )}
 
 <script>

@@ -22,6 +22,8 @@ export interface ResolvedOptions extends ResolvedColors, ResolvedGeometry, Resol
 // `theme` picks a color pair; explicit colorA/colorB override it
 // Optionals admit explicit `undefined`; Astro props destructure to it
 export interface TileInput {
+	// Width over height of the painted box; the canvas matches it so `cover` crops nothing
+	aspectRatio?: number | undefined;
 	bevel?: number | undefined;
 	colorA?: string | undefined;
 	colorB?: string | undefined;
@@ -109,7 +111,10 @@ function resolveGeometry(input: TileInput): ResolvedGeometry {
 	const { groutWidth, tileSize } = resolveCellSize(input, seamless);
 	const canvas = seamless
 		? resolveRepeatUnit(input, tileSize + groutWidth, stagger)
-		: { height: GEOMETRY.canvasHeight, width: GEOMETRY.canvasWidth };
+		: {
+				height: GEOMETRY.canvasWidth / (input.aspectRatio ?? TILE_DEFAULTS.aspectRatio),
+				width: GEOMETRY.canvasWidth,
+			};
 
 	return { groutWidth, seamless, stagger, tileSize, ...canvas };
 }

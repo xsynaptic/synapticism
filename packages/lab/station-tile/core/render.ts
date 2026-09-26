@@ -73,7 +73,7 @@ export function generateTileSvg(input: TileInput): GeneratedTile {
 // `xMidYMid slice` the SVG used to carry itself
 // Both modes set the same keys so reassigning the style never leaves a stale one behind
 export function tileBackgroundStyle(tile: GeneratedTile): Record<string, string> {
-	const image = `url("data:image/svg+xml;utf8,${encodeURIComponent(tile.svg)}")`;
+	const image = `url("${svgDataUri(tile.svg)}")`;
 
 	if (tile.seamless) {
 		return {
@@ -249,4 +249,17 @@ function renderBevel(size: number, radius: number, strength: number): string {
 		` L${formatSvgNumber(far)} ${formatSvgNumber(near + innerRadius)}"/>`;
 
 	return topLeftEdge + bottomRightEdge;
+}
+
+// `encodeURIComponent` inflates the markup ~45%; escaping only what a data URI requires costs ~9%
+// Single quotes pass through Astro's attribute escaping, which rewrites only `&` and `"`
+function svgDataUri(svg: string): string {
+	const escaped = svg
+		.replaceAll('%', '%25')
+		.replaceAll('#', '%23')
+		.replaceAll('<', '%3C')
+		.replaceAll('>', '%3E')
+		.replaceAll('"', "'");
+
+	return `data:image/svg+xml,${escaped}`;
 }

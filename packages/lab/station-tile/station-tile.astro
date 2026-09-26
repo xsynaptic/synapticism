@@ -1,16 +1,17 @@
 ---
 import type { StationTileProps as Props } from '#station-tile/station-tile-types.ts';
 
+import { TILE_DEFAULTS } from '#station-tile/core/appearance.ts';
 import { generateTileSvg, tileBackgroundStyle } from '#station-tile/core/render.ts';
 
-const { class: className, ...input } = Astro.props;
+const { aspectRatio = TILE_DEFAULTS.aspectRatio, class: className, ...input } = Astro.props;
 
 const { isRss } = Astro.locals;
 
-const generated = generateTileSvg(input);
+const generated = generateTileSvg({ ...input, aspectRatio });
 
 const style = {
-	aspectRatio: 'var(--station-tile-aspect, 16 / 7)',
+	aspectRatio: String(aspectRatio),
 	...tileBackgroundStyle(generated),
 };
 ---

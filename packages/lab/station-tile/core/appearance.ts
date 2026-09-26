@@ -39,6 +39,7 @@ export const GLOSS_BLENDS = [
 export type GlossBlend = (typeof GLOSS_BLENDS)[number];
 
 export const TILE_DEFAULTS = {
+	aspectRatio: 16 / 7,
 	bevel: 0.3,
 	gloss: 0.2,
 	glossBlend: 'screen',
@@ -55,8 +56,7 @@ export const TILE_DEFAULTS = {
 } as const satisfies Record<string, number | string>;
 
 export const GEOMETRY = {
-	// Non-seamless viewBox; slice-fit by whatever paints it, so it sets cell density, not size
-	canvasHeight: 512,
+	// Non-seamless viewBox width; painted to fit the box width, so it sets cell density, not size
 	canvasWidth: 768,
 	cornerRadiusRatio: 0.04,
 	groutRatio: 0.08,
