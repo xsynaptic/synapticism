@@ -8,6 +8,7 @@ temp/
 .astro/
 .cache/
 .wrangler/
+worker-configuration.d.ts
 
 # dependencies
 node_modules/
