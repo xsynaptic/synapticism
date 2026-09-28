@@ -6,6 +6,7 @@
 	"private": true,
 	"exports": {
 		"./constants": "./src/constants.ts",
+		"./image-featured": "./src/image-featured.ts",
 		"./open-graph": "./src/open-graph.ts"
 	},
 	"imports": {
