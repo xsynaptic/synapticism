@@ -21,23 +21,6 @@ export function getImageFeaturedHeroGroup({
 	return imageHeroObjectGroup;
 }
 
-// The first item serves as the card, thumbnail, and social preview image
-export function getImageFeaturedId({
-	imageFeatured,
-}: {
-	imageFeatured: ImageFeatured | undefined;
-}): string | undefined {
-	if (!imageFeatured) return undefined;
-
-	if (typeof imageFeatured === 'string') return imageFeatured;
-
-	const [item] = imageFeatured;
-
-	if (!item) return undefined;
-
-	return isImageFeaturedObject(item) ? item.id : item;
-}
-
 function isImageFeaturedObject(item: ImageFeaturedItem): item is ImageFeaturedObject {
 	return typeof item === 'object' && 'id' in item;
 }

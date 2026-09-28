@@ -1,5 +1,6 @@
 import type { CollectionKey } from 'astro:content';
 
+import { getImageFeaturedId } from '@synapticism/shared/image-featured';
 import { getOpenGraphId } from '@synapticism/shared/open-graph';
 
 import type { OpenGraphContentEntry, OpenGraphEntryItem } from '#og-image/types.ts';
@@ -54,23 +55,4 @@ export function toOpenGraphEntryItem({
 	const imageId = getImageFeaturedId(entry.data.imageFeatured);
 
 	return { imageId, label, outputId: getOpenGraphId(collection, entry.id), title };
-}
-
-// Mirrored from src/lib/utils/image-featured.ts; this script can't resolve the site's path aliases
-function getImageFeaturedId(imageFeatured: unknown): string | undefined {
-	if (typeof imageFeatured === 'string') return imageFeatured;
-
-	if (!Array.isArray(imageFeatured)) return undefined;
-
-	const item: unknown = imageFeatured[0];
-
-	if (typeof item === 'string') return item;
-
-	if (typeof item === 'object' && item !== null && 'id' in item) {
-		const { id } = item;
-
-		if (typeof id === 'string') return id;
-	}
-
-	return undefined;
 }

@@ -35,6 +35,7 @@
 			"src/components/progress/progress-*.ts",
 		],
 	},
+	"similarCode": { "threshold": 0.9 },
 	"boundaries": {
 		"zones": [
 			{ "name": "packages", "patterns": ["packages/**"] },

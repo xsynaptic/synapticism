@@ -37,6 +37,8 @@ export default getConfig(
 				'unicorn/consistent-boolean-name': 'off',
 				// We use intentional compounds such as schema.org's WebSite type
 				'unicorn/consistent-compound-words': 'off',
+				// The exact inverse of the core rule above; together they reject both forms
+				'unicorn/logical-assignment-operators': 'off',
 				// Zod schema chains in cv.astro legitimately reach 4; depth 5+ still flagged
 				'unicorn/max-nested-calls': ['error', { max: 4 }],
 				// Conflicts with Remeda's sort function
@@ -86,6 +88,8 @@ export default getConfig(
 				},
 			},
 			rules: {
+				// typescript-eslint turns this off for TS files, and without it the globals above bind nothing
+				'no-undef': 'error',
 				// This conflicts with how some client-side code is handled
 				'unicorn/prefer-global-this': 'off',
 			},

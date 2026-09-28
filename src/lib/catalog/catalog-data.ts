@@ -1,5 +1,6 @@
 import type { CollectionEntry, CollectionKey } from 'astro:content';
 
+import { getImageFeaturedId } from '@synapticism/shared/image-featured';
 import { CUSTOM_CACHE_PATH } from 'astro:env/server';
 import { performance } from 'node:perf_hooks';
 
@@ -16,7 +17,6 @@ import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import { getSqliteCacheInstance } from '#lib/utils/cache.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
 import { getDescriptionRenderedHtml } from '#lib/utils/description-data.ts';
-import { getImageFeaturedId } from '#lib/utils/image-featured.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
 import { createWordCountFunction } from '#lib/utils/word-count.ts';
 
@@ -102,10 +102,7 @@ async function createCatalogItem(
 		description: await getDescriptionRenderedHtml(entry),
 		entryCount: '_entryCount' in data ? data._entryCount : undefined,
 		id: entry.id,
-		imageId:
-			'imageFeatured' in data
-				? getImageFeaturedId({ imageFeatured: data.imageFeatured })
-				: undefined,
+		imageId: 'imageFeatured' in data ? getImageFeaturedId(data.imageFeatured) : undefined,
 		linksExternalCount: getLinksExternalCount(entry),
 		title: data.title,
 		url: getContentPath(entry.collection, entry.id),
