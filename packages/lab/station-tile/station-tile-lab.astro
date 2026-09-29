@@ -5,6 +5,7 @@ import styles from '#station-tile/client/station-tile-lab.css?inline';
 import {
 	DEFAULT_TILE_THEME,
 	GLOSS_BLENDS,
+	isTileTheme,
 	TILE_DEFAULTS,
 	TILE_THEMES,
 } from '#station-tile/core/appearance.ts';
@@ -16,12 +17,10 @@ import {
 
 // Declarative shadow DOM lays the lab out at full height before its script loads
 // A shadow root cannot read the page cascade, so its styles ship inline with it
-const {
-	class: className,
-	href,
-	seed = TILE_DEFAULTS.seed,
-	theme = DEFAULT_TILE_THEME,
-} = Astro.props;
+const { class: className, href, seed = TILE_DEFAULTS.seed, theme } = Astro.props;
+
+// MDX props arrive unchecked; the select must show the theme the generator actually falls back to
+const selectedTheme = theme !== undefined && isTileTheme(theme) ? theme : DEFAULT_TILE_THEME;
 
 const { isRss } = Astro.locals;
 ---
@@ -47,7 +46,7 @@ const { isRss } = Astro.locals;
 						</span>
 						<select name="theme">
 							{Object.keys(TILE_THEMES).map((name) => (
-								<option selected={name === theme}>{name}</option>
+								<option selected={name === selectedTheme}>{name}</option>
 							))}
 						</select>
 					</label>

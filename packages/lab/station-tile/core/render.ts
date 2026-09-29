@@ -2,9 +2,10 @@ import type { Cell } from '#station-tile/core/layout.ts';
 import type { ResolvedOptions, TileInput } from '#station-tile/core/options.ts';
 
 import { BEVEL, GEOMETRY, GLOSS, GRAIN, TILT } from '#station-tile/core/appearance.ts';
+import { toHex } from '#station-tile/core/color.ts';
 import { layoutTiles } from '#station-tile/core/layout.ts';
 import { resolveOptions } from '#station-tile/core/options.ts';
-import { formatSvgCoord, formatSvgNumber, toHex } from '#station-tile/core/utils.ts';
+import { formatSvgCoord, formatSvgNumber } from '#station-tile/core/svg-format.ts';
 
 export interface GeneratedTile {
 	height: number;
@@ -69,8 +70,6 @@ export function generateTileSvg(input: TileInput): GeneratedTile {
 }
 
 // Shared by the Astro component and the custom element so both paint identically
-// Seamless repeats its unit at 1:1; otherwise `cover` + centring stands in for the
-// `xMidYMid slice` the SVG used to carry itself
 // Both modes set the same keys so reassigning the style never leaves a stale one behind
 export function tileBackgroundStyle(tile: GeneratedTile): Record<string, string> {
 	const image = `url("${svgDataUri(tile.svg)}")`;

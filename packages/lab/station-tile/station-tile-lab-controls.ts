@@ -1,3 +1,5 @@
+import { TILE_DEFAULTS } from '#station-tile/core/appearance.ts';
+
 interface ColorSpec {
 	key: 'glossColor' | 'grout';
 	label: string;
@@ -28,23 +30,29 @@ interface RangeSpec {
 // Matches `.preview` in station-tile-lab.css so the canvas fills the box without cropping
 export const LAB_ASPECT_RATIO = 4 / 3;
 
+// Lab opens at the density of the page's own tiles (sizes 18 to 26), finer than the component default
+// Grout width has no default; the component derives it from tile size
+const LAB_PRESET = { ...TILE_DEFAULTS, groutWidth: 2, tileSize: 28 } as const;
+
 // Paint cost scales with cell count; a frame takes ~100 ms at size 16 and ~275 ms at 10 (GPU Chrome, DPR 2)
-export const LAB_RANGES: ReadonlyArray<RangeSpec> = [
-	{ key: 'tileSize', label: 'Tile size', max: 64, min: 16, step: 1, value: 28 },
-	{ key: 'jitter', label: 'Jitter', max: 1, min: 0, step: 0.05, value: 0.8 },
-	{ key: 'gloss', label: 'Gloss', max: 1, min: 0, step: 0.05, value: 0.25 },
-	{ key: 'bevel', label: 'Bevel', max: 1, min: 0, step: 0.05, value: 0.35 },
-	{ key: 'macroLighting', label: 'Macro light', max: 1, min: 0, step: 0.05, value: 0.3 },
-	{ key: 'stagger', label: 'Stagger', max: 0.5, min: 0, step: 0.05, value: 0 },
-	{ key: 'unitCells', label: 'Unit cells', max: 24, min: 4, step: 1, value: 12 },
-	{ key: 'groutWidth', label: 'Grout width', max: 8, min: 1, step: 0.5, value: 2 },
-	{ key: 'grain', label: 'Tile grain', max: 0.3, min: 0, step: 0.01, value: 0.05 },
-	{ key: 'grainGrout', label: 'Grout grain', max: 1, min: 0, step: 0.05, value: 0.5 },
-];
+export const LAB_RANGES: ReadonlyArray<RangeSpec> = (
+	[
+		{ key: 'tileSize', label: 'Tile size', max: 64, min: 16, step: 1 },
+		{ key: 'jitter', label: 'Jitter', max: 1, min: 0, step: 0.05 },
+		{ key: 'gloss', label: 'Gloss', max: 1, min: 0, step: 0.05 },
+		{ key: 'bevel', label: 'Bevel', max: 1, min: 0, step: 0.05 },
+		{ key: 'macroLighting', label: 'Macro light', max: 1, min: 0, step: 0.05 },
+		{ key: 'stagger', label: 'Stagger', max: 0.5, min: 0, step: 0.05 },
+		{ key: 'unitCells', label: 'Unit cells', max: 24, min: 4, step: 1 },
+		{ key: 'groutWidth', label: 'Grout width', max: 8, min: 1, step: 0.5 },
+		{ key: 'grain', label: 'Tile grain', max: 0.3, min: 0, step: 0.01 },
+		{ key: 'grainGrout', label: 'Grout grain', max: 1, min: 0, step: 0.05 },
+	] satisfies Array<Omit<RangeSpec, 'value'>>
+).map((range) => ({ ...range, value: LAB_PRESET[range.key] }));
 
 export const LAB_COLORS: ReadonlyArray<ColorSpec> = [
-	{ key: 'grout', label: 'Grout', value: '#8a8a85' },
-	{ key: 'glossColor', label: 'Gloss tint', value: '#ffffff' },
+	{ key: 'grout', label: 'Grout', value: LAB_PRESET.grout },
+	{ key: 'glossColor', label: 'Gloss tint', value: LAB_PRESET.glossColor },
 ];
 
 export function formatRangeValue(value: number): string {

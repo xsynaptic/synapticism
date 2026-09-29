@@ -1,13 +1,15 @@
 import type { GlossBlend, TileTheme } from '#station-tile/core/appearance.ts';
-import type { RgbColor } from '#station-tile/core/utils.ts';
+import type { RgbColor } from '#station-tile/core/color.ts';
 
 import {
 	DEFAULT_TILE_THEME,
 	GEOMETRY,
+	isTileTheme,
 	TILE_DEFAULTS,
 	TILE_THEMES,
 } from '#station-tile/core/appearance.ts';
-import { hashSeed, parseHex } from '#station-tile/core/utils.ts';
+import { parseHex } from '#station-tile/core/color.ts';
+import { hashSeed } from '#station-tile/core/random.ts';
 
 export interface ResolvedOptions extends ResolvedColors, ResolvedGeometry, ResolvedGloss {
 	bevel: number;
@@ -95,8 +97,7 @@ function resolveCellSize(input: TileInput, seamless: boolean) {
 }
 
 function resolveColors(input: TileInput): ResolvedColors {
-	const themeName =
-		input.theme && Object.hasOwn(TILE_THEMES, input.theme) ? input.theme : DEFAULT_TILE_THEME;
+	const themeName = input.theme && isTileTheme(input.theme) ? input.theme : DEFAULT_TILE_THEME;
 	const themeColors = TILE_THEMES[themeName];
 
 	return {

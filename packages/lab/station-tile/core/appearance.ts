@@ -25,6 +25,10 @@ export type TileTheme = keyof typeof TILE_THEMES;
 
 export const DEFAULT_TILE_THEME = 'grey' satisfies TileTheme;
 
+export function isTileTheme(value: string): value is TileTheme {
+	return Object.hasOwn(TILE_THEMES, value);
+}
+
 export const GLOSS_BLENDS = [
 	'color-dodge',
 	'hard-light',
@@ -101,4 +105,6 @@ export const MACRO = {
 	cols: 4,
 	lightnessRange: 0.12,
 	rows: 3,
+	// Decorrelates the field from cell streams, which share its (col, row) seeding
+	seedSalt: 0x9e_37_79_b9,
 } as const;

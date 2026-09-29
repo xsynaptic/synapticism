@@ -1,15 +1,9 @@
+import type { RgbColor } from '#station-tile/core/color.ts';
 import type { ResolvedOptions } from '#station-tile/core/options.ts';
-import type { RgbColor } from '#station-tile/core/utils.ts';
 
 import { GLOSS, JITTER, MACRO, TILT } from '#station-tile/core/appearance.ts';
-import {
-	cellSeed,
-	jitterHsl,
-	lerp,
-	mulberry32,
-	shiftLightness,
-	signed,
-} from '#station-tile/core/utils.ts';
+import { jitterHsl, mixLinearLight, shiftLightness } from '#station-tile/core/color.ts';
+import { cellSeed, mulberry32, signed } from '#station-tile/core/random.ts';
 
 export interface Cell {
 	baseColor: RgbColor;
@@ -93,7 +87,7 @@ function buildCell({
 	const { groutWidth, jitter, rootSeed, tileSize } = options;
 	const rng = mulberry32(cellSeed(rootSeed, col, row));
 
-	const baseMix = lerp(options.colorA, options.colorB, rng());
+	const baseMix = mixLinearLight(options.colorA, options.colorB, rng());
 	const hueShift = signed(rng) * JITTER.hueDegrees * jitter;
 	const saturationShift = signed(rng) * JITTER.saturation * jitter;
 	const lightnessShift = signed(rng) * JITTER.lightness * jitter;
@@ -121,8 +115,7 @@ function buildMacroField({ height, macroLighting, rootSeed, width }: ResolvedOpt
 	const samples: Array<number> = [];
 	for (let y = 0; y <= MACRO.rows; y += 1) {
 		for (let x = 0; x <= MACRO.cols; x += 1) {
-			const seed = (rootSeed ^ Math.imul(x + 1, 374_761_393) ^ Math.imul(y + 1, 668_265_263)) >>> 0;
-			samples.push(mulberry32(seed)());
+			samples.push(mulberry32(cellSeed(rootSeed ^ MACRO.seedSalt, x, y))());
 		}
 	}
 	return { height, samples, strength: macroLighting, width };
