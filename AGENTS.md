@@ -2,7 +2,7 @@
 
 Source for [**synapticism.com**](https://synapticism.com): a dev blog, tech notebook, and creative coding project.
 
-Vocabulary is fixed. Read [`.claude/context.md`](.claude/context.md) before naming things in code or in prose.
+Vocabulary is fixed. Read [`.claude/glossary.md`](.claude/glossary.md) before naming things in code or in prose.
 
 Add a line here only when an agent cannot see it in the repo or work it out quickly.
 

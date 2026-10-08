@@ -14,4 +14,4 @@
 
 Markdown files under `.claude/tasks/`, flat: no backlog or completed folders at this size. Each opens with YAML frontmatter: `status` (`proposal` | `accepted` | `deferred` | `superseded`), `created` (ISO date), and optional `area`. Converted plans may also carry `priority` / `effort` / `depends` / `source` / `updated` / `progress`.
 
-Completion is not a status: delete a task once its work lands, folding anything worth keeping into the code, `AGENTS.md`, or `context.md`.
+Completion is not a status: delete a task once its work lands, folding anything worth keeping into the code, `AGENTS.md`, or `glossary.md`.
