@@ -1,21 +1,16 @@
+import type { Cache } from '@synapticism/shared/cache';
 import type { CollectionEntry, CollectionKey } from 'astro:content';
-import type Keyv from 'keyv';
 
 import { stripTags } from '@xsynaptic/unified-tools';
 import { countWords } from '@xsynaptic/word-count';
+import { hash } from 'ohash';
 import * as R from 'remeda';
 
 import { mdxComponentsToStrip } from '#constants.ts';
-import { hash } from '#lib/utils/cache.ts';
 import { renderMarkdownInline, stripMdxComponents } from '#lib/utils/text.ts';
 
-interface WordCountCached {
-	count: number;
-	hash: string;
-}
-
-export function createWordCountFunction({ cache }: { cache: Keyv }) {
-	return async function getWordCount(entry: CollectionEntry<CollectionKey>): Promise<number> {
+export function createWordCountFunction({ cache }: { cache: Cache<number> }) {
+	return function getWordCount(entry: CollectionEntry<CollectionKey>) {
 		const description = getDescription(entry);
 
 		// Key by entry ID so edits overwrite the old row; the hash validates cached content
@@ -27,19 +22,14 @@ export function createWordCountFunction({ cache }: { cache: Keyv }) {
 			version: 1,
 		});
 
-		const cached = await cache.get<WordCountCached>(entry.id);
+		const cached = cache.get(entry.id, contentHash);
 
-		if (cached?.hash === contentHash) {
-			return cached.count;
-		}
+		if (cached !== undefined) return cached;
 
 		const source = entry.body || description;
 		const wordCount = source ? computeWordCount(source) : 0;
 
-		await cache.set(entry.id, {
-			count: wordCount,
-			hash: contentHash,
-		} satisfies WordCountCached);
+		cache.set(entry.id, contentHash, wordCount);
 
 		return wordCount;
 	};

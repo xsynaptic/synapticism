@@ -11,7 +11,7 @@
 		"#*": "./*"
 	},
 	"dependencies": {
-		"@base-ui/react": "^1.8.0",
+		"@base-ui/react": "^1.9.0",
 		"@thi.ng/color": "^5.8.33",
 		"@thi.ng/dgraph": "^2.1.213",
 		"@thi.ng/pixel": "^7.5.38",

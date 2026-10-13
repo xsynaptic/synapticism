@@ -5,6 +5,7 @@
 	"type": "module",
 	"private": true,
 	"exports": {
+		"./cache": "./src/cache.ts",
 		"./constants": "./src/constants.ts",
 		"./image-featured": "./src/image-featured.ts",
 		"./open-graph": "./src/open-graph.ts"

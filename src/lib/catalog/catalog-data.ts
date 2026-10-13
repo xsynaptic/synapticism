@@ -1,5 +1,6 @@
 import type { CollectionEntry, CollectionKey } from 'astro:content';
 
+import { createSqliteCache } from '@synapticism/shared/cache';
 import { getImageFeaturedId } from '@synapticism/shared/image-featured';
 import { CUSTOM_CACHE_PATH } from 'astro:env/server';
 import { performance } from 'node:perf_hooks';
@@ -14,7 +15,6 @@ import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
-import { getSqliteCacheInstance } from '#lib/utils/cache.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
 import { getDescriptionRenderedHtml } from '#lib/utils/description-data.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
@@ -31,7 +31,7 @@ function getLinksExternalCount(entry: CollectionEntry<CollectionKey>): number {
 function getWordCount(entry: CollectionEntry<CollectionKey>) {
 	if (!wordCountFunction) {
 		wordCountFunction = createWordCountFunction({
-			cache: getSqliteCacheInstance(CUSTOM_CACHE_PATH, 'word-counts'),
+			cache: createSqliteCache(CUSTOM_CACHE_PATH, 'word-counts'),
 		});
 	}
 	return wordCountFunction(entry);
@@ -58,15 +58,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 		...tags,
 	];
 
-	const wordCountsById = new Map(
-		await Promise.all(
-			catalogEntries.map(async (entry) => [entry.id, await getWordCount(entry)] as const),
-		),
-	);
-
-	const catalogItems = await Promise.all(
-		catalogEntries.map((entry) => createCatalogItem(entry, wordCountsById)),
-	);
+	const catalogItems = catalogEntries.map((entry) => createCatalogItem(entry));
 
 	// Note: name collisions across these collections are prohibited and will throw
 	for (const item of catalogItems) {
@@ -88,10 +80,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	return [...catalogItemsById.values()];
 }
 
-async function createCatalogItem(
-	entry: CollectionEntry<CollectionKey>,
-	wordCountsById: Map<string, number | undefined>,
-): Promise<CatalogItem> {
+function createCatalogItem(entry: CollectionEntry<CollectionKey>): CatalogItem {
 	const { data } = entry;
 
 	return {
@@ -99,14 +88,14 @@ async function createCatalogItem(
 		collection: entry.collection,
 		dateCreated: parseContentDate(data.dateCreated) ?? new Date(String(siteYearFounded)),
 		dateUpdated: parseContentDate('dateUpdated' in data ? data.dateUpdated : undefined),
-		description: await getDescriptionRenderedHtml(entry),
+		description: getDescriptionRenderedHtml(entry),
 		entryCount: '_entryCount' in data ? data._entryCount : undefined,
 		id: entry.id,
 		imageId: 'imageFeatured' in data ? getImageFeaturedId(data.imageFeatured) : undefined,
 		linksExternalCount: getLinksExternalCount(entry),
 		title: data.title,
 		url: getContentPath(entry.collection, entry.id),
-		wordCount: wordCountsById.get(entry.id),
+		wordCount: getWordCount(entry),
 	};
 }
 

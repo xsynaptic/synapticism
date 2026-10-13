@@ -1,10 +1,10 @@
-import type Keyv from 'keyv';
+import type { Cache } from '@synapticism/shared/cache';
 
 import { sanitizeHtml, stripTags } from '@xsynaptic/unified-tools';
+import { hash } from 'ohash';
 import * as R from 'remeda';
 
 import { mdxComponentsToStrip } from '#constants.ts';
-import { hash } from '#lib/utils/cache.ts';
 import {
 	renderMarkdownInline,
 	stripFootnoteReferences,
@@ -18,11 +18,7 @@ export interface DescriptionEntry {
 	id: string;
 }
 
-interface DescriptionCached extends DescriptionRendered {
-	hash: string;
-}
-
-interface DescriptionRendered {
+export interface DescriptionRendered {
 	html: string;
 	text: string;
 }
@@ -34,11 +30,9 @@ const wordCountFinal = 100;
 // Keep only inline emphasis in the display form; everything else collapses to plain text
 const descriptionSchema = { tagNames: ['em', 'strong'] };
 
-export function createDescriptionRenderers({ cache }: { cache: Keyv }) {
+export function createDescriptionRenderers({ cache }: { cache: Cache<DescriptionRendered> }) {
 	// Render and cache both the HTML (display) and plain-text (SEO) forms in a single parse
-	async function getDescriptionRendered(
-		entry: DescriptionEntry,
-	): Promise<DescriptionRendered | undefined> {
+	function getDescriptionRendered(entry: DescriptionEntry): DescriptionRendered | undefined {
 		const source = getDescription(entry, { wordCount: wordCountBuffer });
 
 		if (!source) return undefined;
@@ -47,9 +41,9 @@ export function createDescriptionRenderers({ cache }: { cache: Keyv }) {
 		// MDX component names participate so render-affecting code changes self-invalidate
 		const sourceHash = hash({ mdxComponentsToStrip, source, version: 1 });
 
-		const cached = await cache.get<DescriptionCached>(entry.id);
+		const cached = cache.get(entry.id, sourceHash);
 
-		if (cached?.hash === sourceHash) return { html: cached.html, text: cached.text };
+		if (cached) return cached;
 
 		const rawHtml = renderMarkdownInline(source);
 
@@ -59,21 +53,17 @@ export function createDescriptionRenderers({ cache }: { cache: Keyv }) {
 
 		const rendered: DescriptionRendered = { html, text };
 
-		await cache.set(entry.id, { hash: sourceHash, ...rendered } satisfies DescriptionCached);
+		cache.set(entry.id, sourceHash, rendered);
 
 		return rendered;
 	}
 
-	async function getDescriptionRenderedHtml(entry: DescriptionEntry): Promise<string | undefined> {
-		const rendered = await getDescriptionRendered(entry);
-
-		return rendered?.html;
+	function getDescriptionRenderedHtml(entry: DescriptionEntry) {
+		return getDescriptionRendered(entry)?.html;
 	}
 
-	async function getDescriptionRenderedText(entry: DescriptionEntry): Promise<string | undefined> {
-		const rendered = await getDescriptionRendered(entry);
-
-		return rendered?.text;
+	function getDescriptionRenderedText(entry: DescriptionEntry) {
+		return getDescriptionRendered(entry)?.text;
 	}
 
 	return { getDescriptionRendered, getDescriptionRenderedHtml, getDescriptionRenderedText };
