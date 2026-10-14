@@ -3,6 +3,7 @@ import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import fontDevtools from '@xsynaptic/astro-font-devtools';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
 import { readingTime } from '@xsynaptic/satteri-reading-time';
 import pagefind from 'astro-pagefind';
@@ -70,6 +71,7 @@ export default defineConfig({
 	integrations: [
 		devGlitchGraph(),
 		devInventory(),
+		fontDevtools({ targets: ['--font-mono', '--font-sans'] }),
 		mdx(),
 		react(),
 		sitemap({
