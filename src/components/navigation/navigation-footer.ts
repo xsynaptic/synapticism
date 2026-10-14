@@ -15,6 +15,21 @@ export const navigationFooterItems = [
 		url: 'https://github.com/xsynaptic',
 	},
 	{
+		rel: 'me',
+		title: t('navigation.linkedin.label'),
+		url: 'https://www.linkedin.com/in/alexandersynaptic',
+	},
+	{
+		rel: 'me',
+		title: t('navigation.mastodon.label'),
+		url: 'https://indieweb.social/@SpectralCodex',
+	},
+	{
+		rel: 'me',
+		title: t('navigation.x.label'),
+		url: 'https://x.com/spectralcodex',
+	},
+	{
 		title: t('navigation.about.label'),
 		url: getSitePath('about'),
 	},

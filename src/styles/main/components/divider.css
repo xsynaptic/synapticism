@@ -8,9 +8,9 @@
 	}
 }
 
-.divided-item::after {
+.divided-item:has(~ .divided-item)::after {
 	color: var(--color-primary-400);
-	content: var(--content-slash);
+	content: var(--content-word-joiner) var(--content-slash) var(--content-zero-width-space);
 }
 
 /* Glyphs need spacing below sm breakpoint due to jsx whitespace handling */
@@ -18,10 +18,6 @@
 	.divided-item::after {
 		margin-inline: calc(var(--spacing) * 1);
 	}
-}
-
-.divided-item:last-child::after {
-	content: none;
 }
 
 .divided-thin::after {
