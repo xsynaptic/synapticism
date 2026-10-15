@@ -1,10 +1,11 @@
 import { Select } from '@base-ui/react/select';
 import { Slider } from '@base-ui/react/slider';
+import { ChevronDown } from 'lucide-react';
 
 import type { ParamValue } from '#glitch-graph/graph/graph-types.ts';
 import type { ParamSpec, RangeParam, SelectParam } from '#glitch-graph/graph/param-definitions.ts';
 
-import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
+import { SelectPopup } from '#glitch-graph/ui/select-popup.tsx';
 
 interface ParamControlProps<Spec extends ParamSpec = ParamSpec> {
 	onChange: (value: ParamValue) => void;
@@ -22,8 +23,6 @@ export function ParamControl({ onChange, onCommit, spec, value }: ParamControlPr
 }
 
 function ParamSelect({ onChange, onCommit, spec, value }: ParamControlProps<SelectParam>) {
-	const container = usePortalContainer();
-
 	return (
 		<Select.Root
 			items={spec.options}
@@ -38,21 +37,11 @@ function ParamSelect({ onChange, onCommit, spec, value }: ParamControlProps<Sele
 			<Select.Label className="gg-param-label">{spec.label}</Select.Label>
 			<Select.Trigger className="gg-select-trigger nodrag nopan">
 				<Select.Value />
-				<Select.Icon className="gg-select-icon">▾</Select.Icon>
+				<Select.Icon className="gg-select-icon">
+					<ChevronDown aria-hidden="true" className="gg-icon" />
+				</Select.Icon>
 			</Select.Trigger>
-			<Select.Portal container={container}>
-				<Select.Positioner alignItemWithTrigger={false} className="gg-positioner" sideOffset={4}>
-					<Select.Popup className="gg-select-popup nokey">
-						<Select.List>
-							{spec.options.map((option) => (
-								<Select.Item className="gg-select-item" key={option.value} value={option.value}>
-									<Select.ItemText>{option.label}</Select.ItemText>
-								</Select.Item>
-							))}
-						</Select.List>
-					</Select.Popup>
-				</Select.Positioner>
-			</Select.Portal>
+			<SelectPopup options={spec.options} />
 		</Select.Root>
 	);
 }

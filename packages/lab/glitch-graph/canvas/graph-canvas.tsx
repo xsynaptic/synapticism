@@ -36,7 +36,7 @@ const minZoom = 0.1;
 
 const fitViewOptions = { maxZoom: 1, padding: 0.08 };
 
-const readableZoom = 0.5;
+const readableZoom = 0.7;
 
 const readableTopInset = 24;
 
@@ -161,6 +161,11 @@ function getLayoutSignature(graph: Graph, sizes: ReadonlyMap<string, NodeSize>) 
 	return `${getStructureSignature(graph)}|${sizeSignature}`;
 }
 
+// `checkVisibility({ visibilityProperty: true })` answers wrongly where WebIDL drops the unknown option: every flag defaults false and an unplaced node reports visible
+function isPlaced(target: HTMLElement) {
+	return getComputedStyle(target).visibility !== 'hidden';
+}
+
 // The focused control unmounts with its edge or node, so focus lands on what replaced it once a layout shows it
 function useFocusRequest(canvasRef: RefObject<HTMLDivElement | null>) {
 	const focusRequest = useFlowStore((state) => state.focusRequest);
@@ -177,7 +182,7 @@ function useFocusRequest(canvasRef: RefObject<HTMLDivElement | null>) {
 		const frame = requestAnimationFrame(() => {
 			const target = findFocusTarget(root, focusRequest);
 
-			if (target?.checkVisibility({ visibilityProperty: true }) !== true) return;
+			if (target === null || !isPlaced(target)) return;
 
 			target.focus({ preventScroll: true });
 			clearFocusRequest();

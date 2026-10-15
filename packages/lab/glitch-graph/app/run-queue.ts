@@ -1,19 +1,17 @@
-// Latest request wins: a drag asks far faster than the engine can answer
-export function createRunQueue<Request>(
-	perform: (request: Request) => Promise<void>,
+// Requests coalesce into one further run: a drag asks far faster than the engine can answer
+export function createRunQueue(
+	perform: () => Promise<void>,
 	onBusyChange: (isBusy: boolean) => void,
 ) {
 	let isRunning = false;
-	let pending: Request | undefined;
+	let isPending = false;
 
 	async function drain() {
-		while (pending !== undefined) {
-			const next = pending;
-
-			pending = undefined;
+		while (isPending) {
+			isPending = false;
 
 			try {
-				await perform(next);
+				await perform();
 			} catch {
 				// A failed run must not wedge the queue
 			}
@@ -24,8 +22,8 @@ export function createRunQueue<Request>(
 	}
 
 	// Busy spans the whole drag rather than each run, so nothing reads as idle between two queued runs
-	return function request(next: Request) {
-		pending = next;
+	return function request() {
+		isPending = true;
 
 		if (isRunning) return;
 

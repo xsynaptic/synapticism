@@ -4,13 +4,13 @@ import { createRunQueue } from '#glitch-graph/app/run-queue.ts';
 
 function createRecorder() {
 	const busy: Array<boolean> = [];
-	const started: Array<string> = [];
+	const counts = { started: 0 };
 	let release: ((value: number) => void) | undefined;
 
-	const perform = async (request: string) => {
+	const perform = async () => {
 		const { promise, resolve } = Promise.withResolvers<number>();
 
-		started.push(request);
+		counts.started += 1;
 		release = resolve;
 
 		await promise;
@@ -18,6 +18,7 @@ function createRecorder() {
 
 	return {
 		busy,
+		counts,
 		finish: async () => {
 			const resolve = release;
 
@@ -29,7 +30,6 @@ function createRecorder() {
 		request: createRunQueue(perform, (isBusy) => {
 			busy.push(isBusy);
 		}),
-		started,
 	};
 }
 
@@ -43,54 +43,43 @@ describe('createRunQueue', () => {
 	it('runs an idle request at once', () => {
 		const recorder = createRecorder();
 
-		recorder.request('first');
+		recorder.request();
 
-		expect(recorder.started).toEqual(['first']);
+		expect(recorder.counts.started).toBe(1);
 	});
 
 	it('holds a request back while one is running', async () => {
 		const recorder = createRecorder();
 
-		recorder.request('first');
-		recorder.request('second');
+		recorder.request();
+		recorder.request();
 
-		expect(recorder.started).toEqual(['first']);
+		expect(recorder.counts.started).toBe(1);
 
 		await recorder.finish();
 
-		expect(recorder.started).toEqual(['first', 'second']);
+		expect(recorder.counts.started).toBe(2);
 	});
 
-	it('keeps only the last of several requests made during a run', async () => {
+	it('coalesces several requests made during a run into one further run', async () => {
 		const recorder = createRecorder();
 
-		recorder.request('first');
-		recorder.request('second');
-		recorder.request('third');
-		recorder.request('fourth');
-
-		await recorder.finish();
-
-		expect(recorder.started).toEqual(['first', 'fourth']);
-	});
-
-	it('stops once the queue drains, rather than repeating the last request', async () => {
-		const recorder = createRecorder();
-
-		recorder.request('first');
-		recorder.request('second');
+		recorder.request();
+		recorder.request();
+		recorder.request();
+		recorder.request();
 
 		await recorder.finish();
 		await recorder.finish();
 
-		expect(recorder.started).toEqual(['first', 'second']);
+		expect(recorder.counts.started).toBe(2);
 	});
 
 	it('stays busy across queued runs, and reports idle only once drained', async () => {
 		const recorder = createRecorder();
 
-		recorder.request('first');
-		recorder.request('second');
+		recorder.request();
+		recorder.request();
 
 		await recorder.finish();
 
@@ -102,22 +91,22 @@ describe('createRunQueue', () => {
 	});
 
 	it('accepts a new request after a failed run', async () => {
-		const attempted: Array<string> = [];
-		const request = createRunQueue((name: string) => {
-			attempted.push(name);
+		let attempts = 0;
+		const request = createRunQueue(() => {
+			attempts += 1;
 
 			return Promise.reject(new Error('the run failed'));
 		}, noop);
 
-		request('first');
+		request();
 
 		await flush();
 
-		request('second');
+		request();
 
 		await flush();
 
-		expect(attempted).toEqual(['first', 'second']);
+		expect(attempts).toBe(2);
 	});
 });
 

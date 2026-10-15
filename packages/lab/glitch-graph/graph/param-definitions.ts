@@ -218,6 +218,29 @@ export function getInsertLabel(graph: Graph, edgeId: string) {
 	return `Insert after ${getOutletLabel(outlet.source, outlet.edge.sourceIndex)}`;
 }
 
+export function getNodeLabel(node: GraphNode) {
+	switch (node.kind) {
+		case 'effect': {
+			return effectDefinitions[node.effect].label;
+		}
+		case 'fork': {
+			return 'Fork';
+		}
+		case 'merge': {
+			return 'Merge';
+		}
+		case 'output': {
+			return node.name;
+		}
+		case 'source': {
+			return 'Source';
+		}
+		case 'split': {
+			return `${predicateDefinitions[node.predicate].label} Split`;
+		}
+	}
+}
+
 export function readNumber(params: ParamValues, key: string) {
 	const value = params[key];
 
@@ -232,24 +255,10 @@ export function readString(params: ParamValues, key: string) {
 
 // Branch A (index 0) is laid out on the left
 function getOutletLabel(node: GraphNode, sourceIndex: number) {
-	switch (node.kind) {
-		case 'effect': {
-			return effectDefinitions[node.effect].label;
-		}
-		case 'fork': {
-			return `Fork, ${sourceIndex === 0 ? 'left' : 'right'} branch`;
-		}
-		case 'merge': {
-			return 'Merge';
-		}
-		case 'output': {
-			return node.name;
-		}
-		case 'source': {
-			return 'Source';
-		}
-		case 'split': {
-			return `${predicateDefinitions[node.predicate].label} Split, ${getBranchLabel(node, sourceIndex)} branch`;
-		}
-	}
+	if (node.kind === 'fork') return `Fork, ${sourceIndex === 0 ? 'left' : 'right'} branch`;
+
+	if (node.kind === 'split')
+		return `${getNodeLabel(node)}, ${getBranchLabel(node, sourceIndex)} branch`;
+
+	return getNodeLabel(node);
 }

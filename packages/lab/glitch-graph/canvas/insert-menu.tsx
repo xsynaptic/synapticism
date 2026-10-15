@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 
 import { Menu } from '@base-ui/react/menu';
+import { Plus } from 'lucide-react';
 import { Fragment } from 'react';
 
 import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
@@ -12,7 +13,6 @@ import {
 	effectDefinitions,
 	effectKinds,
 	getInsertLabel,
-	predicateDefinitions,
 	predicateKinds,
 } from '#glitch-graph/graph/param-definitions.ts';
 import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
@@ -23,9 +23,14 @@ interface InsertOption {
 	label: string;
 }
 
+const splitLabels = {
+	luminance: 'By brightness',
+	random: 'In random blocks',
+} as const satisfies Record<(typeof predicateKinds)[number], string>;
+
 const insertGroups: ReadonlyArray<{ label: string; options: ReadonlyArray<InsertOption> }> = [
 	{
-		label: 'Effect',
+		label: 'Add an effect',
 		options: effectKinds.map((effect) => ({
 			insertion: { effect, kind: 'effect' },
 			key: effect,
@@ -33,16 +38,16 @@ const insertGroups: ReadonlyArray<{ label: string; options: ReadonlyArray<Insert
 		})),
 	},
 	{
-		label: 'Split by',
+		label: 'Split the image',
 		options: predicateKinds.map((predicate) => ({
 			insertion: { kind: 'split', predicate },
 			key: predicate,
-			label: predicateDefinitions[predicate].label,
+			label: splitLabels[predicate],
 		})),
 	},
 	{
 		label: 'Fork',
-		options: [{ insertion: { kind: 'fork' }, key: 'fork', label: 'To a new Output' }],
+		options: [{ insertion: { kind: 'fork' }, key: 'fork', label: 'Add an Output here' }],
 	},
 ];
 
@@ -62,7 +67,7 @@ export function InsertMenu({ edgeId, style }: { edgeId: string; style: CSSProper
 				disabled={!canInsert(nodeCount, 'effect')}
 				style={style}
 			>
-				+
+				<Plus aria-hidden="true" className="gg-icon" />
 			</Menu.Trigger>
 			<Menu.Portal container={container}>
 				<Menu.Positioner className="gg-positioner" sideOffset={4}>

@@ -2,12 +2,17 @@ import { create } from 'zustand';
 
 import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
 import type { PresetId } from '#glitch-graph/graph/graph-presets.ts';
-import type { Graph, GraphNode, ParamValue, ParamValues } from '#glitch-graph/graph/graph-types.ts';
+import type { Graph, ParamValue, ParamValues } from '#glitch-graph/graph/graph-types.ts';
 
 import { deleteNode, insertNode } from '#glitch-graph/graph/graph-operations.ts';
-import { createBlankGraph, defaultPresetId, getPreset } from '#glitch-graph/graph/graph-presets.ts';
+import { defaultPresetId, getPreset } from '#glitch-graph/graph/graph-presets.ts';
 import { getNodeId } from '#glitch-graph/graph/graph-utils.ts';
-import { effectDefinitions, predicateDefinitions } from '#glitch-graph/graph/param-definitions.ts';
+import { jitterGraph } from '#glitch-graph/graph/jitter.ts';
+import {
+	effectDefinitions,
+	getNodeLabel,
+	predicateDefinitions,
+} from '#glitch-graph/graph/param-definitions.ts';
 
 interface GraphState extends HistorySnapshot {
 	commitEdit: (label: string) => void;
@@ -16,11 +21,10 @@ interface GraphState extends HistorySnapshot {
 	historyIndex: number;
 	insertNode: (edgeId: string, insertion: Insertion) => string | undefined;
 	loadPreset: (presetId: PresetId) => void;
+	randomize: () => void;
 	redo: () => void;
 	renameOutput: (id: string, name: string) => void;
-	reset: () => void;
 	setParam: (id: string, key: string, value: ParamValue) => void;
-	setSeed: (seed: number) => void;
 	undo: () => void;
 }
 
@@ -49,18 +53,6 @@ export const useGraphStore = create<GraphState>()((set, get) => {
 	const graph = getPreset(defaultPresetId).create();
 	const loadedPreset = { graph, id: defaultPresetId };
 
-	function commit(label: string, changes: Partial<HistorySnapshot>) {
-		set((state) => pushHistory(state, label, { ...toSnapshot(state), ...changes }));
-	}
-
-	function applyEdit(edit: StructuralEdit | undefined) {
-		if (edit === undefined) return;
-
-		commit(edit.label, { graph: edit.graph });
-
-		return edit.focusId;
-	}
-
 	return {
 		commitEdit: (label) => {
 			commit(label, {});
@@ -80,24 +72,25 @@ export const useGraphStore = create<GraphState>()((set, get) => {
 				loadedPreset: { graph: presetGraph, id: presetId },
 			});
 		},
+		// A new seed re-rolls the two nodes that draw on it, which no param move reaches
+		randomize: () => {
+			commit('Randomize', {
+				graph: jitterGraph(get().graph, nextRandomFloat),
+				seed: nextRandomWord(),
+			});
+		},
 		redo: () => {
-			set((state) => stepHistory(state, 1));
+			stepHistory(1);
 		},
 		renameOutput: (id, name) => {
 			set(({ graph }) => ({ graph: withOutputName(graph, id, name) }));
-		},
-		reset: () => {
-			commit('Reset', { graph: createBlankGraph(), loadedPreset: undefined });
 		},
 		seed: initialSeed,
 		setParam: (id, key, value) => {
 			set(({ graph }) => ({ graph: withParams(graph, id, { [key]: value }) }));
 		},
-		setSeed: (seed) => {
-			set({ seed });
-		},
 		undo: () => {
-			set((state) => stepHistory(state, -1));
+			stepHistory(-1);
 		},
 	};
 });
@@ -119,30 +112,25 @@ export function useActivePresetId() {
 	return useGraphStore(getActivePresetId);
 }
 
+// Both reach the store through its api rather than the creator's `set`, which would push the creator past its line cap
+function applyEdit(edit: StructuralEdit | undefined) {
+	if (edit === undefined) return;
+
+	commit(edit.label, { graph: edit.graph });
+
+	return edit.focusId;
+}
+
+function commit(label: string, changes: Partial<HistorySnapshot>) {
+	useGraphStore.setState((state) =>
+		pushHistory(state, { ...toSnapshot(state), ...changes, label }),
+	);
+}
+
 function getBridgeId(previous: Graph, next: Graph) {
 	const previousIds = new Set(previous.edges.map((edge) => edge.id));
 
 	return next.edges.find((edge) => !previousIds.has(edge.id))?.id;
-}
-
-function getDeleteLabel(node: GraphNode) {
-	switch (node.kind) {
-		case 'effect': {
-			return `Delete ${effectDefinitions[node.effect].label}`;
-		}
-		case 'fork': {
-			return 'Delete Fork';
-		}
-		case 'merge': {
-			return 'Delete Merge';
-		}
-		case 'split': {
-			return `Delete ${predicateDefinitions[node.predicate].label} Split`;
-		}
-		default: {
-			return 'Delete';
-		}
-	}
 }
 
 function getInsertionLabel(insertion: Insertion) {
@@ -155,13 +143,21 @@ function getInsertionLabel(insertion: Insertion) {
 	return 'Insert Fork';
 }
 
+function nextRandomFloat() {
+	return nextRandomWord() / 2 ** 32;
+}
+
+function nextRandomWord() {
+	return crypto.getRandomValues(new Uint32Array(1))[0] ?? 0;
+}
+
 function planDelete(graph: Graph, id: string): StructuralEdit | undefined {
 	const node = graph.nodes[id];
 	const next = deleteNode(graph, id);
 
 	if (node === undefined || next === graph) return;
 
-	return { focusId: getBridgeId(graph, next), graph: next, label: getDeleteLabel(node) };
+	return { focusId: getBridgeId(graph, next), graph: next, label: `Delete ${getNodeLabel(node)}` };
 }
 
 function planInsert(
@@ -181,38 +177,33 @@ function planInsert(
 }
 
 // A commit that changed nothing must not truncate the redo branch
-function pushHistory(state: GraphState, label: string, snapshot: HistorySnapshot) {
+function pushHistory(state: GraphState, entry: HistoryEntry) {
 	const current = state.history[state.historyIndex];
 
 	if (
-		current?.graph === snapshot.graph &&
-		current.loadedPreset === snapshot.loadedPreset &&
-		current.seed === snapshot.seed
+		current?.graph === entry.graph &&
+		current.loadedPreset === entry.loadedPreset &&
+		current.seed === entry.seed
 	) {
 		return {};
 	}
 
-	const history = [...state.history.slice(0, state.historyIndex + 1), { ...snapshot, label }].slice(
-		-historyCap,
-	);
+	const history = [...state.history.slice(0, state.historyIndex + 1), entry].slice(-historyCap);
 
-	return { ...snapshot, history, historyIndex: history.length - 1 };
+	return { ...toSnapshot(entry), history, historyIndex: history.length - 1 };
 }
 
-function stepHistory(state: GraphState, offset: number) {
-	const entry = state.history[state.historyIndex + offset];
+function stepHistory(offset: number) {
+	const state = useGraphStore.getState();
+	const historyIndex = state.historyIndex + offset;
+	const entry = state.history[historyIndex];
 
-	if (entry === undefined) return {};
+	if (entry === undefined) return;
 
-	return {
-		graph: entry.graph,
-		historyIndex: state.historyIndex + offset,
-		loadedPreset: entry.loadedPreset,
-		seed: entry.seed,
-	};
+	useGraphStore.setState({ ...toSnapshot(entry), historyIndex });
 }
 
-function toSnapshot({ graph, loadedPreset, seed }: GraphState): HistorySnapshot {
+function toSnapshot({ graph, loadedPreset, seed }: HistorySnapshot): HistorySnapshot {
 	return { graph, loadedPreset, seed };
 }
 

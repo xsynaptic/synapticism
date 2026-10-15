@@ -39,10 +39,6 @@ const insertionSizes = { effect: 1, fork: 2, split: 2 } as const satisfies Recor
 	number
 >;
 
-export function canDelete(node: GraphNode) {
-	return node.kind !== 'source' && node.kind !== 'output';
-}
-
 export function canInsert(nodeCount: number, kind: Insertion['kind']) {
 	return nodeCount + insertionSizes[kind] <= nodeCap;
 }

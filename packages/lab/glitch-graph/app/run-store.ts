@@ -2,15 +2,13 @@ import type { IntBuffer } from '@thi.ng/pixel';
 
 import { create } from 'zustand';
 
-import type { RunInputs } from '#glitch-graph/app/run-staleness.ts';
-import type { RunQuality, TriggerState } from '#glitch-graph/app/run-trigger.ts';
+import type { TriggerState } from '#glitch-graph/app/run-trigger.ts';
 import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
-import { decodeImage } from '#glitch-graph/app/frame-image.ts';
+import { decodeImage, defaultResolution } from '#glitch-graph/app/frame-image.ts';
 import { runInWorker } from '#glitch-graph/app/run-client.ts';
 import { createRunQueue } from '#glitch-graph/app/run-queue.ts';
-import { isStale } from '#glitch-graph/app/run-staleness.ts';
-import { getRunQuality } from '#glitch-graph/app/run-trigger.ts';
+import { shouldRerun } from '#glitch-graph/app/run-trigger.ts';
 import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
 import { getOutputs } from '#glitch-graph/graph/graph-utils.ts';
 
@@ -21,33 +19,37 @@ interface OutputResult {
 }
 
 interface RunState {
-	clearResults: () => void;
-	isLive: boolean;
 	isRendering: boolean;
 	loadDefaultSource: (url: string) => Promise<void>;
 	loadSource: (file: File) => Promise<void>;
-	previewSource: IntBuffer | undefined;
-	ranWith: RunInputs | undefined;
+	resolution: number;
 	results: Array<OutputResult>;
 	runDuration: number | undefined;
 	runError: string | undefined;
-	runGraph: () => void;
-	setLive: (isLive: boolean) => void;
+	selectedId: string | undefined;
+	selectOutput: (id: string) => void;
+	setResolution: (resolution: number) => void;
 	source: IntBuffer | undefined;
+	sourceBlob: Blob | undefined;
 	sourceError: string | undefined;
-	stage: StageView | undefined;
-	status: 'idle' | 'loading' | 'running';
+	sourceName: string | undefined;
+	sourceUrl: string | undefined;
 }
 
-type StageView =
-	| { kind: 'failed'; name: string }
-	| { kind: 'ready'; name: string; url: string }
-	| { kind: 'rendering'; name: string };
+interface SourceRequest {
+	advice: string;
+	failure: string;
+	name: string;
+	read: () => Promise<Blob>;
+}
+
+// Node ids are `n` plus a counter, so this can never be one
+export const originalId = 'original';
 
 const supportedFormats = 'Try a PNG, JPEG, WebP or GIF.';
 
-// Closing or opening another stage invalidates a run still in flight, which would otherwise reopen the dialog
-let stageSequence = 0;
+// A slower decode started earlier must not land over the resolution the visitor settled on
+let decodeSequence = 0;
 
 const requestRun = createRunQueue(performRun, (isRendering) => {
 	useRunStore.setState({ isRendering });
@@ -58,119 +60,88 @@ export const useRunStore = create<RunState>()((set, get) => {
 	useGraphStore.subscribe(handleGraphChange);
 
 	return {
-		clearResults: () => {
-			for (const result of get().results) URL.revokeObjectURL(result.url);
-
-			set({ ranWith: undefined, results: [], runDuration: undefined, runError: undefined });
-		},
-		isLive: false,
 		isRendering: false,
 		loadDefaultSource: async (url) => {
-			await decodeSource(
-				() => fetchImage(url),
-				'The default image did not load.',
-				'Open an image to start.',
-			);
+			await decodeSource({
+				advice: 'Open an image to start.',
+				failure: 'The default image did not load.',
+				name: 'Default image',
+				read: () => fetchImage(url),
+			});
 		},
-		loadSource: async (file) => {
-			// An empty type means the browser does not know the extension, so let the decoder decide
-			if (file.type !== '' && !file.type.startsWith('image/')) {
-				set({ sourceError: `“${file.name}” is not an image. ${supportedFormats}` });
-
-				return;
-			}
-
-			await decodeSource(
-				() => Promise.resolve(file),
-				`“${file.name}” could not be opened in this browser.`,
-				supportedFormats,
-			);
-		},
-		previewSource: undefined,
-		ranWith: undefined,
+		loadSource: loadSourceFile,
+		resolution: defaultResolution,
 		results: [],
 		runDuration: undefined,
 		runError: undefined,
-		runGraph: () => {
-			requestRun('full');
+		selectedId: undefined,
+		selectOutput: (id) => {
+			set({ selectedId: id });
 		},
-		setLive: (isLive) => {
-			set({ isLive });
+		setResolution: (resolution) => {
+			const { sourceBlob, sourceName } = get();
 
-			if (isLive && isBehind()) requestRun('full');
+			set({ resolution });
+
+			if (sourceBlob === undefined || sourceName === undefined) return;
+
+			void decodeSource({
+				advice: 'Try a smaller one.',
+				failure: 'The image could not be read at that resolution.',
+				name: sourceName,
+				read: () => Promise.resolve(sourceBlob),
+			});
 		},
 		source: undefined,
+		sourceBlob: undefined,
 		sourceError: undefined,
-		stage: undefined,
-		status: 'idle',
+		sourceName: undefined,
+		sourceUrl: undefined,
 	};
 });
 
-export function closeStage() {
-	stageSequence += 1;
+// The first Output stands in until one is picked, and again once the picked one is deleted
+export function getShownId({ results, selectedId }: Pick<RunState, 'results' | 'selectedId'>) {
+	if (selectedId === originalId) return originalId;
 
-	revokeStage(useRunStore.getState().stage);
-	useRunStore.setState({ stage: undefined });
+	return (results.find(({ id }) => id === selectedId) ?? results[0])?.id;
 }
 
-export async function inspectStage(nodeId: string, name: string) {
-	const { source, stage: previous } = useRunStore.getState();
+export function useIsShown(id: string) {
+	return useRunStore((state) => getShownId(state) === id);
+}
 
-	if (source === undefined) return;
+async function decodeSource({ advice, failure, name, read }: SourceRequest) {
+	const sequence = (decodeSequence += 1);
 
-	const sequence = (stageSequence += 1);
-
-	revokeStage(previous);
-	useRunStore.setState({ stage: { kind: 'rendering', name } });
+	useRunStore.setState({ sourceError: undefined });
 
 	try {
-		const { graph, seed } = useGraphStore.getState();
-		const { images } = await runInWorker({ graph, seed, source }, nodeId);
-		const image = images.get(nodeId);
-
-		if (image === undefined) throw new Error(`The worker returned no frame for ${nodeId}`);
-
+		const blob = await read();
+		const { frame, image } = await decodeImage(blob, useRunStore.getState().resolution);
 		const url = URL.createObjectURL(image);
 
-		if (sequence !== stageSequence) {
+		if (sequence !== decodeSequence) {
 			URL.revokeObjectURL(url);
 
 			return;
 		}
 
-		useRunStore.setState({ stage: { kind: 'ready', name, url } });
+		revokeSourceUrl();
+		useRunStore.setState({
+			source: frame,
+			sourceBlob: blob,
+			sourceName: name,
+			sourceUrl: url,
+		});
+		requestRun();
 	} catch {
-		if (sequence !== stageSequence) return;
+		if (sequence !== decodeSequence) return;
 
-		useRunStore.setState({ stage: { kind: 'failed', name } });
-	}
-}
-
-export function useIsStale() {
-	const isCatchingUp = useRunStore((state) => state.isLive && state.isRendering);
-	const ranWith = useRunStore((state) => state.ranWith);
-	const source = useRunStore((state) => state.source);
-
-	// Live results trail an edit by one render; "Run again to update them" is wrong while that render is queued
-	return useGraphStore(
-		({ graph, seed }) => !isCatchingUp && isStale(ranWith, { graph, seed, source }),
-	);
-}
-
-async function decodeSource(read: () => Promise<Blob>, failure: string, advice: string) {
-	useRunStore.setState({ sourceError: undefined, status: 'loading' });
-
-	try {
-		const { preview, source } = await decodeImage(await read());
-
-		useRunStore.setState({ previewSource: preview, source, status: 'idle' });
-
-		if (useRunStore.getState().isLive) requestRun('full');
-	} catch {
 		const kept =
 			useRunStore.getState().source === undefined ? '' : ' The previous image is still loaded.';
 
-		useRunStore.setState({ sourceError: `${failure}${kept} ${advice}`, status: 'idle' });
+		useRunStore.setState({ sourceError: `${failure}${kept} ${advice}` });
 	}
 }
 
@@ -183,57 +154,62 @@ async function fetchImage(url: string) {
 }
 
 function handleGraphChange(next: TriggerState, previous: TriggerState) {
-	if (!useRunStore.getState().isLive) return;
+	if (shouldRerun(previous, next)) {
+		requestRun();
 
-	const quality = getRunQuality(previous, next);
+		return;
+	}
 
-	if (quality !== undefined) requestRun(quality);
+	// A rename renders nothing new, so only the names move
+	if (next.graph !== previous.graph) {
+		useRunStore.setState(({ results }) => ({ results: withNames(results, next.graph) }));
+	}
 }
 
-function isBehind() {
-	const { ranWith, source } = useRunStore.getState();
-	const { graph, seed } = useGraphStore.getState();
+async function loadSourceFile(file: File) {
+	// An empty type means the browser does not know the extension, so let the decoder decide
+	if (file.type !== '' && !file.type.startsWith('image/')) {
+		useRunStore.setState({ sourceError: `“${file.name}” is not an image. ${supportedFormats}` });
 
-	return ranWith === undefined || isStale(ranWith, { graph, seed, source });
+		return;
+	}
+
+	await decodeSource({
+		advice: supportedFormats,
+		failure: `“${file.name}” could not be opened in this browser.`,
+		name: file.name,
+		read: () => Promise.resolve(file),
+	});
 }
 
-async function performRun(quality: RunQuality) {
-	const { previewSource, results: previous, source } = useRunStore.getState();
+async function performRun() {
+	const { results: previous, source } = useRunStore.getState();
 
-	if (source === undefined || previewSource === undefined) return;
-
-	// A preview must not grey out the toolbar, and must not release a load that started mid-run
-	const isFull = quality === 'full';
+	if (source === undefined) return;
 
 	useRunStore.setState({ runError: undefined });
 
-	if (isFull) useRunStore.setState({ status: 'running' });
-
 	try {
 		const { graph, seed } = useGraphStore.getState();
-		const { duration, images } = await runInWorker({
-			graph,
-			seed,
-			source: isFull ? source : previewSource,
-		});
+		const { duration, images } = await runInWorker({ graph, seed, source });
+		// Looks reuse ids, so a rename made meanwhile only carries over while the structure is the one rendered
+		const current = useGraphStore.getState().graph;
 
 		for (const result of previous) URL.revokeObjectURL(result.url);
 
-		// A preview renders the small source but stands in for the full one, so staleness stays quiet
 		useRunStore.setState({
-			ranWith: { graph, seed, source },
-			results: toResults(graph, images),
+			results: toResults(current.edges === graph.edges ? current : graph, images),
 			runDuration: duration,
 		});
 	} catch {
-		useRunStore.setState({ runError: 'The run failed. Run again, or Reset the graph.' });
+		useRunStore.setState({ runError: 'This graph could not be rendered. Undo the last change.' });
 	}
-
-	if (isFull) useRunStore.setState({ status: 'idle' });
 }
 
-function revokeStage(stage: StageView | undefined) {
-	if (stage?.kind === 'ready') URL.revokeObjectURL(stage.url);
+function revokeSourceUrl() {
+	const { sourceUrl } = useRunStore.getState();
+
+	if (sourceUrl !== undefined) URL.revokeObjectURL(sourceUrl);
 }
 
 function toResults(graph: Graph, images: Map<string, Blob>) {
@@ -241,5 +217,15 @@ function toResults(graph: Graph, images: Map<string, Blob>) {
 		const image = images.get(id);
 
 		return image === undefined ? [] : [{ id, name, url: URL.createObjectURL(image) }];
+	});
+}
+
+function withNames(results: Array<OutputResult>, graph: Graph) {
+	return results.map((result) => {
+		const node = graph.nodes[result.id];
+
+		return node?.kind === 'output' && node.name !== result.name
+			? { ...result, name: node.name }
+			: result;
 	});
 }

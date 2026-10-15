@@ -19,6 +19,11 @@ export interface FocusRequest {
 	kind: 'edge' | 'node';
 }
 
+interface GraphChange {
+	graph: Graph;
+	loadedPreset: object | undefined;
+}
+
 interface FlowState {
 	applyNodeChanges: (changes: Array<NodeChange<FlowNode>>) => void;
 	clearFocusRequest: () => void;
@@ -27,11 +32,13 @@ interface FlowState {
 	focusRequest: FocusRequest | undefined;
 	hasLayout: boolean;
 	isDebug: boolean;
+	isFullscreen: boolean;
 	layoutDuration: number | undefined;
 	nodes: Array<FlowNode>;
 	requestFocus: (request: FocusRequest) => void;
 	resetView: () => void;
 	setDebug: (isDebug: boolean) => void;
+	setFullscreen: (isFullscreen: boolean) => void;
 	sizeVersion: number;
 }
 
@@ -43,14 +50,7 @@ type RoutedEdgeData = {
 export const useFlowStore = create<FlowState>()((set) => {
 	const { graph } = useGraphStore.getState();
 
-	useGraphStore.subscribe(({ graph: nextGraph }, previous) => {
-		if (nextGraph.edges === previous.graph.edges) return;
-
-		set(({ edges, nodes }) => ({
-			edges: toFlowEdges(nextGraph, new Map(edges.map((edge) => [edge.id, edge]))),
-			nodes: toFlowNodes(nextGraph, new Map(nodes.map((node) => [node.id, node]))),
-		}));
-	});
+	useGraphStore.subscribe(handleGraphChange);
 
 	return {
 		applyNodeChanges: (changes) => {
@@ -80,6 +80,7 @@ export const useFlowStore = create<FlowState>()((set) => {
 		focusRequest: undefined,
 		hasLayout: false,
 		isDebug: false,
+		isFullscreen: false,
 		layoutDuration: undefined,
 		nodes: toFlowNodes(graph, new Map()),
 		requestFocus: (request) => {
@@ -91,9 +92,26 @@ export const useFlowStore = create<FlowState>()((set) => {
 		setDebug: (isDebug) => {
 			set({ isDebug });
 		},
+		// The canvas changes shape, so the view it was fitted to is gone
+		setFullscreen: (isFullscreen) => {
+			set({ hasLayout: false, isFullscreen });
+		},
 		sizeVersion: 0,
 	};
 });
+
+// Reached through the store api rather than the creator's `set`, which would push the creator past its line cap
+function handleGraphChange({ graph, loadedPreset }: GraphChange, previous: GraphChange) {
+	// A Look load, or a history step across one, puts up a graph the current view was never fitted to
+	if (loadedPreset !== previous.loadedPreset) useFlowStore.setState({ hasLayout: false });
+
+	if (graph.edges === previous.graph.edges) return;
+
+	useFlowStore.setState(({ edges, nodes }) => ({
+		edges: toFlowEdges(graph, new Map(edges.map((edge) => [edge.id, edge]))),
+		nodes: toFlowNodes(graph, new Map(nodes.map((node) => [node.id, node]))),
+	}));
+}
 
 function toFlowEdges(graph: Graph, previous: ReadonlyMap<string, FlowEdge>): Array<FlowEdge> {
 	return graph.edges.map(

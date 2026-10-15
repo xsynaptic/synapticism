@@ -1,9 +1,5 @@
-import type { IntBuffer } from '@thi.ng/pixel';
-
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { isStale } from '#glitch-graph/app/run-staleness.ts';
-import { createFrame } from '#glitch-graph/engine/test-frames.ts';
 import { createDiamondForkPreset } from '#glitch-graph/graph/graph-presets.ts';
 import {
 	getActivePresetId,
@@ -21,12 +17,6 @@ function getBlend(id: string) {
 	const node = useGraphStore.getState().graph.nodes[id];
 
 	return node?.kind === 'merge' ? readString(node.params, 'blend') : undefined;
-}
-
-function getCurrentInputs(source: IntBuffer) {
-	const { graph, seed } = useGraphStore.getState();
-
-	return { graph, seed, source };
 }
 
 function getFirstEdgeId() {
@@ -77,31 +67,35 @@ describe('undo and redo', () => {
 		expect(useGraphStore.getState().history[1]?.graph).toBe(split);
 	});
 
-	it('restores the seed, so Reseed steps back', () => {
-		const { commitEdit, setSeed, undo } = useGraphStore.getState();
+	it('restores the seed and the params a Randomize moved', () => {
+		const { randomize, undo } = useGraphStore.getState();
+		const before = useGraphStore.getState().graph;
 
-		setSeed(4096);
-		commitEdit('Reseed');
+		randomize();
+
+		expect(useGraphStore.getState().graph).not.toBe(before);
+
 		undo();
 
 		expect(useGraphStore.getState().seed).toBe(1);
-		expect(getRedoLabel(useGraphStore.getState())).toBe('Reseed');
+		expect(useGraphStore.getState().graph).toBe(before);
+		expect(getRedoLabel(useGraphStore.getState())).toBe('Randomize');
 	});
 
 	it('evicts the oldest entry once the stack is full', () => {
-		const { commitEdit, setSeed, undo } = useGraphStore.getState();
+		const { commitEdit, setParam, undo } = useGraphStore.getState();
 		const edits = historyCap + 5;
 
 		for (let step = 1; step <= edits; step++) {
-			setSeed(step + 1);
-			commitEdit('Set seed');
+			setParam('n2', 'dx', step + 1);
+			commitEdit('Set Shift x');
 		}
 
 		expect(useGraphStore.getState().history).toHaveLength(historyCap);
 
 		for (let step = 1; step <= edits; step++) undo();
 
-		expect(useGraphStore.getState().seed).toBe(edits + 2 - historyCap);
+		expect(getShiftX('n2')).toBe(edits + 2 - historyCap);
 		expect(getUndoLabel(useGraphStore.getState())).toBeUndefined();
 	});
 
@@ -164,39 +158,24 @@ describe('undo and redo', () => {
 });
 
 describe('undo against the rest of the app', () => {
-	it('un-stales the results when the graph that was run comes back', () => {
-		const { commitEdit, setParam, undo } = useGraphStore.getState();
-		const source = createFrame(1, 1, [0]);
-		const ranWith = getCurrentInputs(source);
+	it('restores the preset an edit or another preset replaced', () => {
+		const { insertNode, loadPreset, undo } = useGraphStore.getState();
 
-		setParam('n2', 'dx', 40);
-		commitEdit('Set Shift x');
-
-		expect(isStale(ranWith, getCurrentInputs(source))).toBe(true);
-
-		undo();
-
-		expect(isStale(ranWith, getCurrentInputs(source))).toBe(false);
-	});
-
-	it('restores the preset an edit or a Reset made custom', () => {
-		const { insertNode, loadPreset, reset, undo } = useGraphStore.getState();
-
-		loadPreset('single');
+		loadPreset('anaglyph');
 		insertNode(getFirstEdgeId(), channelShift);
 
 		expect(getActivePresetId(useGraphStore.getState())).toBeUndefined();
 
 		undo();
 
-		expect(getActivePresetId(useGraphStore.getState())).toBe('single');
+		expect(getActivePresetId(useGraphStore.getState())).toBe('anaglyph');
 
-		reset();
+		loadPreset('blank');
 
-		expect(getActivePresetId(useGraphStore.getState())).toBeUndefined();
+		expect(getActivePresetId(useGraphStore.getState())).toBe('blank');
 
 		undo();
 
-		expect(getActivePresetId(useGraphStore.getState())).toBe('single');
+		expect(getActivePresetId(useGraphStore.getState())).toBe('anaglyph');
 	});
 });

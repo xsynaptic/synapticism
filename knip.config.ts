@@ -10,11 +10,11 @@ export default {
 			// MDX components are provided to <Content> at render time via renderContent (src/lib/utils/astro.ts)
 			entry: [
 				'src/components/mdx/*.astro',
-				'src/dev/glitch-graph/glitch-graph.astro',
 				'src/dev/inventory/inventory.astro',
 				'src/dev/inventory/inventory-og-image.ts',
 			],
 			ignoreDependencies: [
+				'@synapticism/lab', // imported only from MDX in packages/content, which this workspace does not scan
 				'eslint-plugin-jsx-a11y', // peer of eslint-plugin-astro's a11y-strict config; referenced by string, not import
 				'wrangler', // used via wrangler.jsonc + the deploy script ($`wrangler deploy`), neither traceable
 			],

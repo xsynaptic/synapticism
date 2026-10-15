@@ -10,8 +10,11 @@
 	--gg-accent-soft: var(--color-accent-50, #f0fafb);
 	--gg-error: var(--color-highlight-700, #98421d);
 	--gg-mono: var(--font-mono, var(--font-geist-mono, ui-monospace, monospace));
-	--gg-node-width: 13rem;
+	--gg-node-width: 14rem;
 	--gg-pill-width: 8rem;
+	--gg-merge-width: 12.5rem;
+	--gg-matte: var(--color-primary-100, #f4f4f5);
+	--gg-routing: var(--color-highlight-700, #98421d);
 	--gg-radius: 0.25rem;
 
 	font-family: var(--gg-mono);
@@ -27,20 +30,23 @@
 	flex-direction: column;
 }
 
-.gg-toolbar-row {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
-	padding: 0.6rem 0.75rem;
-	container-type: inline-size;
-	border-bottom: 1px solid var(--gg-hairline);
+/* The island reserves this same height before the stylesheet arrives, so keep the two in step */
+.gg-workspace {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) clamp(22rem, 38%, 34rem);
+	height: clamp(34rem, 100svh - 8rem, 56rem);
 }
 
+/* One row is exactly 3rem, which the island's reserve counts on */
 .gg-toolbar {
+	box-sizing: border-box;
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.5rem;
 	align-items: center;
+	min-height: 3rem;
+	padding: 0.4rem 0.75rem;
+	border-bottom: 1px solid var(--gg-hairline);
 }
 
 .gg-toolbar-separator {
@@ -49,11 +55,15 @@
 	background: var(--gg-hairline);
 }
 
-/* The toolbar wraps below this width, leaving separators at the ends of lines */
-@container (width < 57rem) {
-	.gg-toolbar-separator {
-		display: none;
-	}
+.gg-toolbar-spacer {
+	flex: 1;
+}
+
+/* Sized in em so one icon suits the toolbar and a zoomed node alike */
+.gg-icon {
+	flex-shrink: 0;
+	width: 1.25em;
+	height: 1.25em;
 }
 
 .gg-button,
@@ -66,14 +76,18 @@
 	border-radius: var(--gg-radius);
 }
 
+/* Also worn by the download link, which the site's prose rules would otherwise underline */
 .gg-button {
+	display: inline-flex;
+	gap: 0.4rem;
+	align-items: center;
 	padding: 0.3rem 0.6rem;
+	white-space: nowrap;
+	text-decoration: none;
 }
 
-.gg-glyph-button {
-	min-width: 2rem;
-	padding-inline: 0.4rem;
-	line-height: 1;
+.gg-icon-button {
+	padding-inline: 0.45rem;
 }
 
 .gg-button[data-variant='primary'] {
@@ -91,8 +105,7 @@
 
 @media (hover: hover) {
 	.gg-button:hover:not(:disabled, [data-disabled]),
-	.gg-select-trigger:hover,
-	.gg-seed-input:hover {
+	.gg-select-trigger:hover {
 		border-color: var(--gg-accent);
 	}
 }
@@ -101,53 +114,6 @@
 	display: flex;
 	gap: 0.4rem;
 	align-items: center;
-}
-
-/* Wide enough for the largest seed, 2^32 - 1 */
-.gg-seed-input {
-	width: calc(10ch + 0.9rem + 2px);
-	padding: 0.3rem 0.45rem;
-	font: inherit;
-	font-variant-numeric: tabular-nums;
-	color: var(--gg-ink);
-	background: var(--gg-panel);
-	border: 1px solid var(--gg-hairline);
-	border-radius: var(--gg-radius);
-}
-
-.gg-switch {
-	box-sizing: border-box;
-	display: flex;
-	flex-shrink: 0;
-	width: 1.9rem;
-	height: 1.1rem;
-	padding: 2px;
-	cursor: pointer;
-	background: var(--gg-hairline);
-	border: 1px solid var(--gg-hairline);
-	border-radius: 999px;
-}
-
-.gg-switch[data-checked] {
-	background: var(--gg-accent);
-	border-color: var(--gg-accent);
-}
-
-.gg-switch-thumb {
-	width: calc(1.1rem - 6px);
-	height: calc(1.1rem - 6px);
-	background: var(--gg-panel);
-	border-radius: 50%;
-}
-
-.gg-switch-thumb[data-checked] {
-	translate: calc(1.9rem - 1.1rem) 0;
-}
-
-@media (hover: hover) {
-	.gg-switch:hover:not([data-checked]) {
-		border-color: var(--gg-accent);
-	}
 }
 
 .gg-note {
@@ -165,8 +131,8 @@
 	--xy-edge-stroke-width: 1.25;
 	--xy-background-pattern-color: var(--gg-edge);
 
-	height: 40rem;
-	border-bottom: 1px solid var(--gg-hairline);
+	min-width: 0;
+	border-inline-end: 1px solid var(--gg-hairline);
 }
 
 .gg-canvas[data-ready='false'] {
@@ -223,6 +189,8 @@
 	position: absolute;
 	top: 0;
 	left: 0;
+	display: grid;
+	place-items: center;
 	width: 1.5rem;
 	height: 1.5rem;
 	padding: 0;
@@ -295,26 +263,65 @@
 	border-radius: 999px;
 }
 
+/* A stripe per kind, so the graph reads as stages and routing before any title is read */
+.gg-node[data-kind] {
+	border-top: 2px solid var(--gg-kind);
+}
+
+.gg-node[data-kind='source'] {
+	--gg-kind: var(--gg-ink-soft);
+}
+
+.gg-node[data-kind='effect'] {
+	--gg-kind: var(--gg-accent);
+}
+
+.gg-node[data-kind='split'] {
+	--gg-kind: var(--gg-routing);
+}
+
+.gg-pill[data-kind='merge'] {
+	gap: 0.4rem;
+	width: var(--gg-merge-width);
+	border-color: var(--gg-routing);
+}
+
+.gg-pill[data-kind='fork'] {
+	border-color: var(--gg-edge);
+}
+
+.gg-pill[data-kind='output'] {
+	border-color: var(--gg-ink-soft);
+}
+
+.gg-pill[data-selected='true'] {
+	background: var(--gg-accent-soft);
+	border-color: var(--gg-accent);
+	box-shadow: 0 0 0 2px var(--gg-accent);
+}
+
 .gg-node-header {
 	display: flex;
 	gap: 0.5rem;
-	align-items: flex-start;
+	align-items: center;
 	justify-content: space-between;
+	min-height: 1.4rem;
 }
 
 .gg-node-actions {
 	display: flex;
 	gap: 0.1rem;
-	align-items: flex-start;
+	align-items: center;
 }
 
 .gg-delete-button,
 .gg-inspect-button {
-	width: 1.1rem;
-	height: 1.1rem;
+	display: grid;
+	place-items: center;
+	width: 1.4rem;
+	height: 1.4rem;
 	padding: 0;
 	font: inherit;
-	line-height: 1;
 	color: var(--gg-ink-muted);
 	cursor: pointer;
 	background: none;
@@ -322,7 +329,19 @@
 	border-radius: var(--gg-radius);
 }
 
+/* A pointer that cannot hover never gets to reveal them, so they hide only where it can */
 @media (hover: hover) {
+	.gg-node-actions,
+	.gg-pill .gg-delete-button,
+	.gg-pill .gg-inspect-button {
+		opacity: 0;
+	}
+
+	.gg-node:is(:hover, :focus-within) .gg-node-actions,
+	.gg-pill:is(:hover, :focus-within) :is(.gg-delete-button, .gg-inspect-button) {
+		opacity: 1;
+	}
+
 	.gg-delete-button:hover {
 		color: var(--gg-error);
 	}
@@ -362,7 +381,10 @@
 
 .gg-node-meta {
 	margin: 0.2rem 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	color: var(--gg-ink-muted);
+	white-space: nowrap;
 }
 
 .gg-node-params {
@@ -471,6 +493,7 @@
 }
 
 .gg-select-icon {
+	display: flex;
 	color: var(--gg-ink-muted);
 }
 
@@ -488,11 +511,10 @@
 .gg-pill .gg-select-trigger {
 	justify-content: center;
 	width: auto;
-	max-width: calc(100% - 1.7rem);
 	padding: 0;
 	margin-top: 0;
 	overflow: hidden;
-	color: var(--gg-ink);
+	color: var(--gg-accent);
 	white-space: nowrap;
 	text-decoration: underline dotted;
 	text-underline-offset: 0.25em;
@@ -500,7 +522,7 @@
 	border: 0;
 }
 
-/* The caret would not leave room for the longest mode name */
+/* The dotted underline already marks it as a choice */
 .gg-pill .gg-select-icon {
 	display: none;
 }
@@ -530,6 +552,9 @@
 
 .gg-select-item,
 .gg-menu-item {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
 	padding: 0.3rem 0.6rem;
 	cursor: default;
 	outline: none;
@@ -549,16 +574,22 @@
 	min-width: 11rem;
 }
 
-.gg-menu-label,
-.gg-results-title {
+.gg-menu-label {
+	padding: 0.3rem 0.6rem 0.15rem;
 	font-size: 0.7rem;
 	color: var(--gg-ink-muted);
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 }
 
-.gg-menu-label {
-	padding: 0.3rem 0.6rem 0.15rem;
+/* Kept mounted so checked and unchecked items share one text edge */
+.gg-menu-indicator {
+	display: flex;
+	color: var(--gg-accent);
+}
+
+.gg-menu-indicator[data-unchecked] {
+	visibility: hidden;
 }
 
 .gg-menu-separator {
@@ -600,95 +631,78 @@
 	border-radius: var(--gg-radius);
 }
 
-.gg-results {
+.gg-preview {
 	display: flex;
 	flex-direction: column;
 	gap: 0.6rem;
+	min-height: 0;
 	padding: 0.75rem;
 }
 
-.gg-results-header {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.25rem 1rem;
-	align-items: baseline;
+.gg-preview[data-drop-target='true'] {
+	outline: 2px dashed var(--gg-accent);
+	outline-offset: -0.3rem;
 }
 
-.gg-run-button {
-	margin-inline-start: auto;
-}
-
-.gg-results-title {
-	margin: 0;
-}
-
-.gg-stale-note {
-	margin: 0;
-	color: var(--gg-error);
-}
-
-/* Out of flow rather than hidden, so the live region stays in the accessibility tree */
-.gg-stale-note:empty {
-	position: absolute;
-}
-
-.gg-empty-note {
-	margin: 0;
-	color: var(--gg-ink-soft);
-}
-
-.gg-result-list {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
-	gap: 0.75rem;
-	padding: 0;
-	margin: 0;
-	list-style: none;
-}
-
-.gg-results[data-stale='true'] .gg-result-list {
-	opacity: 0.45;
-}
-
-.gg-result-frame {
-	background: repeating-linear-gradient(
-		-45deg,
-		transparent 0 0.4rem,
-		var(--gg-hairline) 0.4rem calc(0.4rem + 1px)
-	);
-	border: 1px dashed var(--gg-edge);
+.gg-preview-frame {
+	position: relative;
+	flex: 1;
+	min-height: 12rem;
+	background: var(--gg-matte);
 	border-radius: var(--gg-radius);
 }
 
-.gg-result-trigger {
-	display: block;
-	width: 100%;
-	padding: 0;
+/* A definite track is what lets the image's percentage caps resolve */
+.gg-preview-trigger {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+	place-items: center;
+	padding: 0.5rem;
 	cursor: zoom-in;
 	background: none;
-	border: 1px solid var(--gg-hairline);
+	border: 0;
 	border-radius: var(--gg-radius);
 }
 
-@media (hover: hover) {
-	.gg-result-trigger:hover {
-		border-color: var(--gg-accent);
-	}
-}
-
-.gg-result-image {
-	display: block;
-	width: 100%;
+.gg-preview-image {
+	width: auto;
+	max-width: 100%;
 	height: auto;
-	border-radius: var(--gg-radius);
+	max-height: 100%;
 }
 
-.gg-result-caption {
+.gg-preview-caption {
 	display: flex;
-	flex-direction: column;
-	gap: 0.1rem;
-	align-items: flex-start;
-	margin-top: 0.3rem;
+	flex-wrap: wrap;
+	gap: 0.4rem 1rem;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.gg-preview-name {
+	display: flex;
+	gap: 0.6rem;
+	align-items: baseline;
+	min-width: 0;
+	margin: 0;
+}
+
+.gg-preview-actions {
+	display: flex;
+	gap: 0.5rem;
+}
+
+/* Delayed rather than faded, so a render quicker than the delay never flashes the word */
+.gg-render-status {
+	color: var(--gg-ink-muted);
+	opacity: 0;
+}
+
+.gg-render-status[data-rendering='true'] {
+	opacity: 1;
+	transition: opacity 0s 200ms;
 }
 
 .gg-result-name {
@@ -699,12 +713,63 @@
 	white-space: nowrap;
 }
 
-.gg-result[data-placeholder] .gg-result-caption {
-	color: var(--gg-ink-muted);
+.gg-strip {
+	display: flex;
+	flex-shrink: 0;
+	gap: 0.5rem;
+	padding: 0;
+	margin: 0;
+	overflow-x: auto;
+	list-style: none;
 }
 
-.gg-link {
-	color: var(--gg-accent);
+/* The site's prose rules space list items apart */
+.gg-strip > li {
+	margin: 0;
+}
+
+.gg-strip-tile {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	align-items: center;
+	width: 5rem;
+	padding: 0.2rem;
+	font: inherit;
+	font-size: 0.7rem;
+	cursor: pointer;
+	background: none;
+	border: 1px solid transparent;
+	border-radius: var(--gg-radius);
+}
+
+.gg-strip-tile[aria-pressed='true'] {
+	background: var(--gg-accent-soft);
+	border-color: var(--gg-accent);
+}
+
+@media (hover: hover) {
+	.gg-strip-tile:hover {
+		border-color: var(--gg-accent);
+	}
+}
+
+.gg-strip-image {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1;
+	object-fit: cover;
+	border-radius: calc(var(--gg-radius) / 2);
+}
+
+.gg-source {
+	display: flex;
+	flex-shrink: 0;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.75rem;
+	align-items: center;
+	padding-top: 0.6rem;
+	border-top: 1px solid var(--gg-hairline);
 }
 
 .gg-dialog-backdrop {
@@ -734,10 +799,26 @@
 	transform: translate(-50%, -50%);
 }
 
-.gg-dialog-image {
+/* Scrolls rather than scales, so one image pixel stays one screen pixel */
+.gg-viewer {
 	max-width: 100%;
 	min-height: 0;
-	max-height: calc(100vh - 7rem);
+	max-height: calc(100vh - 9rem);
+	overflow: auto;
+	overscroll-behavior: contain;
+	cursor: grab;
+}
+
+.gg-viewer[data-panning] {
+	cursor: grabbing;
+}
+
+/* The site's base rule scales images to their container, which would defeat 1:1 */
+.gg-viewer-image {
+	display: block;
+	width: auto;
+	max-width: none;
+	height: auto;
 	image-rendering: pixelated;
 }
 
@@ -746,16 +827,53 @@
 	color: var(--gg-ink-muted);
 }
 
+/* Fixed rather than the Fullscreen API: no permission to ask, Escape closes it like any overlay, and the site chrome stays in view */
+.gg-app[data-fullscreen='true'] {
+	position: fixed;
+	inset: 0;
+	z-index: calc(var(--z-index-top-button, 45) + 1);
+	overflow-y: auto;
+	background: var(--gg-surface);
+}
+
+.gg-app[data-fullscreen='true'] .gg-workspace {
+	flex: 1;
+	height: auto;
+	min-height: 0;
+}
+
+/* Side by side needs room for a readable graph beside a judgeable image; below it the image leads */
+@media (width < 56rem) {
+	.gg-workspace,
+	.gg-app[data-fullscreen='true'] .gg-workspace {
+		grid-template-columns: minmax(0, 1fr);
+		height: auto;
+	}
+
+	.gg-preview {
+		order: -1;
+		border-bottom: 1px solid var(--gg-hairline);
+	}
+
+	.gg-preview-frame {
+		flex: none;
+		height: min(70svh, 100vw);
+	}
+
+	.gg-canvas {
+		height: 34rem;
+		border-inline-end: 0;
+	}
+}
+
 .gg-button:focus-visible,
 .gg-edge-button:focus-visible,
 .gg-delete-button:focus-visible,
 .gg-inspect-button:focus-visible,
 .gg-select-trigger:focus-visible,
-.gg-seed-input:focus-visible,
-.gg-switch:focus-visible,
 .gg-output-name:focus-visible,
-.gg-result-trigger:focus-visible,
-.gg-link:focus-visible {
+.gg-preview-trigger:focus-visible,
+.gg-strip-tile:focus-visible {
 	outline: 2px solid var(--gg-accent);
 	outline-offset: 1px;
 	border-color: var(--gg-accent);
@@ -764,19 +882,19 @@
 @media (prefers-reduced-motion: no-preference) {
 	.gg-button,
 	.gg-select-trigger,
-	.gg-seed-input,
 	.gg-edge-button,
 	.gg-delete-button,
 	.gg-inspect-button,
-	.gg-result-trigger,
+	.gg-strip-tile,
 	.gg-controls button {
 		transition-duration: 120ms;
 		transition-property: color, background-color, border-color;
 	}
 
-	.gg-switch,
-	.gg-switch-thumb {
+	.gg-node-actions,
+	.gg-pill .gg-delete-button,
+	.gg-pill .gg-inspect-button {
 		transition-duration: 120ms;
-		transition-property: background-color, border-color, translate;
+		transition-property: color, opacity;
 	}
 }

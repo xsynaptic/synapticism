@@ -1,5 +1,7 @@
 import { lazy, Suspense, useSyncExternalStore } from 'react';
 
+import { ErrorBoundary } from '#glitch-graph/error-boundary.tsx';
+
 interface GlitchGraphIslandProps {
 	className?: string | undefined;
 }
@@ -7,10 +9,21 @@ interface GlitchGraphIslandProps {
 // React Flow, Base UI, thi.ng and ELK stay out of the hydration bundle until the island is visible
 const GlitchGraphApp = lazy(() => import('#glitch-graph/app/glitch-graph-app.tsx'));
 
-// Matches the loaded app with an empty results panel at the site's content width
-const reservedStyle = { minHeight: '60.9rem' };
+const frameWidth = 'min(100vw - 2rem, 88rem)';
+
+// The stylesheet arrives with the lazy chunk, so the frame is inline: wider than the prose column it sits in, and as tall as the toolbar, `.gg-workspace` and the border so the page below never moves
+const frameStyle = {
+	marginInline: `calc(50% - ${frameWidth} / 2)`,
+	minHeight: 'calc(clamp(34rem, 100svh - 8rem, 56rem) + 3rem + 2px)',
+	width: frameWidth,
+};
 
 const placeholder = <p>Loading the glitch graph…</p>;
+
+// Unstyled on purpose: a chunk that failed to load brought no stylesheet with it
+const failureNotice = (
+	<p role="alert">The glitch graph could not start. Reload the page to try again.</p>
+);
 
 export default function GlitchGraphIsland({ className }: GlitchGraphIslandProps) {
 	const isClient = useIsClient();
@@ -18,12 +31,14 @@ export default function GlitchGraphIsland({ className }: GlitchGraphIslandProps)
 	return (
 		<div
 			className={className === undefined ? 'glitch-graph' : `glitch-graph ${className}`}
-			style={reservedStyle}
+			style={frameStyle}
 		>
 			{isClient ? (
-				<Suspense fallback={placeholder}>
-					<GlitchGraphApp />
-				</Suspense>
+				<ErrorBoundary fallback={failureNotice}>
+					<Suspense fallback={placeholder}>
+						<GlitchGraphApp />
+					</Suspense>
+				</ErrorBoundary>
 			) : (
 				placeholder
 			)}

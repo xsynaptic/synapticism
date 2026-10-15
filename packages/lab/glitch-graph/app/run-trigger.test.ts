@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import type { TriggerState } from '#glitch-graph/app/run-trigger.ts';
 import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
-import { getRunQuality } from '#glitch-graph/app/run-trigger.ts';
+import { shouldRerun } from '#glitch-graph/app/run-trigger.ts';
 import { createDiamondForkPreset } from '#glitch-graph/graph/graph-presets.ts';
 
 function createState(graph: Graph): TriggerState {
@@ -18,37 +18,37 @@ function withNode(graph: Graph, id: string, changes: Record<string, unknown>): G
 	return { ...graph, nodes: { ...graph.nodes, [id]: { ...node, ...changes } } };
 }
 
-describe('getRunQuality', () => {
+describe('shouldRerun', () => {
 	const preset = createDiamondForkPreset();
 	const state = createState(preset);
 
-	it('asks for nothing when neither the graph nor the seed moved', () => {
-		expect(getRunQuality(state, state)).toBeUndefined();
+	it('holds still when neither the graph nor the seed moved', () => {
+		expect(shouldRerun(state, state)).toBe(false);
 	});
 
-	it('asks for a full run when an edit was committed', () => {
+	it('runs when an edit was committed', () => {
 		const next = { ...state, history: [...state.history, { graph: preset }] };
 
-		expect(getRunQuality(state, next)).toBe('full');
+		expect(shouldRerun(state, next)).toBe(true);
 	});
 
-	it('asks for a full run when history stepped, as undo and redo do', () => {
-		expect(getRunQuality(state, { ...state, historyIndex: 1 })).toBe('full');
+	it('runs when history stepped, as undo and redo do', () => {
+		expect(shouldRerun(state, { ...state, historyIndex: 1 })).toBe(true);
 	});
 
-	it('asks for a preview while a param is being dragged', () => {
+	it('runs while a param is being dragged', () => {
 		const dragged = withNode(preset, 'n2', { params: { channel: 'red', dx: 4, dy: 0 } });
 
-		expect(getRunQuality(state, { ...state, graph: dragged })).toBe('preview');
+		expect(shouldRerun(state, { ...state, graph: dragged })).toBe(true);
 	});
 
-	it('asks for a preview when the seed changes without a commit', () => {
-		expect(getRunQuality(state, { ...state, seed: 2 })).toBe('preview');
+	it('runs when the seed changes without a commit', () => {
+		expect(shouldRerun(state, { ...state, seed: 2 })).toBe(true);
 	});
 
-	it('asks for nothing when an Output was renamed, which changes no pixels', () => {
+	it('holds still when an Output was renamed, which changes no pixels', () => {
 		const renamed = withNode(preset, 'n7', { name: 'Renamed' });
 
-		expect(getRunQuality(state, { ...state, graph: renamed })).toBeUndefined();
+		expect(shouldRerun(state, { ...state, graph: renamed })).toBe(false);
 	});
 });

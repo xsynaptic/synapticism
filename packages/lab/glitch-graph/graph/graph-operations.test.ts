@@ -4,7 +4,6 @@ import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
 import type { Graph } from '#glitch-graph/graph/graph-types.ts';
 
 import {
-	canDelete,
 	deleteNode,
 	getNodeCount,
 	insertNode,
@@ -13,6 +12,7 @@ import {
 import {
 	createBlankGraph,
 	createDiamondForkPreset,
+	getPreset,
 	graphPresets,
 } from '#glitch-graph/graph/graph-presets.ts';
 import { effectKinds, predicateKinds } from '#glitch-graph/graph/param-definitions.ts';
@@ -24,7 +24,7 @@ const insertions: Array<Insertion> = [
 	{ kind: 'fork' },
 ];
 
-const densePreset = graphPresets[2].create();
+const densePreset = getPreset('dense').create();
 
 function fillWithEffects(graph: Graph, target: number) {
 	let filled = graph;
@@ -115,7 +115,7 @@ describe('insertNode', () => {
 describe('deleteNode', () => {
 	it.each(
 		Object.values(densePreset.nodes)
-			.filter((node) => canDelete(node))
+			.filter((node) => node.kind !== 'source' && node.kind !== 'output')
 			.map((node) => node.id),
 	)('keeps the dense preset valid when deleting %s', (id) => {
 		const graph = deleteNode(densePreset, id);

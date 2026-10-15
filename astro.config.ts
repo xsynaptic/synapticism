@@ -10,7 +10,6 @@ import pagefind from 'astro-pagefind';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
-import devGlitchGraph from '#dev/glitch-graph/glitch-graph-integration.ts';
 import devInventory from '#dev/inventory/inventory-integration.ts';
 import { isIndexableUrlPath, readSitemapLastmod } from '#lib/utils/sitemap.ts';
 
@@ -69,7 +68,6 @@ export default defineConfig({
 		responsiveStyles: true,
 	},
 	integrations: [
-		devGlitchGraph(),
 		devInventory(),
 		fontDevtools({ targets: ['--font-mono', '--font-sans'] }),
 		mdx(),

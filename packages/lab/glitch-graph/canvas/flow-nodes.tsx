@@ -5,7 +5,8 @@ import { Handle, Position, useEdges } from '@xyflow/react';
 import type { FlowEdge, FlowNode } from '#glitch-graph/canvas/flow-store.ts';
 import type { GraphNode, ParamValue } from '#glitch-graph/graph/graph-types.ts';
 
-import { inspectStage, useRunStore } from '#glitch-graph/app/run-store.ts';
+import { useIsShown, useRunStore } from '#glitch-graph/app/run-store.ts';
+import { inspectStage } from '#glitch-graph/app/stage-store.ts';
 import {
 	EffectCard,
 	ForkCard,
@@ -17,7 +18,6 @@ import {
 import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
 import { InsertMenu } from '#glitch-graph/canvas/insert-menu.tsx';
 import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
-import { effectDefinitions, predicateDefinitions } from '#glitch-graph/graph/param-definitions.ts';
 
 interface EditableCardProps {
 	node: Extract<GraphNode, { kind: 'effect' | 'fork' | 'merge' | 'split' }>;
@@ -36,15 +36,15 @@ const portCounts = {
 } as const;
 
 function EditableCard({ node, onDelete, onParamChange, onParamCommit }: EditableCardProps) {
+	const handleInspect = () => void inspectStage(node.id);
+
 	switch (node.kind) {
 		case 'effect': {
-			const { label } = effectDefinitions[node.effect];
-
 			return (
 				<EffectCard
 					node={node}
 					onDelete={onDelete}
-					onInspect={() => void inspectStage(node.id, label)}
+					onInspect={handleInspect}
 					onParamChange={onParamChange}
 					onParamCommit={onParamCommit}
 				/>
@@ -58,7 +58,7 @@ function EditableCard({ node, onDelete, onParamChange, onParamCommit }: Editable
 			return (
 				<MergeCard
 					onDelete={onDelete}
-					onInspect={() => void inspectStage(node.id, 'Merge')}
+					onInspect={handleInspect}
 					onParamChange={onParamChange}
 					onParamCommit={onParamCommit}
 					params={node.params}
@@ -66,13 +66,11 @@ function EditableCard({ node, onDelete, onParamChange, onParamCommit }: Editable
 			);
 		}
 		case 'split': {
-			const { label } = predicateDefinitions[node.predicate];
-
 			return (
 				<SplitCard
 					node={node}
 					onDelete={onDelete}
-					onInspect={() => void inspectStage(node.id, `${label} Split mask`)}
+					onInspect={handleInspect}
 					onParamChange={onParamChange}
 					onParamCommit={onParamCommit}
 				/>
@@ -159,6 +157,8 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 	const node = useGraphStore((state) => state.graph.nodes[id]);
 	const renameOutput = useGraphStore((state) => state.renameOutput);
 	const commitEdit = useGraphStore((state) => state.commitEdit);
+	const selectOutput = useRunStore((state) => state.selectOutput);
+	const isSelected = useIsShown(id);
 
 	if (node?.kind !== 'output') return;
 
@@ -166,12 +166,16 @@ function OutputFlowNode({ id }: NodeProps<FlowNode>) {
 		<>
 			<FlowHandles inputs={1} outputs={0} />
 			<OutputCard
+				isSelected={isSelected}
 				name={node.name}
 				onCommit={() => {
 					commitEdit('Rename Output');
 				}}
 				onRename={(name) => {
 					renameOutput(id, name);
+				}}
+				onSelect={() => {
+					selectOutput(id);
 				}}
 			/>
 		</>
@@ -184,11 +188,12 @@ function SourceFlowNode({ id, positionAbsoluteX, positionAbsoluteY }: NodeProps<
 
 		return sourceError === undefined ? 'Loading image…' : 'No image';
 	});
+	const name = useRunStore((state) => state.sourceName);
 
 	return (
 		<>
 			<FlowHandles inputs={0} outputs={1} />
-			<SourceCard meta={meta} />
+			<SourceCard meta={meta} name={name} />
 			<OutgoingInsertMenus id={id} x={positionAbsoluteX} y={positionAbsoluteY} />
 		</>
 	);
