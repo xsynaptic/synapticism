@@ -17,6 +17,7 @@ class StationTileLab extends HTMLElement {
 	#tile: HTMLElementTagNameMap['station-tile'] | undefined;
 
 	connectedCallback() {
+		this.#adoptTemplate();
 		this.#wire();
 		this.#apply();
 	}
@@ -26,6 +27,18 @@ class StationTileLab extends HTMLElement {
 
 		cancelAnimationFrame(this.#frame);
 		this.#frame = 0;
+	}
+
+	// ClientRouter connects a swapped-in element before it attaches the declarative shadow root
+	#adoptTemplate() {
+		if (this.shadowRoot) return;
+
+		const template = this.querySelector(':scope > template[shadowrootmode]');
+
+		if (!(template instanceof HTMLTemplateElement)) return;
+
+		this.attachShadow({ mode: 'open' }).append(template.content);
+		template.remove();
 	}
 
 	// A dragged slider fires `input` far faster than a tile field can be regenerated

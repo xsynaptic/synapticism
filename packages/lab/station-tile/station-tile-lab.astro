@@ -57,7 +57,20 @@ const { isRss } = Astro.locals;
 						<div class="seed-row">
 							<input id="seed" name="seed" type="text" value={String(seed)} />
 							<button aria-label="Randomize seed" type="button">
-								↻
+								<svg
+									aria-hidden="true"
+									fill="none"
+									height="16"
+									stroke="currentColor"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									viewBox="0 0 24 24"
+									width="16"
+								>
+									<rect height="18" rx="2" width="18" x="3" y="3" />
+									<path d="M16 8h.01M8 8h.01M8 16h.01M16 16h.01M12 12h.01" />
+								</svg>
 							</button>
 						</div>
 					</div>
