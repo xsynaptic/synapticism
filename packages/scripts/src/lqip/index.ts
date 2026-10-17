@@ -37,7 +37,7 @@ async function buildLqipMap({
 	files: Array<string>;
 	mediaPath: string;
 }): Promise<{ generated: number; next: LqipMap; reused: number }> {
-	const sortedFiles = files.sort((a, b) => a.localeCompare(b));
+	const sortedFiles = files.toSorted((a, b) => a.localeCompare(b));
 	const next: LqipMap = {};
 	let generated = 0;
 	let reused = 0;

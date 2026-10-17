@@ -18,7 +18,7 @@ export async function queryArticleEntries(
 
 	return results
 		.flatMap(({ entries }): Array<ArticleEntry> => entries)
-		.sort(sortByDateReverseChronological);
+		.toSorted(sortByDateReverseChronological);
 }
 
 export function getArticleMinutesRead(

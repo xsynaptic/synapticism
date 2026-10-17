@@ -28,14 +28,14 @@ const getTagsByIds = await createTagsByIdsFunction();
 
 const projectItems = projects
 	? getRowItems(
-			getProjectsByIds(projects.map(({ id }) => id)).sort((projectA, projectB) =>
+			getProjectsByIds(projects.map(({ id }) => id)).toSorted((projectA, projectB) =>
 				projectA.data.title.localeCompare(projectB.data.title),
 			),
 		)
 	: [];
 
 const tagItems = tags
-	? getRowItems(getTagsByIds(tags.map(({ id }) => id)).sort(sortByEntryCount))
+	? getRowItems(getTagsByIds(tags.map(({ id }) => id)).toSorted(sortByEntryCount))
 	: [];
 ---
 

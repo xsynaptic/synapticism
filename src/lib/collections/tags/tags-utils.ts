@@ -63,7 +63,7 @@ export function groupTagsByLetter(tags: Array<CollectionEntry<'tags'>>) {
 	// Alphabetic buckets in order, then the non-alphabetic bucket last
 	const alphabetic = groupList
 		.filter((group) => group.letter !== nonAlphabeticGroup)
-		.sort((groupA, groupB) => groupA.letter.localeCompare(groupB.letter));
+		.toSorted((groupA, groupB) => groupA.letter.localeCompare(groupB.letter));
 	const nonAlphabetic = groupList.filter((group) => group.letter === nonAlphabeticGroup);
 
 	return [...alphabetic, ...nonAlphabetic];

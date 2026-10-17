@@ -40,7 +40,7 @@ describe('sortCatalogByDate', () => {
 			id: 'updated-recently',
 		});
 
-		expect(ids([older, newer, updatedRecently].sort(sortCatalogByDate))).toEqual([
+		expect(ids([older, newer, updatedRecently].toSorted(sortCatalogByDate))).toEqual([
 			'updated-recently',
 			'newer',
 			'older',

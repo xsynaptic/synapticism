@@ -12,7 +12,7 @@ export const getStaticPaths = (async () => {
 	const { entries } = await getNotesCollection();
 	const catalog = await getCatalog();
 
-	const sorted = [...entries].sort(sortByDateReverseChronological);
+	const sorted = entries.toSorted(sortByDateReverseChronological);
 
 	return sorted.map((entry, index) => {
 		const newer = sorted[index - 1];
