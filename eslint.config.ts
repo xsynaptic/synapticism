@@ -1,5 +1,6 @@
 import {
 	getAstroConfig,
+	getBrowserConfig,
 	getConfig,
 	getWebComponentConfig,
 	restrictedSyntaxDefaults,
@@ -24,32 +25,14 @@ export default getConfig(
 		},
 		{
 			rules: {
-				complexity: ['warn', { max: 8, variant: 'modified' }],
-				// Ban logical-assignment shorthand (??=, ||=, &&=); the expanded form reads more clearly
-				'logical-assignment-operators': ['error', 'never'],
-				// Catches genuinely tangled control flow; unlike `complexity` it ignores JSX ternaries
-				'max-depth': ['warn', 3],
-				// Blank lines after declaration blocks are house style, so only code counts toward length
 				'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
-				'max-params': ['warn', 3],
 				'max-statements': ['warn', 20],
 				// Prefix demand fights idiomatic predicates, getters, schema fields, env (PROD), and CLI flags
 				'unicorn/consistent-boolean-name': 'off',
-				// We use intentional compounds such as schema.org's WebSite type
-				'unicorn/consistent-compound-words': 'off',
-				// The exact inverse of the core rule above; together they reject both forms
-				'unicorn/logical-assignment-operators': 'off',
 				// Zod schema chains in cv.astro legitimately reach 4; depth 5+ still flagged
 				'unicorn/max-nested-calls': ['error', { max: 4 }],
-				// Conflicts with Remeda's sort function
-				'unicorn/no-array-sort': 'off',
-			},
-		},
-		{
-			// A describe callback groups cases rather than holding logic, so its length says nothing
-			files: ['**/*.test.ts'],
-			rules: {
-				'max-lines-per-function': 'off',
+				// The shared config turns this off for a Remeda `R.sort` conflict the rule no longer has
+				'unicorn/no-array-sort': 'error',
 			},
 		},
 		{
@@ -78,22 +61,7 @@ export default getConfig(
 			...reactHooks.configs.flat.recommended,
 			files: ['packages/lab/**/*.tsx'],
 		},
-		// These files run in the browser and might need the browser globals
-		{
-			files: ['src/components/**/*'],
-			languageOptions: {
-				globals: {
-					...Object.fromEntries(Object.keys(globals.node).map((key) => [key, 'off'])),
-					...globals.browser,
-				},
-			},
-			rules: {
-				// typescript-eslint turns this off for TS files, and without it the globals above bind nothing
-				'no-undef': 'error',
-				// This conflicts with how some client-side code is handled
-				'unicorn/prefer-global-this': 'off',
-			},
-		},
+		getBrowserConfig(['src/components/**/*']),
 		{
 			files: ['tests/e2e/**/*', 'playwright.config.ts'],
 			languageOptions: {
