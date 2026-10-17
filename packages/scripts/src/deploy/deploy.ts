@@ -5,6 +5,7 @@ import { $ } from 'zx';
 
 import { deployApp } from '#deploy/deploy-app.ts';
 import { assertDeployAuth, printDeployConfig, siteUrl } from '#deploy/deploy-config.ts';
+import { fetchWithRetry } from '#shared/fetch-with-retry.ts';
 import { findWorkspaceRoot } from '#shared/utils.ts';
 
 const rootPath = findWorkspaceRoot();
@@ -35,7 +36,7 @@ async function build() {
 async function healthCheck() {
 	console.log(chalk.blue(`Health check: ${siteUrl}`));
 
-	const response = await fetch(siteUrl, { signal: AbortSignal.timeout(15_000) });
+	const response = await fetchWithRetry(siteUrl, { label: 'site', timeoutMs: 15_000 });
 
 	if (!response.ok) {
 		throw new Error(`Site health check failed: ${String(response.status)} ${response.statusText}`);
