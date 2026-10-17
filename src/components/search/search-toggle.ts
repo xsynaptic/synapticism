@@ -4,11 +4,17 @@ import { getInstanceManager } from '@pagefind/component-ui';
 
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.userAgent);
 
-const searchQueryDebounceMs = 1500;
 const searchQueryMinLength = 2;
 const searchQueryMaxLength = 100;
 
-let searchAnalyticsRegistered = false;
+type CommitSearch = (isClicked: boolean) => void;
+
+interface PendingSearch {
+	query: string;
+	results: number;
+}
+
+const searchCommitters = new WeakMap<Instance, CommitSearch>();
 
 class SearchToggle extends HTMLElement {
 	// eslint-disable-next-line unicorn/no-null -- matches Pagefind's PagefindComponent interface
@@ -18,6 +24,7 @@ class SearchToggle extends HTMLElement {
 		return this.querySelector<HTMLButtonElement>('button');
 	}
 
+	#commitSearch: CommitSearch | undefined;
 	#controller: AbortController | undefined;
 	#cssReady?: Promise<void>;
 
@@ -33,7 +40,7 @@ class SearchToggle extends HTMLElement {
 
 		this.instance = getInstanceManager().getInstance(instanceName);
 
-		registerSearchAnalytics(this.instance);
+		this.#commitSearch = getSearchCommitter(this.instance);
 
 		// Pagefind exposes no deregisterUtility so each navigation's fresh trigger would pile up
 		// The astro:before-swap handler in search-modal.astro clears the registry to bound it; keep these two in sync
@@ -49,16 +56,21 @@ class SearchToggle extends HTMLElement {
 
 		this.addEventListener('click', this.#handleClickEvent, { signal });
 		document.addEventListener('keydown', this.#handleKeydown, { signal });
+
+		// Capture commits before the result link's navigation closes the modal
+		document.addEventListener('click', this.#handleResultClick, { capture: true, signal });
 	}
 
 	disconnectedCallback() {
 		this.instance?.deregisterAllShortcuts(this);
+		this.#commitSearch = undefined;
 		this.#controller?.abort();
 		this.#controller = undefined;
 	}
 
 	// Invoked by <pagefind-modal> on close, never from this file
 	handleModalClose() {
+		this.#commitSearch?.(false);
 		this.buttonEl?.setAttribute('aria-expanded', 'false');
 		this.buttonEl?.focus();
 	}
@@ -131,6 +143,13 @@ class SearchToggle extends HTMLElement {
 		void this.#handleClick();
 	};
 
+	#handleResultClick = (event: MouseEvent) => {
+		if (!(event.target instanceof Element)) return;
+		if (!event.target.closest('pagefind-results a[href]')) return;
+
+		this.#commitSearch?.(true);
+	};
+
 	#preloadPagefindCss = () => {
 		void this.#ensurePagefindCss();
 	};
@@ -144,28 +163,41 @@ function getResultCount(result: unknown): number | undefined {
 	return Array.isArray(results) ? results.length : undefined;
 }
 
-function registerSearchAnalytics(instance: Instance) {
-	if (searchAnalyticsRegistered) return;
+function getSearchCommitter(instance: Instance) {
+	const existing = searchCommitters.get(instance);
 
-	searchAnalyticsRegistered = true;
+	if (existing) return existing;
 
-	let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+	let pending: PendingSearch | undefined;
 
 	instance.on('results', (result: unknown) => {
-		clearTimeout(debounceTimer);
-
 		const query = instance.searchTerm.replaceAll(/\s+/g, ' ').trim().slice(0, searchQueryMaxLength);
+		const results = getResultCount(result);
 
-		if (query.length < searchQueryMinLength) return;
+		if (results === undefined || query.length < searchQueryMinLength) {
+			pending = undefined;
+			return;
+		}
 
-		const resultCount = getResultCount(result);
-		const queryWithCount =
-			resultCount === undefined ? query : `${query} (${resultCount.toString()})`;
-
-		debounceTimer = setTimeout(() => {
-			window.umami?.track('search-query', { query, queryWithCount });
-		}, searchQueryDebounceMs);
+		pending = { query, results };
 	});
+
+	const commitSearch: CommitSearch = (isClicked) => {
+		if (!pending) return;
+
+		const { query, results } = pending;
+
+		pending = undefined;
+		window.umami?.track('search-query', { clicked: isClicked, query, results });
+
+		if (results > 0) return;
+
+		window.umami?.track('search-empty', { query });
+	};
+
+	searchCommitters.set(instance, commitSearch);
+
+	return commitSearch;
 }
 
 if (!customElements.get('search-toggle')) {

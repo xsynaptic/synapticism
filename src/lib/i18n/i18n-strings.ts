@@ -14,7 +14,7 @@ const strings = {
 	'site.topButton': 'Back to top',
 
 	// Author
-	'author.role': 'Web Developer',
+	'author.role': 'Senior Front-end Engineer',
 
 	// Collection labels
 	'collection.notes.plural': 'Notes',
@@ -31,6 +31,9 @@ const strings = {
 	'navigation.about.label': 'About',
 	'navigation.bluesky.label': 'Bluesky',
 	'navigation.github.label': 'GitHub',
+	'navigation.linkedin.label': 'LinkedIn',
+	'navigation.mastodon.label': 'Mastodon',
+	'navigation.x.label': 'X',
 
 	// Accessibility (aria-labels, screen-reader text)
 	'aria.footerNavigation': 'Footer navigation',
@@ -39,7 +42,6 @@ const strings = {
 	'aria.pageSelect': 'Select a page',
 	'aria.pagination': 'Pagination',
 	'aria.prevPage': 'Previous page',
-	'aria.streamPagination': 'Stream pagination',
 
 	// Pagination
 	'pagination.counter': 'Page {current} of {total}',
@@ -57,20 +59,10 @@ const strings = {
 	'section.pagination.title': 'More {label}',
 	'section.projects': 'Projects',
 	'section.relatedWriting': 'Related writing',
-	'section.source': 'Source',
 	'section.tags': 'Tags',
 
-	// Index / homepage
-	'index.allProjects': 'All projects',
-	'index.heroHeading': 'I’m Alexander Synaptic, a web developer and designer.',
-	'index.heroSubtitle':
-		'Synapticism is my notebook in the open: field notes from real projects, experiments with typography and creative code, and longer pieces when an idea earns the room.',
-	'index.newer': 'Newer',
-	'index.older': 'Older',
-	'index.pageTitle': 'Page {page}',
-	'index.recently': 'Recently',
-	'index.selectedWork': 'Selected work',
-	'index.tagline': 'web development, design, creative coding',
+	// Home
+	'home.pageTitle': 'Page {page}',
 
 	// Content
 	'content.continueReading': 'Continue reading',
@@ -80,7 +72,6 @@ const strings = {
 	'content.quotationAuthor': '― {author}',
 	'content.timeUtc': '{time} UTC',
 	'content.updated': 'Updated',
-	'content.via': ' · via ',
 
 	// List pages (heading + SEO title/description)
 	'notes.description':
@@ -103,13 +94,16 @@ const strings = {
 	'notFound.title': 'Page Not Found',
 
 	// Footer colophon
+	'footer.about': 'More about me',
 	'footer.astro': 'Astro',
+	'footer.bio': `I'm Alexander Synaptic, a web developer from Canada currently based in Taiwan. Front-end has been my home base for years but I'm leaning into the full stack at the dawn of the agentic era. This site is my technical notebook and portfolio.`,
 	'footer.builtWith': 'Built with',
 	'footer.copyright': '©{years} A. Synaptic',
-	'footer.rss': 'RSS',
+	'footer.rss': 'RSS Feed',
+	'footer.sourceCode': 'Source Code',
 
 	// CV
-	'cv.description': 'The professional background of Alexander Synaptic, senior software engineer.',
+	'cv.description': 'The professional background of Alexander Synaptic, senior front-end engineer.',
 	'cv.education': 'Education',
 	'cv.experience': 'Experience',
 	'cv.github': 'GitHub',

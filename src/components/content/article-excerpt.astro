@@ -1,0 +1,42 @@
+---
+import { render } from 'astro:content';
+
+import type { ArticleEntry } from '#lib/utils/articles.ts';
+
+import ArticleSubtitle from '#components/content/article-subtitle.astro';
+import ContentExcerpt from '#components/content/content-excerpt.astro';
+import ContentHero from '#components/content/content-hero.astro';
+import { getArticleMinutesRead } from '#lib/utils/articles.ts';
+import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
+
+interface Props {
+	class?: string | undefined;
+	entry: ArticleEntry;
+	isPriority: boolean;
+}
+
+const { class: className, entry, isPriority } = Astro.props;
+
+const { Content, remarkPluginFrontmatter } = await render(entry);
+
+const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFeatured })?.[0];
+---
+
+<ContentExcerpt class={className} entryUrl={getContentPath(entry.collection, entry.id)}>
+	<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
+	<ArticleSubtitle
+		entry={entry}
+		minutesRead={getArticleMinutesRead(entry, remarkPluginFrontmatter)}
+		slot="excerpt-subtitle"
+	/>
+	{heroImage ? (
+		<ContentHero
+			{...heroImage}
+			fallbackAlt={entry.data.title}
+			isPriority={isPriority}
+			slot="excerpt-hero"
+		/>
+	) : undefined}
+	<Content />
+</ContentExcerpt>

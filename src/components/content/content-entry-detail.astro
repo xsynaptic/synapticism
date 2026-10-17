@@ -54,12 +54,14 @@ const articleProps = isArticle
 	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp(hideSearch)}>
 		<ContentHeader title={entry.data.title} titleUrl={url}>
 			<Fragment slot="header-subtitle">
-				<slot name="header-subtitle-start" />
-				<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
-				<slot name="header-subtitle-end" />
+				<slot name="header-subtitle">
+					<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
+				</slot>
 			</Fragment>
 		</ContentHeader>
-		{heroImage ? <ContentHero {...heroImage} fallbackAlt={entry.data.title} /> : undefined}
+		{heroImage ? (
+			<ContentHero {...heroImage} fallbackAlt={entry.data.title} isPriority={true} />
+		) : undefined}
 		<slot />
 		<AuthorCard />
 	</article>

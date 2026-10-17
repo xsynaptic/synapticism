@@ -1,14 +1,15 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
-import PostList from '#layouts/post-list.astro';
-import { queryPostsIndex } from '#lib/collections/posts/posts-utils.ts';
+import { articleListPageSize } from '#constants.ts';
+import ArticleList from '#layouts/article-list.astro';
+import { queryArticleEntries } from '#lib/utils/articles.ts';
 
 export const getStaticPaths = (async ({ paginate }) => {
-	return paginate(await queryPostsIndex(), { pageSize: 20 });
+	return paginate(await queryArticleEntries(['posts']), { pageSize: articleListPageSize });
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 ---
 
-<PostList {...Astro.props} />
+<ArticleList collection="posts" page={Astro.props.page} />

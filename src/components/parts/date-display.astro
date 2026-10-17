@@ -3,6 +3,7 @@ import type { HTMLAttributes } from 'astro/types';
 
 import type { DatePreset } from '#lib/utils/date.ts';
 
+import { getDateTimeFormat } from '#lib/i18n/i18n-formatters.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { DatePresetEnum, hasUtcTime, parseContentDate } from '#lib/utils/date.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
@@ -43,14 +44,14 @@ if (!dateRaw) throw new Error(`Invalid date: "${JSON.stringify(date)}"`);
 
 const dateTimeAttribute = dateRaw.toISOString();
 
-const dateDisplay = dateRaw.toLocaleDateString('en', {
+const dateDisplay = getDateTimeFormat('en', {
 	...datePresets[datePreset],
 	...dateOptions,
-});
+}).format(dateRaw);
 
 const timeDisplay = hasUtcTime(dateRaw)
 	? formatStringTemplate(t('content.timeUtc'), {
-			time: dateRaw.toLocaleTimeString('en', timeOptions),
+			time: getDateTimeFormat('en', timeOptions).format(dateRaw),
 		})
 	: undefined;
 

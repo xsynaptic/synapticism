@@ -8,6 +8,7 @@ import type { Thing } from '#lib/utils/structured-data.ts';
 
 import '#styles/main.css';
 import Analytics from '#components/main/main-analytics.astro';
+import Bio from '#components/main/main-bio.astro';
 import Colophon from '#components/main/main-colophon.astro';
 import Meta from '#components/main/main-meta.astro';
 import SkipLink from '#components/main/main-skip-link.astro';
@@ -36,7 +37,7 @@ const siteUrl = getSitePath();
 // Tracks --color-primary-800, the band behind the header
 const themeColor = '#27272a';
 
-// The site title is the page h1 on the homepage/stream, plain branding elsewhere
+// The site title is the page h1 on the homepage and its later pages, plain branding elsewhere
 const SiteTitleTag = isHomepage ? 'h1' : 'div';
 ---
 
@@ -52,7 +53,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 		<Font cssVariable="--font-geist-mono" preload />
 		<Meta {...meta} />
 		{UMAMI_ID && UMAMI_DOMAIN && import.meta.env.PROD ? (
-			<Analytics isViewTransitionsEnabled={true} umamiDomain={UMAMI_DOMAIN} umamiId={UMAMI_ID} />
+			<Analytics umamiDomain={UMAMI_DOMAIN} umamiId={UMAMI_ID} />
 		) : undefined}
 		<ClientRouter />
 		<meta content={import.meta.env.BUILD_VERSION} name="build-version" />
@@ -115,6 +116,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 			data-nosnippet
 		>
 			<div class="content-column pb-8">
+				<Bio />
 				<NavigationFooter />
 				<Colophon />
 			</div>

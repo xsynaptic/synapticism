@@ -51,7 +51,7 @@ const { basics, education, projects, skills, work } = cv;
 				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
 				<div class="flex items-center gap-2 text-sm text-neutral-500">
 					{basics.profiles.map((profile) => (
-						<a class="print:hidden" href={profile.url}>
+						<a class="print:hidden" href={profile.url} rel="me">
 							{profile.network}
 						</a>
 					))}

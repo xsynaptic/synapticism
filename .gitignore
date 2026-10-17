@@ -29,6 +29,8 @@ pnpm-debug.log*
 .claude/tasks*
 .claude/settings*.json
 .claude/worktrees/
+.claude/devlog/
+.claude/skills/devlog/
 
 # content
 /packages/content

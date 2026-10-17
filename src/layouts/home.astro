@@ -1,0 +1,51 @@
+---
+import type { ArticleEntry } from '#lib/utils/articles.ts';
+
+import ArticleExcerptList from '#components/content/article-excerpt-list.astro';
+import MainSite from '#components/main/main-site.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getPagination } from '#lib/utils/pagination.ts';
+import { getHomePaginationPath } from '#lib/utils/routing.ts';
+import { openGraphIndexIds } from '#lib/utils/seo.ts';
+import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
+
+interface Props {
+	entries: Array<ArticleEntry>;
+	pageNumber: number;
+	totalPages: number;
+}
+
+const { entries, pageNumber, totalPages } = Astro.props;
+
+const mainProps =
+	pageNumber === 1
+		? {
+				meta: { openGraphId: openGraphIndexIds.home },
+				schemas: [
+					buildWebSiteSchema({
+						description: t('site.description'),
+						name: t('site.title'),
+					}),
+				],
+			}
+		: {
+				meta: {
+					noIndex: true,
+					openGraphId: openGraphIndexIds.home,
+					title: formatStringTemplate(t('home.pageTitle'), { page: pageNumber }),
+				},
+			};
+
+const pagination = getPagination({
+	currentPage: pageNumber,
+	getPageUrl: getHomePaginationPath,
+	lastPage: totalPages,
+});
+---
+
+<MainSite isHomepage={true} {...mainProps}>
+	<div class="pt-8 md:pt-12">
+		<ArticleExcerptList entries={entries} pagination={pagination} />
+	</div>
+</MainSite>

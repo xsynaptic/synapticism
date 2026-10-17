@@ -12,7 +12,7 @@ import MainSite from '#components/main/main-site.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
-import { getPagination } from '#lib/utils/pagination.ts';
+import { getPagePagination } from '#lib/utils/pagination.ts';
 import { getOpenGraphId } from '#lib/utils/seo.ts';
 
 interface Props {
@@ -39,6 +39,6 @@ const { entry, page } = Astro.props;
 	<ContentDescription entry={entry} />
 	<ContentSection>
 		<ContentItemList items={page.data} />
-		<PaginationSelect class="mt-4 md:mt-8" pagination={getPagination(page)} />
+		<PaginationSelect class="mt-4 md:mt-8" pagination={getPagePagination(page)} />
 	</ContentSection>
 </MainSite>

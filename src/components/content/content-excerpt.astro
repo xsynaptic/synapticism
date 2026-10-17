@@ -1,7 +1,6 @@
 ---
 import Anchor from '#components/parts/anchor.astro';
 import ProseBody from '#components/parts/prose-body.astro';
-import ProseDescription from '#components/parts/prose-description.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { contentExcerptIdentifier } from '#constants.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
@@ -15,7 +14,6 @@ interface Props {
 const { class: className, entryUrl } = Astro.props;
 
 const subtitle = await renderSlot(Astro.slots, 'excerpt-subtitle');
-const description = await renderSlot(Astro.slots, 'excerpt-description');
 const content = await renderSlot(Astro.slots, 'default');
 
 const excerptSplit = content?.split(`<!-- ${contentExcerptIdentifier} -->`) ?? [];
@@ -24,8 +22,8 @@ const hasExcerpt = excerptSplit.length > 1;
 ---
 
 <article class:list={[className, MicroformatClassNames.Entry]}>
-	<header class:list={['content-column', description ? undefined : 'mb-2']}>
-		<h2 class="mb-1 text-lg font-semibold md:text-xl">
+	<header class="content-column mb-2 pb-2">
+		<h2 class="-ml-0.5 font-sans text-xl leading-[1.125] font-semibold md:text-2xl lg:text-3xl">
 			<Anchor
 				anchorColor="title"
 				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
@@ -36,16 +34,12 @@ const hasExcerpt = excerptSplit.length > 1;
 		</h2>
 		{subtitle ? (
 			<div
-				class="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-primary-600"
+				class="items-center gap-1 pt-1 font-mono text-xs sm:flex sm:flex-wrap"
 				set:html={subtitle}
 			/>
 		) : undefined}
-		{description ? (
-			<ProseDescription class={MicroformatClassNames.Summary}>
-				<Fragment set:html={description} />
-			</ProseDescription>
-		) : undefined}
 	</header>
+	<slot name="excerpt-hero" />
 	<ProseBody class:list={['e-content', 'pb-4']}>
 		<Fragment set:html={excerptContent} />
 	</ProseBody>

@@ -1,0 +1,31 @@
+---
+import type { ArticleEntry } from '#lib/utils/articles.ts';
+import type { Pagination } from '#lib/utils/pagination-types.ts';
+
+import ArticleExcerpt from '#components/content/article-excerpt.astro';
+import PaginationSelect from '#components/parts/pagination-select.astro';
+import { MicroformatClassNames } from '#components/types.ts';
+
+interface Props {
+	entries: Array<ArticleEntry>;
+	pagination: Pagination;
+}
+
+const { entries, pagination } = Astro.props;
+---
+
+<div class={MicroformatClassNames.Feed} data-pagination-target>
+	{entries.map((entry, index) => (
+		<Fragment>
+			{index > 0 ? (
+				<div class="content-column my-8">
+					<hr class="border-primary-300/70" />
+				</div>
+			) : undefined}
+			<ArticleExcerpt entry={entry} isPriority={index === 0} />
+		</Fragment>
+	))}
+</div>
+<div class="content-column">
+	<PaginationSelect class="mt-8" pagination={pagination} />
+</div>

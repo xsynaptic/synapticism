@@ -3,35 +3,30 @@ import type { GetStaticPaths } from 'astro';
 
 import * as R from 'remeda';
 
-import { streamPageSize } from '#constants.ts';
-import IndexLayout from '#layouts/index.astro';
-import { queryRecentStream } from '#lib/utils/stream.ts';
+import { articleListPageSize } from '#constants.ts';
+import HomeLayout from '#layouts/home.astro';
+import { queryArticleEntries } from '#lib/utils/articles.ts';
 
 export const getStaticPaths = (async () => {
-	const stream = await queryRecentStream();
+	const entries = await queryArticleEntries(['posts', 'notes']);
 
-	const totalPages = Math.max(1, Math.ceil(stream.length / streamPageSize));
+	const totalPages = Math.max(1, Math.ceil(entries.length / articleListPageSize));
 
 	return R.range(2, totalPages + 1).map((pageNumber) => {
-		const start = (pageNumber - 1) * streamPageSize;
+		const start = (pageNumber - 1) * articleListPageSize;
 
 		return {
 			params: { page: String(pageNumber) },
 			props: {
+				entries: entries.slice(start, start + articleListPageSize),
 				pageNumber,
-				streamItems: stream.slice(start, start + streamPageSize),
 				totalPages,
 			},
 		};
 	});
 }) satisfies GetStaticPaths;
 
-const { pageNumber, streamItems, totalPages } = Astro.props;
+const { entries, pageNumber, totalPages } = Astro.props;
 ---
 
-<IndexLayout
-	pageNumber={pageNumber}
-	selectedProjects={undefined}
-	streamItems={streamItems}
-	totalPages={totalPages}
-/>
+<HomeLayout entries={entries} pageNumber={pageNumber} totalPages={totalPages} />

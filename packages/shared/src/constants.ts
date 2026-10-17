@@ -13,4 +13,5 @@ export const mediaDir = 'packages/content/media';
 export const siteTitle = 'Synapticism';
 
 // The home card's line, and the app's `site.description`
-export const siteTagline = 'A technical blog about web development, design, and creative coding.';
+export const siteTagline =
+	'Web development, design, and creative coding, by Alexander Synaptic, a senior front-end engineer in Taiwan.';

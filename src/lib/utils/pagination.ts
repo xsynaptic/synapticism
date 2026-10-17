@@ -6,19 +6,20 @@ import { t } from '#lib/i18n/i18n-strings.ts';
 import { joinUrl } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
-// The site leaves `trailingSlash` at Astro's default, so paginate URLs arrive bare
-export function getPagination(page: Page) {
-	const { currentPage, lastPage, url } = page;
+interface PaginationOptions {
+	currentPage: number;
+	getPageUrl: (pageNumber: number) => string;
+	lastPage: number;
+}
 
-	const basePath = url.first ?? url.current;
-
+export function getPagination({ currentPage, getPageUrl, lastPage }: PaginationOptions) {
 	const options = Array.from({ length: lastPage }, (_, index) => {
 		const pageNumber = index + 1;
 
 		return {
 			isCurrent: pageNumber === currentPage,
 			label: formatStringTemplate(t('pagination.pageNumber'), { page: pageNumber }),
-			url: pageNumber === 1 ? joinUrl(basePath, '/') : joinUrl(basePath, String(pageNumber), '/'),
+			url: getPageUrl(pageNumber),
 		};
 	});
 
@@ -34,21 +35,35 @@ export function getPagination(page: Page) {
 		submitLabel: t('pagination.select.submit'),
 	};
 
-	if (url.prev) {
+	if (currentPage > 1) {
 		pagination.previous = {
 			ariaLabel: t('aria.prevPage'),
 			label: t('pagination.previous'),
-			url: joinUrl(url.prev, '/'),
+			url: getPageUrl(currentPage - 1),
 		};
 	}
 
-	if (url.next) {
+	if (currentPage < lastPage) {
 		pagination.next = {
 			ariaLabel: t('aria.nextPage'),
 			label: t('pagination.next'),
-			url: joinUrl(url.next, '/'),
+			url: getPageUrl(currentPage + 1),
 		};
 	}
 
 	return pagination;
+}
+
+// The site leaves `trailingSlash` at Astro's default, so paginate URLs arrive bare
+export function getPagePagination(page: Page) {
+	const { currentPage, lastPage, url } = page;
+
+	const basePath = url.first ?? url.current;
+
+	return getPagination({
+		currentPage,
+		getPageUrl: (pageNumber) =>
+			pageNumber === 1 ? joinUrl(basePath, '/') : joinUrl(basePath, String(pageNumber), '/'),
+		lastPage,
+	});
 }

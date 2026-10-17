@@ -11,5 +11,4 @@ export const siteAuthorName = 'Alexander Synaptic';
 
 export const siteTimezoneOffsetHours = 8;
 
-// Entries per page in the interleaved homepage stream
-export const streamPageSize = 20;
+export const articleListPageSize = 10;

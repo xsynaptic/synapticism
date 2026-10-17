@@ -8,9 +8,10 @@ import { sanitizeAltAttribute } from '#lib/utils/text.ts';
 
 interface Props extends ImageFeaturedObject {
 	fallbackAlt?: string | undefined;
+	isPriority: boolean;
 }
 
-const { fallbackAlt, id, title } = Astro.props;
+const { fallbackAlt, id, isPriority, title } = Astro.props;
 
 const alt = sanitizeAltAttribute(title ?? fallbackAlt ?? '');
 
@@ -27,7 +28,7 @@ const lqip = getMediaLqip(id);
 			alt={alt}
 			class="block w-full"
 			layout="constrained"
-			priority
+			priority={isPriority}
 			sizes="(min-width: 58rem) 58rem, 100vw"
 			src={image}
 			width={1600}

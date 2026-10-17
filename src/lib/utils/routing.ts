@@ -14,6 +14,9 @@ export const getBasePath = (...routeParts: Array<string>): string =>
 export const getSitePath = (...routeParts: Array<string>): string =>
 	joinUrl(BASE_URL, ...routeParts, '/');
 
+export const getHomePaginationPath = (pageNumber: number): string =>
+	pageNumber === 1 ? getSitePath() : getSitePath('page', String(pageNumber));
+
 export const getAbsoluteUrl = (path: string): string => new URL(path, SITE).href;
 
 // Pages are flat (URL mirrors the file system); every other collection is sectioned under /{collection}/
