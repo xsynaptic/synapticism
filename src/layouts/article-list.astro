@@ -22,7 +22,6 @@ const { collection, page } = Astro.props;
 <MainSite
 	meta={{
 		description: t(`${collection}.description`),
-		noIndex: page.currentPage > 1,
 		openGraphId: openGraphIndexIds[collection],
 		title: t(`${collection}.title`),
 	}}

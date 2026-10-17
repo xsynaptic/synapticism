@@ -7,7 +7,6 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
-import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionEntryList from '#components/sections/section-entry-list.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
@@ -24,10 +23,8 @@ const { Content } = await render(entry);
 ---
 
 <ContentEntryDetail entry={entry} hasReadingBar={true} isArticle={false}>
-	<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
-		<Content />
-	</ProseBody>
-	<ContentSectionReferences tags={entry.data.tags} />
+	<Content />
+	<ContentSectionReferences slot="after-body" tags={entry.data.tags} />
 	<Fragment slot="after-article">
 		<SectionEntryList entries={relatedContent} title={t('section.relatedWriting')} />
 		<SectionBacklinks backlinks={backlinks} />

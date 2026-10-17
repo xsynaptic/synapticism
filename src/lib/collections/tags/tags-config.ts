@@ -14,7 +14,6 @@ export const tags = defineCollection({
 			dateCreated: DateStringSchema,
 			dateUpdated: DateStringSchema.optional(),
 			description: z.string().optional(),
-			hideSearch: z.boolean().optional(),
 			imageFeatured: ImageFeaturedSchema.optional(),
 			title: StylizedTextSchema,
 		})

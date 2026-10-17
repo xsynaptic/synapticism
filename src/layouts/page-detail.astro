@@ -4,7 +4,6 @@ import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
-import ProseBody from '#components/parts/prose-body.astro';
 
 interface Props {
 	entry: CollectionEntry<'pages'>;
@@ -15,13 +14,6 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<ContentEntryDetail
-	entry={entry}
-	hasReadingBar={true}
-	hideSearch={entry.data.hideSearch}
-	isArticle={false}
->
-	<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame>
-		<Content />
-	</ProseBody>
+<ContentEntryDetail entry={entry} hasReadingBar={true} isArticle={false}>
+	<Content />
 </ContentEntryDetail>

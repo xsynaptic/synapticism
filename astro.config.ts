@@ -10,8 +10,9 @@ import pagefind from 'astro-pagefind';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
+import { mdxComponentFiles } from '#constants.ts';
 import devInventory from '#dev/inventory/inventory-integration.ts';
-import { isIndexableUrlPath, readSitemapLastmod } from '#lib/utils/sitemap.ts';
+import { getUrlPathIndexing, readSitemapLastmod } from '#lib/utils/sitemap.ts';
 
 import { expressiveCodeOptions } from './expressive-code.config.mjs';
 
@@ -24,6 +25,13 @@ function getSitemapLastmod() {
 
 	return sitemapLastmodCache;
 }
+
+const mdxAutoImports = Object.fromEntries(
+	Object.entries(mdxComponentFiles).map(([name, file]): [string, Array<[string, string]>] => [
+		`./src/components/mdx/${file}.astro`,
+		[['default', name]],
+	]),
+);
 
 export default defineConfig({
 	// `getViteConfig` scripts run Vite in serve mode, where Astro reads the store from `.astro`
@@ -73,7 +81,7 @@ export default defineConfig({
 		mdx(),
 		react(),
 		sitemap({
-			filter: (page) => isIndexableUrlPath(new URL(page).pathname),
+			filter: (page) => getUrlPathIndexing(new URL(page).pathname).index,
 			serialize: (item) => {
 				const sitemapLastmod = getSitemapLastmod();
 
@@ -98,14 +106,7 @@ export default defineConfig({
 			hastPlugins: [expressiveCode(expressiveCodeOptions)],
 			mdastPlugins: [
 				autoImport({
-					imports: [
-						{
-							'./src/components/mdx/img.astro': [['default', 'Img']],
-							'./src/components/mdx/link.astro': [['default', 'Link']],
-							'./src/components/mdx/more.astro': [['default', 'More']],
-							'./src/components/mdx/quotation.astro': [['default', 'Quotation']],
-						},
-					],
+					imports: [mdxAutoImports],
 				}),
 				readingTime(),
 			],

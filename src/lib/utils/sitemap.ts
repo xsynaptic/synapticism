@@ -4,7 +4,7 @@ import { z } from 'zod';
 // Written by the sitemap-lastmod script, read back when the Astro config loads
 const sitemapLastmodPath = '.cache/sitemap-lastmod.json';
 
-const sitemapExcludePrefixes = ['/about/cv'];
+const excludedPrefixes = ['/about/cv'];
 
 const SitemapLastmodSchema = z.object({
 	generatedAt: z.string(),
@@ -13,15 +13,19 @@ const SitemapLastmodSchema = z.object({
 
 type SitemapLastmod = z.infer<typeof SitemapLastmodSchema>;
 
-export function isIndexableUrlPath(pathname: string): boolean {
+export function getUrlPathIndexing(pathname: string) {
 	const normalized = pathname.replace(/\/$/, '');
 
-	// Paginated routes repeat content already indexed at page one
-	if (/\/\d+$/.test(normalized)) return false;
+	if (
+		excludedPrefixes.some((prefix) => normalized === prefix || normalized.startsWith(prefix + '/'))
+	) {
+		return { follow: false, index: false };
+	}
 
-	return sitemapExcludePrefixes.every(
-		(prefix) => !(normalized === prefix || normalized.startsWith(prefix + '/')),
-	);
+	// Paginated routes repeat content already indexed at page one
+	if (/\/\d+$/.test(normalized)) return { follow: true, index: false };
+
+	return { follow: true, index: true };
 }
 
 export function readSitemapLastmod(): SitemapLastmod {

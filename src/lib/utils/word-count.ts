@@ -6,7 +6,7 @@ import { countWords } from '@xsynaptic/word-count';
 import { hash } from 'ohash';
 import * as R from 'remeda';
 
-import { mdxComponentsToStrip } from '#constants.ts';
+import { mdxComponents } from '#constants.ts';
 import { renderMarkdownInline, stripMdxComponents } from '#lib/utils/text.ts';
 
 export function createWordCountFunction({ cache }: { cache: Cache<number> }) {
@@ -18,7 +18,7 @@ export function createWordCountFunction({ cache }: { cache: Cache<number> }) {
 		const contentHash = hash({
 			body: entry.body,
 			description,
-			mdxComponentsToStrip,
+			mdxComponents,
 			version: 1,
 		});
 
@@ -38,7 +38,7 @@ export function createWordCountFunction({ cache }: { cache: Cache<number> }) {
 function computeWordCount(body: string): number {
 	return R.pipe(
 		body,
-		(body) => stripMdxComponents(body, mdxComponentsToStrip),
+		(body) => stripMdxComponents(body, mdxComponents),
 		renderMarkdownInline,
 		stripTags,
 		countWords,

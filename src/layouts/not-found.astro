@@ -4,14 +4,14 @@ import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
 import NotFoundSuggestions from '#components/not-found/not-found-suggestions.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { getSeoHideSearch } from '#lib/utils/seo.ts';
 ---
 
 <MainSite
 	meta={{
 		description: t('notFound.description'),
+		noFollow: true,
+		noIndex: true,
 		title: t('notFound.title'),
-		...getSeoHideSearch(true),
 	}}
 >
 	<ContentHeader title={t('notFound.title')} />

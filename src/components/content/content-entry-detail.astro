@@ -6,22 +6,22 @@ import ContentHeader from '#components/content/content-header.astro';
 import ContentHero from '#components/content/content-hero.astro';
 import MainSite from '#components/main/main-site.astro';
 import AuthorCard from '#components/parts/author-card.astro';
+import ProseBody from '#components/parts/prose-body.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { siteAuthorName } from '#constants.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
-import { getPagefindBodyProp } from '#lib/utils/pagefind.ts';
-import { getOpenGraphId, getSeoArticleProps, getSeoHideSearch } from '#lib/utils/seo.ts';
-import { buildArticleSchemas } from '#lib/utils/structured-data.ts';
+import { getOpenGraphId, getSeoArticleProps } from '#lib/utils/seo.ts';
+import { getUrlPathIndexing } from '#lib/utils/sitemap.ts';
+import { buildEntrySchemas } from '#lib/utils/structured-data.ts';
 
 interface Props {
 	entry: CollectionEntry<'notes' | 'pages' | 'posts' | 'projects'>;
 	hasReadingBar: boolean;
-	hideSearch?: boolean | undefined;
 	isArticle: boolean;
 }
 
-const { entry, hasReadingBar, hideSearch, isArticle } = Astro.props;
+const { entry, hasReadingBar, isArticle } = Astro.props;
 
 const url = Astro.url.toString();
 
@@ -29,15 +29,18 @@ const description = getDescriptionRenderedText(entry);
 
 const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFeatured })?.[0];
 
-const articleProps = isArticle
-	? {
-			meta: getSeoArticleProps({
-				dateCreated: entry.data.dateCreated,
-				dateUpdated: entry.data.dateUpdated,
-			}),
-			schemas: buildArticleSchemas(entry, { authorName: siteAuthorName, description, url }),
-		}
+const articleMeta = isArticle
+	? getSeoArticleProps({ dateCreated: entry.data.dateCreated, dateUpdated: entry.data.dateUpdated })
 	: undefined;
+
+const schemas = buildEntrySchemas(entry, {
+	authorName: siteAuthorName,
+	description,
+	isArticle,
+	url,
+});
+
+const { index } = getUrlPathIndexing(Astro.url.pathname);
 ---
 
 <MainSite
@@ -46,12 +49,14 @@ const articleProps = isArticle
 		description,
 		openGraphId: getOpenGraphId(entry.collection, entry.id),
 		title: entry.data.title,
-		...articleProps?.meta,
-		...getSeoHideSearch(hideSearch),
+		...articleMeta,
 	}}
-	{...(articleProps ? { schemas: articleProps.schemas } : {})}
+	schemas={schemas}
 >
-	<article class:list={['pb-8', MicroformatClassNames.Entry]} {...getPagefindBodyProp(hideSearch)}>
+	<article
+		class:list={['pb-8', MicroformatClassNames.Entry]}
+		{...(index ? { 'data-pagefind-body': '' } : {})}
+	>
 		<ContentHeader title={entry.data.title} titleUrl={url}>
 			<Fragment slot="header-subtitle">
 				<slot name="header-subtitle">
@@ -62,7 +67,10 @@ const articleProps = isArticle
 		{heroImage ? (
 			<ContentHero {...heroImage} fallbackAlt={entry.data.title} isPriority={true} />
 		) : undefined}
-		<slot />
+		<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame={hasReadingBar || undefined}>
+			<slot />
+		</ProseBody>
+		<slot name="after-body" />
 		<AuthorCard />
 	</article>
 	<slot name="after-article" />

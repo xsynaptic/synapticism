@@ -12,7 +12,6 @@ export interface MetaProps {
 	noIndex?: boolean;
 	ogType?: 'article' | 'website' | undefined;
 	openGraphId?: string | undefined;
-	prefetchUrls?: Array<string> | undefined;
 	title?: string | undefined;
 }
 

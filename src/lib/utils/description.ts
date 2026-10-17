@@ -4,7 +4,7 @@ import { sanitizeHtml, stripTags } from '@xsynaptic/unified-tools';
 import { hash } from 'ohash';
 import * as R from 'remeda';
 
-import { mdxComponentsToStrip } from '#constants.ts';
+import { mdxComponents } from '#constants.ts';
 import {
 	renderMarkdownInline,
 	stripFootnoteReferences,
@@ -39,7 +39,7 @@ export function createDescriptionRenderers({ cache }: { cache: Cache<Description
 
 		// Key by entry ID so edits overwrite the old row; the hash validates cached content
 		// MDX component names participate so render-affecting code changes self-invalidate
-		const sourceHash = hash({ mdxComponentsToStrip, source, version: 1 });
+		const sourceHash = hash({ mdxComponents, source, version: 1 });
 
 		const cached = cache.get(entry.id, sourceHash);
 
@@ -81,7 +81,7 @@ function getDescription(
 	if (entry.body) {
 		return R.pipe(
 			entry.body,
-			(body) => stripMdxComponents(body, mdxComponentsToStrip),
+			(body) => stripMdxComponents(body, mdxComponents),
 			stripFootnoteReferences,
 			(text) => textClipper(text.trim(), { wordCount: options.wordCount ?? wordCountFinal }),
 		);

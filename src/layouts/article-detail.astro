@@ -9,7 +9,6 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import ArticleSubtitle from '#components/content/article-subtitle.astro';
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
-import ProseBody from '#components/parts/prose-body.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
 import { getArticleMinutesRead } from '#lib/utils/articles.ts';
@@ -34,10 +33,12 @@ const isPost = entry.collection === 'posts';
 		minutesRead={getArticleMinutesRead(entry, remarkPluginFrontmatter)}
 		slot="header-subtitle"
 	/>
-	<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame={isPost || undefined}>
-		<Content />
-	</ProseBody>
-	<ContentSectionReferences projects={entry.data.projects} tags={entry.data.tags} />
+	<Content />
+	<ContentSectionReferences
+		projects={entry.data.projects}
+		slot="after-body"
+		tags={entry.data.tags}
+	/>
 	<SectionBacklinks backlinks={backlinks} slot="after-article" />
 	<SectionPagination
 		collection={entry.collection}

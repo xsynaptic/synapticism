@@ -1,6 +1,8 @@
 import type { CollectionEntry } from 'astro:content';
 
-import { getAbsoluteUrl, getSitePath } from '#lib/utils/routing.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getAbsoluteUrl, getContentPath, getSitePath } from '#lib/utils/routing.ts';
+import { getOpenGraphId, getOpenGraphImageUrl } from '#lib/utils/seo.ts';
 
 export type Thing = Article | BreadcrumbList | Person | WebSite;
 
@@ -58,41 +60,39 @@ const SchemaFragmentIds = {
 	Website: '#website',
 } as const;
 
-export function buildArticleSchemas(
+export function buildEntrySchemas(
 	entry: CollectionEntry<'notes' | 'pages' | 'posts' | 'projects'>,
-	props: { authorName: string; description: string | undefined; url: string },
+	props: { authorName: string; description: string | undefined; isArticle: boolean; url: string },
 ): Array<Thing> {
-	return [
-		buildArticleSchema({
-			dateCreated: entry.data.dateCreated,
-			dateUpdated: entry.data.dateUpdated,
-			description: props.description,
-			imageUrl: undefined,
-			title: entry.data.title,
-			url: props.url,
-		}),
-		buildAuthorSchema(props.authorName),
-	];
-}
+	const schemas: Array<Thing> = [];
 
-/**
- * @expected-unused
- * @knipignore staged for the launch design; the schema graph has no breadcrumb consumer yet
- */
-export function buildBreadcrumbSchema(
-	items: Array<{ name: string; url?: string }>,
-	pageUrl: string,
-): BreadcrumbList {
-	return {
-		'@id': `${getAbsoluteUrl(pageUrl)}${SchemaFragmentIds.Breadcrumb}`,
-		'@type': 'BreadcrumbList',
-		itemListElement: items.map((item, index) => ({
-			'@type': 'ListItem' as const,
-			name: item.name,
-			position: index + 1,
-			...(item.url ? { item: getAbsoluteUrl(item.url) } : {}),
-		})),
-	};
+	if (props.isArticle) {
+		schemas.push(
+			buildArticleSchema({
+				dateCreated: entry.data.dateCreated,
+				dateUpdated: entry.data.dateUpdated,
+				description: props.description,
+				imageUrl: getOpenGraphImageUrl(getOpenGraphId(entry.collection, entry.id)),
+				title: entry.data.title,
+				url: props.url,
+			}),
+			buildAuthorSchema(props.authorName),
+		);
+	}
+
+	if (entry.collection !== 'pages') {
+		schemas.push(
+			buildBreadcrumbSchema(
+				[
+					{ name: t(`${entry.collection}.title`), url: getContentPath(entry.collection) },
+					{ name: entry.data.title },
+				],
+				props.url,
+			),
+		);
+	}
+
+	return schemas;
 }
 
 export function buildWebSiteSchema(props: { description: string; name: string }): WebSite {
@@ -151,5 +151,21 @@ function buildAuthorSchema(name: string): Person {
 		'@type': 'Person',
 		name,
 		url: aboutUrl,
+	};
+}
+
+function buildBreadcrumbSchema(
+	items: Array<{ name: string; url?: string }>,
+	pageUrl: string,
+): BreadcrumbList {
+	return {
+		'@id': `${getAbsoluteUrl(pageUrl)}${SchemaFragmentIds.Breadcrumb}`,
+		'@type': 'BreadcrumbList',
+		itemListElement: items.map((item, index) => ({
+			'@type': 'ListItem' as const,
+			name: item.name,
+			position: index + 1,
+			...(item.url ? { item: getAbsoluteUrl(item.url) } : {}),
+		})),
 	};
 }

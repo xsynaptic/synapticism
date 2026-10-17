@@ -2,7 +2,14 @@ export const contentCollectionsPath = './packages/content/collections';
 
 export const contentExcerptIdentifier = 'more';
 
-export const mdxComponentsToStrip = ['Img', 'ImgGroup', 'More'];
+export const mdxComponentFiles = {
+	Img: 'img',
+	Link: 'link',
+	More: 'more',
+	Quotation: 'quotation',
+} as const;
+
+export const mdxComponents = Object.keys(mdxComponentFiles);
 
 export const millisecondsPerHour = 3_600_000;
 

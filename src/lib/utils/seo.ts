@@ -28,12 +28,3 @@ export function getSeoArticleProps({
 		ogType: 'article' as const,
 	};
 }
-
-export function getSeoHideSearch(shouldHide: boolean | undefined) {
-	return shouldHide
-		? {
-				noFollow: true,
-				noIndex: true,
-			}
-		: undefined;
-}
