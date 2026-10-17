@@ -19,6 +19,7 @@ Add a line here only when an agent cannot see it in the repo or work it out quic
 
 - Import from `src/` through the `#` alias, declared in `package.json` `imports` rather than `tsconfig.json`
 - Leave a blank line after a declaration block
+- Client storage keys (localStorage, sessionStorage, IndexedDB) take the `syn-` prefix in kebab-case and live in a constants file, never as a literal at the call site; a pre-paint inline script receives them through `define:vars`
 
 ## Styling
 

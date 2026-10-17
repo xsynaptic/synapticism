@@ -14,7 +14,7 @@ interface Props {
 const { entries, pagination } = Astro.props;
 ---
 
-<div class={MicroformatClassNames.Feed} data-pagination-target>
+<div class:list={[MicroformatClassNames.Feed, 'scroll-mt-4']} data-pagination-target>
 	{entries.map((entry, index) => (
 		<Fragment>
 			{index > 0 ? (

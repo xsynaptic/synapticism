@@ -1,6 +1,9 @@
-import type { Instance, PagefindModal, PagefindSearchResult } from '@pagefind/component-ui';
-
-import { getInstanceManager } from '@pagefind/component-ui';
+import type {
+	getInstanceManager,
+	Instance,
+	PagefindModal,
+	PagefindSearchResult,
+} from '@pagefind/component-ui';
 
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.userAgent);
 
@@ -15,6 +18,8 @@ interface PendingSearch {
 }
 
 const searchCommitters = new WeakMap<Instance, CommitSearch>();
+
+let instanceManager: ReturnType<typeof getInstanceManager> | undefined;
 
 class SearchToggle extends HTMLElement {
 	// eslint-disable-next-line unicorn/no-null -- matches Pagefind's PagefindComponent interface
@@ -36,23 +41,8 @@ class SearchToggle extends HTMLElement {
 		// Static props in markup; only the OS-dependent keyboard hint has to be set client-side
 		this.buttonEl?.setAttribute('aria-keyshortcuts', isMac ? 'Meta+K' : 'Control+K');
 
-		const instanceName = this.getAttribute('instance') ?? 'default';
-
-		this.instance = getInstanceManager().getInstance(instanceName);
-
-		this.#commitSearch = getSearchCommitter(this.instance);
-
-		// Pagefind exposes no deregisterUtility so each navigation's fresh trigger would pile up
-		// The astro:before-swap handler in search-modal.astro clears the registry to bound it; keep these two in sync
-		this.instance.registerUtility(this, 'modal-trigger', { keyboardNavigation: true });
-
-		this.instance.registerShortcut(
-			{ description: this.dataset.shortcutDescription ?? '', label: isMac ? '⌘K' : 'Ctrl+K' },
-			this,
-		);
-
-		this.addEventListener('pointerenter', this.#preloadPagefindCss, { once: true, signal });
-		this.addEventListener('focusin', this.#preloadPagefindCss, { once: true, signal });
+		this.addEventListener('pointerenter', this.#preloadPagefind, { once: true, signal });
+		this.addEventListener('focusin', this.#preloadPagefind, { once: true, signal });
 
 		this.addEventListener('click', this.#handleClickEvent, { signal });
 		document.addEventListener('keydown', this.#handleKeydown, { signal });
@@ -63,6 +53,8 @@ class SearchToggle extends HTMLElement {
 
 	disconnectedCallback() {
 		this.instance?.deregisterAllShortcuts(this);
+		// eslint-disable-next-line unicorn/no-null -- matches Pagefind's PagefindComponent interface
+		this.instance = null;
 		this.#commitSearch = undefined;
 		this.#controller?.abort();
 		this.#controller = undefined;
@@ -117,9 +109,27 @@ class SearchToggle extends HTMLElement {
 		return this.#cssReady;
 	};
 
-	// Await the stylesheet so the modal never opens unstyled
+	#ensurePagefindRegistered = async (): Promise<void> => {
+		const pagefind = await import('@pagefind/component-ui');
+
+		instanceManager = pagefind.getInstanceManager();
+
+		if (this.instance || !this.#controller) return;
+
+		this.instance = instanceManager.getInstance(this.getAttribute('instance') ?? 'default');
+
+		this.#commitSearch = getSearchCommitter(this.instance);
+
+		this.instance.registerUtility(this, 'modal-trigger', { keyboardNavigation: true });
+
+		this.instance.registerShortcut(
+			{ description: this.dataset.shortcutDescription ?? '', label: isMac ? '⌘K' : 'Ctrl+K' },
+			this,
+		);
+	};
+
 	#handleClick = async () => {
-		await this.#ensurePagefindCss();
+		await Promise.all([this.#ensurePagefindCss(), this.#ensurePagefindRegistered()]);
 		const [modal] = (this.instance?.getUtilities('modal') ?? []) as Array<PagefindModal>;
 		modal?.open();
 	};
@@ -150,8 +160,9 @@ class SearchToggle extends HTMLElement {
 		this.#commitSearch?.(true);
 	};
 
-	#preloadPagefindCss = () => {
+	#preloadPagefind = () => {
 		void this.#ensurePagefindCss();
+		void this.#ensurePagefindRegistered();
 	};
 }
 
@@ -199,6 +210,15 @@ function getSearchCommitter(instance: Instance) {
 
 	return commitSearch;
 }
+
+// Pagefind components never deregister (Pagefind/pagefind#1230); a fresh instance per page keeps the registry bounded
+document.addEventListener('astro:before-swap', () => {
+	if (!instanceManager) return;
+
+	for (const name of instanceManager.getInstanceNames()) {
+		instanceManager.removeInstance(name);
+	}
+});
 
 if (!customElements.get('search-toggle')) {
 	customElements.define('search-toggle', SearchToggle);
