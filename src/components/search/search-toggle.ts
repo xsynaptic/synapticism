@@ -1,9 +1,4 @@
-import type {
-	getInstanceManager,
-	Instance,
-	PagefindModal,
-	PagefindSearchResult,
-} from '@pagefind/component-ui';
+import type { getInstanceManager, Instance, PagefindModal } from '@pagefind/component-ui';
 
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.userAgent);
 
@@ -12,10 +7,17 @@ const searchQueryMaxLength = 100;
 
 type CommitSearch = (isClicked: boolean) => void;
 
+interface PagefindMatch {
+	matchedMetaFields?: Array<string>;
+	words: Array<number>;
+}
+
 interface PendingSearch {
 	query: string;
 	results: number;
 }
+
+const imageMetaFields = new Set(['image', 'image_2x']);
 
 const searchCommitters = new WeakMap<Instance, CommitSearch>();
 
@@ -169,9 +171,13 @@ class SearchToggle extends HTMLElement {
 function getResultCount(result: unknown): number | undefined {
 	if (!result || typeof result !== 'object') return undefined;
 
-	const { results } = result as Partial<PagefindSearchResult>;
+	const { results } = result as { results?: Array<PagefindMatch> };
 
-	return Array.isArray(results) ? results.length : undefined;
+	return Array.isArray(results) ? results.filter((match) => isTextMatch(match)).length : undefined;
+}
+
+function isTextMatch({ matchedMetaFields = [], words }: PagefindMatch) {
+	return words.length > 0 || matchedMetaFields.some((field) => !imageMetaFields.has(field));
 }
 
 function getSearchCommitter(instance: Instance) {
