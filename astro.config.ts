@@ -128,5 +128,10 @@ export default defineConfig({
 			'import.meta.env.BUILD_VERSION': JSON.stringify(Date.now().toString()),
 		},
 		plugins: [tailwindcss()],
+		server: {
+			watch: {
+				ignored: ['./*.md', '**/temp/**'],
+			},
+		},
 	},
 });

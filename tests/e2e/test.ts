@@ -4,7 +4,7 @@ import { test as base, expect } from '@playwright/test';
 
 import type { SitePaths } from '#e2e/site-paths.ts';
 
-import { getBaseUrl } from '#e2e/constants.ts';
+import { getBaseUrl, isDev } from '#e2e/constants.ts';
 import { getSitePaths } from '#e2e/site-paths.ts';
 
 export { expect } from '@playwright/test';
@@ -18,6 +18,9 @@ const allowedHost = new URL(getBaseUrl()).host;
 // Cloudflare edge-injects a beacon the off-host route answers empty; Chromium fails its SRI check, WebKit its MIME check
 const blockedResourcePattern = /static\.cloudflareinsights\.com/;
 
+// Vite logs to the console under dev, and a dependency re-optimization answers 504 once
+const devPatterns = isDev ? [/\[vite\]/, /Outdated Optimize Dep/] : [];
+
 export const test = base.extend<{
 	consoleGuard: ConsoleGuard;
 	site: SitePaths;
@@ -25,7 +28,7 @@ export const test = base.extend<{
 	consoleGuard: [
 		async ({ page }, use) => {
 			const errors: Array<string> = [];
-			const allowed: Array<RegExp> = [blockedResourcePattern];
+			const allowed: Array<RegExp> = [blockedResourcePattern, ...devPatterns];
 
 			page.on('console', (message) => {
 				if (message.type() === 'error') errors.push(message.text());
@@ -53,6 +56,14 @@ export const test = base.extend<{
 			(url) => url.host !== allowedHost,
 			(route) => route.fulfill({ body: '', status: 204 }),
 		);
+
+		// The dev toolbar's open shadow root adds headings and buttons that locators would match
+		if (isDev) {
+			await page.route(
+				(url) => url.pathname.includes('/dev-toolbar/'),
+				(route) => route.fulfill({ body: '', contentType: 'text/javascript' }),
+			);
+		}
 
 		await use(page);
 	},

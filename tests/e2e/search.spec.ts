@@ -5,7 +5,7 @@ import { t } from '#lib/i18n/i18n-strings.ts';
 
 const resultTimeout = 10_000;
 
-test('Pagefind returns a known Post first', async ({ page, site }) => {
+test('Pagefind returns a known Post first', { tag: '@smoke' }, async ({ page, site }) => {
 	await visit(page, '/');
 
 	await page.getByRole('button', { name: t('site.search.toggle.label') }).click();

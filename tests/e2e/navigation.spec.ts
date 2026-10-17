@@ -15,23 +15,28 @@ test('the current page is the only one marked', async ({ page }) => {
 	).not.toHaveAttribute('aria-current');
 });
 
-test('a header link navigates client-side and the chrome survives the swap', async ({ page }) => {
-	await visit(page, routes.postsIndex);
+test(
+	'a header link navigates client-side and the chrome survives the swap',
+	{ tag: '@smoke' },
+	async ({ page }) => {
+		await visit(page, routes.postsIndex);
 
-	// A window property dies with its document, where a `load` count races the URL assertion on a slow host
-	await page.evaluate(() => Object.assign(window, { survivesSwap: true }));
+		// A window property dies with its document, where a `load` count races the swap on a slow host
+		await page.evaluate(() => Object.assign(window, { survivesSwap: true }));
 
-	await page
-		.getByRole('navigation', { name: t('aria.headerNavigation') })
-		.getByRole('link', { exact: true, name: t('collection.notes.plural') })
-		.click();
+		await page
+			.getByRole('navigation', { name: t('aria.headerNavigation') })
+			.getByRole('link', { exact: true, name: t('collection.notes.plural') })
+			.click();
 
-	await expect(page).toHaveURL(routes.notesIndex);
-	expect(
-		await page.evaluate(() => 'survivesSwap' in window),
-		'the swap reloaded the document',
-	).toBe(true);
+		// The address changes before the new page is fetched and swapped in; the heading marks arrival
+		await expect(page.getByRole('heading', { level: 1 })).toHaveText(t('collection.notes.plural'));
+		expect(
+			await page.evaluate(() => 'survivesSwap' in window),
+			'the swap reloaded the document',
+		).toBe(true);
 
-	await page.getByRole('button', { name: t('site.search.toggle.label') }).click();
-	await expect(page.locator('pagefind-input input')).toBeVisible();
-});
+		await page.getByRole('button', { name: t('site.search.toggle.label') }).click();
+		await expect(page.locator('pagefind-input input')).toBeVisible();
+	},
+);
