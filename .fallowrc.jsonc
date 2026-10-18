@@ -27,6 +27,7 @@
 	"health": {
 		// Zero disables CRAP, which fallow otherwise estimates without coverage data
 		"maxCrap": 0,
+		"maxCognitive": 12,
 		"ignore": ["src/dev/**"],
 	},
 	"duplicates": {
