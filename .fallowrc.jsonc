@@ -1,5 +1,8 @@
 {
 	"ignorePatterns": ["packages/scripts/src/validate-content/fixtures/**"],
+	"rulePacks": ["fallow-rules.jsonc"],
+	// Rule packs only check reachable files; MDX components are reached by auto-import
+	"dynamicallyLoaded": ["src/components/mdx/*.astro"],
 	"rules": {
 		// Dead code and dependency hygiene belong to knip
 		"unused-files": "off",
@@ -18,6 +21,8 @@
 		"dev-dependencies-in-production": "off",
 		"unused-dependency-overrides": "off",
 		"misconfigured-dependency-overrides": "off",
+		"re-export-cycle": "error",
+		"package-cycle": "error",
 	},
 	"health": {
 		// Zero disables CRAP, which fallow otherwise estimates without coverage data
@@ -39,14 +44,29 @@
 	"boundaries": {
 		"zones": [
 			{ "name": "packages", "patterns": ["packages/**"] },
-			{ "name": "lib", "patterns": ["src/lib/**"] },
-			{ "name": "components", "patterns": ["src/components/**", "src/layouts/**", "src/pages/**"] },
+			{ "name": "dev", "patterns": ["src/dev/**"] },
+			{ "name": "lib", "patterns": ["src/lib/**", "src/constants.ts", "src/env.d.ts"] },
+			{
+				"name": "components",
+				"patterns": [
+					"src/components/**",
+					"src/layouts/**",
+					"src/pages/**",
+					"src/styles/**",
+					"src/content.config.ts",
+				],
+			},
 		],
+		// Unzoned files are unrestricted both ways, so every analyzed file needs a zone
+		"coverage": {
+			"requireAllFiles": true,
+			"allowUnmatched": ["*.config.{ts,mjs}", "tests/**"],
+		},
 		"rules": [
 			// Vite/Rolldown build breaks when packages import the app
-			{ "from": "packages", "allow": ["packages"] },
-			{ "from": "lib", "allow": ["lib", "packages"] },
-			{ "from": "components", "allow": ["components", "lib", "packages"] },
+			{ "from": "packages", "allow": [] },
+			{ "from": "lib", "allow": ["packages"] },
+			{ "from": "components", "allow": ["lib", "packages"] },
 		],
 	},
 }

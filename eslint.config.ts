@@ -3,7 +3,6 @@ import {
 	getBrowserConfig,
 	getConfig,
 	getWebComponentConfig,
-	restrictedSyntaxDefaults,
 } from '@xsynaptic/eslint-config';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
@@ -40,21 +39,6 @@ export default getConfig(
 			files: ['src/lib/i18n/**/*.ts'],
 			rules: {
 				'perfectionist/sort-objects': ['error', { partitionByComment: true, type: 'natural' }],
-			},
-		},
-		// A direct read here would see computed `_` fields or not depending on which wrapper ran first
-		{
-			files: ['src/lib/collections/**/*.ts'],
-			rules: {
-				'no-restricted-syntax': [
-					'error',
-					...restrictedSyntaxDefaults,
-					{
-						message:
-							'Use getRawCollection() from #lib/utils/collections.ts instead of getCollection() inside src/lib/collections.',
-						selector: "CallExpression[callee.name='getCollection']",
-					},
-				],
 			},
 		},
 		{
