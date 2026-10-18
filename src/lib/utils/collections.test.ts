@@ -16,6 +16,10 @@ function makePost(id: string): CollectionEntry<'posts'> {
 	return { collection: 'posts', data: { title: id }, id } as unknown as CollectionEntry<'posts'>;
 }
 
+function computeReplacedTitle(entry: CollectionEntry<'posts'>) {
+	return { _flag: `computed-${entry.id}`, title: 'Replaced' };
+}
+
 function noop() {
 	// The factory logs its timing on every call
 }
@@ -57,7 +61,7 @@ describe('createCollectionData', () => {
 		expect(getCollectionMock).toHaveBeenCalledTimes(1);
 	});
 
-	test('keys entriesMap by id and hands mutate the same entry objects it returns', async () => {
+	test('returns the store objects uncopied when there is no compute', async () => {
 		const { createCollectionData } = await importCollections();
 
 		const alpha = makePost('alpha');
@@ -65,28 +69,32 @@ describe('createCollectionData', () => {
 
 		getCollectionMock.mockResolvedValue([alpha, beta]);
 
-		const mutateCalls: Array<
-			[Array<CollectionEntry<'posts'>>, Map<string, CollectionEntry<'posts'>>]
-		> = [];
+		const result = await createCollectionData({ collection: 'posts' })();
 
-		const getPostsCollection = createCollectionData({
-			collection: 'posts',
-			mutate: (entries, entriesMap) => {
-				mutateCalls.push([entries, entriesMap]);
-			},
-		});
-
-		const result = await getPostsCollection();
-
-		expect(mutateCalls).toHaveLength(1);
-
-		const [mutatedEntries, mutatedEntriesMap] = mutateCalls[0]!;
-
-		expect(mutatedEntries[0]).toBe(alpha);
-		expect(mutatedEntriesMap.get('alpha')).toBe(alpha);
 		expect(result.entries[0]).toBe(alpha);
 		expect(result.entriesMap.get('beta')).toBe(beta);
 		expect([...result.entriesMap.keys()]).toEqual(['alpha', 'beta']);
+	});
+
+	test('merges computed fields onto copies and leaves the store untouched', async () => {
+		const { createCollectionData } = await importCollections();
+
+		const alpha = makePost('alpha');
+		const snapshot = structuredClone(alpha);
+
+		getCollectionMock.mockResolvedValue([alpha]);
+
+		const getPostsCollection = createCollectionData({
+			collection: 'posts',
+			compute: () => computeReplacedTitle,
+		});
+
+		const result = await getPostsCollection();
+		const computed = result.entriesMap.get('alpha');
+
+		expect(computed?.data).toEqual({ _flag: 'computed-alpha', title: 'Replaced' });
+		expect(computed).not.toBe(alpha);
+		expect(alpha).toEqual(snapshot);
 	});
 
 	test('evicts an empty result in dev so the next call refetches', async () => {

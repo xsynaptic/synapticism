@@ -1,9 +1,10 @@
+import type { CollectionEntry } from 'astro:content';
+
 import { createCollectionData, getRawCollection } from '#lib/utils/collections.ts';
 
 export const getTagsCollection = createCollectionData({
 	collection: 'tags',
-	label: 'Tags',
-	async mutate(entries) {
+	async compute() {
 		const [posts, notes, projects] = await Promise.all([
 			getRawCollection('posts'),
 			getRawCollection('notes'),
@@ -12,10 +13,12 @@ export const getTagsCollection = createCollectionData({
 
 		const tagged = [...posts, ...notes, ...projects];
 
-		for (const entry of entries) {
-			entry.data._entryCount = tagged.filter((item) =>
-				item.data.tags?.some(({ id }) => id === entry.id),
-			).length;
-		}
+		return function computeTag(entry: CollectionEntry<'tags'>) {
+			return {
+				_entryCount: tagged.filter((item) => item.data.tags?.some(({ id }) => id === entry.id))
+					.length,
+			};
+		};
 	},
+	label: 'Tags',
 });

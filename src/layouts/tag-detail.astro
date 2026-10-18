@@ -1,8 +1,8 @@
 ---
 import type { Page } from 'astro';
-import type { CollectionEntry } from 'astro:content';
 
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
+import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import ContentDescription from '#components/content/content-description.astro';
 import ContentHeader from '#components/content/content-header.astro';
@@ -16,7 +16,7 @@ import { getPagePagination } from '#lib/utils/pagination.ts';
 import { getOpenGraphId } from '#lib/utils/seo.ts';
 
 interface Props {
-	entry: CollectionEntry<'tags'>;
+	entry: ComputedEntry<'tags'>;
 	page: Page<CatalogItem>;
 }
 

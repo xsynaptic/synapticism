@@ -1,5 +1,5 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import LabeledRow from '#components/parts/labeled-row.astro';
 import { MicroformatClassNames } from '#components/types.ts';
@@ -16,7 +16,7 @@ interface Props {
 
 const { projects, tags } = Astro.props;
 
-function getRowItems(entries: Array<CollectionEntry<'projects' | 'tags'>>) {
+function getRowItems(entries: Array<ComputedEntry<'projects' | 'tags'>>) {
 	return entries.map((item) => ({
 		title: item.data.title,
 		url: getContentPath(item.collection, item.id),

@@ -1,6 +1,6 @@
-import type { CollectionEntry } from 'astro:content';
-
 import * as R from 'remeda';
+
+import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
@@ -16,7 +16,7 @@ import {
 
 export const createTagsByIdsFunction = createCollectionLookupByIds('Tags', getTagsCollection);
 
-export async function queryTagsEntryContent(entry: CollectionEntry<'tags'>) {
+export async function queryTagsEntryContent(entry: ComputedEntry<'tags'>) {
 	const [{ entries: posts }, { entries: notes }, { entries: projects }] = await Promise.all([
 		getPostsCollection(),
 		getNotesCollection(),
@@ -39,8 +39,8 @@ export async function queryTagsIndex() {
 
 const nonAlphabeticGroup = '#';
 
-export function groupTagsByLetter(tags: Array<CollectionEntry<'tags'>>) {
-	const groups = new Map<string, Array<CollectionEntry<'tags'>>>();
+export function groupTagsByLetter(tags: Array<ComputedEntry<'tags'>>) {
+	const groups = new Map<string, Array<ComputedEntry<'tags'>>>();
 
 	for (const tag of tags) {
 		const initial = tag.data.title.charAt(0).toUpperCase();

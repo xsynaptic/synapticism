@@ -1,4 +1,4 @@
-import type { CollectionEntry, CollectionKey } from 'astro:content';
+import type { CollectionKey } from 'astro:content';
 
 import { createSqliteCache } from '@synapticism/shared/cache';
 import { getImageFeaturedId } from '@synapticism/shared/image-featured';
@@ -7,6 +7,7 @@ import { performance } from 'node:perf_hooks';
 
 import type { Catalog } from '#lib/catalog/catalog-factory.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
+import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import { siteYearFounded } from '#constants.ts';
 import { createCatalog } from '#lib/catalog/catalog-factory.ts';
@@ -22,13 +23,13 @@ import { createWordCountFunction } from '#lib/utils/word-count.ts';
 
 let wordCountFunction: ReturnType<typeof createWordCountFunction> | undefined;
 
-function getLinksExternalCount(entry: CollectionEntry<CollectionKey>): number {
+function getLinksExternalCount(entry: ComputedEntry<CollectionKey>): number {
 	if (!entry.body) return 0;
 
 	return (entry.body.match(/\[[^\]]*\]\(https?:\/\/[^)]+\)/g) ?? []).length;
 }
 
-function getWordCount(entry: CollectionEntry<CollectionKey>) {
+function getWordCount(entry: ComputedEntry<CollectionKey>) {
 	if (!wordCountFunction) {
 		wordCountFunction = createWordCountFunction({
 			cache: createSqliteCache(CUSTOM_CACHE_PATH, 'word-counts'),
@@ -50,7 +51,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	const { entries: projects } = await getProjectsCollection();
 	const { entries: tags } = await getTagsCollection();
 
-	const catalogEntries: Array<CollectionEntry<CollectionKey>> = [
+	const catalogEntries: Array<ComputedEntry<CollectionKey>> = [
 		...pages,
 		...posts,
 		...notes,
@@ -80,7 +81,7 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	return [...catalogItemsById.values()];
 }
 
-function createCatalogItem(entry: CollectionEntry<CollectionKey>): CatalogItem {
+function createCatalogItem(entry: ComputedEntry<CollectionKey>): CatalogItem {
 	const { data } = entry;
 
 	return {
@@ -100,7 +101,7 @@ function createCatalogItem(entry: CollectionEntry<CollectionKey>): CatalogItem {
 }
 
 function generateContentBacklinksFromMdxComponents(
-	entry: CollectionEntry<CollectionKey>,
+	entry: ComputedEntry<CollectionKey>,
 	catalogItemsById: Map<string, CatalogItem>,
 ) {
 	if (!entry.body?.includes('<Link ')) return;
