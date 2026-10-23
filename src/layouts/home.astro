@@ -1,7 +1,7 @@
 ---
-import type { ArticleEntry } from '#lib/utils/articles.ts';
+import type { CollectionEntry } from 'astro:content';
 
-import ArticleExcerptList from '#components/content/article-excerpt-list.astro';
+import PostExcerptList from '#components/content/post-excerpt-list.astro';
 import MainSite from '#components/main/main-site.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getPagination } from '#lib/utils/pagination.ts';
@@ -11,7 +11,7 @@ import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
-	entries: Array<ArticleEntry>;
+	entries: Array<CollectionEntry<'posts'>>;
 	pageNumber: number;
 	totalPages: number;
 }
@@ -45,6 +45,6 @@ const pagination = getPagination({
 
 <MainSite isHomepage={true} {...mainProps}>
 	<div class="pt-8 md:pt-12">
-		<ArticleExcerptList entries={entries} pagination={pagination} />
+		<PostExcerptList entries={entries} pagination={pagination} />
 	</div>
 </MainSite>

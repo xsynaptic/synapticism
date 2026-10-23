@@ -18,4 +18,6 @@ export const siteAuthorName = 'Alexander Synaptic';
 
 export const siteTimezoneOffsetHours = 8;
 
-export const articleListPageSize = 10;
+export const postListPageSize = 10;
+
+export const postReadingTimeMinimumMinutes = 3;

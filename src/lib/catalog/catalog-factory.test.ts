@@ -67,30 +67,30 @@ describe('lookups', () => {
 describe('backlinksOf', () => {
 	const catalog = createCatalog([
 		makeCatalogItem({
-			backlinks: new Set(['linker-note', 'linker-tag']),
+			backlinks: new Set(['linker-post', 'linker-tag']),
 			collection: 'posts',
 			id: 'target',
 		}),
 		makeCatalogItem({
-			collection: 'notes',
+			collection: 'posts',
 			dateCreated: new Date(2023, 0, 1),
-			id: 'linker-note',
+			id: 'linker-post',
 		}),
 		makeCatalogItem({ collection: 'tags', id: 'linker-tag' }),
 	]);
 
 	test('returns every inbound link, uncapped and unfiltered, newest first', () => {
-		expect(ids(catalog.backlinksOf('target'))).toEqual(['linker-note', 'linker-tag']);
+		expect(ids(catalog.backlinksOf('target'))).toEqual(['linker-post', 'linker-tag']);
 	});
 
 	test('leaves narrowing to the caller', () => {
 		expect(ids(catalog.backlinksOf('target').filter(filterIsEditorialEntry))).toEqual([
-			'linker-note',
+			'linker-post',
 		]);
 	});
 
 	test('returns an empty array for an unknown or backlink-free id', () => {
 		expect(catalog.backlinksOf('nope')).toEqual([]);
-		expect(catalog.backlinksOf('linker-note')).toEqual([]);
+		expect(catalog.backlinksOf('linker-post')).toEqual([]);
 	});
 });

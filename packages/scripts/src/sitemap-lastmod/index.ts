@@ -13,7 +13,7 @@ interface SitemapLastmodOptions {
 }
 
 // Every collection that reaches a page of its own; mirrors src/content.config.ts
-const sitemapCollections: Array<CollectionKey> = ['notes', 'pages', 'posts', 'projects', 'tags'];
+const sitemapCollections: Array<CollectionKey> = ['pages', 'posts', 'projects', 'tags'];
 
 export async function generateSitemapLastmod({
 	outputPath,

@@ -3,7 +3,6 @@ import type { APIRequestContext } from '@playwright/test';
 import { contentManifestPath } from '#e2e/constants.ts';
 
 export interface SitePaths {
-	noteDetail: string;
 	postDetail: string;
 	postTitle: string;
 }
@@ -29,11 +28,7 @@ async function discover(request: APIRequestContext): Promise<SitePaths> {
 
 	if (!post) throw new Error('The content manifest names no Post');
 
-	const note = manifest.find((item) => isDetailPath(item.url, 'notes'));
-
-	if (!note) throw new Error('The content manifest names no Note');
-
-	return { noteDetail: note.url, postDetail: post.url, postTitle: post.title };
+	return { postDetail: post.url, postTitle: post.title };
 }
 
 function isDetailPath(url: string, collection: string): boolean {

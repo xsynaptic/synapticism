@@ -1,18 +1,18 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+
 import { render } from 'astro:content';
 
-import type { ArticleEntry } from '#lib/utils/articles.ts';
-
-import ArticleSubtitle from '#components/content/article-subtitle.astro';
 import ContentExcerpt from '#components/content/content-excerpt.astro';
 import ContentHero from '#components/content/content-hero.astro';
-import { getArticleMinutesRead } from '#lib/utils/articles.ts';
+import PostSubtitle from '#components/content/post-subtitle.astro';
+import { getPostMinutesRead } from '#lib/collections/posts/posts-utils.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
 
 interface Props {
 	class?: string | undefined;
-	entry: ArticleEntry;
+	entry: CollectionEntry<'posts'>;
 	isPriority: boolean;
 }
 
@@ -23,11 +23,11 @@ const { Content, remarkPluginFrontmatter } = await render(entry);
 const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFeatured })?.[0];
 ---
 
-<ContentExcerpt class={className} entryUrl={getContentPath(entry.collection, entry.id)}>
+<ContentExcerpt class={className} entryUrl={getContentPath('posts', entry.id)}>
 	<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
-	<ArticleSubtitle
+	<PostSubtitle
 		entry={entry}
-		minutesRead={getArticleMinutesRead(entry, remarkPluginFrontmatter)}
+		minutesRead={getPostMinutesRead(remarkPluginFrontmatter)}
 		slot="excerpt-subtitle"
 	/>
 	{heroImage ? (

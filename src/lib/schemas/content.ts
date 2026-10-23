@@ -37,7 +37,7 @@ export const contentBaseSchema = z.object({
 	title: StylizedTextSchema,
 });
 
-export const articleSchema = contentBaseSchema
+export const postSchema = contentBaseSchema
 	.extend({
 		projects: reference('projects').array().optional(),
 		tags: reference('tags').array().optional(),

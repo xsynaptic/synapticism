@@ -2,10 +2,7 @@ import type { CollectionKey } from 'astro:content';
 
 export type CatalogCaption = Pick<CatalogItem, 'id' | 'title' | 'url'>;
 
-export type CatalogCollectionKey = Extract<
-	CollectionKey,
-	'notes' | 'pages' | 'posts' | 'projects' | 'tags'
->;
+export type CatalogCollectionKey = Extract<CollectionKey, 'pages' | 'posts' | 'projects' | 'tags'>;
 
 export interface CatalogItem<T extends CatalogCollectionKey = CatalogCollectionKey> {
 	backlinks: Set<string>;

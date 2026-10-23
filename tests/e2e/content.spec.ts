@@ -27,11 +27,6 @@ test('a Post renders', { tag: '@smoke' }, async ({ page, site }) => {
 	await expectEntryRenders(page);
 });
 
-test('a Note renders', async ({ page, site }) => {
-	await visit(page, site.noteDetail);
-	await expectEntryRenders(page);
-});
-
 test('a List Page reaches a Project that renders', async ({ page }) => {
 	await visit(page, routes.projectsIndex);
 

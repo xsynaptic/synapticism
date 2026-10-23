@@ -16,7 +16,7 @@ import { validateMdxComponents } from '#validate-content/mdx.ts';
 import { validateReferences } from '#validate-content/references.ts';
 import { reportValidationResult } from '#validate-content/validation-result.ts';
 
-const collections = ['notes', 'pages', 'posts', 'projects', 'tags'] satisfies Array<CollectionKey>;
+const collections = ['pages', 'posts', 'projects', 'tags'] satisfies Array<CollectionKey>;
 
 const { positionals, values } = parseArgs({
 	allowPositionals: true,

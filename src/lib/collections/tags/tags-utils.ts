@@ -4,7 +4,6 @@ import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
-import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
@@ -17,14 +16,13 @@ import {
 export const createTagsByIdsFunction = createCollectionLookupByIds('Tags', getTagsCollection);
 
 export async function queryTagsEntryContent(entry: ComputedEntry<'tags'>) {
-	const [{ entries: posts }, { entries: notes }, { entries: projects }] = await Promise.all([
+	const [{ entries: posts }, { entries: projects }] = await Promise.all([
 		getPostsCollection(),
-		getNotesCollection(),
 		getProjectsCollection(),
 	]);
 	const catalog = await getCatalog();
 
-	const tagged = [...posts, ...notes, ...projects].filter(({ data }) =>
+	const tagged = [...posts, ...projects].filter(({ data }) =>
 		data.tags?.some(({ id }) => id === entry.id),
 	);
 

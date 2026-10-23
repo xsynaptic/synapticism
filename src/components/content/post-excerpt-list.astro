@@ -1,13 +1,14 @@
 ---
-import type { ArticleEntry } from '#lib/utils/articles.ts';
+import type { CollectionEntry } from 'astro:content';
+
 import type { Pagination } from '#lib/utils/pagination-types.ts';
 
-import ArticleExcerpt from '#components/content/article-excerpt.astro';
+import PostExcerpt from '#components/content/post-excerpt.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 
 interface Props {
-	entries: Array<ArticleEntry>;
+	entries: Array<CollectionEntry<'posts'>>;
 	pagination: Pagination;
 }
 
@@ -22,7 +23,7 @@ const { entries, pagination } = Astro.props;
 					<hr class="border-primary-300/70" />
 				</div>
 			) : undefined}
-			<ArticleExcerpt entry={entry} isPriority={index === 0} />
+			<PostExcerpt entry={entry} isPriority={index === 0} />
 		</Fragment>
 	))}
 </div>

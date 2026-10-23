@@ -1,10 +1,9 @@
 ---
 import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 
-import type { ArticleEntry } from '#lib/utils/articles.ts';
-
-import ArticleExcerptList from '#components/content/article-excerpt-list.astro';
 import ContentHeader from '#components/content/content-header.astro';
+import PostExcerptList from '#components/content/post-excerpt-list.astro';
 import MainSite from '#components/main/main-site.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
@@ -12,24 +11,23 @@ import { getPagePagination } from '#lib/utils/pagination.ts';
 import { openGraphIndexIds } from '#lib/utils/seo.ts';
 
 interface Props {
-	collection: ArticleEntry['collection'];
-	page: Page<ArticleEntry>;
+	page: Page<CollectionEntry<'posts'>>;
 }
 
-const { collection, page } = Astro.props;
+const { page } = Astro.props;
 ---
 
 <MainSite
 	meta={{
-		description: t(`${collection}.description`),
-		openGraphId: openGraphIndexIds[collection],
-		title: t(`${collection}.title`),
+		description: t('posts.description'),
+		openGraphId: openGraphIndexIds.posts,
+		title: t('posts.title'),
 	}}
 >
-	<ContentHeader class="mb-6" title={t(`${collection}.title`)}>
+	<ContentHeader class="mb-6" title={t('posts.title')}>
 		<Fragment slot="header-subtitle">
 			<PaginationCounter page={page} />
 		</Fragment>
 	</ContentHeader>
-	<ArticleExcerptList entries={page.data} pagination={getPagePagination(page)} />
+	<PostExcerptList entries={page.data} pagination={getPagePagination(page)} />
 </MainSite>

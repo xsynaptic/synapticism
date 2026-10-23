@@ -5,13 +5,12 @@ import { createCollectionData, getRawCollection } from '#lib/utils/collections.t
 export const getTagsCollection = createCollectionData({
 	collection: 'tags',
 	async compute() {
-		const [posts, notes, projects] = await Promise.all([
+		const [posts, projects] = await Promise.all([
 			getRawCollection('posts'),
-			getRawCollection('notes'),
 			getRawCollection('projects'),
 		]);
 
-		const tagged = [...posts, ...notes, ...projects];
+		const tagged = [...posts, ...projects];
 
 		return function computeTag(entry: CollectionEntry<'tags'>) {
 			return {

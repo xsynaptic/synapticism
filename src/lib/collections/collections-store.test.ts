@@ -10,7 +10,6 @@ function makeEntry(collection: string, id: string, data: Record<string, unknown>
 
 function makeStore() {
 	return {
-		notes: [makeEntry('notes', 'note', { tags: [{ id: 'astro' }] })],
 		posts: [
 			makeEntry('posts', 'post', { tags: [{ id: 'astro' }, { id: 'typescript' }] }),
 			makeEntry('posts', 'untagged'),
@@ -57,11 +56,11 @@ describe('collection wrappers', () => {
 		expect(store).toEqual(snapshot);
 	});
 
-	test('count tagged entries across posts, notes and projects', async () => {
+	test('count tagged entries across posts and projects', async () => {
 		const { tags } = await loadWrappers();
 
 		expect(tags.entries.map(({ data, id }) => [id, data._entryCount])).toEqual([
-			['astro', 3],
+			['astro', 2],
 			['typescript', 1],
 			['unused', 0],
 		]);

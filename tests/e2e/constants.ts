@@ -14,7 +14,6 @@ export const contentManifestPath = '/content-manifest.json';
 export const feedPath = '/rss.xml';
 
 export const routes = {
-	notesIndex: '/notes/',
 	postsIndex: '/posts/',
 	projectsIndex: '/projects/',
 } as const;

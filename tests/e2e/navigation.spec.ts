@@ -11,7 +11,7 @@ test('the current page is the only one marked', async ({ page }) => {
 		nav.getByRole('link', { exact: true, name: t('collection.posts.plural') }),
 	).toHaveAttribute('aria-current', 'page');
 	await expect(
-		nav.getByRole('link', { exact: true, name: t('collection.notes.plural') }),
+		nav.getByRole('link', { exact: true, name: t('collection.projects.plural') }),
 	).not.toHaveAttribute('aria-current');
 });
 
@@ -26,11 +26,13 @@ test(
 
 		await page
 			.getByRole('navigation', { name: t('aria.headerNavigation') })
-			.getByRole('link', { exact: true, name: t('collection.notes.plural') })
+			.getByRole('link', { exact: true, name: t('collection.projects.plural') })
 			.click();
 
 		// The address changes before the new page is fetched and swapped in; the heading marks arrival
-		await expect(page.getByRole('heading', { level: 1 })).toHaveText(t('collection.notes.plural'));
+		await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+			t('collection.projects.plural'),
+		);
 		expect(
 			await page.evaluate(() => 'survivesSwap' in window),
 			'the swap reloaded the document',

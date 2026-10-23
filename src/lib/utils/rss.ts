@@ -10,21 +10,18 @@ import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
 import { millisecondsPerHour, siteTimezoneOffsetHours } from '#constants.ts';
-import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { parseContentDate, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
 import { stripFootnotes } from '#lib/utils/text.ts';
 
-type FeedEntry = CollectionEntry<'notes'> | CollectionEntry<'posts'>;
-
 async function createRenderMdxFunction() {
 	const container = await AstroContainer.create();
 
 	container.addServerRenderer({ name: 'mdx', renderer: mdxRenderer });
 
-	return async function (entry: FeedEntry, options?: ContainerRenderOptions) {
+	return async function (entry: CollectionEntry<'posts'>, options?: ContainerRenderOptions) {
 		const { Content } = await render(entry);
 
 		return await container.renderToString(Content, options);
@@ -39,7 +36,7 @@ const generateFeedItem = async ({
 	excludeFootnotes,
 }: {
 	debug: boolean;
-	entry: FeedEntry;
+	entry: CollectionEntry<'posts'>;
 	excludeFootnotes: boolean;
 }) => {
 	const startTime = performance.now();
@@ -63,7 +60,7 @@ const generateFeedItem = async ({
 	const pubDate = parseContentDate(entry.data.dateUpdated ?? entry.data.dateCreated);
 
 	const feedItem = {
-		link: getContentPath(entry.collection, entry.id),
+		link: getContentPath('posts', entry.id),
 		// Dates sit at 00:00 UTC; re-anchor to the site timezone so today's entries are never future-dated
 		pubDate: pubDate
 			? new Date(pubDate.getTime() - siteTimezoneOffsetHours * millisecondsPerHour)
@@ -91,20 +88,11 @@ export async function generateFeedItems({
 	excludeFootnotes: boolean;
 	itemCount: number;
 }) {
-	const [{ entries: posts }, { entries: notes }] = await Promise.all([
-		getPostsCollection(),
-		getNotesCollection(),
-	]);
+	const { entries: posts } = await getPostsCollection();
 
 	return R.pipe(
-		await R.pipe(
-			[...posts, ...notes],
-			R.sort(sortByDateReverseChronological),
-			R.take(itemCount),
-			(items) =>
-				Promise.all(
-					items.map((item) => generateFeedItem({ debug, entry: item, excludeFootnotes })),
-				),
+		await R.pipe(posts, R.sort(sortByDateReverseChronological), R.take(itemCount), (items) =>
+			Promise.all(items.map((item) => generateFeedItem({ debug, entry: item, excludeFootnotes }))),
 		),
 		R.sort((a, b) => (a.pubDate && b.pubDate ? b.pubDate.getTime() - a.pubDate.getTime() : -1)),
 		R.take(itemCount),

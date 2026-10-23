@@ -6,16 +6,16 @@ import { render } from 'astro:content';
 import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
-import ArticleSubtitle from '#components/content/article-subtitle.astro';
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
+import PostSubtitle from '#components/content/post-subtitle.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
-import { getArticleMinutesRead } from '#lib/utils/articles.ts';
+import { getPostMinutesRead } from '#lib/collections/posts/posts-utils.ts';
 
 interface Props {
 	backlinks: Array<CatalogItem> | undefined;
-	entry: CollectionEntry<'notes' | 'posts'>;
+	entry: CollectionEntry<'posts'>;
 	newerEntry: PaginationEntry | undefined;
 	olderEntry: PaginationEntry | undefined;
 }
@@ -24,15 +24,11 @@ const { backlinks, entry, newerEntry, olderEntry } = Astro.props;
 
 const { Content, remarkPluginFrontmatter } = await render(entry);
 
-const isPost = entry.collection === 'posts';
+const minutesRead = getPostMinutesRead(remarkPluginFrontmatter);
 ---
 
-<ContentEntryDetail entry={entry} hasReadingBar={isPost} isArticle={true}>
-	<ArticleSubtitle
-		entry={entry}
-		minutesRead={getArticleMinutesRead(entry, remarkPluginFrontmatter)}
-		slot="header-subtitle"
-	/>
+<ContentEntryDetail entry={entry} hasReadingBar={minutesRead !== undefined} isArticle={true}>
+	<PostSubtitle entry={entry} minutesRead={minutesRead} slot="header-subtitle" />
 	<Content />
 	<ContentSectionReferences
 		projects={entry.data.projects}
@@ -40,10 +36,5 @@ const isPost = entry.collection === 'posts';
 		tags={entry.data.tags}
 	/>
 	<SectionBacklinks backlinks={backlinks} slot="after-article" />
-	<SectionPagination
-		collection={entry.collection}
-		newerEntry={newerEntry}
-		olderEntry={olderEntry}
-		slot="after-article"
-	/>
+	<SectionPagination newerEntry={newerEntry} olderEntry={olderEntry} slot="after-article" />
 </ContentEntryDetail>

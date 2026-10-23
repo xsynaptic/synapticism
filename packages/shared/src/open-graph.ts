@@ -5,7 +5,6 @@ import { openGraphBasePath, openGraphImageFormat } from '#constants.ts';
 export const openGraphIndexIds = {
 	default: 'index-default',
 	home: 'index-home',
-	notes: 'index-notes',
 	posts: 'index-posts',
 	projects: 'index-projects',
 	tags: 'index-tags',

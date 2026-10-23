@@ -61,7 +61,7 @@ const SchemaFragmentIds = {
 } as const;
 
 export function buildEntrySchemas(
-	entry: CollectionEntry<'notes' | 'pages' | 'posts' | 'projects'>,
+	entry: CollectionEntry<'pages' | 'posts' | 'projects'>,
 	props: { authorName: string; description: string | undefined; isArticle: boolean; url: string },
 ): Array<Thing> {
 	const schemas: Array<Thing> = [];

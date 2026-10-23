@@ -9,7 +9,6 @@ import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import type { ImageFeaturedObject } from '#lib/schemas/image-featured.ts';
 
-import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
@@ -58,10 +57,10 @@ export const sampleCatalogItems: Array<CatalogItem> = [
 		title: 'Reading the grain of a typeface at small sizes',
 	}),
 	createCatalogItem({
-		collection: 'notes',
+		collection: 'posts',
 		dateCreated: new Date('2026-02-09'),
-		description: 'A shorter description, the kind a Note carries.',
-		id: 'sample-note',
+		description: 'A shorter description, the kind a short Post carries.',
+		id: 'sample-short-post',
 		imageId: undefined,
 		title: 'Two hundred words on cascade layers',
 		wordCount: 210,
@@ -135,15 +134,13 @@ const openGraphTitleSamples = [
 const openGraphImageTitle = 'Drawing a social preview card without a browser anywhere in the loop';
 
 async function createSampleOpenGraphCards() {
-	const [notes, pages, posts, projects] = await Promise.all([
-		getNotesCollection(),
+	const [pages, posts, projects] = await Promise.all([
 		getPagesCollection(),
 		getPostsCollection(),
 		getProjectsCollection(),
 	]);
 
 	const candidates = [
-		...notes.entries,
 		...pages.entries,
 		...posts.entries,
 		...projects.entries,

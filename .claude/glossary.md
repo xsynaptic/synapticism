@@ -6,21 +6,19 @@ The language of the site itself: what an author writes, how it is grouped, and h
 
 **Entry**: A single piece of authored content in a collection, sourced from one Markdown or MDX file. _Avoid_: document, record, node, item (reserve "item" for catalog rows).
 
-**Collection**: A named set of Entries sharing one schema (Posts, Notes, Projects, Pages, Tags). _Avoid_: content type, model.
+**Collection**: A named set of Entries sharing one schema (Posts, Projects, Pages, Tags). _Avoid_: content type, model.
 
-**Post**: A long-form article, the site's principal form of writing. In code, "article" names what Posts and Notes share (`article-detail.astro`, `articleSchema`), never a Post alone. _Avoid_: blog post, story.
+**Post**: A dated piece of writing, the site's principal form. Length draws no distinction: a two-line observation and a long article are both Posts. _Avoid_: article, note, blog post, story (schema.org `Article` and Open Graph `article` stay as the platforms name them).
 
-**Note**: A short Entry: an observation or a piece of commentary that does not justify a full article. The distinction from a Post is length and ambition, not kind. _Avoid_: snippet, micropost, aside.
+**Project**: Something designed, built, or worked on, published as its own Entry. Posts may reference a Project, which gathers them as its related writing. _Avoid_: work, case study, portfolio item.
 
-**Project**: Something designed, built, or worked on, published as its own Entry. Posts and Notes may reference a Project, which gathers them as its related writing. _Avoid_: work, case study, portfolio item.
-
-**Page**: A standalone Entry outside the run of Posts and Notes (about, colophon). _Avoid_: static page.
+**Page**: A standalone Entry outside the run of Posts (about, colophon). _Avoid_: static page.
 
 **Tag**: A subject grouping that cuts across collections. Tags are flat and do not nest, and each is an Entry in its own right with a title and description. _Avoid_: topic, category, theme, keyword.
 
 **Catalog**: The unified, cross-collection view of every Entry reduced to a common shape, used for listing, counting, sorting, and resolving references. _Avoid_: index, registry, manifest.
 
-**Excerpt**: The opening portion of a Post or Note shown when it appears in a list (the homepage, the Posts list, the Notes list), ending where the author places the fold. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).
+**Excerpt**: The opening portion of a Post shown when it appears in a list (the homepage, the Posts list), ending where the author places the fold. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).
 
 **Description**: A short summary of an Entry, either authored in frontmatter or derived by clipping the opening of the body. Appears in listings, social previews, and search results. _Avoid_: summary, blurb, abstract, excerpt.
 

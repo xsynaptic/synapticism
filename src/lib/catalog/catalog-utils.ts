@@ -1,7 +1,7 @@
 import type { CatalogCollectionKey, CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 // Only dated content links editorially; pages and tags are link targets, not sources
-const editorialCollections = new Set<CatalogCollectionKey>(['notes', 'posts', 'projects']);
+const editorialCollections = new Set<CatalogCollectionKey>(['posts', 'projects']);
 
 export function filterIsEditorialEntry(item: CatalogItem): boolean {
 	return editorialCollections.has(item.collection);

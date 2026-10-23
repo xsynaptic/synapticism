@@ -5,12 +5,10 @@ import { getUrlPathIndexing } from '#lib/utils/sitemap.ts';
 describe('getUrlPathIndexing', () => {
 	test('indexes and follows an ordinary content path', () => {
 		expect(getUrlPathIndexing('/posts/some-post/')).toStrictEqual({ follow: true, index: true });
-		expect(getUrlPathIndexing('/notes/some-note')).toStrictEqual({ follow: true, index: true });
 	});
 
 	test('follows but does not index paginated routes', () => {
 		expect(getUrlPathIndexing('/posts/2/')).toStrictEqual({ follow: true, index: false });
-		expect(getUrlPathIndexing('/notes/3')).toStrictEqual({ follow: true, index: false });
 		expect(getUrlPathIndexing('/page/2/')).toStrictEqual({ follow: true, index: false });
 	});
 

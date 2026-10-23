@@ -9,10 +9,6 @@ export const navigationHeaderItems = [
 		url: getSitePath('posts'),
 	},
 	{
-		title: t('collection.notes.plural'),
-		url: getSitePath('notes'),
-	},
-	{
 		title: t('collection.projects.plural'),
 		url: getSitePath('projects'),
 	},

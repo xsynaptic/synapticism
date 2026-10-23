@@ -8,16 +8,15 @@ import { getContentPath } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
-	collection: 'notes' | 'posts';
 	newerEntry: PaginationEntry | undefined;
 	olderEntry: PaginationEntry | undefined;
 }
 
-const { collection, newerEntry, olderEntry } = Astro.props;
+const { newerEntry, olderEntry } = Astro.props;
 
-const baseUrl = getContentPath(collection);
-const labelPlural = t(`collection.${collection}.plural`);
-const labelSingular = t(`collection.${collection}.singular`);
+const baseUrl = getContentPath('posts');
+const labelPlural = t('collection.posts.plural');
+const labelSingular = t('collection.posts.singular');
 ---
 
 {newerEntry || olderEntry ? (

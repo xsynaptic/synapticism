@@ -483,19 +483,11 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="section-pagination"
-				note="Previous and next within one collection. Each arm renders alone when the other end is missing."
+				note="Previous and next Post. Each arm renders alone when the other end is missing."
 				source="components/sections/section-pagination.astro"
 			>
-				<SectionPagination
-					collection="posts"
-					newerEntry={samplePaginationNewer}
-					olderEntry={samplePaginationOlder}
-				/>
-				<SectionPagination
-					collection="notes"
-					newerEntry={undefined}
-					olderEntry={samplePaginationOlder}
-				/>
+				<SectionPagination newerEntry={samplePaginationNewer} olderEntry={samplePaginationOlder} />
+				<SectionPagination newerEntry={undefined} olderEntry={samplePaginationOlder} />
 			</Specimen>
 		</Section>
 		<Section

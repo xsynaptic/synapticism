@@ -7,8 +7,8 @@ import { getHomePaginationPath } from '#lib/utils/routing.ts';
 
 function getUrl(pageNumber: number, trailingSlash: string) {
 	return pageNumber === 1
-		? `/notes${trailingSlash}`
-		: `/notes/${String(pageNumber)}${trailingSlash}`;
+		? `/posts${trailingSlash}`
+		: `/posts/${String(pageNumber)}${trailingSlash}`;
 }
 
 function makePage(currentPage: number, lastPage: number, trailingSlash: string): Page {
@@ -37,10 +37,10 @@ describe.each([
 	test('page 1 normalizes every option to the trailing-slash form', () => {
 		const pagination = getPagePagination(makePage(1, 3, trailingSlash));
 
-		expect(pagination.options.at(0)?.url).toBe('/notes/');
-		expect(pagination.options.at(2)?.url).toBe('/notes/3/');
+		expect(pagination.options.at(0)?.url).toBe('/posts/');
+		expect(pagination.options.at(2)?.url).toBe('/posts/3/');
 		expect(pagination.previous).toBeUndefined();
-		expect(pagination.next?.url).toBe('/notes/2/');
+		expect(pagination.next?.url).toBe('/posts/2/');
 	});
 
 	test('a middle page marks only itself current and links back to the unnumbered first page', () => {
@@ -48,8 +48,8 @@ describe.each([
 
 		expect(
 			pagination.options.filter((option) => option.isCurrent).map((option) => option.url),
-		).toStrictEqual(['/notes/2/']);
-		expect(pagination.previous?.url).toBe('/notes/');
+		).toStrictEqual(['/posts/2/']);
+		expect(pagination.previous?.url).toBe('/posts/');
 	});
 });
 

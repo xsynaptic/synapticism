@@ -1,15 +1,11 @@
 ---
-import { articleListPageSize } from '#constants.ts';
+import { postListPageSize } from '#constants.ts';
 import HomeLayout from '#layouts/home.astro';
-import { queryArticleEntries } from '#lib/utils/articles.ts';
+import { queryPostEntries } from '#lib/collections/posts/posts-utils.ts';
 
-const entries = await queryArticleEntries(['posts', 'notes']);
+const entries = await queryPostEntries();
 
-const totalPages = Math.max(1, Math.ceil(entries.length / articleListPageSize));
+const totalPages = Math.max(1, Math.ceil(entries.length / postListPageSize));
 ---
 
-<HomeLayout
-	entries={entries.slice(0, articleListPageSize)}
-	pageNumber={1}
-	totalPages={totalPages}
-/>
+<HomeLayout entries={entries.slice(0, postListPageSize)} pageNumber={1} totalPages={totalPages} />

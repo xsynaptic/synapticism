@@ -3,22 +3,22 @@ import type { GetStaticPaths } from 'astro';
 
 import * as R from 'remeda';
 
-import { articleListPageSize } from '#constants.ts';
+import { postListPageSize } from '#constants.ts';
 import HomeLayout from '#layouts/home.astro';
-import { queryArticleEntries } from '#lib/utils/articles.ts';
+import { queryPostEntries } from '#lib/collections/posts/posts-utils.ts';
 
 export const getStaticPaths = (async () => {
-	const entries = await queryArticleEntries(['posts', 'notes']);
+	const entries = await queryPostEntries();
 
-	const totalPages = Math.max(1, Math.ceil(entries.length / articleListPageSize));
+	const totalPages = Math.max(1, Math.ceil(entries.length / postListPageSize));
 
 	return R.range(2, totalPages + 1).map((pageNumber) => {
-		const start = (pageNumber - 1) * articleListPageSize;
+		const start = (pageNumber - 1) * postListPageSize;
 
 		return {
 			params: { page: String(pageNumber) },
 			props: {
-				entries: entries.slice(start, start + articleListPageSize),
+				entries: entries.slice(start, start + postListPageSize),
 				pageNumber,
 				totalPages,
 			},

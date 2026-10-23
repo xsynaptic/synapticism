@@ -11,7 +11,6 @@ import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import { siteYearFounded } from '#constants.ts';
 import { createCatalog } from '#lib/catalog/catalog-factory.ts';
-import { getNotesCollection } from '#lib/collections/notes/notes-data.ts';
 import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
@@ -45,7 +44,6 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 
 	const catalogItemsById = new Map<string, CatalogItem>();
 
-	const { entries: notes } = await getNotesCollection();
 	const { entries: pages } = await getPagesCollection();
 	const { entries: posts } = await getPostsCollection();
 	const { entries: projects } = await getProjectsCollection();
@@ -54,7 +52,6 @@ async function buildCatalogItems(): Promise<Array<CatalogItem>> {
 	const catalogEntries: Array<ComputedEntry<CollectionKey>> = [
 		...pages,
 		...posts,
-		...notes,
 		...projects,
 		...tags,
 	];

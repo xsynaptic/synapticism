@@ -13,7 +13,6 @@ const openGraphMetaPattern = /<meta property="og:image" content="([^"]+)"\s*\/?>
 // Collection titles mirror i18n-strings.ts; no import map reaches the app's aliases from here
 const indexEntries: Array<Pick<OpenGraphContentEntry, 'outputId' | 'title'>> = [
 	{ outputId: openGraphIndexIds.home, title: siteTagline },
-	{ outputId: openGraphIndexIds.notes, title: 'Notes' },
 	{ outputId: openGraphIndexIds.posts, title: 'Posts' },
 	{ outputId: openGraphIndexIds.projects, title: 'Projects' },
 	{ outputId: openGraphIndexIds.tags, title: 'Tags' },

@@ -17,8 +17,6 @@ const strings = {
 	'author.role': 'Senior Front-end Engineer',
 
 	// Collection labels
-	'collection.notes.plural': 'Notes',
-	'collection.notes.singular': 'Note',
 	'collection.pages': 'Pages',
 	'collection.posts.plural': 'Posts',
 	'collection.posts.singular': 'Post',
@@ -74,10 +72,8 @@ const strings = {
 	'content.updated': 'Updated',
 
 	// List pages (heading + SEO title/description)
-	'notes.description':
-		'Short-form notes: half-formed thoughts, links, and things still taking shape.',
-	'notes.title': 'Notes',
-	'posts.description': 'Articles about web development, design, and creative coding.',
+	'posts.description':
+		'Writing on web development, design, and creative coding, from quick notes to long articles.',
 	'posts.title': 'Posts',
 	'projects.description': 'Things I have designed, built, and worked on.',
 	'projects.title': 'Projects',

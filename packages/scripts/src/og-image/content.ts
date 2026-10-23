@@ -10,7 +10,6 @@ import { getCollectionEntries, withAstroContent } from '#shared/astro-content.ts
 
 // Doubles as the collection filter; `undefined` draws the card with no label
 const openGraphCollections = {
-	notes: 'note',
 	pages: undefined,
 	posts: 'post',
 	projects: 'project',
