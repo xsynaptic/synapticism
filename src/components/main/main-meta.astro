@@ -61,7 +61,7 @@ const openGraphImage = {
 	}}
 	title={contentTitle ?? siteTitle}
 	titleDefault={siteTitle}
-	titleTemplate={!!contentTitle && contentTitle !== siteTitle ? `%s - ${siteTitle}` : '%s'}
+	titleTemplate={!contentTitle || contentTitle === siteTitle ? '%s' : `%s - ${siteTitle}`}
 	twitter={{
 		card: 'summary_large_image',
 		description,
