@@ -12,6 +12,8 @@
 	/* Fonts */
 	--font-sans: var(--font-aleo);
 	--font-mono: var(--font-geist-mono);
+	--font-cv: var(--font-aleo-static);
+	--list-style-type-bullet: '• ';
 
 	/* Teal primitive */
 	--color-blue-chill-50: #f0fafb;

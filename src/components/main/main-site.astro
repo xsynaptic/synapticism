@@ -51,6 +51,7 @@ const SiteTitleTag = isHomepage ? 'h1' : 'div';
 		<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
 		<Font cssVariable="--font-aleo" preload={[{ style: 'normal' }]} />
 		<Font cssVariable="--font-geist-mono" preload />
+		<slot name="head" />
 		<Meta {...meta} />
 		{UMAMI_ID && UMAMI_DOMAIN && import.meta.env.PROD ? (
 			<Analytics umamiDomain={UMAMI_DOMAIN} umamiId={UMAMI_ID} />

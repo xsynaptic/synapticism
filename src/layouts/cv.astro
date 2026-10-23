@@ -1,6 +1,10 @@
 ---
+import { Font } from 'astro:assets';
+
 import CvHighlights from '#components/cv/cv-highlights.astro';
 import MainSite from '#components/main/main-site.astro';
+import Anchor from '#components/parts/anchor.astro';
+import DividedItem from '#components/parts/divided-item.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface Props {
@@ -10,10 +14,18 @@ interface Props {
 			label: string;
 			location: { city: string; region: string };
 			name: string;
+			phone: string;
 			profiles: Array<{ network: string; url: string }>;
 			summary: string;
+			website: string;
 		};
-		education: Array<{ area: string; degree: string; institution: string }>;
+		education: Array<{
+			area: string;
+			degree: string;
+			endDate?: string | undefined;
+			institution: string;
+			startDate?: string | undefined;
+		}>;
 		projects: Array<{
 			description: string;
 			highlights: Array<string>;
@@ -35,6 +47,28 @@ interface Props {
 const { cv } = Astro.props;
 
 const { basics, education, projects, skills, work } = cv;
+
+function formatUrl(url: string) {
+	return url.replace(/^https?:\/\/(www\.)?/, '');
+}
+
+function formatCvDate(value: string) {
+	if (/^\d{4}$/.test(value)) return value;
+
+	return new Date(value).toLocaleDateString('en', {
+		month: 'long',
+		timeZone: 'UTC',
+		year: 'numeric',
+	});
+}
+
+function formatDateRange(startDate: string, endDate: string | undefined) {
+	const end = endDate ? formatCvDate(endDate) : t('cv.present');
+
+	return `${formatCvDate(startDate)}\u{2013}${end}`;
+}
+
+const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 ---
 
 <MainSite
@@ -43,102 +77,118 @@ const { basics, education, projects, skills, work } = cv;
 		title: t('cv.title'),
 	}}
 >
-	<article class="content-column my-8 print:my-0">
-		<header class="flex break-inside-avoid flex-col gap-1 py-1">
-			<div class="flex items-center justify-between gap-2">
+	<Font cssVariable="--font-aleo-static" preload={[{ style: 'normal' }]} slot="head" />
+	<cv-print class="block" data-filename={printFilename} data-phone={btoa(basics.phone)}>
+		<article class="content-column my-8 font-cv print:my-0">
+			<header class="flex break-inside-avoid flex-col gap-1 pt-1 pb-3">
 				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
-				<div class="flex items-center gap-2 text-sm text-neutral-500">
-					{basics.profiles.map((profile) => (
-						<a class="print:hidden" href={profile.url} rel="me">
-							{profile.network}
-						</a>
-					))}
-				</div>
-			</div>
-			<p class="text-base text-neutral-500 sm:text-lg">{basics.label}</p>
-			<div>
-				{basics.location.city}, {basics.location.region}
-			</div>
-			<div class="flex flex-col gap-1 text-sm text-neutral-500">
-				<a href={`mailto:${basics.email}`}>{basics.email}</a>
-			</div>
-		</header>
-		<section class="pt-1 pb-2 text-base">
-			<p>{basics.summary}</p>
-		</section>
-		<section class="pt-1 pb-2 text-base">
-			<h2 class="break-after-avoid text-lg font-bold">{t('cv.skills')}</h2>
-			<ul>
-				{skills.map((skill) => (
-					<li class="mb-1 ml-4 list-disc text-sm text-neutral-400">
-						<span class="sr-only">{skill.category}:</span>
-						<span class="text-neutral-700">{skill.items.join(', ')}</span>
-					</li>
-				))}
-			</ul>
-		</section>
-		<section class="pt-1 pb-2 text-base">
-			<h2 class="break-after-avoid text-lg font-bold">{t('cv.experience')}</h2>
-			{work.map((job) => (
-				<div class="flex break-inside-avoid flex-col gap-2">
-					<div class="flex items-center justify-between gap-2">
-						<h3 class="font-semibold">
-							{job.company}, <span class="italic">{job.position}</span>
-						</h3>
-						<span class="text-sm text-neutral-500">
-							{new Date(job.startDate).toLocaleDateString('en', {
-								month: 'long',
-								year: 'numeric',
-							})}
-							&ndash;
-							{job.endDate
-								? new Date(job.endDate).toLocaleDateString('en', {
-										month: 'long',
-										year: 'numeric',
-									})
-								: t('cv.present')}
-						</span>
+				<p class="text-base text-neutral-500 sm:text-lg">{basics.label}</p>
+				<div class="flex flex-col gap-0.5 pt-1 text-sm">
+					<div class="flex flex-wrap items-center gap-x-1 text-neutral-500 print:gap-x-4 print:*:after:content-none">
+						<DividedItem as="span" class="text-neutral-700">
+							{basics.location.city}, {basics.location.region}
+						</DividedItem>
+						<DividedItem as="span">
+							<Anchor anchorColor="primary-bright" href={`mailto:${basics.email}`}>
+								{basics.email}
+							</Anchor>
+						</DividedItem>
+						<span class="not-print:hidden" data-cv-phone></span>
 					</div>
-					<CvHighlights highlights={job.highlights} />
+					<div class="flex flex-wrap items-center gap-x-1 text-neutral-500 print:gap-x-4 print:*:after:content-none">
+						<DividedItem as="span">
+							<Anchor anchorColor="primary-bright" href={basics.website}>
+								{formatUrl(basics.website)}
+							</Anchor>
+						</DividedItem>
+						{basics.profiles.map((profile) => (
+							<DividedItem as="span">
+								<Anchor anchorColor="primary-bright" href={profile.url} rel="me">
+									{formatUrl(profile.url)}
+								</Anchor>
+							</DividedItem>
+						))}
+					</div>
 				</div>
-			))}
-		</section>
-		<section class="pt-1 pb-2 text-base">
-			<h2 class="break-after-avoid text-lg font-bold">{t('cv.projects')}</h2>
-			{projects.map((project) => (
-				<div class="flex break-inside-avoid flex-col gap-2">
-					<div class="flex flex-col gap-1">
-						<div class="flex items-center justify-between gap-2">
+			</header>
+			<section class="pt-1 pb-2 text-base">
+				<p>{basics.summary}</p>
+			</section>
+			<section class="pt-1 pb-2 text-base">
+				<h2 class="break-after-avoid text-lg font-bold">{t('cv.skills')}</h2>
+				<ul>
+					{skills.map((skill) => (
+						<li class="mb-1 ml-4 list-bullet text-sm text-neutral-400">
+							<span class="font-semibold text-neutral-700">{skill.category}:</span>{' '}
+							<span class="text-neutral-700">{skill.items.join(', ')}</span>
+						</li>
+					))}
+				</ul>
+			</section>
+			<section class="pt-1 pb-2 text-base">
+				<h2 class="break-after-avoid text-lg font-bold">{t('cv.experience')}</h2>
+				{work.map((job) => (
+					<div class="flex flex-col gap-2">
+						<div class="flex break-after-avoid items-center justify-between gap-2">
 							<h3 class="font-semibold">
-								<a href={project.url}>{project.name}</a>:{' '}
-								<span class="italic">{project.description}</span>
+								{job.company}, <span class="italic">{job.position}</span>
 							</h3>
-							{project.repo ? (
-								<a class="text-sm text-neutral-500 print:hidden" href={project.repo}>
-									{t('cv.github')}
-								</a>
+							<span class="shrink-0 text-sm text-neutral-500">
+								{formatDateRange(job.startDate, job.endDate)}
+							</span>
+						</div>
+						<CvHighlights highlights={job.highlights} />
+					</div>
+				))}
+			</section>
+			<section class="pt-1 pb-2 text-base">
+				<h2 class="break-after-avoid text-lg font-bold">{t('cv.projects')}</h2>
+				{projects.map((project) => (
+					<div class="flex flex-col gap-2">
+						<div class="flex break-inside-avoid break-after-avoid flex-col gap-1">
+							<div class="flex items-center justify-between gap-2">
+								<h3 class="font-semibold">
+									<a href={project.url}>{project.name}</a>:{' '}
+									<span class="italic">{project.description}</span>
+								</h3>
+								{project.repo ? (
+									<a class="text-sm text-neutral-500 print:hidden" href={project.repo}>
+										{t('cv.github')}
+									</a>
+								) : undefined}
+							</div>
+							{project.url ? (
+								<div class="flex flex-col gap-1 text-sm text-neutral-500">
+									<a href={project.url}>{project.url}</a>
+								</div>
 							) : undefined}
 						</div>
-						{project.url ? (
-							<div class="flex flex-col gap-1 text-sm text-neutral-500">
-								<a href={project.url}>{project.url}</a>
-							</div>
-						) : undefined}
+						<CvHighlights highlights={project.highlights} />
 					</div>
-					<CvHighlights highlights={project.highlights} />
-				</div>
-			))}
-		</section>
-		<section class="pt-1 pb-2 text-base">
-			<h2 class="break-after-avoid text-lg font-bold">{t('cv.education')}</h2>
-			{education.map((educationItem) => (
-				<div>
-					<span class="font-semibold">{educationItem.institution}</span>:{' '}
-					<span>
-						{educationItem.degree}, {educationItem.area}
-					</span>
-				</div>
-			))}
-		</section>
-	</article>
+				))}
+			</section>
+			<section class="pt-1 pb-2 text-base">
+				<h2 class="break-after-avoid text-lg font-bold">{t('cv.education')}</h2>
+				{education.map((educationItem) => (
+					<div class="flex break-inside-avoid flex-col gap-1">
+						<div class="flex items-center justify-between gap-2">
+							<h3 class="font-semibold">
+								{educationItem.institution}, <span class="italic">{educationItem.degree}</span>
+							</h3>
+							{educationItem.startDate ? (
+								<span class="shrink-0 text-sm text-neutral-500">
+									{formatDateRange(educationItem.startDate, educationItem.endDate)}
+								</span>
+							) : undefined}
+						</div>
+						<p class="text-sm text-neutral-700">{educationItem.area}</p>
+					</div>
+				))}
+			</section>
+		</article>
+	</cv-print>
 </MainSite>
+
+<script>
+	import '#components/cv/cv-print.ts';
+</script>

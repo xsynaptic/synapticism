@@ -62,6 +62,14 @@ export default defineConfig({
 			weights: ['300 700'],
 		},
 		{
+			cssVariable: '--font-aleo-static',
+			name: 'Aleo',
+			provider: fontProviders.fontsource(),
+			styles: ['normal', 'italic'],
+			subsets: ['latin'],
+			weights: [400, 600, 700],
+		},
+		{
 			cssVariable: '--font-geist-mono',
 			fallbacks: ['monospace'],
 			name: 'Geist Mono',

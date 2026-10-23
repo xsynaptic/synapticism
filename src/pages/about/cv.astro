@@ -16,6 +16,7 @@ const CvDataSchema = z.object({
 			region: z.string(),
 		}),
 		name: z.string(),
+		phone: z.string(),
 		profiles: z
 			.object({
 				network: z.string(),
@@ -29,7 +30,9 @@ const CvDataSchema = z.object({
 		.object({
 			area: z.string(),
 			degree: z.string(),
+			endDate: z.string().optional(),
 			institution: z.string(),
+			startDate: z.string().optional(),
 		})
 		.array(),
 	projects: z
