@@ -1,18 +1,8 @@
-import type { LucideIcon } from 'lucide-react';
+import type { ComponentType } from 'react';
 
 import { Menu } from '@base-ui/react/menu';
 import { Select } from '@base-ui/react/select';
 import { Toolbar } from '@base-ui/react/toolbar';
-import {
-	Check,
-	ChevronDown,
-	Dices,
-	Ellipsis,
-	Maximize2,
-	Minimize2,
-	Redo2,
-	Undo2,
-} from 'lucide-react';
 
 import { resolutions } from '#glitch-graph/app/frame-image.ts';
 import { useRunStore } from '#glitch-graph/app/run-store.ts';
@@ -25,6 +15,16 @@ import {
 	useGraphStore,
 } from '#glitch-graph/graph/graph-store.ts';
 import { hasAdjustableParams } from '#glitch-graph/graph/jitter.ts';
+import {
+	CheckIcon,
+	ChevronDownIcon,
+	DicesIcon,
+	EllipsisIcon,
+	MaximizeIcon,
+	MinimizeIcon,
+	RedoIcon,
+	UndoIcon,
+} from '#glitch-graph/ui/icons.tsx';
 import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 import { SelectPopup } from '#glitch-graph/ui/select-popup.tsx';
 
@@ -48,7 +48,7 @@ function ExpandButton() {
 	const isFullscreen = useFlowStore((state) => state.isFullscreen);
 	const setFullscreen = useFlowStore((state) => state.setFullscreen);
 	const label = isFullscreen ? 'Leave full window' : 'Fill the window';
-	const Icon = isFullscreen ? Minimize2 : Maximize2;
+	const Icon = isFullscreen ? MinimizeIcon : MaximizeIcon;
 
 	return (
 		<Toolbar.Button
@@ -59,7 +59,7 @@ function ExpandButton() {
 			}}
 			title={isFullscreen ? `${label} (Esc)` : label}
 		>
-			<Icon aria-hidden="true" className="gg-icon" />
+			<Icon />
 		</Toolbar.Button>
 	);
 }
@@ -70,7 +70,7 @@ function HistoryButton({
 	onClick,
 	verb,
 }: {
-	icon: LucideIcon;
+	icon: ComponentType;
 	label: string | undefined;
 	onClick: () => void;
 	verb: string;
@@ -85,7 +85,7 @@ function HistoryButton({
 			onClick={onClick}
 			title={title}
 		>
-			<Icon aria-hidden="true" className="gg-icon" />
+			<Icon />
 		</Toolbar.Button>
 	);
 }
@@ -98,8 +98,8 @@ function HistoryControl() {
 
 	return (
 		<>
-			<HistoryButton icon={Undo2} label={undoLabel} onClick={undo} verb="Undo" />
-			<HistoryButton icon={Redo2} label={redoLabel} onClick={redo} verb="Redo" />
+			<HistoryButton icon={UndoIcon} label={undoLabel} onClick={undo} verb="Undo" />
+			<HistoryButton icon={RedoIcon} label={redoLabel} onClick={redo} verb="Redo" />
 		</>
 	);
 }
@@ -117,7 +117,7 @@ function OptionsMenu() {
 				render={<Menu.Trigger />}
 				title="Options"
 			>
-				<Ellipsis aria-hidden="true" className="gg-icon" />
+				<EllipsisIcon />
 			</Toolbar.Button>
 			<Menu.Portal container={container}>
 				<Menu.Positioner align="end" className="gg-positioner" sideOffset={4}>
@@ -130,7 +130,7 @@ function OptionsMenu() {
 							onCheckedChange={setDebug}
 						>
 							<Menu.CheckboxItemIndicator className="gg-menu-indicator" keepMounted={true}>
-								<Check aria-hidden="true" className="gg-icon" />
+								<CheckIcon />
 							</Menu.CheckboxItemIndicator>
 							Show layout metrics
 						</Menu.CheckboxItem>
@@ -166,7 +166,7 @@ function PresetControl() {
 				>
 					<Select.Value placeholder="Custom" />
 					<Select.Icon className="gg-select-icon">
-						<ChevronDown aria-hidden="true" className="gg-icon" />
+						<ChevronDownIcon />
 					</Select.Icon>
 				</Toolbar.Button>
 			</div>
@@ -191,7 +191,7 @@ function RandomizeButton() {
 					: 'Add an effect first; a blank graph has nothing to vary'
 			}
 		>
-			<Dices aria-hidden="true" className="gg-icon" />
+			<DicesIcon />
 			Randomize
 		</Toolbar.Button>
 	);
@@ -213,7 +213,7 @@ function ResolutionGroup() {
 				{resolutions.map((value) => (
 					<Menu.RadioItem className="gg-menu-item" key={value} value={value}>
 						<Menu.RadioItemIndicator className="gg-menu-indicator" keepMounted={true}>
-							<Check aria-hidden="true" className="gg-icon" />
+							<CheckIcon />
 						</Menu.RadioItemIndicator>
 						{`${String(value)} px`}
 					</Menu.RadioItem>

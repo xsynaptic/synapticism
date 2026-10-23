@@ -1,7 +1,6 @@
 import type { CSSProperties } from 'react';
 
 import { Menu } from '@base-ui/react/menu';
-import { Plus } from 'lucide-react';
 import { Fragment } from 'react';
 
 import type { Insertion } from '#glitch-graph/graph/graph-operations.ts';
@@ -15,6 +14,7 @@ import {
 	getInsertLabel,
 	predicateKinds,
 } from '#glitch-graph/graph/param-definitions.ts';
+import { PlusIcon } from '#glitch-graph/ui/icons.tsx';
 import { usePortalContainer } from '#glitch-graph/ui/portal-container.ts';
 
 interface InsertOption {
@@ -67,7 +67,7 @@ export function InsertMenu({ edgeId, style }: { edgeId: string; style: CSSProper
 				disabled={!canInsert(nodeCount, 'effect')}
 				style={style}
 			>
-				<Plus aria-hidden="true" className="gg-icon" />
+				<PlusIcon />
 			</Menu.Trigger>
 			<Menu.Portal container={container}>
 				<Menu.Positioner className="gg-positioner" sideOffset={4}>

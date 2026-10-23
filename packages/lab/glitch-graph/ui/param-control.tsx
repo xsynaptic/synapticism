@@ -1,10 +1,10 @@
 import { Select } from '@base-ui/react/select';
 import { Slider } from '@base-ui/react/slider';
-import { ChevronDown } from 'lucide-react';
 
 import type { ParamValue } from '#glitch-graph/graph/graph-types.ts';
 import type { ParamSpec, RangeParam, SelectParam } from '#glitch-graph/graph/param-definitions.ts';
 
+import { ChevronDownIcon } from '#glitch-graph/ui/icons.tsx';
 import { SelectPopup } from '#glitch-graph/ui/select-popup.tsx';
 
 interface ParamControlProps<Spec extends ParamSpec = ParamSpec> {
@@ -38,7 +38,7 @@ function ParamSelect({ onChange, onCommit, spec, value }: ParamControlProps<Sele
 			<Select.Trigger className="gg-select-trigger nodrag nopan">
 				<Select.Value />
 				<Select.Icon className="gg-select-icon">
-					<ChevronDown aria-hidden="true" className="gg-icon" />
+					<ChevronDownIcon />
 				</Select.Icon>
 			</Select.Trigger>
 			<SelectPopup options={spec.options} />

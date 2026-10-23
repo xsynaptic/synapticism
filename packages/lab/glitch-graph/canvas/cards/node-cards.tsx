@@ -1,5 +1,4 @@
 import { Input } from '@base-ui/react/input';
-import { Eye, X } from 'lucide-react';
 
 import type {
 	EffectNode,
@@ -14,6 +13,7 @@ import {
 	mergeDefinition,
 	predicateDefinitions,
 } from '#glitch-graph/graph/param-definitions.ts';
+import { EyeIcon, XIcon } from '#glitch-graph/ui/icons.tsx';
 import { ParamControl } from '#glitch-graph/ui/param-control.tsx';
 
 type ParamChangeHandler = (key: string, value: ParamValue) => void;
@@ -168,7 +168,7 @@ function DeleteButton({ label, onDelete }: { label: string; onDelete: () => void
 			title={label}
 			type="button"
 		>
-			<X aria-hidden="true" className="gg-icon" />
+			<XIcon />
 		</button>
 	);
 }
@@ -182,7 +182,7 @@ function InspectButton({ label, onInspect }: { label: string; onInspect: () => v
 			title={label}
 			type="button"
 		>
-			<Eye aria-hidden="true" className="gg-icon" />
+			<EyeIcon />
 		</button>
 	);
 }

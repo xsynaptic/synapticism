@@ -1,8 +1,8 @@
 import { Dialog } from '@base-ui/react/dialog';
-import { Download, Eye, ImagePlus } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 import { getShownId, originalId, useRunStore } from '#glitch-graph/app/run-store.ts';
+import { DownloadIcon, EyeIcon, ImagePlusIcon } from '#glitch-graph/ui/icons.tsx';
 import { PixelDialog, PixelViewer } from '#glitch-graph/ui/pixel-dialog.tsx';
 
 interface Shown {
@@ -71,7 +71,7 @@ function CompareButton({ onCompare }: { onCompare: (isComparing: boolean) => voi
 			title="Hold to see the original"
 			type="button"
 		>
-			<Eye aria-hidden="true" className="gg-icon" />
+			<EyeIcon />
 			Original
 		</button>
 	);
@@ -123,7 +123,7 @@ function SourceControl() {
 	return (
 		<div className="gg-source">
 			<button className="gg-button" onClick={() => fileInputRef.current?.click()} type="button">
-				<ImagePlus aria-hidden="true" className="gg-icon" />
+				<ImagePlusIcon />
 				Use your own image…
 			</button>
 			<input
@@ -201,7 +201,7 @@ function ShownImage({ shown }: { shown: Shown | undefined }) {
 					<div className="gg-preview-actions">
 						<CompareButton onCompare={setIsComparing} />
 						<a className="gg-button" download={shown.fileName} href={shown.url}>
-							<Download aria-hidden="true" className="gg-icon" />
+							<DownloadIcon />
 							Download
 						</a>
 					</div>
