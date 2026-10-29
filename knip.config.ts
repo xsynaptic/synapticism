@@ -12,9 +12,10 @@ export default {
 				'src/dev/inventory/inventory-og-image.ts',
 			],
 			ignoreDependencies: [
+				'@astrojs/check', // loaded by `astro check` in lefthook.yml, which knip does not trace to the package
 				'@synapticism/lab', // imported only from MDX in packages/content, which this workspace does not scan
 				'eslint-plugin-jsx-a11y', // peer of eslint-plugin-astro's a11y-strict config; referenced by string, not import
-				'wrangler', // used via wrangler.jsonc + the deploy script ($`wrangler deploy`), neither traceable
+				'wrangler', // used via wrangler.jsonc + the deploy script (`pnpm exec wrangler deploy`), neither traceable
 			],
 		},
 		'packages/content': {

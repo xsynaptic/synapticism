@@ -1,8 +1,6 @@
-import type { OpenGraphEntryItem } from '@synapticism/scripts/og-image';
+import type { OpenGraphCardInput } from '@synapticism/shared/open-graph';
 import type { Page } from 'astro';
 import type { ComponentProps } from 'astro/types';
-
-import { toOpenGraphEntryItem } from '@synapticism/scripts/og-image';
 
 import type LabeledRow from '#components/parts/labeled-row.astro';
 import type { PaginationEntry } from '#components/types.ts';
@@ -13,6 +11,7 @@ import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
 import { hasMediaImage, mediaRoot } from '#lib/utils/media.ts';
+import { getEntryOpenGraphCard } from '#lib/utils/seo.ts';
 
 // getMediaImage throws on a path the glob never saw, so an image is the one thing a fixture cannot invent
 // The media store is gitignored; a fresh checkout resolves nothing here, hence the fallback note
@@ -114,7 +113,11 @@ export const sampleRowItems = [
 ] satisfies ComponentProps<typeof LabeledRow>['items'];
 
 // A key doubles as the route param, so `inventory-og-image.ts` resolves one back through this list
-interface SampleOpenGraphCard extends OpenGraphEntryItem {
+interface OpenGraphCardSample extends OpenGraphCardInput {
+	imageId?: string | undefined;
+}
+
+interface SampleOpenGraphCard extends OpenGraphCardSample {
 	key: string;
 }
 
@@ -140,20 +143,17 @@ async function createSampleOpenGraphCards() {
 		getProjectsCollection(),
 	]);
 
-	const candidates = [
-		...pages.entries,
-		...posts.entries,
-		...projects.entries,
-	].flatMap<OpenGraphEntryItem>((entry) => {
-		const item = toOpenGraphEntryItem({ collection: entry.collection, entry });
+	const candidates = [...pages.entries, ...posts.entries, ...projects.entries].map(
+		(entry): OpenGraphCardSample => {
+			const { imageId, input } = getEntryOpenGraphCard(entry);
 
-		return item ? [item] : [];
-	});
+			return { imageId, ...input };
+		},
+	);
 
 	const titleCards = openGraphTitleSamples.map(({ key, title }) => ({
 		key,
 		label: 'inventory',
-		outputId: key,
 		title,
 	}));
 
@@ -167,7 +167,6 @@ async function createSampleOpenGraphCards() {
 				? {
 						imageId: imageCard.imageId,
 						label: 'inventory',
-						outputId: 'image-long',
 						title: openGraphImageTitle,
 					}
 				: undefined,
@@ -177,7 +176,6 @@ async function createSampleOpenGraphCards() {
 			candidates.find((card) => !card.imageId),
 		),
 		...toOpenGraphCard('label-none', {
-			outputId: 'label-none',
 			title: 'A card with no eyebrow, as index pages draw',
 		}),
 		...titleCards,
@@ -186,7 +184,7 @@ async function createSampleOpenGraphCards() {
 
 function toOpenGraphCard(
 	key: string,
-	entry: OpenGraphEntryItem | undefined,
+	entry: OpenGraphCardSample | undefined,
 ): Array<SampleOpenGraphCard> {
 	return entry ? [{ key, ...entry }] : [];
 }

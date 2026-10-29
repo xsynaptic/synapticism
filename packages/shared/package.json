@@ -4,6 +4,9 @@
 	"description": "Code shared between the Synapticism app and its build scripts",
 	"type": "module",
 	"private": true,
+	"dependencies": {
+		"@xsynaptic/astro-image-pipeline": "^0.11.1"
+	},
 	"exports": {
 		"./cache": "./src/cache.ts",
 		"./constants": "./src/constants.ts",

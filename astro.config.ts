@@ -2,8 +2,11 @@ import { satteri } from '@astrojs/markdown-satteri';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import { imageCachePath, mediaDir, sitemapLastmodPath } from '@synapticism/shared/constants';
 import tailwindcss from '@tailwindcss/vite';
 import fontDevtools from '@xsynaptic/astro-font-devtools';
+import imagePipeline from '@xsynaptic/astro-image-pipeline';
+import { sitemapLastmod } from '@xsynaptic/astro-sitemap-lastmod';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
 import { readingTime } from '@xsynaptic/satteri-reading-time';
 import pagefind from 'astro-pagefind';
@@ -12,19 +15,11 @@ import expressiveCode from 'satteri-expressive-code';
 
 import { mdxComponentFiles } from '#constants.ts';
 import devInventory from '#dev/inventory/inventory-integration.ts';
-import { getUrlPathIndexing, readSitemapLastmod } from '#lib/utils/sitemap.ts';
+import { getUrlPathIndexing } from '#lib/utils/sitemap.ts';
 
 import { expressiveCodeOptions } from './expressive-code.config.mjs';
 
-// Per-URL dates, written by the sitemap-lastmod script before the build
-// Read on first use, so loading this config never depends on a file a content script writes
-let sitemapLastmodCache: ReturnType<typeof readSitemapLastmod> | undefined;
-
-function getSitemapLastmod() {
-	if (!sitemapLastmodCache) sitemapLastmodCache = readSitemapLastmod();
-
-	return sitemapLastmodCache;
-}
+const lastmod = sitemapLastmod({ filePath: sitemapLastmodPath });
 
 const mdxAutoImports = Object.fromEntries(
 	Object.entries(mdxComponentFiles).map(([name, file]): [string, Array<[string, string]>] => [
@@ -39,11 +34,6 @@ export default defineConfig({
 	cacheDir: './.astro/',
 	env: {
 		schema: {
-			CUSTOM_CACHE_PATH: envField.string({
-				access: 'public',
-				context: 'server',
-				default: './.cache',
-			}),
 			UMAMI_DOMAIN: envField.string({ access: 'public', context: 'client', optional: true }),
 			UMAMI_ID: envField.string({ access: 'public', context: 'client', optional: true }),
 			WEBMENTION_DOMAIN: envField.string({ access: 'public', context: 'client', optional: true }),
@@ -70,6 +60,14 @@ export default defineConfig({
 			weights: [400, 600, 700],
 		},
 		{
+			cssVariable: '--font-oxygen',
+			name: 'Oxygen',
+			provider: fontProviders.fontsource(),
+			styles: ['normal'],
+			subsets: ['latin'],
+			weights: [300, 400, 700],
+		},
+		{
 			cssVariable: '--font-geist-mono',
 			fallbacks: ['monospace'],
 			name: 'Geist Mono',
@@ -85,20 +83,19 @@ export default defineConfig({
 	},
 	integrations: [
 		devInventory(),
-		fontDevtools({ targets: ['--font-mono', '--font-sans'] }),
+		fontDevtools({ targets: ['--font-body', '--font-mono', '--font-sans'] }),
+		imagePipeline({
+			mediaPath: mediaDir,
+			placeholders: { blur: 3, pixels: 1024, quality: 25, saturation: 1.2 },
+			storePath: imageCachePath,
+		}),
 		mdx(),
 		react(),
 		sitemap({
 			filter: (page) => getUrlPathIndexing(new URL(page).pathname).index,
-			serialize: (item) => {
-				const sitemapLastmod = getSitemapLastmod();
-
-				return {
-					...item,
-					lastmod: sitemapLastmod.urls[new URL(item.url).pathname] ?? sitemapLastmod.generatedAt,
-				};
-			},
+			serialize: lastmod.serialize,
 		}),
+		lastmod.integration,
 		pagefind({
 			indexConfig: {
 				excludeSelectors: [
@@ -125,7 +122,7 @@ export default defineConfig({
 	site: import.meta.env.PROD ? 'https://synapticism.com/' : 'http://localhost:4321/',
 	vite: {
 		build: {
-			rollupOptions: {
+			rolldownOptions: {
 				output: {
 					chunkFileNames: 'js/c-[hash].js',
 					entryFileNames: 'js/a-[hash].js',
