@@ -1,7 +1,6 @@
+import { findComponentTags, getTagProp } from '@xsynaptic/astro-scripts';
 import { readdirSync, statSync } from 'node:fs';
 import path from 'node:path';
-
-import { findComponentTags, getTagProp } from '#shared/component-tags.ts';
 
 const imageExtensionRegex = /\.(?:avif|gif|jpe?g|png|webp)$/i;
 
