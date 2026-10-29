@@ -1,183 +1,112 @@
-#!/usr/bin/env tsx
-import { openGraphBasePath, openGraphImageFormat } from '@synapticism/shared/constants';
-import chalk from 'chalk';
-import { copyFile, mkdir, stat } from 'node:fs/promises';
+#!/usr/bin/env -S node --import tsx
+import type { CardInput as RecordedCardInput } from '@xsynaptic/astro-image-pipeline/names';
+import type {
+	PreparedCardRender,
+	RenderCounts,
+	RenderFailure,
+} from '@xsynaptic/astro-image-pipeline/node';
+import type { Progress } from '@xsynaptic/astro-scripts';
+
+import {
+	openGraphBasePath,
+	openGraphImageHeight,
+	openGraphImageWidth,
+} from '@synapticism/shared/constants';
+import { hashTemplateVersion, prepareCardRender } from '@xsynaptic/astro-image-pipeline/node';
+import { createProgress, formatCount, log, UserError } from '@xsynaptic/astro-scripts';
+import { copyFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
-import pLimit from 'p-limit';
 
-import type { OpenGraphContentEntry } from '#og-image/types.ts';
+import { createCardRenderer, decodeImage } from '#og-image/generate.ts';
+import { runCommand } from '#shared/command.ts';
 
-import { getBuiltEntries } from '#og-image/built-entries.ts';
-import { createCardRenderer, resolveMediaPath } from '#og-image/generate.ts';
-import { createOutputCache, getOutputCacheKey } from '#og-image/output-cache.ts';
-import { findWorkspaceRoot } from '#shared/utils.ts';
+const templateVersion = hashTemplateVersion({
+	files: ['constants.ts', 'element.tsx', 'fonts.ts', 'generate.ts'].map(
+		(file) => new URL(file, import.meta.url),
+	),
+	from: import.meta.url,
+	packages: ['takumi-js'],
+	parts: [openGraphImageWidth, openGraphImageHeight],
+});
 
-// Rendering is CPU-bound and each entry decodes its own image, so one bound serves both
-const concurrency = 12;
+function toCardInput({ label, title }: RecordedCardInput) {
+	if (typeof title !== 'string') throw new TypeError('OpenGraph card recorded without a title');
 
-// Survives between builds, so a wiped dist costs no re-renders
-const cacheDir = '.cache/og-image';
-
-const rootPath = findWorkspaceRoot();
-
-type CardRenderer = Awaited<ReturnType<typeof createCardRenderer>>;
-
-type OutputCache = Awaited<ReturnType<typeof createOutputCache>>;
-
-interface RenderContext {
-	cache: OutputCache;
-	renderCard: CardRenderer;
+	return { label: typeof label === 'string' ? label : undefined, title };
 }
 
-interface RenderSummary {
-	errors: Array<string>;
-	generated: number;
-	missingImages: Array<string>;
-	reused: number;
-}
+function reportOutcomes(
+	{ failures, fresh, rendered }: RenderCounts & { failures: Array<RenderFailure> },
+	{
+		missingImages,
+		progress,
+	}: { missingImages: PreparedCardRender['missingImages']; progress: Progress },
+): void {
+	const tally = `${formatCount(rendered)} generated, ${formatCount(fresh)} cached`;
 
-async function getModifiedTime(filePath: string): Promise<number | undefined> {
-	try {
-		const { mtimeMs } = await stat(filePath);
-
-		return Math.round(mtimeMs);
-	} catch {
-		return undefined;
+	for (const { cards, path: imagePath } of missingImages) {
+		log.warn(`Featured Image missing, drawn without art: ${imagePath} (${cards.join(', ')})`);
 	}
+
+	if (failures.length > 0) {
+		progress.fail(tally);
+		for (const { message, name } of failures) log.error(`${name}: ${message}`);
+		throw new UserError(`${String(failures.length)} OpenGraph image(s) failed to render`);
+	}
+
+	progress.succeed(tally);
 }
 
-async function main() {
-	const cachePath = path.resolve(rootPath, cacheDir);
-	const distPath = path.resolve(rootPath, 'dist');
-
-	console.log(chalk.magenta('=== OpenGraph image generation ===\n'));
-
-	const { entries, unresolved } = await getBuiltEntries({ distPath });
-
-	reportUnresolved(unresolved);
-
-	const cache = await createOutputCache(cachePath);
-	const renderCard = await createCardRenderer();
-
-	console.log(chalk.blue(`Generating ${String(entries.length)} images...\n`));
-
-	const summary = await renderEntries(entries, { cache, renderCard });
-	const pruned = await cache.prune(new Set(entries.map((entry) => entry.outputId)));
-
-	await cache.save();
-
-	if (pruned > 0) console.log(chalk.yellow(`Pruned ${String(pruned)} orphaned card(s)`));
-
-	reportSummary(summary);
-
-	await publish({ cache, distPath, outputIds: entries.map((entry) => entry.outputId) });
-}
-
-async function publish({
-	cache,
-	distPath,
-	outputIds,
-}: {
-	cache: { filePath: (outputId: string) => string };
-	distPath: string;
-	outputIds: Array<string>;
-}): Promise<void> {
+async function publish({ cards, directory }: PreparedCardRender, distPath: string) {
 	const publishPath = path.join(distPath, openGraphBasePath);
 
 	await mkdir(publishPath, { recursive: true });
 
-	for (const outputId of outputIds) {
-		await copyFile(
-			cache.filePath(outputId),
-			path.join(publishPath, `${outputId}.${openGraphImageFormat}`),
+	for (const name of cards) {
+		await copyFile(path.join(directory, name), path.join(publishPath, name));
+	}
+
+	return publishPath;
+}
+
+await runCommand({
+	name: 'og-image',
+	run: async ({ paths, signal }) => {
+		const { distPath } = paths;
+		const renderCard = await createCardRenderer();
+		const render = await prepareCardRender({
+			decode: (source) => decodeImage(source.filePath),
+			distPath,
+			missingImage: 'omit',
+			render: (input, image) => renderCard(toCardInput(input), image),
+			storePath: paths.imageCachePath,
+			templateVersion,
+		});
+		const progress = createProgress({ label: 'Cards', total: render.total });
+		const counts = await render.run({
+			onFailure: 'report',
+			onProgress: () => {
+				progress.tick();
+			},
+			signal,
+		});
+
+		reportOutcomes(counts, { missingImages: render.missingImages, progress });
+
+		const publishPath = await publish(render, distPath);
+
+		log.data(
+			{
+				generated: counts.rendered,
+				missingImages: render.missingImages,
+				outputPath: publishPath,
+				published: render.cards.length,
+				reused: counts.fresh,
+			},
+			() =>
+				`${String(counts.rendered)} generated, ${String(counts.fresh)} cached; ${String(render.cards.length)} published → ${publishPath}`,
 		);
-	}
-
-	console.log(chalk.gray(`Published ${String(outputIds.length)} cards to ${publishPath}`));
-}
-
-async function renderEntries(
-	entries: Array<OpenGraphContentEntry>,
-	context: RenderContext,
-): Promise<RenderSummary> {
-	const limit = pLimit(concurrency);
-	const summary: RenderSummary = { errors: [], generated: 0, missingImages: [], reused: 0 };
-
-	await Promise.all(
-		entries.map((entry) =>
-			limit(async () => {
-				try {
-					await renderEntry(entry, context, summary);
-				} catch (error) {
-					summary.errors.push(
-						`${entry.outputId}: ${error instanceof Error ? error.message : String(error)}`,
-					);
-				}
-			}),
-		),
-	);
-
-	return summary;
-}
-
-async function renderEntry(
-	entry: OpenGraphContentEntry,
-	{ cache, renderCard }: RenderContext,
-	summary: RenderSummary,
-): Promise<void> {
-	const imageModifiedTime = entry.imageId
-		? await getModifiedTime(resolveMediaPath(entry.imageId))
-		: undefined;
-
-	// Originals are gitignored, so a card can ship without its art on a partial checkout
-	if (imageModifiedTime === undefined && entry.imageId) {
-		summary.missingImages.push(`${entry.outputId}: ${entry.imageId}`);
-	}
-
-	const key = getOutputCacheKey({
-		digest: entry.digest,
-		imageId: entry.imageId,
-		imageModifiedTime,
-	});
-
-	if (await cache.isFresh(entry.outputId, key)) {
-		summary.reused += 1;
-		return;
-	}
-
-	await cache.write(entry.outputId, key, await renderCard(entry));
-
-	summary.generated += 1;
-	console.log(chalk.green(`✓ ${entry.outputId}`));
-}
-
-function reportSummary({ errors, generated, missingImages, reused }: RenderSummary): void {
-	console.log(chalk.gray(`\n${String(generated)} generated, ${String(reused)} cached`));
-
-	for (const missing of missingImages) {
-		console.log(chalk.yellow(`! Featured Image missing, drawn without art: ${missing}`));
-	}
-
-	for (const error of errors) {
-		console.log(chalk.red(`✗ ${error}`));
-	}
-
-	if (errors.length > 0) {
-		throw new Error(`${String(errors.length)} OpenGraph image(s) failed to render`);
-	}
-}
-
-// An unresolved stem means seo.ts and this generator have diverged; the page would ship a dead og:image
-function reportUnresolved(unresolved: Array<string>): void {
-	if (unresolved.length === 0) return;
-
-	for (const outputId of unresolved) {
-		console.log(chalk.red(`✗ Unresolved: ${outputId}`));
-	}
-
-	throw new Error(
-		`${String(unresolved.length)} card(s) referenced by the build resolve to no entry`,
-	);
-}
-
-await main();
+	},
+	summary: 'Render the OpenGraph cards the build recorded and publish them into dist/',
+	title: 'OpenGraph images',
+});

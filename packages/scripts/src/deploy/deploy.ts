@@ -1,73 +1,78 @@
-#!/usr/bin/env tsx
-import chalk from 'chalk';
-import { parseArgs } from 'node:util';
-import { $ } from 'zx';
+#!/usr/bin/env node
+import { fetchUrl, log, runSubprocess, UserError, withStep } from '@xsynaptic/astro-scripts';
 
 import { deployApp } from '#deploy/deploy-app.ts';
-import { assertDeployAuth, printDeployConfig, siteUrl } from '#deploy/deploy-config.ts';
-import { fetchWithRetry } from '#shared/fetch-with-retry.ts';
-import { findWorkspaceRoot } from '#shared/utils.ts';
-
-const rootPath = findWorkspaceRoot();
-
-const { values } = parseArgs({
-	args: process.argv.slice(2),
-	options: {
-		'dry-run': { default: false, type: 'boolean' },
-		'skip-build': { default: false, type: 'boolean' },
-		'skip-smoke': { default: false, type: 'boolean' },
-	},
-});
-
-const dryRun = values['dry-run'];
-const skipBuild = values['skip-build'];
-const skipSmoke = values['skip-smoke'];
-
-async function build() {
-	if (skipBuild) {
-		console.log(chalk.yellow('Skipping build'));
-		return;
-	}
-	console.log(chalk.blue('Building...'));
-	await $({ cwd: rootPath, stdio: 'inherit' })`pnpm build`;
-}
+import { assertDeployAuth, reportDeployConfig, siteUrl } from '#deploy/deploy-config.ts';
+import { runCommand } from '#shared/command.ts';
 
 // A successful `wrangler deploy` is not proof the site answers; fail the run if it doesn't
 async function healthCheck() {
-	console.log(chalk.blue(`Health check: ${siteUrl}`));
+	return withStep(
+		`Health check: ${siteUrl}`,
+		async () => {
+			const response = await fetchUrl(siteUrl, {
+				retry: { limit: 1, retryOnTimeout: true },
+				throwHttpErrors: false,
+				timeout: 15_000,
+			});
 
-	const response = await fetchWithRetry(siteUrl, { label: 'site', timeoutMs: 15_000 });
+			if (!response.ok) {
+				throw new UserError(
+					`Site health check failed: ${String(response.status)} ${response.statusText}`,
+				);
+			}
 
-	if (!response.ok) {
-		throw new Error(`Site health check failed: ${String(response.status)} ${response.statusText}`);
-	}
-
-	console.log(chalk.green(`  Site OK (${String(response.status)})`));
+			return response.status;
+		},
+		(status) => `Health check: ${siteUrl} (${String(status)})`,
+	);
 }
 
-// Runs in a dry run too, since it reads the build and touches nothing remote
-async function smoke() {
-	if (skipSmoke) {
-		console.log(chalk.yellow('Skipping smoke suite'));
-		return;
-	}
-	console.log(chalk.blue('Running the smoke suite...'));
-	await $({ cwd: rootPath, stdio: 'inherit' })`pnpm test-e2e-smoke`;
-}
+await runCommand({
+	name: 'deploy-site',
+	options: {
+		'dry-run': { default: false, description: 'Run wrangler without uploading', type: 'boolean' },
+		'skip-build': {
+			default: false,
+			description: 'Deploy the existing dist/; implies --skip-check',
+			type: 'boolean',
+		},
+		'skip-check': { default: false, description: 'Skip the quality gate', type: 'boolean' },
+		'skip-smoke': { default: false, description: 'Skip the smoke suite', type: 'boolean' },
+	},
+	run: async ({ paths, rootPath, values }) => {
+		const dryRun = values['dry-run'];
 
-try {
-	assertDeployAuth();
-	printDeployConfig();
+		assertDeployAuth();
+		reportDeployConfig();
 
-	await build();
-	await smoke();
-	await deployApp({ dryRun, rootPath });
+		// `pnpm build` carries no type check, so this is the only gate a deploy runs
+		if (values['skip-build'] || values['skip-check']) log.warn('Skipping quality gate');
+		else await runSubprocess('Checking', ['pnpm', 'check'], { cwd: rootPath });
 
-	if (dryRun) console.log(chalk.yellow('Skipping health check (dry run)'));
-	else await healthCheck();
+		if (values['skip-build']) log.warn('Skipping build');
+		else await runSubprocess('Building', ['pnpm', 'build'], { cwd: rootPath });
 
-	console.log(chalk.green('Deploy complete'));
-} catch (error) {
-	console.error(chalk.red('Deploy failed:'), error);
-	process.exit(1);
-}
+		// Runs in a dry run too, since it reads the build and touches nothing remote
+		if (values['skip-smoke']) log.warn('Skipping smoke suite');
+		else
+			await runSubprocess('Running the smoke suite', ['pnpm', 'test-e2e-smoke'], { cwd: rootPath });
+
+		const { assets } = await deployApp({ distPath: paths.distPath, dryRun, rootPath });
+
+		if (dryRun) {
+			log.warn('Skipping health check (dry run)');
+			log.data({ assets, dryRun, site: siteUrl }, () => `Dry run: ${String(assets)} assets`);
+			return;
+		}
+
+		const status = await healthCheck();
+
+		log.data(
+			{ assets, dryRun, site: siteUrl, status },
+			() => `Deployed ${String(assets)} assets to ${siteUrl}`,
+		);
+	},
+	summary: 'Build, smoke-test and deploy the site to Cloudflare Workers',
+	title: 'Deploy site',
+});

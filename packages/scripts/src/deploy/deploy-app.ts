@@ -1,8 +1,7 @@
-import chalk from 'chalk';
+import { log, runSubprocess, UserError } from '@xsynaptic/astro-scripts';
 import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { $ } from 'zx';
 
 // Cloudflare Workers allows 20,000 assets per version and 25 MiB per asset
 // wrangler's own `Read N files` line counts directories too, so it runs ahead of this count
@@ -11,7 +10,8 @@ const fileCountWarn = 15_000;
 const assetSizeWarn = 25 * 1024 * 1024;
 
 interface DeployAppOptions {
-	dryRun?: boolean;
+	distPath: string;
+	dryRun: boolean;
 	rootPath: string;
 }
 
@@ -20,42 +20,36 @@ interface DistFile {
 	size: number;
 }
 
-export async function deployApp(options: DeployAppOptions): Promise<void> {
-	const { dryRun = false, rootPath } = options;
-
-	const distPath = path.join(rootPath, 'dist');
-
+export async function deployApp({ distPath, dryRun, rootPath }: DeployAppOptions) {
 	if (!existsSync(distPath)) {
-		throw new Error(`dist/ not found at ${distPath}. Run \`pnpm build\` (or omit --skip-build).`);
+		throw new UserError(`dist/ not found at ${distPath}`, {
+			detail: 'Run `pnpm build` first',
+		});
 	}
 
 	const files = await readDistFiles(distPath);
 
-	console.log(chalk.blue('Deploying to Cloudflare Workers...'));
-	console.log(chalk.gray(`  Assets: ${String(files.length)}`));
-
 	checkAssetLimits(files);
 
-	if (dryRun) console.log(chalk.yellow('  DRY RUN'));
+	// wrangler.jsonc lives at the repo root; run from there so it resolves config + ./dist
+	await runSubprocess(
+		dryRun ? 'Deploying to Cloudflare Workers (dry run)' : 'Deploying to Cloudflare Workers',
+		['pnpm', 'exec', 'wrangler', 'deploy', ...(dryRun ? ['--dry-run'] : [])],
+		{ cwd: rootPath, onLine: isWranglerSummaryLine },
+	);
 
-	const start = Date.now();
-
-	await runWrangler(rootPath, dryRun ? ['deploy', '--dry-run'] : ['deploy']);
-
-	console.log(chalk.green(`Done in ${((Date.now() - start) / 1000).toFixed(1)}s`));
+	return { assets: files.length };
 }
 
-function checkAssetLimits(files: Array<DistFile>): void {
+function checkAssetLimits(files: Array<DistFile>) {
 	if (files.length >= fileCountError) {
-		throw new Error(
-			`dist/ has ${String(files.length)} files, over the ${String(fileCountError)} safety threshold (Workers cap is 20,000/version).`,
+		throw new UserError(
+			`dist/ has ${String(files.length)} files, over the ${String(fileCountError)} safety threshold (Workers cap is 20,000/version)`,
 		);
 	}
 
 	if (files.length >= fileCountWarn) {
-		console.log(
-			chalk.yellow(`  Warning: ${String(files.length)} files approaches the 20,000 Workers cap`),
-		);
+		log.warn(`${String(files.length)} files approaches the 20,000 Workers cap`);
 	}
 
 	for (const file of files) {
@@ -63,10 +57,13 @@ function checkAssetLimits(files: Array<DistFile>): void {
 
 		const mib = (file.size / 1024 / 1024).toFixed(1);
 
-		console.log(
-			chalk.yellow(`  Warning: ${file.relativePath} is ${mib} MiB (25 MiB per-asset limit)`),
-		);
+		log.warn(`${file.relativePath} is ${mib} MiB (25 MiB per-asset limit)`);
 	}
+}
+
+// wrangler has no flag for its per-asset `+ path` lines; `--log-level warn` would take the deploy summary with them
+function isWranglerSummaryLine(line: string) {
+	return !line.startsWith('+ /') && !line.includes('truncating changed assets log');
 }
 
 async function readDistFiles(distPath: string): Promise<Array<DistFile>> {
@@ -81,23 +78,4 @@ async function readDistFiles(distPath: string): Promise<Array<DistFile>> {
 	);
 
 	return entries.filter((entry) => entry.isFile);
-}
-
-// wrangler.jsonc lives at the repo root; run from there so it resolves config + ./dist
-// wrangler has no flag for its per-asset `+ path` lines; `--log-level warn` would take the deploy summary with them
-// Piping stdout to filter them costs color unless it is forced
-async function runWrangler(rootPath: string, args: Array<string>): Promise<void> {
-	const wrangler = $({
-		cwd: rootPath,
-		env: process.stdout.isTTY ? { ...process.env, FORCE_COLOR: '1' } : process.env,
-		stdio: ['inherit', 'pipe', 'inherit'],
-	})`pnpm exec wrangler ${args}`;
-
-	for await (const line of wrangler) {
-		if (line.startsWith('+ /') || line.includes('truncating changed assets log')) continue;
-
-		console.log(line);
-	}
-
-	await wrangler;
 }

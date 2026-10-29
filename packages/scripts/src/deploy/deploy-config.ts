@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { log, UserError } from '@xsynaptic/astro-scripts';
 
 // Hardcoded because it never varies; must match `site` in astro.config.ts and the wrangler route
 export const siteUrl = 'https://synapticism.com/';
@@ -7,35 +7,26 @@ export const siteUrl = 'https://synapticism.com/';
 const requiredAuthEnv = ['CLOUDFLARE_ACCOUNT_ID', 'CLOUDFLARE_API_TOKEN'] as const;
 
 const exampleEnv = [
-	'  .env:',
-	'    CLOUDFLARE_ACCOUNT_ID=<account-id>',
-	'    CLOUDFLARE_API_TOKEN=<token with Workers Scripts:Edit and Workers Routes:Edit>',
+	'Example .env:',
+	'  CLOUDFLARE_ACCOUNT_ID=<account-id>',
+	'  CLOUDFLARE_API_TOKEN=<token with Workers Scripts:Edit and Workers Routes:Edit>',
 ];
 
 // Called before the build, so a missing token costs a second rather than surfacing minutes in
 export function assertDeployAuth() {
-	const missing: Array<string> = [];
-
-	for (const name of requiredAuthEnv) {
-		const value = process.env[name];
-
-		if (!value) missing.push(name);
-	}
+	const missing = requiredAuthEnv.filter((name) => (process.env[name] ?? '') === '');
 
 	if (missing.length === 0) return;
 
-	const message = `Missing required environment variables: ${missing.join(', ')}`;
-
-	console.error(chalk.red(message));
-	console.error(chalk.gray('\nExample configuration:'));
-	for (const line of exampleEnv) console.error(chalk.gray(line));
-
-	throw new Error(message);
+	throw new UserError(`Missing required environment variables: ${missing.join(', ')}`, {
+		detail: exampleEnv.join('\n'),
+	});
 }
 
-export function printDeployConfig() {
-	console.log(chalk.blue('Deploy: Cloudflare Workers (static assets)'));
-	console.log(chalk.gray(`  Site: ${siteUrl}`));
-	console.log(chalk.gray('  Auth: CLOUDFLARE_API_TOKEN (.env)'));
-	console.log('');
+export function reportDeployConfig() {
+	log.summary([
+		['Target', 'Cloudflare Workers (static assets)'],
+		['Site', siteUrl],
+		['Auth', 'CLOUDFLARE_API_TOKEN (.env)'],
+	]);
 }

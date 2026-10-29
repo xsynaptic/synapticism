@@ -1,3 +1,4 @@
+import type { OpenGraphCardInput } from '@synapticism/shared/open-graph';
 import type { CSSProperties } from 'react';
 
 import {
@@ -8,7 +9,6 @@ import {
 import { Bitmap } from 'takumi-js/helpers/jsx';
 
 import type { ProcessedImage } from '#og-image/generate.ts';
-import type { OpenGraphEntryItem } from '#og-image/types.ts';
 
 import {
 	openGraphPaddingFull,
@@ -78,7 +78,7 @@ const styles = {
 	},
 } satisfies Record<string, CSSProperties>;
 
-export function getOpenGraphElement(entry: OpenGraphEntryItem, image?: ProcessedImage) {
+export function getOpenGraphElement(entry: OpenGraphCardInput, image?: ProcessedImage) {
 	const columnWidth = image
 		? openGraphImageWidth - openGraphPanelWidth - openGraphSeamWidth
 		: openGraphImageWidth;

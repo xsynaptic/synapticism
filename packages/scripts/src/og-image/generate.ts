@@ -1,16 +1,15 @@
+import type { OpenGraphCardInput } from '@synapticism/shared/open-graph';
+
 import { mediaDir, openGraphImageHeight, openGraphImageWidth } from '@synapticism/shared/constants';
-import { existsSync } from 'node:fs';
+import { openImageSource } from '@xsynaptic/astro-image-pipeline/node';
+import { findWorkspaceRoot } from '@xsynaptic/astro-scripts';
 import path from 'node:path';
-import sharp from 'sharp';
 import { render, setGlyphCacheMaxBytes } from 'takumi-js';
 import { Renderer } from 'takumi-js/node';
-
-import type { OpenGraphEntryItem } from '#og-image/types.ts';
 
 import { openGraphJpegQuality, openGraphPanelWidth } from '#og-image/constants.ts';
 import { getOpenGraphElement } from '#og-image/element.tsx';
 import { loadOpenGraphFonts } from '#og-image/fonts.ts';
-import { findWorkspaceRoot } from '#shared/utils.ts';
 
 // The 8 MiB default evicts outlines mid-run once a corpus draws more than about a thousand glyphs
 const glyphCacheBytes = 64 * 1024 * 1024;
@@ -29,8 +28,8 @@ export async function createCardRenderer() {
 	const fonts = await loadOpenGraphFonts();
 	const renderer = new Renderer();
 
-	return async function renderCard(entry: OpenGraphEntryItem) {
-		return render(getOpenGraphElement(entry, await loadImage(entry.imageId)), {
+	return async function renderCard(card: OpenGraphCardInput, image?: ProcessedImage) {
+		return render(getOpenGraphElement(card, image), {
 			fonts,
 			format: 'jpeg',
 			height: openGraphImageHeight,
@@ -45,17 +44,10 @@ export function resolveMediaPath(imageId: string): string {
 	return path.join(findWorkspaceRoot(), mediaDir, imageId);
 }
 
-// Originals are gitignored and may be absent; a card without its art still beats no card
-async function loadImage(imageId: string | undefined): Promise<ProcessedImage | undefined> {
-	if (imageId === undefined) return undefined;
-
-	const imagePath = resolveMediaPath(imageId);
-
-	if (!existsSync(imagePath)) return undefined;
-
-	// The panel is a tall crop of a wide source, so let sharp pick the region of interest
-	// Raw RGBA hands off to Takumi without an encode, so the card takes one lossy pass instead of two
-	const { data, info } = await sharp(imagePath)
+// The panel is a tall crop of a wide source, so let sharp pick the region of interest
+// Raw RGBA hands off to Takumi without an encode, so the card takes one lossy pass instead of two
+export async function decodeImage(filePath: string): Promise<ProcessedImage> {
+	const { data, info } = await openImageSource(filePath)
 		.resize({
 			fit: 'cover',
 			height: openGraphImageHeight,
