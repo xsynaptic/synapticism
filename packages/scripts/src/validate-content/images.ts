@@ -1,8 +1,8 @@
-import type { ContentEntry } from '#shared/astro-content.ts';
-import type { ValidationResult } from '#validate-content/validation-result.ts';
+import type { ContentEntry, ValidationResult } from '@xsynaptic/astro-scripts';
+
+import { toValidationResult } from '@xsynaptic/astro-scripts';
 
 import { collectMediaFiles, extractImageFeaturedIds, extractMdxImageIds } from '#shared/images.ts';
-import { toValidationResult } from '#validate-content/validation-result.ts';
 
 export function validateImages(entries: Array<ContentEntry>, mediaPath: string): ValidationResult {
 	const mediaFiles = collectMediaFiles(mediaPath);
@@ -13,7 +13,8 @@ export function validateImages(entries: Array<ContentEntry>, mediaPath: string):
 
 	const issues = entries.flatMap((entry) =>
 		collectMissingImageIds(entry, mediaFiles).map((imageId) => ({
-			message: `${entry.filePath ?? entry.id}: missing image "${imageId}"`,
+			location: entry.filePath ?? entry.id,
+			message: `missing image "${imageId}"`,
 		})),
 	);
 
