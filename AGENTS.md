@@ -12,7 +12,7 @@ Add a line here only when an agent cannot see it in the repo or work it out quic
 
 - `pnpm check` reports, `pnpm fix` mutates. Run `fix` once after a chunk of work, not repeatedly.
 - Neither touches MDX. Content linting is separate: `pnpm check-content` and `pnpm fix-content`.
-- `pnpm build` is a pipeline. `astro build` on its own skips LQIP placeholders, `astro check`, sitemap lastmod, and OG image generation.
+- `pnpm build` is a pipeline. `astro build` on its own skips OG image generation. It runs no type check: `pnpm check` is the gate, and `deploy-site` runs it unless given `--skip-check`.
 - `pnpm test-e2e` and its `@smoke` subset, `pnpm test-e2e-smoke`, run against `dist/`, so build first; `pnpm test-e2e-dev` runs against the dev server instead. All sit outside `check`; `deploy-site` runs the smoke subset unless given `--skip-smoke`.
 
 ## Conventions

@@ -2,7 +2,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getAbsoluteUrl, getContentPath, getSitePath } from '#lib/utils/routing.ts';
-import { getOpenGraphId, getOpenGraphImageUrl } from '#lib/utils/seo.ts';
+import { getEntryOpenGraphCard, getOpenGraphImageUrl } from '#lib/utils/seo.ts';
 
 export type Thing = Article | BreadcrumbList | Person | WebSite;
 
@@ -72,7 +72,7 @@ export function buildEntrySchemas(
 				dateCreated: entry.data.dateCreated,
 				dateUpdated: entry.data.dateUpdated,
 				description: props.description,
-				imageUrl: getOpenGraphImageUrl(getOpenGraphId(entry.collection, entry.id)),
+				imageUrl: getOpenGraphImageUrl(getEntryOpenGraphCard(entry)),
 				title: entry.data.title,
 				url: props.url,
 			}),

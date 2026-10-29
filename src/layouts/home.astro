@@ -6,7 +6,7 @@ import MainSite from '#components/main/main-site.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getPagination } from '#lib/utils/pagination.ts';
 import { getHomePaginationPath } from '#lib/utils/routing.ts';
-import { openGraphIndexIds } from '#lib/utils/seo.ts';
+import { homeOpenGraphCard } from '#lib/utils/seo.ts';
 import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
@@ -21,7 +21,7 @@ const { entries, pageNumber, totalPages } = Astro.props;
 const mainProps =
 	pageNumber === 1
 		? {
-				meta: { openGraphId: openGraphIndexIds.home },
+				meta: { openGraphCard: homeOpenGraphCard },
 				schemas: [
 					buildWebSiteSchema({
 						description: t('site.description'),
@@ -31,7 +31,7 @@ const mainProps =
 			}
 		: {
 				meta: {
-					openGraphId: openGraphIndexIds.home,
+					openGraphCard: homeOpenGraphCard,
 					title: formatStringTemplate(t('home.pageTitle'), { page: pageNumber }),
 				},
 			};
@@ -44,7 +44,5 @@ const pagination = getPagination({
 ---
 
 <MainSite isHomepage={true} {...mainProps}>
-	<div class="pt-8 md:pt-12">
-		<PostExcerptList entries={entries} pagination={pagination} />
-	</div>
+	<PostExcerptList entries={entries} isLeading={true} pagination={pagination} />
 </MainSite>

@@ -8,7 +8,7 @@ import MainSite from '#components/main/main-site.astro';
 import PaginationCounter from '#components/parts/pagination-counter.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getPagePagination } from '#lib/utils/pagination.ts';
-import { openGraphIndexIds } from '#lib/utils/seo.ts';
+import { getIndexOpenGraphCard } from '#lib/utils/seo.ts';
 
 interface Props {
 	page: Page<CollectionEntry<'posts'>>;
@@ -20,7 +20,7 @@ const { page } = Astro.props;
 <MainSite
 	meta={{
 		description: t('posts.description'),
-		openGraphId: openGraphIndexIds.posts,
+		openGraphCard: getIndexOpenGraphCard('posts', t('posts.title')),
 		title: t('posts.title'),
 	}}
 >

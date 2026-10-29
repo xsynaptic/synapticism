@@ -1,10 +1,11 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
+import { getPlaceholder } from '@xsynaptic/astro-image-pipeline/node';
 import { Image } from 'astro:assets';
 
 import { renderSlot } from '#lib/utils/astro.ts';
-import { getMediaImage, getMediaLqip } from '#lib/utils/media.ts';
+import { getMediaImage } from '#lib/utils/media.ts';
 import { sanitizeAltAttribute } from '#lib/utils/text.ts';
 
 interface Props extends HTMLAttributes<'figure'> {
@@ -15,7 +16,7 @@ interface Props extends HTMLAttributes<'figure'> {
 const { alt: altProp, src, ...props } = Astro.props;
 
 const image = getMediaImage(src);
-const lqip = getMediaLqip(src);
+const placeholder = await getPlaceholder({ height: image.height, id: src, width: image.width });
 
 const caption = await renderSlot(Astro.slots);
 
@@ -26,7 +27,7 @@ const alt = sanitizeAltAttribute(altProp ?? caption ?? '');
 <figure class="content-image" {...props}>
 	<div
 		class="overflow-hidden rounded-lg border border-primary-200 bg-primary-100 bg-placeholder"
-		style={lqip ? `background-image:url(${lqip})` : undefined}
+		style={placeholder ? `background-image:url(${placeholder})` : undefined}
 	>
 		<Image
 			alt={alt}

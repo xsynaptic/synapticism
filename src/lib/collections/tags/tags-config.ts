@@ -3,11 +3,15 @@ import { defineCollection } from 'astro:content';
 import { z } from 'zod';
 
 import { contentCollectionsPath } from '#constants.ts';
+import { withSitemapLastmod } from '#lib/collections/collections-sitemap.ts';
 import { DateStringSchema, StylizedTextSchema } from '#lib/schemas/content.ts';
 import { ImageFeaturedSchema } from '#lib/schemas/image-featured.ts';
 
 export const tags = defineCollection({
-	loader: glob({ base: `${contentCollectionsPath}/tags`, pattern: '**/[^_]*.(md|mdx)' }),
+	loader: withSitemapLastmod(
+		'tags',
+		glob({ base: `${contentCollectionsPath}/tags`, pattern: '**/[^_]*.(md|mdx)' }),
+	),
 	schema: z
 		.object({
 			dateCreated: DateStringSchema,

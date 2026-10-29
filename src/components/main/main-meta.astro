@@ -7,7 +7,7 @@ import type { MetaProps } from '#components/types.ts';
 
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getBasePath } from '#lib/utils/routing.ts';
-import { getOpenGraphImageUrl } from '#lib/utils/seo.ts';
+import { defaultOpenGraphCard, getOpenGraphImageUrl } from '#lib/utils/seo.ts';
 import { getUrlPathIndexing } from '#lib/utils/sitemap.ts';
 import { formatStringTemplate, sanitizeAltAttribute } from '#lib/utils/text.ts';
 
@@ -19,7 +19,7 @@ const {
 	noFollow,
 	noIndex,
 	ogType,
-	openGraphId,
+	openGraphCard = defaultOpenGraphCard,
 	title: contentTitle,
 } = Astro.props;
 
@@ -35,7 +35,7 @@ const openGraphImage = {
 	alt: sanitizeAltAttribute(contentTitle ?? siteTitle),
 	height: openGraphImageHeight,
 	type: 'image/jpeg',
-	url: getOpenGraphImageUrl(openGraphId),
+	url: getOpenGraphImageUrl(openGraphCard),
 	width: openGraphImageWidth,
 };
 ---

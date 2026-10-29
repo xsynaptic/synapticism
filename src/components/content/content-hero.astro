@@ -1,37 +1,40 @@
 ---
+import { getPlaceholder } from '@xsynaptic/astro-image-pipeline/node';
 import { Image } from 'astro:assets';
 
+import type { Template } from '#lib/schemas/content.ts';
 import type { ImageFeaturedObject } from '#lib/schemas/image-featured.ts';
 
-import { getMediaImage, getMediaLqip } from '#lib/utils/media.ts';
+import { getMediaImage } from '#lib/utils/media.ts';
 import { sanitizeAltAttribute } from '#lib/utils/text.ts';
 
 interface Props extends ImageFeaturedObject {
 	fallbackAlt?: string | undefined;
 	isPriority: boolean;
+	template: Template;
 }
 
-const { fallbackAlt, id, isPriority, title } = Astro.props;
+const { fallbackAlt = '', id, isPriority, template, title = fallbackAlt } = Astro.props;
 
-const alt = sanitizeAltAttribute(title ?? fallbackAlt ?? '');
+const alt = sanitizeAltAttribute(title);
 
 const image = getMediaImage(id);
-const lqip = getMediaLqip(id);
+const placeholder = await getPlaceholder({ height: image.height, id: id, width: image.width });
+
+const sizes = template === 'sidebar' ? '(min-width: 64rem) 58rem, 100vw' : '100vw';
 ---
 
-<figure class="content-column mb-8">
-	<div
-		class="overflow-hidden rounded-sm bg-placeholder"
-		style={lqip ? `background-image:url(${lqip})` : undefined}
-	>
-		<Image
-			alt={alt}
-			class="block w-full"
-			layout="constrained"
-			priority={isPriority}
-			sizes="(min-width: 58rem) 58rem, 100vw"
-			src={image}
-			width={1600}
-		/>
-	</div>
+<figure
+	class="aspect-3/2 max-h-[70svh] w-full overflow-hidden bg-placeholder md:aspect-2/1"
+	style={placeholder ? `background-image:url(${placeholder})` : undefined}
+>
+	<Image
+		alt={alt}
+		class="block size-full object-cover"
+		layout="constrained"
+		priority={isPriority}
+		sizes={sizes}
+		src={image}
+		width={2400}
+	/>
 </figure>

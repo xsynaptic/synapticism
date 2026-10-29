@@ -1,8 +1,8 @@
 import type { CollectionKey } from 'astro:content';
 
 import { createSqliteCache } from '@synapticism/shared/cache';
+import { cachePath } from '@synapticism/shared/constants';
 import { getImageFeaturedId } from '@synapticism/shared/image-featured';
-import { CUSTOM_CACHE_PATH } from 'astro:env/server';
 import { performance } from 'node:perf_hooks';
 
 import type { Catalog } from '#lib/catalog/catalog-factory.ts';
@@ -31,7 +31,7 @@ function getLinksExternalCount(entry: ComputedEntry<CollectionKey>): number {
 function getWordCount(entry: ComputedEntry<CollectionKey>) {
 	if (!wordCountFunction) {
 		wordCountFunction = createWordCountFunction({
-			cache: createSqliteCache(CUSTOM_CACHE_PATH, 'word-counts'),
+			cache: createSqliteCache(cachePath, 'word-counts'),
 		});
 	}
 	return wordCountFunction(entry);

@@ -1,3 +1,5 @@
+import type { PageOpenGraphCard } from '@synapticism/shared/open-graph';
+
 export interface MetaProps {
 	article?: {
 		authors?: Array<string>;
@@ -11,7 +13,7 @@ export interface MetaProps {
 	noFollow?: boolean;
 	noIndex?: boolean;
 	ogType?: 'article' | 'website' | undefined;
-	openGraphId?: string | undefined;
+	openGraphCard?: PageOpenGraphCard | undefined;
 	title?: string | undefined;
 }
 

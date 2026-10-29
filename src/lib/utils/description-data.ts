@@ -1,5 +1,5 @@
 import { createSqliteCache } from '@synapticism/shared/cache';
-import { CUSTOM_CACHE_PATH } from 'astro:env/server';
+import { cachePath } from '@synapticism/shared/constants';
 
 import type { DescriptionEntry } from '#lib/utils/description.ts';
 
@@ -18,7 +18,7 @@ export function getDescriptionRenderedText(entry: DescriptionEntry) {
 function getDescriptionRenderers() {
 	if (!descriptionRenderers) {
 		descriptionRenderers = createDescriptionRenderers({
-			cache: createSqliteCache(CUSTOM_CACHE_PATH, 'description-rendered'),
+			cache: createSqliteCache(cachePath, 'description-rendered'),
 		});
 	}
 	return descriptionRenderers;
