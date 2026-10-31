@@ -103,8 +103,7 @@ await runCommand({
 				published: render.cards.length,
 				reused: counts.fresh,
 			},
-			() =>
-				`${String(counts.rendered)} generated, ${String(counts.fresh)} cached; ${String(render.cards.length)} published → ${publishPath}`,
+			() => `${String(render.cards.length)} published → ${publishPath}`,
 		);
 	},
 	summary: 'Render the OpenGraph cards the build recorded and publish them into dist/',
