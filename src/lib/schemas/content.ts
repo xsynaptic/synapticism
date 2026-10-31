@@ -29,6 +29,10 @@ export const DateStringSchema = z
 	)
 	.transform((value) => (value instanceof Date ? value : parseFrontmatterDate(value)));
 
+export const TemplateSchema = z.enum(['full', 'sidebar']);
+
+export type Template = z.infer<typeof TemplateSchema>;
+
 export const contentBaseSchema = z.object({
 	dateCreated: DateStringSchema,
 	dateUpdated: DateStringSchema.optional(),

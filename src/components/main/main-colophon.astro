@@ -9,24 +9,24 @@ import { formatStringTemplate } from '#lib/utils/text.ts';
 const copyrightYears = getCopyrightYears();
 ---
 
-<div class="flex flex-wrap items-center gap-x-1 text-xs text-primary-600">
+<div class="flex flex-wrap items-center gap-x-1 text-xs text-primary-300">
 	<DividedItem as="span">
 		{formatStringTemplate(t('footer.copyright'), { years: copyrightYears })}
 	</DividedItem>
 	<DividedItem as="span">
 		{t('footer.builtWith')}{' '}
-		<Anchor anchorColor="primary-bright" href="https://astro.build">
+		<Anchor anchorColor="on-dark" href="https://astro.build">
 			{t('footer.astro')}
 		</Anchor>
 	</DividedItem>
 	<DividedItem as="span">
-		<Anchor anchorColor="primary-bright" href="https://github.com/xsynaptic/synapticism">
+		<Anchor anchorColor="on-dark" href="https://github.com/xsynaptic/synapticism">
 			{t('footer.sourceCode')}
 		</Anchor>
 	</DividedItem>
 	<DividedItem as="span">
 		<Anchor
-			anchorColor="primary-bright"
+			anchorColor="on-dark"
 			class="group inline-flex items-center gap-1.5"
 			data-astro-prefetch="false"
 			href={`${getSitePath()}rss.xml`}

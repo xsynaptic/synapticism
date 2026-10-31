@@ -1,6 +1,10 @@
 @theme {
 	/* Spacing */
-	--spacing-content: 58rem;
+	--spacing-content: 54rem;
+	--spacing-sidebar: 24rem;
+	--spacing-site-title: 3.25rem;
+	--spacing-site-nav: 2.5rem;
+	--spacing-site-nav-baseline: 0.875rem;
 
 	/* Stacking order */
 	--z-index-header: 40;
@@ -11,6 +15,7 @@
 
 	/* Fonts */
 	--font-sans: var(--font-aleo);
+	--font-body: var(--font-oxygen);
 	--font-mono: var(--font-geist-mono);
 	--font-cv: var(--font-aleo-static);
 	--list-style-type-bullet: '• ';

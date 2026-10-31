@@ -1,0 +1,29 @@
+---
+import Anchor from '#components/parts/anchor.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import { recentPostsCount } from '#constants.ts';
+import { queryPostEntries } from '#lib/collections/posts/posts-utils.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
+
+const entries = await queryPostEntries();
+
+const recentEntries = entries.slice(0, recentPostsCount);
+---
+
+<ul class="space-y-3">
+	{recentEntries.map((entry) => (
+		<li class="leading-snug">
+			<Anchor
+				anchorColor="on-dark"
+				class="text-sm font-medium text-pretty"
+				href={getContentPath('posts', entry.id)}
+			>
+				{entry.data.title}
+			</Anchor>
+			<DateDisplay
+				class="block pt-0.5 font-mono text-xs text-primary-500"
+				date={entry.data.dateCreated}
+			/>
+		</li>
+	))}
+</ul>

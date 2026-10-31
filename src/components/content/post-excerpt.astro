@@ -13,17 +13,22 @@ import { getContentPath } from '#lib/utils/routing.ts';
 interface Props {
 	class?: string | undefined;
 	entry: CollectionEntry<'posts'>;
+	isLeading: boolean;
 	isPriority: boolean;
 }
 
-const { class: className, entry, isPriority } = Astro.props;
+const { class: className, entry, isLeading, isPriority } = Astro.props;
 
 const { Content, remarkPluginFrontmatter } = await render(entry);
 
 const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFeatured })?.[0];
 ---
 
-<ContentExcerpt class={className} entryUrl={getContentPath('posts', entry.id)}>
+<ContentExcerpt
+	class={className}
+	entryUrl={getContentPath('posts', entry.id)}
+	isLeading={isLeading}
+>
 	<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
 	<PostSubtitle
 		entry={entry}
@@ -36,6 +41,7 @@ const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFea
 			fallbackAlt={entry.data.title}
 			isPriority={isPriority}
 			slot="excerpt-hero"
+			template="sidebar"
 		/>
 	) : undefined}
 	<Content />

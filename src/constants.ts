@@ -21,3 +21,5 @@ export const siteTimezoneOffsetHours = 8;
 export const postListPageSize = 10;
 
 export const postReadingTimeMinimumMinutes = 3;
+
+export const recentPostsCount = 5;

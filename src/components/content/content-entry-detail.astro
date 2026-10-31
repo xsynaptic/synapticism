@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
+import type { Template } from '#lib/schemas/content.ts';
+
 import ContentDate from '#components/content/content-date.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentHero from '#components/content/content-hero.astro';
@@ -11,7 +13,7 @@ import { MicroformatClassNames } from '#components/types.ts';
 import { siteAuthorName } from '#constants.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
-import { getOpenGraphId, getSeoArticleProps } from '#lib/utils/seo.ts';
+import { getEntryOpenGraphCard, getSeoArticleProps } from '#lib/utils/seo.ts';
 import { getUrlPathIndexing } from '#lib/utils/sitemap.ts';
 import { buildEntrySchemas } from '#lib/utils/structured-data.ts';
 
@@ -19,9 +21,10 @@ interface Props {
 	entry: CollectionEntry<'pages' | 'posts' | 'projects'>;
 	hasReadingBar: boolean;
 	isArticle: boolean;
+	template?: Template;
 }
 
-const { entry, hasReadingBar, isArticle } = Astro.props;
+const { entry, hasReadingBar, isArticle, template = 'sidebar' } = Astro.props;
 
 const url = Astro.url.toString();
 
@@ -47,27 +50,37 @@ const { index } = getUrlPathIndexing(Astro.url.pathname);
 	hasReadingBar={hasReadingBar}
 	meta={{
 		description,
-		openGraphId: getOpenGraphId(entry.collection, entry.id),
+		openGraphCard: getEntryOpenGraphCard(entry),
 		title: entry.data.title,
 		...articleMeta,
 	}}
 	schemas={schemas}
+	template={template}
 >
 	<article
 		class:list={['pb-8', MicroformatClassNames.Entry]}
 		{...(index ? { 'data-pagefind-body': '' } : {})}
 	>
-		<ContentHeader title={entry.data.title} titleUrl={url}>
+		{heroImage ? (
+			<ContentHero
+				{...heroImage}
+				fallbackAlt={entry.data.title}
+				isPriority={true}
+				template={template}
+			/>
+		) : undefined}
+		<ContentHeader isLeading={!heroImage} title={entry.data.title} titleUrl={url}>
 			<Fragment slot="header-subtitle">
 				<slot name="header-subtitle">
 					<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
 				</slot>
 			</Fragment>
 		</ContentHeader>
-		{heroImage ? (
-			<ContentHero {...heroImage} fallbackAlt={entry.data.title} isPriority={true} />
-		) : undefined}
-		<ProseBody class:list={['e-content', 'pb-4']} data-reading-frame={hasReadingBar || undefined}>
+		<ProseBody
+			class:list={['e-content', 'pb-4']}
+			data-reading-frame={hasReadingBar || undefined}
+			frame={template === 'full' ? 'bleed' : 'column'}
+		>
 			<slot />
 		</ProseBody>
 		<slot name="after-body" />

@@ -76,6 +76,7 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 		description: t('cv.description'),
 		title: t('cv.title'),
 	}}
+	template="full"
 >
 	<Font cssVariable="--font-aleo-static" preload={[{ style: 'normal' }]} slot="head" />
 	<cv-print class="block" data-filename={printFilename} data-phone={btoa(basics.phone)}>

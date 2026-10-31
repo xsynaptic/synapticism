@@ -4,35 +4,38 @@ import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
 	class?: string | undefined;
+	isLeading?: boolean;
 	title: string;
 	titleUrl?: string | undefined;
 }
 
-const { class: className, title, titleUrl } = Astro.props;
+const { class: className, isLeading = true, title, titleUrl } = Astro.props;
 
 const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 ---
 
-<div class:list={['content-column mt-4 mb-2 pt-4 pb-2', className]}>
-	<h1
-		class="-ml-0.5 font-sans text-2xl leading-[1.125] font-semibold text-primary-900 md:text-3xl lg:text-4xl"
-		data-pagefind-weight="3"
-	>
-		{titleUrl ? (
-			<a
-				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-				href={titleUrl}
-				rel="bookmark"
-			>
-				{title}
-			</a>
-		) : (
-			title
-		)}
-	</h1>
+<div class:list={['content-column mb-2 pb-2', className]}>
+	<div class:list={['pt-4 md:pt-8', { 'site-shell-title': isLeading }]}>
+		<h1
+			class="-ml-0.5 trim-text font-sans text-2xl leading-[1.125] font-semibold text-primary-900 md:text-3xl lg:text-4xl"
+			data-pagefind-weight="3"
+		>
+			{titleUrl ? (
+				<a
+					class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+					href={titleUrl}
+					rel="bookmark"
+				>
+					{title}
+				</a>
+			) : (
+				title
+			)}
+		</h1>
+	</div>
 	{subtitle ? (
 		<div
-			class="items-center gap-1 pt-1 font-mono text-xs sm:flex sm:flex-wrap"
+			class="items-center gap-1 pt-2 font-mono text-xs sm:flex sm:flex-wrap"
 			data-pagefind-ignore
 			set:html={subtitle}
 		/>

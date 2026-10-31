@@ -9,10 +9,11 @@ import { MicroformatClassNames } from '#components/types.ts';
 
 interface Props {
 	entries: Array<CollectionEntry<'posts'>>;
+	isLeading?: boolean;
 	pagination: Pagination;
 }
 
-const { entries, pagination } = Astro.props;
+const { entries, isLeading = false, pagination } = Astro.props;
 ---
 
 <div class:list={[MicroformatClassNames.Feed, 'scroll-mt-4']} data-pagination-target>
@@ -23,7 +24,7 @@ const { entries, pagination } = Astro.props;
 					<hr class="border-primary-300/70" />
 				</div>
 			) : undefined}
-			<PostExcerpt entry={entry} isPriority={index === 0} />
+			<PostExcerpt entry={entry} isLeading={isLeading && index === 0} isPriority={index === 0} />
 		</Fragment>
 	))}
 </div>

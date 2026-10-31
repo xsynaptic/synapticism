@@ -89,8 +89,11 @@ const strings = {
 	'notFound.suggestionsLoading': 'Looking for close matches...',
 	'notFound.title': 'Page Not Found',
 
+	// Sidebar
+	'aside.about': 'About',
+	'aside.recentPosts': 'Recent posts',
+
 	// Footer colophon
-	'footer.about': 'More about me',
 	'footer.astro': 'Astro',
 	'footer.bio': `I'm Alexander Synaptic, a web developer from Canada currently based in Taiwan. Front-end has been my home base for years but I'm leaning into the full stack at the dawn of the agentic era. This site is my technical notebook and portfolio.`,
 	'footer.builtWith': 'Built with',

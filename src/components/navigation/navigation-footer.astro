@@ -18,7 +18,7 @@ const { pathname } = Astro.url;
 		{navigationFooterItems.map((item) => (
 			<li class="text-xs font-medium sm:text-sm">
 				<Anchor
-					anchorColor="primary"
+					anchorColor="on-dark"
 					class:list={[isActiveNavigationItem(item, pathname) ? 'font-semibold' : undefined]}
 					href={item.url}
 					{...(item.rel ? { rel: item.rel } : undefined)}

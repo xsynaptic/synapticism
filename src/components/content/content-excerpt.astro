@@ -9,9 +9,10 @@ import { renderSlot } from '#lib/utils/astro.ts';
 interface Props {
 	class?: string | undefined;
 	entryUrl: string;
+	isLeading?: boolean;
 }
 
-const { class: className, entryUrl } = Astro.props;
+const { class: className, entryUrl, isLeading = false } = Astro.props;
 
 const subtitle = await renderSlot(Astro.slots, 'excerpt-subtitle');
 const content = await renderSlot(Astro.slots, 'default');
@@ -23,18 +24,20 @@ const hasExcerpt = excerptSplit.length > 1;
 
 <article class:list={[className, MicroformatClassNames.Entry]}>
 	<header class="content-column mb-2 pb-2">
-		<h2 class="-ml-0.5 font-sans text-xl leading-[1.125] font-semibold md:text-2xl lg:text-3xl">
-			<Anchor
-				anchorColor="title"
-				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-				href={entryUrl}
-			>
-				<slot name="excerpt-title" />
-			</Anchor>
-		</h2>
+		<div class:list={[{ 'site-shell-title pt-4 md:pt-8': isLeading }]}>
+			<h2 class="-ml-0.5 trim-text font-sans text-xl leading-[1.125] font-semibold md:text-2xl lg:text-3xl">
+				<Anchor
+					anchorColor="title"
+					class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+					href={entryUrl}
+				>
+					<slot name="excerpt-title" />
+				</Anchor>
+			</h2>
+		</div>
 		{subtitle ? (
 			<div
-				class="items-center gap-1 pt-1 font-mono text-xs sm:flex sm:flex-wrap"
+				class="items-center gap-1 pt-2 font-mono text-xs sm:flex sm:flex-wrap"
 				set:html={subtitle}
 			/>
 		) : undefined}

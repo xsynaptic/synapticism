@@ -14,6 +14,11 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<ContentEntryDetail entry={entry} hasReadingBar={true} isArticle={false}>
+<ContentEntryDetail
+	entry={entry}
+	hasReadingBar={true}
+	isArticle={false}
+	template={entry.data.template}
+>
 	<Content />
 </ContentEntryDetail>

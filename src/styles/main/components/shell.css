@@ -1,0 +1,25 @@
+.site-shell {
+	grid-template-rows: auto 1fr auto auto;
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.site-shell-sidebar {
+	@variant lg {
+		grid-template-rows: auto 1fr auto;
+		grid-template-columns:
+			minmax(0, 1fr)
+			minmax(0, var(--spacing-content))
+			minmax(var(--spacing-sidebar), 1fr);
+	}
+}
+
+.site-shell-sidebar .site-shell-title {
+	@variant lg {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		min-height: calc(
+			var(--spacing-site-title) + var(--spacing-site-nav) - var(--spacing-site-nav-baseline)
+		);
+	}
+}

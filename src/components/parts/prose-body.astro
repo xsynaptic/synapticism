@@ -1,11 +1,16 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-type Props = HTMLAttributes<'div'>;
+interface Props extends HTMLAttributes<'div'> {
+	frame?: 'bleed' | 'column';
+}
 
-const { class: className, ...props } = Astro.props;
+const { class: className, frame = 'column', ...props } = Astro.props;
 ---
 
-<div class:list={['prose-x', 'content-column', className]} {...props}>
+<div
+	class:list={['prose-x', frame === 'bleed' ? 'prose-bleed' : 'content-column', className]}
+	{...props}
+>
 	<slot />
 </div>

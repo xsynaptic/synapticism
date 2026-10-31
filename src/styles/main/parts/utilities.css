@@ -3,8 +3,16 @@
 	@apply mx-auto max-w-content px-4 md:px-8;
 }
 
+@utility sidebar-column {
+	@apply content-column lg:mx-0 lg:max-w-sidebar;
+}
+
 /* LQIP backdrop under an Image; the data URI is per instance and stays an inline style */
 @utility bg-placeholder {
 	background-position: center;
 	background-size: cover;
+}
+
+@utility trim-text {
+	text-box: trim-both cap alphabetic;
 }

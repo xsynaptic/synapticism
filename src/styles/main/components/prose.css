@@ -1,6 +1,7 @@
-/* Typography only; the frame comes from content-column on the consuming component */
+/* Typography only; ProseBody picks the frame, content-column or .prose-bleed below */
 .prose-x {
-	font-size: var(--text-base);
+	font-family: var(--font-body);
+	font-size: var(--text-lg);
 	line-height: var(--leading-relaxed);
 	color: var(--color-primary-700);
 }
@@ -9,6 +10,12 @@
    Must follow .prose-x: same specificity, so source order decides */
 .prose-compact {
 	font-size: var(--text-sm);
+}
+
+@variant md {
+	.prose-x:not(.prose-compact) {
+		font-size: var(--text-xl);
+	}
 }
 
 /* Text wraps at the reading measure, left-aligned within the frame */
@@ -22,6 +29,25 @@
 .prose-x > pre,
 .prose-x > table {
 	max-width: none;
+}
+
+.prose-bleed {
+	--prose-gutter: calc(var(--spacing) * 4);
+
+	display: grid;
+	grid-template-columns:
+		[full-start] minmax(var(--prose-gutter), 1fr)
+		[content-start] minmax(0, calc(var(--spacing-content) - 2 * var(--prose-gutter)))
+		[content-end] minmax(var(--prose-gutter), 1fr)
+		[full-end];
+
+	@variant md {
+		--prose-gutter: calc(var(--spacing) * 8);
+	}
+}
+
+.prose-bleed > * {
+	grid-column: content;
 }
 
 /* Flow rhythm: generous between blocks, more space above headings */
@@ -44,6 +70,7 @@
 
 /* Headings */
 .prose-x :is(h1, h2, h3, h4) {
+	font-family: var(--font-sans);
 	font-weight: 600;
 	color: var(--color-primary-900);
 	text-wrap: balance;
@@ -266,4 +293,20 @@
 	font-weight: var(--font-weight-medium);
 	text-decoration-line: none;
 	user-select: none;
+}
+
+.prose-bleed
+	> :is(figure:not(.quotation), video, iframe, astro-island, station-tile-lab, .station-tile) {
+	grid-column: full;
+	max-width: none;
+}
+
+.prose-bleed > .content-image > div {
+	border-inline-width: 0;
+	border-radius: 0;
+}
+
+.prose-bleed > .content-image > figcaption {
+	width: min(100% - 2 * var(--prose-gutter), var(--spacing-content) - 2 * var(--prose-gutter));
+	margin-inline: auto;
 }

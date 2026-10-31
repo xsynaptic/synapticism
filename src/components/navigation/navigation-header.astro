@@ -7,24 +7,34 @@ import Anchor from '#components/parts/anchor.astro';
 import SearchToggle from '#components/search/search-toggle.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
-type Props = HTMLAttributes<'nav'>;
+interface Props extends HTMLAttributes<'nav'> {
+	columnClass?: 'content-column' | 'sidebar-column';
+}
 
-const props = Astro.props;
+const { columnClass = 'content-column', ...props } = Astro.props;
 
 const { pathname } = Astro.url;
 ---
 
 <nav
 	aria-label={t('aria.headerNavigation')}
-	class="border-b border-accent-600 bg-linear-to-b from-accent-600 to-accent-500 py-2"
+	class:list={[
+		'border-b border-accent-600 bg-linear-to-b from-accent-600 to-accent-500 py-2',
+		'lg:h-site-nav lg:border-b-0 lg:py-0',
+	]}
 	{...props}
 >
-	<ul class="content-column flex items-center gap-4">
+	<ul
+		class:list={[
+			columnClass,
+			'flex items-center gap-4 lg:h-full lg:items-end lg:pb-site-nav-baseline',
+		]}
+	>
 		{navigationHeaderItems.map((item) => {
 			const isActive = isActiveNavigationItem(item, pathname);
 
 			return (
-				<li>
+				<li class="lg:trim-text">
 					<Anchor
 						anchorColor="on-accent"
 						aria-current={isActive ? 'page' : undefined}
@@ -41,7 +51,7 @@ const { pathname } = Astro.url;
 				</li>
 			);
 		})}
-		<li class="ml-auto">
+		<li class="ml-auto lg:-mb-1 lg:self-end">
 			<SearchToggle />
 		</li>
 	</ul>
