@@ -57,7 +57,6 @@ const strings = {
 	'section.pagination.title': 'More {label}',
 	'section.projects': 'Projects',
 	'section.relatedWriting': 'Related writing',
-	'section.tags': 'Tags',
 
 	// Home
 	'home.pageTitle': 'Page {page}',

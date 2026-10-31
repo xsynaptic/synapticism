@@ -58,7 +58,7 @@ const { index } = getUrlPathIndexing(Astro.url.pathname);
 	template={template}
 >
 	<article
-		class:list={['pb-8', MicroformatClassNames.Entry]}
+		class:list={['grow pb-8', MicroformatClassNames.Entry]}
 		{...(index ? { 'data-pagefind-body': '' } : {})}
 	>
 		{heroImage ? (

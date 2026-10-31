@@ -159,6 +159,7 @@
 .prose-x blockquote {
 	position: relative;
 	padding-inline-start: 1.25rem;
+	font-family: var(--font-sans);
 	font-size: 0.875em;
 	font-style: italic;
 	color: var(--color-primary-500);

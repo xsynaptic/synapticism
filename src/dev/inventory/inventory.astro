@@ -12,6 +12,8 @@ import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
 import Link from '#components/mdx/link.astro';
 import Anchor from '#components/parts/anchor.astro';
+import ChipRow from '#components/parts/chip-row.astro';
+import Chip from '#components/parts/chip.astro';
 import DateDisplay from '#components/parts/date-display.astro';
 import DividedItem from '#components/parts/divided-item.astro';
 import LabeledRow from '#components/parts/labeled-row.astro';
@@ -29,6 +31,7 @@ import {
 	createSamplePage,
 	getSampleOpenGraphCards,
 	sampleCatalogItems,
+	sampleChipItems,
 	sampleDate,
 	sampleDateTime,
 	sampleDateUpdated,
@@ -48,19 +51,36 @@ import { DatePresetEnum } from '#lib/utils/date.ts';
 import { getPagePagination } from '#lib/utils/pagination.ts';
 import '#dev/inventory/inventory.css';
 
-// Semantic ramps only; blue-chill and cumin are the primitives accent and highlight alias
+// Semantic ramps only; pale-sky, blue-chill and cumin are the primitives they alias
 const colorRamps = [
-	{ name: 'primary', source: 'zinc' },
+	{ name: 'primary', source: 'pale-sky' },
 	{ name: 'accent', source: 'blue-chill' },
 	{ name: 'highlight', source: 'cumin' },
 ];
 
 const colorSteps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 
+const technocratColors = [
+	{ hex: '#1fc2c2', name: 'java', role: 'links, social icons, primary buttons' },
+	{ hex: '#34efef', name: 'java active', role: 'link active' },
+	{ hex: '#4debeb', name: 'java focus', role: 'link focus' },
+	{ hex: '#1e9ab0', name: 'eastern-blue', role: 'menu bar, title hover' },
+	{ hex: '#ef863f', name: 'jaffa', role: 'entry titles, hover, highlight' },
+	{ hex: '#25272c', name: 'shark', role: 'page, sidebar, code blocks' },
+	{ hex: '#444954', name: 'mako', role: 'text, header, footer' },
+	{ hex: '#727b89', name: 'raven', role: 'muted text, tags, sidebar links' },
+	{ hex: '#bdc9ce', name: 'loblolly', role: 'meta, date box' },
+	{ hex: '#fcfcfc', name: 'grey 252', role: 'body background' },
+	{ hex: '#97cd2d', name: 'atlantis', role: 'success' },
+	{ hex: '#b81104', name: 'milano-red', role: 'error' },
+	{ hex: '#fffacd', name: 'lemon-chiffon', role: 'highlight background' },
+];
+
 const typeSteps = ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'];
 
 const fontFamilies = [
 	{ name: 'font-sans', note: 'Aleo, 300 to 700, normal and italic' },
+	{ name: 'font-body', note: 'Oxygen, 300, 400 and 700, no italic' },
 	{ name: 'font-mono', note: 'Geist Mono, 300 to 700' },
 ];
 
@@ -125,7 +145,11 @@ const anchorColorsOnLight = [
 	'accent',
 ] satisfies Array<AnchorColor>;
 
-const anchorColorOnDark = 'on-dark' satisfies AnchorColor;
+const anchorColorsOnDark = ['on-dark'] satisfies Array<AnchorColor>;
+
+const chipEdgeColors = ['primary', 'accent', 'highlight'] satisfies Array<
+	NonNullable<ComponentProps<typeof Chip>['edgeColor']>
+>;
 const anchorColorOnAccent = 'on-accent' satisfies AnchorColor;
 
 const datePresets = Object.values(DatePresetEnum);
@@ -136,7 +160,7 @@ const samplePageMiddle = createSamplePage(3, 12);
 const sampleOpenGraphCards = await getSampleOpenGraphCards();
 ---
 
-<MainSite hasReadingBar={true} meta={{ noIndex: true, title: 'Inventory' }}>
+<MainSite hasReadingBar={true} meta={{ noIndex: true, title: 'Inventory' }} template="full">
 	<div class="pb-16">
 		<div class="content-column pt-8">
 			<h1 class="font-mono text-base font-medium text-primary-800">Inventory</h1>
@@ -171,6 +195,25 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 									</div>
 								))}
 							</div>
+						</div>
+					))}
+				</div>
+			</Specimen>
+			<Specimen
+				name="Technocrat palette"
+				note="The 2015 WordPress theme's colours, resolved from its compiled stylesheet, for comparison with the ramps above. Reference only; no token reads them."
+				source="wp-technocrat/src/scss/config/_colours.scss"
+			>
+				<div class="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3">
+					{technocratColors.map((color) => (
+						<div>
+							<div
+								class="h-16 rounded-sm border border-primary-300"
+								style={`background-color: ${color.hex}`}
+							/>
+							<div class="mt-1 font-mono text-xs text-primary-700">{color.name}</div>
+							<div class="font-mono text-[0.6875rem] text-primary-500">{color.hex}</div>
+							<div class="text-xs leading-snug text-primary-600">{color.role}</div>
 						</div>
 					))}
 				</div>
@@ -259,10 +302,12 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 							accent + anchor-underline
 						</Anchor>
 					</div>
-					<div class="rounded-sm bg-primary-800 px-5 py-4">
-						<Anchor anchorColor={anchorColorOnDark} href="#anchor">
-							{anchorColorOnDark}
-						</Anchor>
+					<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3 rounded-sm bg-primary-800 px-5 py-4">
+						{anchorColorsOnDark.map((anchorColor) => (
+							<Anchor anchorColor={anchorColor} href="#anchor">
+								{anchorColor}
+							</Anchor>
+						))}
 					</div>
 					<div class="rounded-sm bg-accent-500 px-5 py-4">
 						<Anchor anchorColor={anchorColorOnAccent} href="#anchor">
@@ -287,6 +332,32 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 						</div>
 					))}
 				</div>
+			</Specimen>
+			<Specimen
+				name="chip"
+				note="A keycap link that presses on hover, focus, and click. <code>edgeColor</code> sets the border and base; the hash is generated content, so it stays out of the accessible name and microformat values. The optional count sits behind a divider in the edge's lightest step."
+				source="components/parts/chip.astro"
+			>
+				<div class="flex flex-col gap-3">
+					{chipEdgeColors.map((edgeColor) => (
+						<div class="flex flex-wrap items-center gap-x-2 gap-y-3">
+							<span class="w-20 font-mono text-xs text-primary-500">{edgeColor}</span>
+							<Chip edgeColor={edgeColor} href="#chip">
+								Creative Coding
+							</Chip>
+							<Chip count={5} edgeColor={edgeColor} href="#chip">
+								Creative Coding
+							</Chip>
+						</div>
+					))}
+				</div>
+			</Specimen>
+			<Specimen
+				name="chip-row"
+				note="Chips wrapping in a list. The post coda renders an Entry's Tags in one; the Tags list renders one per letter, with counts."
+				source="components/parts/chip-row.astro"
+			>
+				<ChipRow items={sampleChipItems} />
 			</Specimen>
 			<Specimen
 				name="divided-item / list-row"
@@ -328,10 +399,10 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="labeled-row"
-				note="A labeled section wrapping a divided row of links. <code>content-section-references</code> looks up Projects and Tags into two of these."
+				note="A labeled section wrapping a divided row of links. <code>content-section-references</code> looks up Projects into one."
 				source="components/parts/labeled-row.astro"
 			>
-				<LabeledRow items={sampleRowItems} title="Tags" />
+				<LabeledRow items={sampleRowItems} title="Projects" />
 			</Specimen>
 			<Specimen
 				name="pagination-counter"
@@ -410,7 +481,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-hero"
-				note="A Featured Image at the top of an Entry, over its LQIP placeholder. Against <code>content-image</code>: an object rather than a path, <code>priority</code>, no caption, small radius, no border."
+				note="A Featured Image promoted to a full-bleed banner above the title, cropped 3:2, then 2:1 from md, over its LQIP placeholder. Against <code>content-image</code>: an object rather than a path, <code>priority</code>, no caption, no radius, no border."
 				source="components/content/content-hero.astro"
 			>
 				{sampleImageFeatured ? (
@@ -418,6 +489,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 						{...sampleImageFeatured}
 						fallbackAlt="Fallback alt text"
 						isPriority={false}
+						template="full"
 					/>
 				) : (
 					<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>

@@ -1,0 +1,25 @@
+---
+import type { Page } from 'astro';
+
+import type { MetaProps } from '#components/types.ts';
+
+import ContentHeader from '#components/content/content-header.astro';
+import MainSite from '#components/main/main-site.astro';
+import PaginationCounter from '#components/parts/pagination-counter.astro';
+
+interface Props extends Pick<MetaProps, 'description' | 'openGraphCard'> {
+	page: Page;
+	title: string;
+}
+
+const { description, openGraphCard, page, title } = Astro.props;
+---
+
+<MainSite meta={{ description, openGraphCard, title }}>
+	<ContentHeader class="mb-6" title={title}>
+		<Fragment slot="header-subtitle">
+			<PaginationCounter page={page} />
+		</Fragment>
+	</ContentHeader>
+	<slot />
+</MainSite>

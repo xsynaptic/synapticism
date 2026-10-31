@@ -2,6 +2,7 @@ import type { OpenGraphCardInput } from '@synapticism/shared/open-graph';
 import type { Page } from 'astro';
 import type { ComponentProps } from 'astro/types';
 
+import type ChipRow from '#components/parts/chip-row.astro';
 import type LabeledRow from '#components/parts/labeled-row.astro';
 import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
@@ -111,6 +112,12 @@ export const sampleRowItems = [
 	{ title: 'css', url: '/inventory/#tag-css' },
 	{ title: 'astro', url: '/inventory/#tag-astro' },
 ] satisfies ComponentProps<typeof LabeledRow>['items'];
+
+export const sampleChipItems = [
+	{ count: 12, title: 'Astro', url: '/inventory/#tag-astro' },
+	{ count: 5, title: 'Creative Coding', url: '/inventory/#tag-creative-coding' },
+	{ count: 1, title: 'Typography', url: '/inventory/#tag-typography' },
+] satisfies ComponentProps<typeof ChipRow>['items'];
 
 // A key doubles as the route param, so `inventory-og-image.ts` resolves one back through this list
 interface OpenGraphCardSample extends OpenGraphCardInput {

@@ -7,7 +7,6 @@ import LabeledSection from '#components/parts/labeled-section.astro';
 import ListRow from '#components/parts/list-row.astro';
 
 interface Props extends HTMLAttributes<'section'> {
-	itemProps?: HTMLAttributes<'li'> | undefined;
 	items: Array<RowItem>;
 	title: string;
 }
@@ -17,20 +16,14 @@ interface RowItem {
 	url: string;
 }
 
-const { itemProps, items, title, ...props } = Astro.props;
-
-const { class: itemClassName, ...itemAttributes } = itemProps ?? {};
+const { items, title, ...props } = Astro.props;
 ---
 
 {items.length > 0 ? (
 	<LabeledSection title={title} {...props}>
 		<ListRow>
 			{items.map((item) => (
-				<DividedItem
-					as="li"
-					class:list={['divided-thin font-mono text-sm', itemClassName]}
-					{...itemAttributes}
-				>
+				<DividedItem as="li" class="divided-thin font-mono text-sm">
 					<Anchor anchorColor="accent" href={item.url}>
 						{item.title}
 					</Anchor>

@@ -1,0 +1,69 @@
+/* Hook prefix: chip-; edge colours come from a chip-edge- class */
+.chip {
+	--chip-depth: 3px;
+	--chip-border: var(--chip-edge);
+
+	border-color: var(--chip-border);
+	box-shadow: 0 var(--chip-depth) 0 var(--chip-border);
+	translate: 0 calc(3px - var(--chip-depth));
+	transition:
+		translate 320ms cubic-bezier(0.34, 1.8, 0.64, 1),
+		box-shadow 320ms cubic-bezier(0.34, 1.8, 0.64, 1),
+		border-color 200ms linear,
+		color 200ms linear;
+}
+
+/* Empty alt text keeps the hash out of the accessible name */
+.chip::before {
+	margin-inline-end: 0.125rem;
+	color: var(--chip-edge-strong);
+	content: '#' / '';
+}
+
+.chip:focus-visible {
+	--chip-depth: 2px;
+	--chip-border: var(--chip-edge-strong);
+
+	color: var(--chip-ink);
+}
+
+@media (hover: hover) {
+	.chip:hover {
+		--chip-depth: 2px;
+		--chip-border: var(--chip-edge-strong);
+
+		color: var(--chip-ink);
+	}
+}
+
+.chip:active {
+	--chip-depth: 0px;
+
+	transition-timing-function: ease-out;
+	transition-duration: 60ms;
+}
+
+.chip-count {
+	border-color: var(--chip-edge-soft);
+}
+
+.chip-edge-primary {
+	--chip-edge: var(--color-primary-300);
+	--chip-edge-soft: var(--color-primary-200);
+	--chip-edge-strong: var(--color-primary-400);
+	--chip-ink: var(--color-primary-900);
+}
+
+.chip-edge-accent {
+	--chip-edge: var(--color-accent-300);
+	--chip-edge-soft: var(--color-accent-200);
+	--chip-edge-strong: var(--color-accent-500);
+	--chip-ink: var(--color-accent-700);
+}
+
+.chip-edge-highlight {
+	--chip-edge: var(--color-highlight-300);
+	--chip-edge-soft: var(--color-highlight-200);
+	--chip-edge-strong: var(--color-highlight-500);
+	--chip-ink: var(--color-highlight-700);
+}

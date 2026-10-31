@@ -20,6 +20,19 @@
 	--font-cv: var(--font-aleo-static);
 	--list-style-type-bullet: '• ';
 
+	/* Blue-grey primitive */
+	--color-pale-sky-50: #f9fafb;
+	--color-pale-sky-100: #f3f4f6;
+	--color-pale-sky-200: #e2e5e9;
+	--color-pale-sky-300: #d1d5db;
+	--color-pale-sky-400: #9aa0ac;
+	--color-pale-sky-500: #6c727f;
+	--color-pale-sky-600: #4d5360;
+	--color-pale-sky-700: #3a404b;
+	--color-pale-sky-800: #23272f;
+	--color-pale-sky-900: #15181f;
+	--color-pale-sky-950: #07090f;
+
 	/* Teal primitive */
 	--color-blue-chill-50: #f0fafb;
 	--color-blue-chill-100: #d9f3f4;
@@ -46,18 +59,18 @@
 	--color-cumin-900: #66301b;
 	--color-cumin-950: #38180c;
 
-	/* Primary: neutral steel */
-	--color-primary-50: var(--color-zinc-50);
-	--color-primary-100: var(--color-zinc-100);
-	--color-primary-200: var(--color-zinc-200);
-	--color-primary-300: var(--color-zinc-300);
-	--color-primary-400: var(--color-zinc-400);
-	--color-primary-500: var(--color-zinc-500);
-	--color-primary-600: var(--color-zinc-600);
-	--color-primary-700: var(--color-zinc-700);
-	--color-primary-800: var(--color-zinc-800);
-	--color-primary-900: var(--color-zinc-900);
-	--color-primary-950: var(--color-zinc-950);
+	/* Primary: blue steel */
+	--color-primary-50: var(--color-pale-sky-50);
+	--color-primary-100: var(--color-pale-sky-100);
+	--color-primary-200: var(--color-pale-sky-200);
+	--color-primary-300: var(--color-pale-sky-300);
+	--color-primary-400: var(--color-pale-sky-400);
+	--color-primary-500: var(--color-pale-sky-500);
+	--color-primary-600: var(--color-pale-sky-600);
+	--color-primary-700: var(--color-pale-sky-700);
+	--color-primary-800: var(--color-pale-sky-800);
+	--color-primary-900: var(--color-pale-sky-900);
+	--color-primary-950: var(--color-pale-sky-950);
 
 	/* Accent: teal */
 	--color-accent-50: var(--color-blue-chill-50);

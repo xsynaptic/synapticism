@@ -1,6 +1,7 @@
 ---
 import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
+import ChipRow from '#components/parts/chip-row.astro';
 import LabeledRow from '#components/parts/labeled-row.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { createProjectsByIdsFunction } from '#lib/collections/projects/projects-utils.ts';
@@ -45,10 +46,10 @@ const tagItems = tags
 	items={projectItems}
 	title={t('section.projects')}
 />
-<LabeledRow
+<ChipRow
+	chipProps={{ class: MicroformatClassNames.Category, 'data-pagefind-filter': 'tag' }}
+	class="content-column mb-4"
 	data-nosnippet
 	data-pagefind-ignore
-	itemProps={{ class: MicroformatClassNames.Category, 'data-pagefind-filter': 'tag' }}
 	items={tagItems}
-	title={t('section.tags')}
 />

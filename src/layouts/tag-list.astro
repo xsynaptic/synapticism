@@ -4,9 +4,7 @@ import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentSection from '#components/content/content-section.astro';
 import MainSite from '#components/main/main-site.astro';
-import Anchor from '#components/parts/anchor.astro';
-import DividedItem from '#components/parts/divided-item.astro';
-import ListRow from '#components/parts/list-row.astro';
+import ChipRow from '#components/parts/chip-row.astro';
 import { groupTagsByLetter } from '#lib/collections/tags/tags-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
@@ -35,23 +33,13 @@ const groups = groupTagsByLetter(tags);
 				{groups.map((group) => (
 					<section class="flex flex-col gap-2">
 						<h2 class="font-mono text-sm font-semibold text-primary-400">{group.letter}</h2>
-						<ListRow>
-							{group.tags.map((tag) => (
-								<DividedItem as="li" class="divided-thin text-sm">
-									<Anchor href={getContentPath(tag.collection, tag.id)}>
-										{tag.data.title}
-										{tag.data._entryCount ? (
-											<>
-												{' '}
-												<span class="text-xs text-primary-400">
-													({String(tag.data._entryCount)})
-												</span>
-											</>
-										) : undefined}
-									</Anchor>
-								</DividedItem>
-							))}
-						</ListRow>
+						<ChipRow
+							items={group.tags.map((tag) => ({
+								count: tag.data._entryCount > 0 ? tag.data._entryCount : undefined,
+								title: tag.data.title,
+								url: getContentPath(tag.collection, tag.id),
+							}))}
+						/>
 					</section>
 				))}
 			</div>

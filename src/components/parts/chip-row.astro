@@ -1,0 +1,30 @@
+---
+import type { ComponentProps, HTMLAttributes } from 'astro/types';
+
+import Chip from '#components/parts/chip.astro';
+
+interface Props extends HTMLAttributes<'ul'> {
+	chipProps?: Omit<ComponentProps<typeof Chip>, 'count' | 'href'> | undefined;
+	items: Array<ChipRowItem>;
+}
+
+interface ChipRowItem {
+	count?: number | undefined;
+	title: string;
+	url: string;
+}
+
+const { chipProps, class: className, items, ...props } = Astro.props;
+---
+
+{items.length > 0 ? (
+	<ul class:list={['flex flex-wrap gap-x-2 gap-y-3', className]} {...props}>
+		{items.map((item) => (
+			<li>
+				<Chip count={item.count} href={item.url} {...chipProps}>
+					{item.title}
+				</Chip>
+			</li>
+		))}
+	</ul>
+) : undefined}

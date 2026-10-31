@@ -46,7 +46,7 @@ const isSidebar = template === 'sidebar';
 const columnClass = isSidebar ? 'sidebar-column' : 'content-column';
 
 // Tracks --color-primary-800, the band behind the header
-const themeColor = '#27272a';
+const themeColor = '#23272f';
 ---
 
 <!doctype html>
@@ -118,7 +118,7 @@ const themeColor = '#27272a';
 						'bg-linear-to-b from-primary-800 to-primary-700',
 					]}
 				>
-					<div class:list={[columnClass, 'lg:w-full']}>
+					<div class={columnClass}>
 						<SiteTitle isHomepage={isHomepage} />
 					</div>
 				</div>
@@ -126,9 +126,9 @@ const themeColor = '#27272a';
 			</header>
 			<main
 				class:list={[
-					'bg-linear-to-b from-primary-200 to-primary-100 to-[150px] pb-8',
+					'flex flex-col bg-linear-to-b from-primary-200 to-primary-100 to-[150px] pb-8',
 					{ 'lg:col-start-2 lg:row-span-2 lg:row-start-1': isSidebar },
-					'print:bg-none',
+					'print:block print:bg-none',
 				]}
 				id="main-content"
 			>
@@ -136,7 +136,7 @@ const themeColor = '#27272a';
 			</main>
 			<aside
 				class:list={[
-					'bg-primary-950 pt-6 pb-8',
+					'bg-primary-800 pt-6 pb-8',
 					{ 'lg:col-start-3 lg:row-start-2': isSidebar },
 					'print:hidden',
 				]}
@@ -162,7 +162,7 @@ const themeColor = '#27272a';
 				]}
 				data-nosnippet
 			>
-				<div class:list={['content-column w-full', { 'lg:col-start-2': isSidebar }]}>
+				<div class:list={['content-column', { 'lg:col-start-2': isSidebar }]}>
 					<Colophon />
 				</div>
 			</footer>

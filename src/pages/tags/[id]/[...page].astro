@@ -1,6 +1,7 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
+import { postListPageSize } from '#constants.ts';
 import TagDetailLayout from '#layouts/tag-detail.astro';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import { queryTagsEntryContent } from '#lib/collections/tags/tags-utils.ts';
@@ -10,12 +11,12 @@ export const getStaticPaths = (async ({ paginate }) => {
 
 	const paths = await Promise.all(
 		entries.map(async (entry) => {
-			const content = await queryTagsEntryContent(entry);
+			const { posts, projects } = await queryTagsEntryContent(entry);
 
-			return paginate(content, {
-				pageSize: 20,
+			return paginate(posts, {
+				pageSize: postListPageSize,
 				params: { id: entry.id },
-				props: { entry },
+				props: { entry, projects },
 			});
 		}),
 	);

@@ -1,0 +1,27 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+type EdgeColor = 'accent' | 'highlight' | 'primary';
+
+interface Props extends HTMLAttributes<'a'> {
+	count?: number | undefined;
+	edgeColor?: EdgeColor | undefined;
+}
+
+const { class: className, count, edgeColor = 'primary', ...props } = Astro.props;
+---
+
+<a
+	class:list={[
+		'chip',
+		`chip-edge-${edgeColor}`,
+		'inline-flex items-center rounded-sm border bg-white px-2 py-0.5 font-mono text-xs whitespace-nowrap text-primary-700',
+		className,
+	]}
+	{...props}
+>
+	<slot />
+	{count === undefined ? undefined : (
+		<span class="chip-count ms-2 border-s ps-2 text-accent-600">{count}</span>
+	)}
+</a>
