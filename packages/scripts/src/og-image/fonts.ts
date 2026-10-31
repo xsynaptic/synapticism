@@ -7,7 +7,7 @@ import path from 'node:path';
 interface FontsourceConfig {
 	// Font family name as referenced by `fontFamily` in the template
 	name: string;
-	// @fontsource package without the scope (e.g. geist-mono)
+	// @fontsource package without the scope (e.g. red-hat-mono)
 	package: string;
 	variants: Array<FontVariant>;
 }
@@ -30,8 +30,8 @@ const fontConfigs: Array<FontsourceConfig> = [
 		],
 	},
 	{
-		name: 'Geist Mono',
-		package: 'geist-mono',
+		name: 'Red Hat Mono',
+		package: 'red-hat-mono',
 		variants: [{ style: 'normal', subset: 'latin', weight: 500 }],
 	},
 ];

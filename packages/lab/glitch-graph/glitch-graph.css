@@ -9,7 +9,7 @@
 	--gg-accent: var(--color-accent-600, #2b7e8f);
 	--gg-accent-soft: var(--color-accent-50, #f0fafb);
 	--gg-error: var(--color-highlight-700, #98421d);
-	--gg-mono: var(--font-mono, var(--font-geist-mono, ui-monospace, monospace));
+	--gg-mono: var(--font-mono, var(--font-red-hat-mono, ui-monospace, monospace));
 	--gg-node-width: 14rem;
 	--gg-pill-width: 8rem;
 	--gg-merge-width: 12.5rem;

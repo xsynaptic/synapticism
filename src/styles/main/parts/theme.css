@@ -14,9 +14,9 @@
 	--z-index-skip-link: 70;
 
 	/* Fonts */
-	--font-sans: var(--font-aleo);
-	--font-body: var(--font-oxygen);
-	--font-mono: var(--font-geist-mono);
+	--font-sans: var(--font-red-hat-text);
+	--font-display: var(--font-aleo);
+	--font-mono: var(--font-red-hat-mono);
 	--font-cv: var(--font-aleo-static);
 	--list-style-type-bullet: '• ';
 

@@ -8,7 +8,7 @@
 	--station-tile-accent-strong: var(--color-accent-700, #296775);
 	--station-tile-field: var(--color-white, #fff);
 	--station-tile-on-accent: var(--color-white, #fff);
-	--station-tile-mono: var(--font-mono, var(--font-geist-mono, ui-monospace, monospace));
+	--station-tile-mono: var(--font-mono, var(--font-red-hat-mono, ui-monospace, monospace));
 
 	display: block;
 }

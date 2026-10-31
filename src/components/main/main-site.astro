@@ -58,8 +58,8 @@ const themeColor = '#23272f';
 		<meta content={themeColor} name="theme-color" />
 		<link href="/favicon.svg" rel="icon" type="image/svg+xml" />
 		<Font cssVariable="--font-aleo" preload={[{ style: 'normal' }]} />
-		<Font cssVariable="--font-oxygen" preload={[{ weight: 400 }]} />
-		<Font cssVariable="--font-geist-mono" preload />
+		<Font cssVariable="--font-red-hat-text" preload={[{ style: 'normal', weight: 400 }]} />
+		<Font cssVariable="--font-red-hat-mono" />
 		<slot name="head" />
 		<Meta {...meta} />
 		{UMAMI_ID && UMAMI_DOMAIN && import.meta.env.PROD ? (

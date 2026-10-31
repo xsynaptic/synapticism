@@ -13,7 +13,7 @@ const { isHomepage } = Astro.props;
 const SiteTitleTag = isHomepage ? 'h1' : 'div';
 ---
 
-<SiteTitleTag class="font-sans text-sm font-semibold tracking-widest uppercase">
+<SiteTitleTag class="font-display text-sm font-semibold tracking-widest uppercase">
 	<span class="text-primary-500">ꗥ</span>{' '}
 	<Anchor anchorColor="on-dark" href={getSitePath()}>
 		{t('site.title')}

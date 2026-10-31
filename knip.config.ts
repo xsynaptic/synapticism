@@ -33,7 +33,7 @@ export default {
 			ignoreDependencies: [
 				// OG fonts resolved at build via a fontsource path string knip can't trace
 				'@fontsource/aleo',
-				'@fontsource/geist-mono',
+				'@fontsource/red-hat-mono',
 			],
 		},
 		// An `exports` map makes every file an entry, and entry exports go unchecked by default

@@ -60,17 +60,17 @@ export default defineConfig({
 			weights: [400, 600, 700],
 		},
 		{
-			cssVariable: '--font-oxygen',
-			name: 'Oxygen',
+			cssVariable: '--font-red-hat-text',
+			name: 'Red Hat Text',
 			provider: fontProviders.fontsource(),
-			styles: ['normal'],
+			styles: ['normal', 'italic'],
 			subsets: ['latin'],
-			weights: [300, 400, 700],
+			weights: ['300 700'],
 		},
 		{
-			cssVariable: '--font-geist-mono',
+			cssVariable: '--font-red-hat-mono',
 			fallbacks: ['monospace'],
-			name: 'Geist Mono',
+			name: 'Red Hat Mono',
 			provider: fontProviders.fontsource(),
 			styles: ['normal'],
 			subsets: ['latin'],
@@ -83,7 +83,7 @@ export default defineConfig({
 	},
 	integrations: [
 		devInventory(),
-		fontDevtools({ targets: ['--font-body', '--font-mono', '--font-sans'] }),
+		fontDevtools({ targets: ['--font-display', '--font-mono', '--font-sans'] }),
 		imagePipeline({
 			mediaPath: mediaDir,
 			placeholders: { blur: 3, pixels: 1024, quality: 25, saturation: 1.2 },

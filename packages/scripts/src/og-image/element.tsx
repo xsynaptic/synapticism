@@ -47,7 +47,7 @@ const styles = {
 	header: { alignItems: 'center', display: 'flex' },
 	label: {
 		color: colors.accentBright,
-		fontFamily: 'Geist Mono',
+		fontFamily: 'Red Hat Mono',
 		fontSize: '22px',
 		fontWeight: 500,
 		letterSpacing: '2px',
