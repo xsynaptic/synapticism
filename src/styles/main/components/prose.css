@@ -17,7 +17,6 @@
 	}
 }
 
-/* Text wraps at the reading measure, left-aligned within the frame */
 .prose-x > * {
 	max-width: var(--prose-measure);
 }
@@ -49,7 +48,6 @@
 	grid-column: content;
 }
 
-/* Flow rhythm: generous between blocks, more space above headings */
 .prose-x > * + * {
 	margin-top: 1.2em;
 }
@@ -67,7 +65,6 @@
 	margin-top: 0;
 }
 
-/* Headings */
 .prose-x :is(h1, h2, h3, h4) {
 	font-family: var(--font-display);
 	font-weight: 600;
@@ -97,7 +94,6 @@
 	line-height: var(--leading-snug);
 }
 
-/* Links */
 .prose-x a {
 	color: var(--color-accent-600);
 	text-decoration-line: underline;
@@ -110,28 +106,26 @@
 }
 
 .prose-x a:focus-visible {
-	color: var(--color-accent-500);
-	text-decoration-color: var(--color-accent-200);
+	color: var(--color-highlight-500);
+	text-decoration-color: var(--color-accent-300);
 }
 
 @media (hover: hover) {
 	.prose-x a:hover {
-		color: var(--color-accent-500);
-		text-decoration-color: var(--color-accent-200);
+		color: var(--color-highlight-500);
+		text-decoration-color: var(--color-accent-300);
 	}
 }
 
-/* Emphasis */
 .prose-x strong {
-	font-weight: 700;
-	color: var(--color-primary-900);
+	font-weight: 600;
+	color: var(--color-primary-800);
 }
 
 .prose-x em {
 	font-style: italic;
 }
 
-/* Lists */
 .prose-x :is(ul, ol) {
 	padding-inline-start: 1.5rem;
 }
@@ -154,7 +148,7 @@
 	margin-top: 0.4em;
 }
 
-/* Blockquote: indented with a hanging accent quotation mark, never a side-stripe */
+/* A hanging quotation mark rather than a side stripe */
 .prose-x blockquote {
 	position: relative;
 	padding-inline-start: 1.25rem;
@@ -179,7 +173,6 @@
 	margin-top: 0.8em;
 }
 
-/* Inline code */
 .prose-x :not(pre) > code {
 	padding: 0.15em 0.35em;
 	font-family: var(--font-mono);
@@ -189,7 +182,6 @@
 	border-radius: var(--radius-sm);
 }
 
-/* Tables */
 .prose-x > table {
 	display: block;
 	overflow-x: auto;
@@ -217,7 +209,6 @@
 	border-bottom: 2px solid var(--color-primary-300);
 }
 
-/* Horizontal rule */
 .prose-x hr {
 	height: 1px;
 	margin-block: 2.5em;
@@ -225,7 +216,6 @@
 	border: none;
 }
 
-/* Figures and images */
 .prose-x img {
 	border-radius: var(--radius-sm);
 }
@@ -239,7 +229,7 @@
 	text-align: center;
 }
 
-/* Quotations: unlike media figures they stay at the reading measure; the caption overrides the image-caption treatment and aligns with the indented quote text */
+/* Unlike media figures, quotations stay at the reading measure */
 .prose-x > figure.quotation {
 	max-width: var(--prose-measure);
 }
@@ -252,7 +242,6 @@
 	text-align: start;
 }
 
-/* Footnotes */
 .prose-x > .footnotes {
 	margin-top: 3em;
 	font-size: var(--text-sm);

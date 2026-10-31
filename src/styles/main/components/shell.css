@@ -13,6 +13,38 @@
 	}
 }
 
+.site-shell-main,
+.site-shell-sidebar::before {
+	background-image: linear-gradient(
+		to bottom,
+		var(--color-primary-200),
+		var(--color-primary-100) 150px,
+		var(--color-primary-100) calc(100% - 100px),
+		var(--color-primary-200)
+	);
+	background-repeat: no-repeat;
+}
+
+.site-shell-aside {
+	background-image: linear-gradient(
+		to bottom,
+		var(--color-primary-700),
+		var(--color-primary-800) 250px,
+		var(--color-primary-800) calc(100% - 150px),
+		var(--color-primary-900)
+	);
+	background-repeat: no-repeat;
+}
+
+/* Carries the content pane's background out to the left edge of the viewport */
+.site-shell-sidebar::before {
+	@variant lg {
+		grid-row: 1 / span 2;
+		grid-column: 1;
+		content: '';
+	}
+}
+
 .site-shell-sidebar .site-shell-title {
 	@variant lg {
 		display: flex;

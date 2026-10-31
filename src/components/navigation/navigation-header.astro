@@ -3,7 +3,6 @@ import type { HTMLAttributes } from 'astro/types';
 
 import { navigationHeaderItems } from '#components/navigation/navigation-header.ts';
 import { isActiveNavigationItem } from '#components/navigation/navigation-utils.ts';
-import Anchor from '#components/parts/anchor.astro';
 import SearchToggle from '#components/search/search-toggle.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
@@ -19,39 +18,31 @@ const { pathname } = Astro.url;
 <nav
 	aria-label={t('aria.headerNavigation')}
 	class:list={[
-		'border-b border-accent-600 bg-linear-to-b from-accent-600 to-accent-500 py-2',
-		'lg:h-site-nav lg:border-b-0 lg:py-0',
+		'h-site-nav border-b border-accent-600 bg-linear-to-b from-accent-600 to-accent-500',
+		'lg:border-b-0',
 	]}
 	{...props}
 >
-	<ul
-		class:list={[
-			columnClass,
-			'flex items-center gap-4 font-display lg:h-full lg:items-end lg:pb-site-nav-baseline',
-		]}
-	>
+	<ul class:list={[columnClass, 'flex h-full gap-4 font-display']}>
 		{navigationHeaderItems.map((item) => {
 			const isActive = isActiveNavigationItem(item, pathname);
 
 			return (
-				<li class="lg:trim-text">
-					<Anchor
-						anchorColor="on-accent"
+				<li class="flex">
+					<a
 						aria-current={isActive ? 'page' : undefined}
 						class:list={[
-							'text-sm underline decoration-2 underline-offset-4 sm:text-base',
-							isActive
-								? 'font-semibold decoration-white/55'
-								: 'font-medium decoration-transparent hover:decoration-white/55 focus-visible:decoration-white/55',
+							'navigation-header-link flex items-end pb-site-nav-baseline text-sm sm:text-base',
+							isActive ? 'font-semibold' : 'font-medium',
 						]}
 						href={item.url}
 					>
-						{item.title}
-					</Anchor>
+						<span class="trim-text">{item.title}</span>
+					</a>
 				</li>
 			);
 		})}
-		<li class="ml-auto lg:-mb-1 lg:self-end">
+		<li class="ml-auto flex items-center">
 			<SearchToggle />
 		</li>
 	</ul>

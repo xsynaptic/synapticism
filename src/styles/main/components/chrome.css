@@ -1,4 +1,3 @@
-/* Site furniture anchored to the viewport; hooks: .skip-link, top-button, .progress-bar */
 .skip-link a {
 	inset-inline-start: 0;
 	translate: 0 -100vh;

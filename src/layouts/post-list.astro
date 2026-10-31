@@ -18,7 +18,6 @@ const { page } = Astro.props;
 <ContentListView
 	description={t('posts.description')}
 	openGraphCard={getIndexOpenGraphCard('posts', t('posts.title'))}
-	page={page}
 	title={t('posts.title')}
 >
 	<PostExcerptList entries={page.data} pagination={getPagePagination(page)} />

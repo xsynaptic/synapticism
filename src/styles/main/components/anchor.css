@@ -1,8 +1,9 @@
-/* Anchor role colours; extracted here to avoid repetition in the Anchor component */
 .anchor {
 	color: var(--anchor-color);
 	cursor: pointer;
-	transition: color var(--default-transition-duration) linear;
+	transition-timing-function: var(--default-transition-timing-function);
+	transition-duration: var(--default-transition-duration);
+	transition-property: color, text-decoration-color;
 }
 
 .anchor:focus-visible {
@@ -32,7 +33,7 @@
 
 .anchor-accent {
 	--anchor-color: var(--color-accent-600);
-	--anchor-hover: var(--color-accent-500);
+	--anchor-hover: var(--color-highlight-500);
 }
 
 .anchor-on-dark {
@@ -54,11 +55,11 @@
 }
 
 .anchor-underline:focus-visible {
-	text-decoration-color: var(--color-accent-200);
+	text-decoration-color: var(--color-accent-300);
 }
 
 @media (hover: hover) {
 	.anchor-underline:hover {
-		text-decoration-color: var(--color-accent-200);
+		text-decoration-color: var(--color-accent-300);
 	}
 }

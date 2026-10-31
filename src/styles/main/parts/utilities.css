@@ -1,4 +1,3 @@
-/* Content column: constrains to the content width with responsive horizontal padding */
 @utility content-column {
 	@apply mx-auto w-full max-w-content px-4 md:px-8;
 }

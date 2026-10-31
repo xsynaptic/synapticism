@@ -126,7 +126,7 @@ const themeColor = '#23272f';
 			</header>
 			<main
 				class:list={[
-					'flex flex-col bg-linear-to-b from-primary-200 to-primary-100 to-[150px] pb-8',
+					'site-shell-main flex flex-col pb-8',
 					{ 'lg:col-start-2 lg:row-span-2 lg:row-start-1': isSidebar },
 					'print:block print:bg-none',
 				]}
@@ -136,7 +136,7 @@ const themeColor = '#23272f';
 			</main>
 			<aside
 				class:list={[
-					'bg-primary-800 pt-6 pb-8',
+					'site-shell-aside pt-6 pb-6',
 					{ 'lg:col-start-3 lg:row-start-2': isSidebar },
 					'print:hidden',
 				]}
@@ -156,7 +156,7 @@ const themeColor = '#23272f';
 			</aside>
 			<footer
 				class:list={[
-					'bg-linear-to-b from-primary-700 to-primary-800 py-4',
+					'grid min-h-site-nav items-center bg-linear-to-b from-primary-700 to-primary-800 py-2',
 					{ 'lg:col-span-full lg:grid lg:grid-cols-subgrid': isSidebar },
 					'print:hidden',
 				]}

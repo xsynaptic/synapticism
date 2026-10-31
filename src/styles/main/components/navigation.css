@@ -1,0 +1,56 @@
+.navigation-header-link {
+	position: relative;
+	color: var(--color-accent-50);
+	transition: color 150ms var(--default-transition-timing-function);
+}
+
+/* Takes the colour of the background below the nav so the bar reads as an opening into it
+   Sits 1px low to cover the nav's bottom border, which only shows below lg */
+.navigation-header-link::after {
+	position: absolute;
+	inset-inline: 0;
+	bottom: -1px;
+	height: 3px;
+	content: '';
+	background-color: var(--color-primary-200);
+	border-radius: 2px 2px 0 0;
+	scale: 0 1;
+	transition: scale 150ms var(--default-transition-timing-function);
+
+	@variant lg {
+		bottom: 0;
+	}
+}
+
+.site-shell-sidebar .navigation-header-link::after {
+	@variant lg {
+		background-color: var(--color-primary-700);
+	}
+}
+
+.navigation-header-link:focus-visible {
+	color: var(--color-white);
+}
+
+.navigation-header-link:focus-visible::after {
+	scale: 1 1;
+}
+
+@media (hover: hover) {
+	.navigation-header-link:hover {
+		color: var(--color-white);
+	}
+
+	.navigation-header-link:hover::after {
+		scale: 1 1;
+	}
+}
+
+.navigation-header-link[aria-current='page'] {
+	color: var(--color-white);
+}
+
+.navigation-header-link[aria-current='page']::after {
+	background-color: var(--color-highlight-400);
+	scale: 1 1;
+}

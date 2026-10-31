@@ -19,7 +19,6 @@ import DividedItem from '#components/parts/divided-item.astro';
 import LabeledRow from '#components/parts/labeled-row.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
 import ListRow from '#components/parts/list-row.astro';
-import PaginationCounter from '#components/parts/pagination-counter.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
 import PreviewImage from '#components/parts/preview-image.astro';
 import ProseBody from '#components/parts/prose-body.astro';
@@ -403,16 +402,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				source="components/parts/labeled-row.astro"
 			>
 				<LabeledRow items={sampleRowItems} title="Projects" />
-			</Specimen>
-			<Specimen
-				name="pagination-counter"
-				note="Hides itself on the first page: page 1 of 1, then page 3 of 12."
-				source="components/parts/pagination-counter.astro"
-			>
-				<div class="flex flex-col gap-4">
-					<PaginationCounter page={samplePageFirst} />
-					<PaginationCounter page={samplePageMiddle} />
-				</div>
 			</Specimen>
 			<Specimen
 				name="pagination-select"

@@ -1,11 +1,5 @@
 @import 'tailwindcss' source(none);
 
-/*
- * Tailwind usually scans everything for class names
- * For performance reasons we're explicitly naming paths and file types here:
- * 1) CSS files, for which we need to check @apply rules and CSS variable names
- * 2) Astro files
- */
 @source './main/**/*.css';
 @source '../components/**/*.astro';
 @source '../layouts/**/*.astro';
@@ -22,6 +16,7 @@
 @import './main/components/chip.css' layer(components);
 @import './main/components/chrome.css' layer(components);
 @import './main/components/divider.css' layer(components);
+@import './main/components/navigation.css' layer(components);
 @import './main/components/not-found.css' layer(components);
 @import './main/components/pagination.css' layer(components);
 @import './main/components/prose.css' layer(components);

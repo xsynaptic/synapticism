@@ -26,7 +26,6 @@ const { entry, page, projects } = Astro.props;
 <ContentListView
 	description={getDescriptionRenderedText(entry)}
 	openGraphCard={getEntryOpenGraphCard(entry)}
-	page={page}
 	title={entry.data.title}
 >
 	<ContentDescription entry={entry} />

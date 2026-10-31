@@ -1,4 +1,4 @@
-/* Note: this CSS file does not import Tailwind but relies on variables in the global context */
+/* No Tailwind import; the theme variables come from the main stylesheet */
 @import '@pagefind/component-ui/css/pagefind-component-ui.css';
 
 /* The import resets both hosts to `display: block`; search.css repeats these rules until this lazy sheet loads */
@@ -12,6 +12,11 @@ pagefind-modal {
 
 pagefind-modal:not(:defined) {
 	display: none;
+}
+
+/* Pagefind appends its 1px live regions to the end of body, which overflows a page that exactly fills the viewport */
+[data-pagefind-announcer] {
+	position: fixed;
 }
 
 :root {
@@ -32,21 +37,16 @@ pagefind-modal:not(:defined) {
 	--pf-border-radius: var(--radius-sm);
 }
 
-/*
- * Pagefind 1.5.0 fix
- * `all: initial` on custom elements breaks font inheritance for child buttons
- */
+/* Pagefind's `all: initial` on its hosts stops child buttons inheriting the font */
 pagefind-modal button,
 pagefind-searchbox button {
 	font-family: var(--pf-font) !important;
 }
 
-/* Backdrop blur when modal is open */
 dialog.pf-modal::backdrop {
 	backdrop-filter: blur(4px);
 }
 
-/* Result link colors */
 .pf-result-link {
 	--pf-text: var(--color-accent-500);
 	&:hover {
@@ -54,7 +54,6 @@ dialog.pf-modal::backdrop {
 	}
 }
 
-/* Sub-result link colors */
 .pf-heading-link {
 	--pf-text: var(--color-primary-600);
 	&:hover {
