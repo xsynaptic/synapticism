@@ -17,7 +17,7 @@ import { mdxComponentFiles } from '#constants.ts';
 import devInventory from '#dev/inventory/inventory-integration.ts';
 import { getUrlPathIndexing } from '#lib/utils/sitemap.ts';
 
-import { expressiveCodeOptions } from './expressive-code.config.mjs';
+import { expressiveCodeOptions } from './expressive-code.config.ts';
 
 const lastmod = sitemapLastmod({ filePath: sitemapLastmodPath });
 

@@ -1,22 +1,39 @@
-// @ts-check
+import type { SatteriExpressiveCodeOptions } from 'satteri-expressive-code';
 
-// Shiki does colour math on these at build, so they must be literals rather than var() reads
+import { readFileSync } from 'node:fs';
+
+const themeColors = new Map(
+	readFileSync(new URL('src/styles/main/parts/theme.css', import.meta.url), 'utf8')
+		.matchAll(/--color-([\w-]+):\s*([^;]+);/g)
+		.map(([, name = '', value = '']) => [name, value.trim()]),
+);
+
+function getThemeColor(name: string): string {
+	const value = themeColors.get(name);
+
+	if (!value) throw new Error(`Theme colour not found: --color-${name}`);
+
+	const reference = /^var\(--color-([\w-]+)\)$/.exec(value)?.[1];
+
+	return reference ? getThemeColor(reference) : value;
+}
+
+// Expressive Code adjusts these for contrast at build, so they must be literals rather than var() reads
 const ramp = {
-	accent200: '#b7e6ea',
-	accent300: '#85d3db',
-	accent400: '#4cb6c4',
-	accent600: '#2b7e8f',
-	accent700: '#296775',
-	highlight300: '#e8a578',
-	highlight400: '#dd8048',
-	primary100: '#f4f4f5',
-	primary200: '#e4e4e7',
-	primary300: '#d4d4d8',
-	primary400: '#a1a1aa',
-	primary600: '#52525b',
-	primary700: '#3f3f46',
-	primary800: '#27272a',
-	primary900: '#18181b',
+	accent200: getThemeColor('accent-200'),
+	accent300: getThemeColor('accent-300'),
+	accent400: getThemeColor('accent-400'),
+	accent700: getThemeColor('accent-700'),
+	highlight300: getThemeColor('highlight-300'),
+	highlight400: getThemeColor('highlight-400'),
+	primary100: getThemeColor('primary-100'),
+	primary200: getThemeColor('primary-200'),
+	primary300: getThemeColor('primary-300'),
+	primary400: getThemeColor('primary-400'),
+	primary600: getThemeColor('primary-600'),
+	primary700: getThemeColor('primary-700'),
+	primary800: getThemeColor('primary-800'),
+	primary900: getThemeColor('primary-900'),
 };
 
 const carbonCodeTheme = {
@@ -96,9 +113,6 @@ const carbonCodeTheme = {
 	type: 'dark',
 };
 
-/**
-@type {import('satteri-expressive-code').SatteriExpressiveCodeOptions}
-*/
 export const expressiveCodeOptions = {
 	defaultProps: {
 		wrap: false,
@@ -133,8 +147,8 @@ export const expressiveCodeOptions = {
 			tooltipSuccessBackground: ramp.accent700,
 			tooltipSuccessForeground: '#ffffff',
 		},
-		scrollbarThumbColor: 'rgba(161, 161, 170, 0.25)',
-		scrollbarThumbHoverColor: 'rgba(161, 161, 170, 0.45)',
+		scrollbarThumbColor: `${ramp.primary400}40`,
+		scrollbarThumbHoverColor: `${ramp.primary400}73`,
 		textMarkers: {
 			delBackground: 'rgba(200, 120, 110, 0.13)',
 			delBorderColor: 'rgba(200, 120, 110, 0.45)',
@@ -142,11 +156,11 @@ export const expressiveCodeOptions = {
 			insBackground: 'rgba(122, 180, 140, 0.13)',
 			insBorderColor: 'rgba(122, 180, 140, 0.45)',
 			insDiffIndicatorColor: '#7ab48c',
-			markBackground: 'rgba(133, 211, 219, 0.13)',
-			markBorderColor: 'rgba(133, 211, 219, 0.45)',
+			markBackground: `${ramp.accent300}21`,
+			markBorderColor: `${ramp.accent300}73`,
 		},
 		uiFontFamily: 'var(--font-mono)',
 		uiFontSize: '0.8125rem',
 	},
 	themes: [carbonCodeTheme],
-};
+} satisfies SatteriExpressiveCodeOptions;
