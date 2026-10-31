@@ -18,7 +18,7 @@
 		"@thi.ng/pixel-dither": "^1.1.206",
 		"@thi.ng/random": "^4.1.54",
 		"@xyflow/react": "^12.12.0",
-		"elkjs": "^0.12.0",
+		"elkjs": "^0.12.1",
 		"react": "^19.3.1",
 		"react-dom": "^19.3.1",
 		"zustand": "^5.0.16"

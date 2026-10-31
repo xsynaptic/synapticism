@@ -7,11 +7,9 @@ verifyDepsBeforeRun: error
 strictDepBuilds: true
 
 minimumReleaseAgeExclude:
-  - astro
-  - satteri
-  - '@bruits/*'
-  - '@astrojs/*'
   - '@xsynaptic/*'
+  - '@takumi-rs/*'
+  - takumi-js
 
 # TypeScript 7 native binaries for fallow's type-aware mode, which this project does not use
 ignoredOptionalDependencies:
