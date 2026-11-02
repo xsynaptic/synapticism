@@ -1,5 +1,6 @@
 {
 	"ignorePatterns": ["packages/scripts/src/validate-content/fixtures/**"],
+	"failOnParseError": true,
 	"rulePacks": ["fallow-rules.jsonc"],
 	// Rule packs only check reachable files; MDX components are reached by auto-import
 	"dynamicallyLoaded": ["src/components/mdx/*.astro"],
@@ -23,11 +24,13 @@
 		"misconfigured-dependency-overrides": "off",
 		"re-export-cycle": "error",
 		"package-cycle": "error",
+		"unused-component-props": "error",
 	},
 	"health": {
 		// Zero disables CRAP, which fallow otherwise estimates without coverage data
 		"maxCrap": 0,
 		"maxCognitive": 12,
+		"maxFileLines": 500,
 		"ignore": ["src/dev/**"],
 	},
 	"duplicates": {
