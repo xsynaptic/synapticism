@@ -1,7 +1,7 @@
 .navigation-header-link {
 	position: relative;
 	color: var(--color-accent-50);
-	transition: color 150ms var(--default-transition-timing-function);
+	transition: color var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
 /* Takes the colour of the background below the nav so the bar reads as an opening into it
@@ -13,9 +13,9 @@
 	height: 3px;
 	content: '';
 	background-color: var(--color-primary-200);
-	border-radius: 2px 2px 0 0;
+	border-radius: var(--radius-xs) var(--radius-xs) 0 0;
 	scale: 0 1;
-	transition: scale 150ms var(--default-transition-timing-function);
+	transition: scale var(--default-transition-duration) var(--default-transition-timing-function);
 
 	@variant lg {
 		bottom: 0;

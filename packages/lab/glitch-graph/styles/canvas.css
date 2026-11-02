@@ -1,0 +1,140 @@
+.gg-canvas {
+	--xy-edge-stroke: var(--gg-edge);
+	--xy-edge-stroke-width: 1.25;
+	--xy-background-pattern-color: var(--gg-edge);
+
+	min-width: 0;
+	border-inline-end: 1px solid var(--gg-hairline);
+}
+
+.gg-canvas[data-ready='false'] {
+	opacity: 0;
+}
+
+.gg-canvas .gg-unplaced {
+	visibility: hidden;
+}
+
+.gg-controls {
+	overflow: hidden;
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+}
+
+.gg-controls button {
+	color: var(--gg-ink-soft);
+	cursor: pointer;
+	background: none;
+	border: 0;
+}
+
+.gg-controls button + button {
+	border-top: 1px solid var(--gg-hairline);
+}
+
+@media (hover: hover) {
+	.gg-controls button:hover {
+		color: var(--gg-accent);
+		background: var(--gg-accent-soft);
+	}
+}
+
+.gg-controls button:focus-visible {
+	color: var(--gg-accent);
+	outline: 2px solid var(--gg-accent);
+	outline-offset: -2px;
+	background: var(--gg-accent-soft);
+}
+
+/* stylelint-disable-next-line selector-class-pattern -- React Flow's own class; its default grey fails contrast */
+.gg-canvas .react-flow__attribution a {
+	color: var(--gg-ink-muted);
+}
+
+.gg-handle {
+	pointer-events: none;
+	opacity: 0;
+}
+
+.gg-edge-button {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: grid;
+	place-items: center;
+	width: 1.5rem;
+	height: 1.5rem;
+	padding: 0;
+	font: inherit;
+	line-height: 1;
+	color: var(--gg-ink-muted);
+	pointer-events: all;
+	cursor: pointer;
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: 50%;
+}
+
+.gg-edge-button[data-popup-open],
+.gg-edge-button:focus-visible {
+	color: var(--gg-accent);
+	border-color: var(--gg-accent);
+}
+
+.gg-edge-button:disabled {
+	cursor: default;
+	opacity: 0.5;
+}
+
+@media (hover: hover) {
+	.gg-edge-button:hover:not(:disabled) {
+		color: var(--gg-accent);
+		border-color: var(--gg-accent);
+	}
+}
+
+/* Edges can pass behind a label, so it carries the canvas colour */
+.gg-branch-label {
+	position: absolute;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	padding-inline: 0.2rem;
+	font-size: 0.7rem;
+	line-height: 1;
+	color: var(--gg-ink-soft);
+	white-space: nowrap;
+	background: var(--gg-surface);
+}
+
+.gg-debug-badge {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: 0 0.2rem;
+	font-size: 0.65rem;
+	font-variant-numeric: tabular-nums;
+	line-height: 1.4;
+	color: #fff;
+	white-space: nowrap;
+	pointer-events: none;
+	background: var(--gg-accent);
+	border-radius: var(--gg-radius) var(--gg-radius) 0 0;
+	translate: 0 -100%;
+}
+
+.gg-debug-readout {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+	padding: 0.3rem 0.5rem;
+	font-size: 0.7rem;
+	font-variant-numeric: tabular-nums;
+	color: var(--gg-ink-soft);
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-accent);
+	border-radius: var(--gg-radius);
+}

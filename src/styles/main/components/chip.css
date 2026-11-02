@@ -14,16 +14,16 @@
 	transition:
 		translate var(--chip-press-duration) cubic-bezier(0.34, 1.8, 0.64, 1),
 		box-shadow var(--chip-press-duration) cubic-bezier(0.34, 1.8, 0.64, 1),
-		border-color 150ms linear,
-		color 150ms linear;
+		border-color var(--default-transition-duration) var(--default-transition-timing-function),
+		color var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
 /* Empty alt text keeps the hash out of the accessible name */
 .chip::before {
-	margin-inline-end: 0.125rem;
+	margin-inline-end: calc(var(--spacing) * 0.5);
 	color: var(--chip-border);
 	content: '#' / '';
-	transition: color 150ms linear;
+	transition: color var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
 .chip:focus-visible {
@@ -56,7 +56,7 @@
 .chip-count {
 	color: var(--chip-count-ink);
 	border-color: var(--chip-edge-soft);
-	transition: color 150ms linear;
+	transition: color var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
 .chip-edge-primary {

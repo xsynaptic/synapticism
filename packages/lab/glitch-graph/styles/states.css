@@ -1,0 +1,71 @@
+/* Fixed rather than the Fullscreen API: no permission to ask, Escape closes it like any overlay, and the site chrome stays in view */
+.gg-app[data-fullscreen='true'] {
+	position: fixed;
+	inset: 0;
+	z-index: var(--gg-overlay-z);
+	overflow-y: auto;
+	background: var(--gg-surface);
+}
+
+.gg-app[data-fullscreen='true'] .gg-workspace {
+	flex: 1;
+	height: auto;
+	min-height: 0;
+}
+
+/* Side by side needs room for a readable graph beside a judgeable image; below it the image leads */
+@media (width < 56rem) {
+	.gg-workspace,
+	.gg-app[data-fullscreen='true'] .gg-workspace {
+		grid-template-columns: minmax(0, 1fr);
+		height: auto;
+	}
+
+	.gg-preview {
+		order: -1;
+		border-bottom: 1px solid var(--gg-hairline);
+	}
+
+	.gg-preview-frame {
+		flex: none;
+		height: min(70svh, 100vw);
+	}
+
+	.gg-canvas {
+		height: 34rem;
+		border-inline-end: 0;
+	}
+}
+
+.gg-button:focus-visible,
+.gg-edge-button:focus-visible,
+.gg-delete-button:focus-visible,
+.gg-inspect-button:focus-visible,
+.gg-select-trigger:focus-visible,
+.gg-output-name:focus-visible,
+.gg-preview-trigger:focus-visible,
+.gg-strip-tile:focus-visible {
+	outline: 2px solid var(--gg-accent);
+	outline-offset: 1px;
+	border-color: var(--gg-accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.gg-button,
+	.gg-select-trigger,
+	.gg-edge-button,
+	.gg-delete-button,
+	.gg-inspect-button,
+	.gg-strip-tile,
+	.gg-controls button {
+		transition-duration: 120ms;
+		transition-property: color, background-color, border-color;
+	}
+
+	.gg-node-actions,
+	.gg-pill .gg-delete-button,
+	.gg-pill .gg-inspect-button {
+		transition-duration: 120ms;
+		transition-property: color, opacity;
+	}
+}

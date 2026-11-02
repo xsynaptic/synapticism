@@ -8,8 +8,8 @@ const { highlights } = Astro.props;
 
 <ul>
 	{highlights.map((highlight) => (
-		<li class="mb-1 ml-4 list-bullet break-inside-avoid text-sm text-neutral-400">
-			<span class="text-neutral-700">{highlight}</span>
+		<li class="mb-1 ml-4 list-bullet break-inside-avoid text-sm text-primary-700 marker:text-primary-400">
+			{highlight}
 		</li>
 	))}
 </ul>

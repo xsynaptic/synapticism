@@ -1,0 +1,177 @@
+/* React Flow turns pointer events off on nodes that are neither draggable nor selectable */
+.gg-node,
+.gg-pill {
+	color: var(--gg-ink);
+	pointer-events: auto;
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+}
+
+.gg-node {
+	width: var(--gg-node-width);
+	padding: 0.5rem 0.65rem 0.6rem;
+}
+
+.gg-pill {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--gg-pill-width);
+	padding: 0.3rem 0.6rem;
+	border-radius: 999px;
+}
+
+/* A stripe per kind, so the graph reads as stages and routing before any title is read */
+.gg-node[data-kind] {
+	border-top: 2px solid var(--gg-kind);
+}
+
+.gg-node[data-kind='source'] {
+	--gg-kind: var(--gg-ink-soft);
+}
+
+.gg-node[data-kind='effect'] {
+	--gg-kind: var(--gg-accent);
+}
+
+.gg-node[data-kind='split'] {
+	--gg-kind: var(--gg-routing);
+}
+
+.gg-pill[data-kind='merge'] {
+	gap: 0.4rem;
+	width: var(--gg-merge-width);
+	border-color: var(--gg-routing);
+}
+
+.gg-pill[data-kind='fork'] {
+	border-color: var(--gg-edge);
+}
+
+.gg-pill[data-kind='output'] {
+	border-color: var(--gg-ink-soft);
+}
+
+.gg-pill[data-selected='true'] {
+	background: var(--gg-accent-soft);
+	border-color: var(--gg-accent);
+	box-shadow: 0 0 0 2px var(--gg-accent);
+}
+
+.gg-node-header {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 1.4rem;
+}
+
+.gg-node-actions {
+	display: flex;
+	gap: 0.1rem;
+	align-items: center;
+}
+
+.gg-delete-button,
+.gg-inspect-button {
+	display: grid;
+	place-items: center;
+	width: 1.4rem;
+	height: 1.4rem;
+	padding: 0;
+	font: inherit;
+	color: var(--gg-ink-muted);
+	cursor: pointer;
+	background: none;
+	border: 0;
+	border-radius: var(--gg-radius);
+}
+
+/* A pointer that cannot hover never gets to reveal them, so they hide only where it can */
+@media (hover: hover) {
+	.gg-node-actions,
+	.gg-pill .gg-delete-button,
+	.gg-pill .gg-inspect-button {
+		opacity: 0;
+	}
+
+	.gg-node:is(:hover, :focus-within) .gg-node-actions,
+	.gg-pill:is(:hover, :focus-within) :is(.gg-delete-button, .gg-inspect-button) {
+		opacity: 1;
+	}
+
+	.gg-delete-button:hover {
+		color: var(--gg-error);
+	}
+
+	.gg-inspect-button:hover {
+		color: var(--gg-accent);
+	}
+}
+
+.gg-delete-button:focus-visible {
+	color: var(--gg-error);
+}
+
+.gg-inspect-button:focus-visible {
+	color: var(--gg-accent);
+}
+
+.gg-pill .gg-delete-button {
+	position: absolute;
+	top: 50%;
+	right: 0.35rem;
+	transform: translateY(-50%);
+}
+
+.gg-pill .gg-inspect-button {
+	position: absolute;
+	top: 50%;
+	left: 0.35rem;
+	transform: translateY(-50%);
+}
+
+.gg-node-title {
+	margin: 0;
+	font-weight: 500;
+	color: var(--gg-ink);
+}
+
+.gg-node-meta {
+	margin: 0.2rem 0 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: var(--gg-ink-muted);
+	white-space: nowrap;
+}
+
+.gg-node-params {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+	margin-top: 0.4rem;
+}
+
+.gg-output-name {
+	width: 100%;
+	min-width: 0;
+	padding: 0.1rem 0.25rem;
+	font: inherit;
+	color: var(--gg-ink);
+	text-align: center;
+	background: transparent;
+	border: 1px solid transparent;
+	border-radius: var(--gg-radius);
+}
+
+@media (hover: hover) {
+	.gg-output-name:hover {
+		border-color: var(--gg-hairline);
+	}
+}
+
+.gg-output-name:focus {
+	border-color: var(--gg-hairline);
+}

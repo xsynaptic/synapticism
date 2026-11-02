@@ -13,12 +13,13 @@
 	--z-index-progress-loading: 61;
 	--z-index-skip-link: 70;
 
-	/* Fonts */
+	/* Typography */
 	--font-sans: var(--font-red-hat-text);
 	--font-display: var(--font-aleo);
 	--font-mono: var(--font-red-hat-mono);
 	--font-cv: var(--font-aleo-static);
 	--list-style-type-bullet: '• ';
+	--leading-title: 1.125;
 
 	/* Blue-grey primitive */
 	--color-pale-sky-50: #f9fafb;

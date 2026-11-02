@@ -1,6 +1,6 @@
 search-toggle {
 	opacity: 0.6;
-	transition: opacity var(--default-transition-duration) linear;
+	transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
 search-toggle:focus-within {

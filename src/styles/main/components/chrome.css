@@ -3,7 +3,7 @@
 	translate: 0 -100vh;
 	transition:
 		translate 0.2s ease-in-out,
-		color 0.2s ease-in-out;
+		color var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
 .skip-link a:focus-visible {
@@ -21,7 +21,7 @@ top-button {
 	transition:
 		translate 200ms ease-out,
 		opacity 200ms ease-out,
-		background-color 200ms ease-out;
+		background-color var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
 top-button:not([inert]) {

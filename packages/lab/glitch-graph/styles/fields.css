@@ -1,0 +1,185 @@
+.gg-param-header {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: space-between;
+}
+
+.gg-param-label {
+	color: var(--gg-ink-muted);
+}
+
+.gg-param-value {
+	font-variant-numeric: tabular-nums;
+	color: var(--gg-accent);
+}
+
+.gg-slider {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.gg-slider-control {
+	display: flex;
+	align-items: center;
+	height: 0.9rem;
+	touch-action: none;
+}
+
+.gg-slider-track {
+	position: relative;
+	width: 100%;
+	height: 2px;
+	background: var(--gg-hairline);
+}
+
+.gg-slider-indicator {
+	background: var(--gg-accent);
+}
+
+.gg-slider-thumb {
+	width: 0.8rem;
+	height: 0.8rem;
+	background: var(--gg-panel);
+	border: 2px solid var(--gg-accent);
+	border-radius: 50%;
+}
+
+@media (hover: hover) {
+	.gg-slider-control:hover .gg-slider-thumb {
+		background: var(--gg-accent-soft);
+	}
+}
+
+.gg-slider-thumb:has(:focus-visible) {
+	outline: 2px solid var(--gg-accent);
+	outline-offset: 2px;
+	background: var(--gg-accent-soft);
+}
+
+.gg-select-trigger {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 0.2rem 0.45rem;
+	margin-top: 0.2rem;
+}
+
+.gg-select-trigger[data-placement='toolbar'] {
+	width: auto;
+	min-width: 10rem;
+	padding: 0.3rem 0.45rem;
+	margin-top: 0;
+}
+
+.gg-select-icon {
+	display: flex;
+	color: var(--gg-ink-muted);
+}
+
+/* The pill has no room for a visible label, which still names the trigger */
+.gg-pill .gg-param-label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	white-space: nowrap;
+	clip-path: inset(50%);
+}
+
+/* Inherited font size keeps the line box, and so the measured height, identical to a Fork's title */
+.gg-pill .gg-select-trigger {
+	justify-content: center;
+	width: auto;
+	padding: 0;
+	margin-top: 0;
+	overflow: hidden;
+	color: var(--gg-accent);
+	white-space: nowrap;
+	text-decoration: underline dotted;
+	text-underline-offset: 0.25em;
+	background: none;
+	border: 0;
+}
+
+/* The dotted underline already marks it as a choice */
+.gg-pill .gg-select-icon {
+	display: none;
+}
+
+@media (hover: hover) {
+	.gg-pill .gg-select-trigger:hover {
+		color: var(--gg-accent);
+	}
+}
+
+.gg-positioner {
+	z-index: 1;
+}
+
+.gg-select-popup,
+.gg-menu-popup {
+	min-width: var(--anchor-width);
+	padding: 0.2rem 0;
+	font-family: var(--gg-mono);
+	font-size: 0.8rem;
+	color: var(--gg-ink);
+	background: var(--gg-panel);
+	border: 1px solid var(--gg-hairline);
+	border-radius: var(--gg-radius);
+	box-shadow: 0 0.25rem 0.75rem rgb(0 0 0 / 8%);
+}
+
+.gg-select-item,
+.gg-menu-item {
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
+	padding: 0.3rem 0.6rem;
+	cursor: default;
+	outline: none;
+}
+
+.gg-select-item[data-highlighted],
+.gg-menu-item[data-highlighted] {
+	background: var(--gg-accent-soft);
+}
+
+.gg-menu-item[data-disabled] {
+	color: var(--gg-ink-muted);
+	opacity: 0.6;
+}
+
+.gg-menu-popup {
+	min-width: 11rem;
+}
+
+.gg-menu-label {
+	padding: 0.3rem 0.6rem 0.15rem;
+	font-size: 0.7rem;
+	color: var(--gg-ink-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+/* Kept mounted so checked and unchecked items share one text edge */
+.gg-menu-indicator {
+	display: flex;
+	color: var(--gg-accent);
+}
+
+.gg-menu-indicator[data-unchecked] {
+	visibility: hidden;
+}
+
+.gg-menu-separator {
+	height: 1px;
+	margin: 0.2rem 0;
+	background: var(--gg-hairline);
+}
+
+.gg-select-item[data-selected] {
+	color: var(--gg-accent);
+}

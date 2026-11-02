@@ -1,7 +1,9 @@
 ---
 import { Font } from 'astro:assets';
 
+import CvContactRow from '#components/cv/cv-contact-row.astro';
 import CvHighlights from '#components/cv/cv-highlights.astro';
+import CvSection from '#components/cv/cv-section.astro';
 import MainSite from '#components/main/main-site.astro';
 import Anchor from '#components/parts/anchor.astro';
 import DividedItem from '#components/parts/divided-item.astro';
@@ -83,10 +85,10 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 		<article class="content-column my-8 font-cv print:my-0">
 			<header class="flex break-inside-avoid flex-col gap-1 pt-1 pb-3">
 				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
-				<p class="text-base text-neutral-500 sm:text-lg">{basics.label}</p>
+				<p class="text-base text-primary-500 sm:text-lg">{basics.label}</p>
 				<div class="flex flex-col gap-0.5 pt-1 text-sm">
-					<div class="flex flex-wrap items-center gap-x-1 text-neutral-500 print:gap-x-4 print:*:after:content-none">
-						<DividedItem as="span" class="text-neutral-700">
+					<CvContactRow>
+						<DividedItem as="span" class="text-primary-700">
 							{basics.location.city}, {basics.location.region}
 						</DividedItem>
 						<DividedItem as="span">
@@ -95,8 +97,8 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 							</Anchor>
 						</DividedItem>
 						<span class="not-print:hidden" data-cv-phone></span>
-					</div>
-					<div class="flex flex-wrap items-center gap-x-1 text-neutral-500 print:gap-x-4 print:*:after:content-none">
+					</CvContactRow>
+					<CvContactRow>
 						<DividedItem as="span">
 							<Anchor anchorColor="primary-bright" href={basics.website}>
 								{formatUrl(basics.website)}
@@ -109,41 +111,37 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 								</Anchor>
 							</DividedItem>
 						))}
-					</div>
+					</CvContactRow>
 				</div>
 			</header>
-			<section class="pt-1 pb-2 text-base">
+			<CvSection>
 				<p>{basics.summary}</p>
-			</section>
-			<section class="pt-1 pb-2 text-base">
-				<h2 class="break-after-avoid text-lg font-bold">{t('cv.skills')}</h2>
+			</CvSection>
+			<CvSection title={t('cv.skills')}>
 				<ul>
 					{skills.map((skill) => (
-						<li class="mb-1 ml-4 list-bullet text-sm text-neutral-400">
-							<span class="font-semibold text-neutral-700">{skill.category}:</span>{' '}
-							<span class="text-neutral-700">{skill.items.join(', ')}</span>
+						<li class="mb-1 ml-4 list-bullet text-sm text-primary-700 marker:text-primary-400">
+							<span class="font-semibold">{skill.category}:</span> {skill.items.join(', ')}
 						</li>
 					))}
 				</ul>
-			</section>
-			<section class="pt-1 pb-2 text-base">
-				<h2 class="break-after-avoid text-lg font-bold">{t('cv.experience')}</h2>
+			</CvSection>
+			<CvSection title={t('cv.experience')}>
 				{work.map((job) => (
 					<div class="flex flex-col gap-2">
 						<div class="flex break-after-avoid items-center justify-between gap-2">
 							<h3 class="font-semibold">
 								{job.company}, <span class="italic">{job.position}</span>
 							</h3>
-							<span class="shrink-0 text-sm text-neutral-500">
+							<span class="shrink-0 text-sm text-primary-500">
 								{formatDateRange(job.startDate, job.endDate)}
 							</span>
 						</div>
 						<CvHighlights highlights={job.highlights} />
 					</div>
 				))}
-			</section>
-			<section class="pt-1 pb-2 text-base">
-				<h2 class="break-after-avoid text-lg font-bold">{t('cv.projects')}</h2>
+			</CvSection>
+			<CvSection title={t('cv.projects')}>
 				{projects.map((project) => (
 					<div class="flex flex-col gap-2">
 						<div class="flex break-inside-avoid break-after-avoid flex-col gap-1">
@@ -153,13 +151,13 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 									<span class="italic">{project.description}</span>
 								</h3>
 								{project.repo ? (
-									<a class="text-sm text-neutral-500 print:hidden" href={project.repo}>
+									<a class="text-sm text-primary-500 print:hidden" href={project.repo}>
 										{t('cv.github')}
 									</a>
 								) : undefined}
 							</div>
 							{project.url ? (
-								<div class="flex flex-col gap-1 text-sm text-neutral-500">
+								<div class="flex flex-col gap-1 text-sm text-primary-500">
 									<a href={project.url}>{project.url}</a>
 								</div>
 							) : undefined}
@@ -167,9 +165,8 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 						<CvHighlights highlights={project.highlights} />
 					</div>
 				))}
-			</section>
-			<section class="pt-1 pb-2 text-base">
-				<h2 class="break-after-avoid text-lg font-bold">{t('cv.education')}</h2>
+			</CvSection>
+			<CvSection title={t('cv.education')}>
 				{education.map((educationItem) => (
 					<div class="flex break-inside-avoid flex-col gap-1">
 						<div class="flex items-center justify-between gap-2">
@@ -177,15 +174,15 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 								{educationItem.institution}, <span class="italic">{educationItem.degree}</span>
 							</h3>
 							{educationItem.startDate ? (
-								<span class="shrink-0 text-sm text-neutral-500">
+								<span class="shrink-0 text-sm text-primary-500">
 									{formatDateRange(educationItem.startDate, educationItem.endDate)}
 								</span>
 							) : undefined}
 						</div>
-						<p class="text-sm text-neutral-700">{educationItem.area}</p>
+						<p class="text-sm text-primary-700">{educationItem.area}</p>
 					</div>
 				))}
-			</section>
+			</CvSection>
 		</article>
 	</cv-print>
 </MainSite>

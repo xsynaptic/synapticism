@@ -1,0 +1,195 @@
+.gg-preview {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	min-height: 0;
+	padding: 0.75rem;
+}
+
+.gg-preview[data-drop-target='true'] {
+	outline: 2px dashed var(--gg-accent);
+	outline-offset: -0.3rem;
+}
+
+.gg-preview-frame {
+	position: relative;
+	flex: 1;
+	min-height: 12rem;
+	background: var(--gg-matte);
+	border-radius: var(--gg-radius);
+}
+
+/* A definite track is what lets the image's percentage caps resolve */
+.gg-preview-trigger {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+	place-items: center;
+	padding: 0.5rem;
+	cursor: zoom-in;
+	background: none;
+	border: 0;
+	border-radius: var(--gg-radius);
+}
+
+.gg-preview-image {
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	max-height: 100%;
+}
+
+.gg-preview-caption {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 1rem;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.gg-preview-name {
+	display: flex;
+	gap: 0.6rem;
+	align-items: baseline;
+	min-width: 0;
+	margin: 0;
+}
+
+.gg-preview-actions {
+	display: flex;
+	gap: 0.5rem;
+}
+
+/* Delayed rather than faded, so a render quicker than the delay never flashes the word */
+.gg-render-status {
+	color: var(--gg-ink-muted);
+	opacity: 0;
+}
+
+.gg-render-status[data-rendering='true'] {
+	opacity: 1;
+	transition: opacity 0s 200ms;
+}
+
+.gg-result-name {
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: var(--gg-ink);
+	white-space: nowrap;
+}
+
+.gg-strip {
+	display: flex;
+	flex-shrink: 0;
+	gap: 0.5rem;
+	padding: 0;
+	margin: 0;
+	overflow-x: auto;
+	list-style: none;
+}
+
+/* The site's prose rules space list items apart */
+.gg-strip > li {
+	margin: 0;
+}
+
+.gg-strip-tile {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	align-items: center;
+	width: 5rem;
+	padding: 0.2rem;
+	font: inherit;
+	font-size: 0.7rem;
+	cursor: pointer;
+	background: none;
+	border: 1px solid transparent;
+	border-radius: var(--gg-radius);
+}
+
+.gg-strip-tile[aria-pressed='true'] {
+	background: var(--gg-accent-soft);
+	border-color: var(--gg-accent);
+}
+
+@media (hover: hover) {
+	.gg-strip-tile:hover {
+		border-color: var(--gg-accent);
+	}
+}
+
+.gg-strip-image {
+	display: block;
+	width: 100%;
+	aspect-ratio: 1;
+	object-fit: cover;
+	border-radius: calc(var(--gg-radius) / 2);
+}
+
+.gg-source {
+	display: flex;
+	flex-shrink: 0;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.75rem;
+	align-items: center;
+	padding-top: 0.6rem;
+	border-top: 1px solid var(--gg-hairline);
+}
+
+.gg-dialog-backdrop {
+	position: fixed;
+	inset: 0;
+	z-index: var(--gg-overlay-z);
+	background: rgb(0 0 0 / 40%);
+}
+
+.gg-dialog-popup {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: var(--gg-overlay-z);
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	align-items: flex-start;
+	max-width: calc(100vw - 2rem);
+	max-height: calc(100vh - 2rem);
+	padding: 0.75rem;
+	font-family: var(--gg-mono);
+	font-size: 0.8rem;
+	color: var(--gg-ink);
+	background: var(--gg-panel);
+	border-radius: var(--gg-radius);
+	transform: translate(-50%, -50%);
+}
+
+/* Scrolls rather than scales, so one image pixel stays one screen pixel */
+.gg-viewer {
+	max-width: 100%;
+	min-height: 0;
+	max-height: calc(100vh - 9rem);
+	overflow: auto;
+	overscroll-behavior: contain;
+	cursor: grab;
+}
+
+.gg-viewer[data-panning] {
+	cursor: grabbing;
+}
+
+/* The site's base rule scales images to their container, which would defeat 1:1 */
+.gg-viewer-image {
+	display: block;
+	width: auto;
+	max-width: none;
+	height: auto;
+	image-rendering: pixelated;
+}
+
+.gg-stage-note {
+	margin: 0;
+	color: var(--gg-ink-muted);
+}

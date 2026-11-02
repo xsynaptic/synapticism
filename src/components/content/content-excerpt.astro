@@ -1,4 +1,5 @@
 ---
+import ContentSubtitle from '#components/content/content-subtitle.astro';
 import Anchor from '#components/parts/anchor.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import { MicroformatClassNames } from '#components/types.ts';
@@ -26,7 +27,7 @@ const hasExcerpt = excerptSplit.length > 1;
 <article class:list={[className, MicroformatClassNames.Entry]}>
 	<header class="content-column mb-2 pb-2">
 		<div class:list={[{ 'site-shell-title pt-4 md:pt-8': isLeading }]}>
-			<h2 class="-ml-0.5 trim-text font-display text-xl leading-[1.125] font-semibold md:text-2xl lg:text-3xl">
+			<h2 class="-ml-0.5 trim-text font-display text-xl leading-title font-semibold md:text-2xl lg:text-3xl">
 				<Anchor
 					anchorColor="title"
 					class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
@@ -36,12 +37,7 @@ const hasExcerpt = excerptSplit.length > 1;
 				</Anchor>
 			</h2>
 		</div>
-		{subtitle ? (
-			<div
-				class="items-center gap-1 pt-3 font-mono text-xs text-primary-500 sm:flex sm:flex-wrap"
-				set:html={subtitle}
-			/>
-		) : undefined}
+		{subtitle ? <ContentSubtitle html={subtitle} /> : undefined}
 	</header>
 	<slot name="excerpt-hero" />
 	<ProseBody class:list={['e-content', { 'pb-4': hasExcerpt, 'pt-6': hasHero }]}>
