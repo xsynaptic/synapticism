@@ -64,7 +64,7 @@
 		// Unzoned files are unrestricted both ways, so every analyzed file needs a zone
 		"coverage": {
 			"requireAllFiles": true,
-			"allowUnmatched": ["*.config.{ts,mjs}", "tests/**"],
+			"allowUnmatched": ["*.config.{ts,mjs}", "verify/**"],
 		},
 		"rules": [
 			// Vite/Rolldown build breaks when packages import the app
