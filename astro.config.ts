@@ -6,10 +6,10 @@ import { imageCachePath, mediaDir, sitemapLastmodPath } from '@synapticism/share
 import tailwindcss from '@tailwindcss/vite';
 import fontDevtools from '@xsynaptic/astro-font-devtools';
 import imagePipeline from '@xsynaptic/astro-image-pipeline';
+import pagefind from '@xsynaptic/astro-pagefind';
 import { sitemapLastmod } from '@xsynaptic/astro-sitemap-lastmod';
 import { autoImport } from '@xsynaptic/satteri-auto-import';
 import { readingTime } from '@xsynaptic/satteri-reading-time';
-import pagefind from 'astro-pagefind';
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import expressiveCode from 'satteri-expressive-code';
 
