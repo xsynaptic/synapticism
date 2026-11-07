@@ -1,4 +1,4 @@
-import type { getInstanceManager, Instance, PagefindModal } from '@pagefind/component-ui';
+import type { Instance, PagefindModal } from '@pagefind/component-ui';
 
 const isMac = typeof navigator !== 'undefined' && /mac/i.test(navigator.userAgent);
 
@@ -20,8 +20,6 @@ interface PendingSearch {
 const imageMetaFields = new Set(['image', 'image_2x']);
 
 const searchCommitters = new WeakMap<Instance, CommitSearch>();
-
-let instanceManager: ReturnType<typeof getInstanceManager> | undefined;
 
 class SearchToggle extends HTMLElement {
 	// eslint-disable-next-line unicorn/no-null -- matches Pagefind's PagefindComponent interface
@@ -54,7 +52,9 @@ class SearchToggle extends HTMLElement {
 	}
 
 	disconnectedCallback() {
+		this.#commitSearch?.(false);
 		this.instance?.deregisterAllShortcuts(this);
+		this.instance?.unregisterComponent(this);
 		// eslint-disable-next-line unicorn/no-null -- matches Pagefind's PagefindComponent interface
 		this.instance = null;
 		this.#commitSearch = undefined;
@@ -114,11 +114,11 @@ class SearchToggle extends HTMLElement {
 	#ensurePagefindRegistered = async (): Promise<void> => {
 		const pagefind = await import('@pagefind/component-ui');
 
-		instanceManager = pagefind.getInstanceManager();
-
 		if (this.instance || !this.#controller) return;
 
-		this.instance = instanceManager.getInstance(this.getAttribute('instance') ?? 'default');
+		this.instance = pagefind
+			.getInstanceManager()
+			.getInstance(this.getAttribute('instance') ?? 'default');
 
 		this.#commitSearch = getSearchCommitter(this.instance);
 
@@ -216,15 +216,6 @@ function getSearchCommitter(instance: Instance) {
 
 	return commitSearch;
 }
-
-// Pagefind components never deregister (Pagefind/pagefind#1230); a fresh instance per page keeps the registry bounded
-document.addEventListener('astro:before-swap', () => {
-	if (!instanceManager) return;
-
-	for (const name of instanceManager.getInstanceNames()) {
-		instanceManager.removeInstance(name);
-	}
-});
 
 if (!customElements.get('search-toggle')) {
 	customElements.define('search-toggle', SearchToggle);

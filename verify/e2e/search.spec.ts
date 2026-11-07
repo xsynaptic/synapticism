@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 
+import { routes } from '#e2e/constants.ts';
 import { expect, test, visit } from '#e2e/test.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
@@ -52,6 +53,65 @@ test('the shortcut opens search from a cold start without dropping the keypress'
 	);
 });
 
+async function navigateClientSide(page: Page, path: string): Promise<void> {
+	await page.evaluate(
+		(href) =>
+			new Promise<void>((resolve) => {
+				document.addEventListener(
+					'astro:page-load',
+					() => {
+						resolve();
+					},
+					{ once: true },
+				);
+
+				const link = document.createElement('a');
+
+				link.href = href;
+				document.body.append(link);
+				link.click();
+			}),
+		path,
+	);
+}
+
+function getRegisteredCount(page: Page): Promise<number | undefined> {
+	return page.evaluate(() => document.querySelector('search-toggle')?.instance?.components.length);
+}
+
+test('search still works after client-side navigation', async ({ page, site }) => {
+	await visit(page, '/');
+
+	const toggle = page.getByRole('button', { name: t('site.search.toggle.label') });
+	const searchInput = page.locator('pagefind-input input');
+
+	await toggle.click();
+	await expect(searchInput).toBeFocused();
+	await page.keyboard.press('Escape');
+
+	const registeredCount = await getRegisteredCount(page);
+
+	for (const path of [routes.postsIndex, site.postDetail, '/']) {
+		await navigateClientSide(page, path);
+	}
+
+	await toggle.click();
+	await expect(searchInput).toBeFocused();
+	await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+	expect(await getRegisteredCount(page)).toBe(registeredCount);
+	await searchInput.pressSequentially(site.postTitle, { delay: 30 });
+
+	const resultLink = page.locator('.pf-result-link').first();
+
+	await expect(resultLink).toBeVisible({ timeout: resultTimeout });
+	await expect(resultLink).toHaveText(site.postTitle);
+
+	await page.keyboard.press('Escape');
+	await expect(toggle).toBeFocused();
+	await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+});
+
 interface TrackedEvent {
 	data: unknown;
 	name: string;
@@ -96,6 +156,28 @@ async function searchFor(page: Page, query: string) {
 test('search analytics send one event when search closes', async ({ page, site }) => {
 	await recordTracking(page);
 	await visit(page, '/');
+	await searchFor(page, site.postTitle);
+	await page.keyboard.press('Escape');
+
+	await expect
+		.poll(() => getTracked(page, 'search-query'))
+		.toEqual([
+			{
+				data: { clicked: false, query: site.postTitle, results: expect.any(Number) },
+				name: 'search-query',
+			},
+		]);
+	expect(await getTracked(page, 'search-empty')).toEqual([]);
+});
+
+test('search analytics survive client-side navigation', async ({ page, site }) => {
+	await recordTracking(page);
+	await visit(page, '/');
+
+	await page.getByRole('button', { name: t('site.search.toggle.label') }).click();
+	await page.keyboard.press('Escape');
+	await navigateClientSide(page, routes.postsIndex);
+
 	await searchFor(page, site.postTitle);
 	await page.keyboard.press('Escape');
 
