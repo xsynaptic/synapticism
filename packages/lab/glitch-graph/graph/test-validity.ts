@@ -51,11 +51,11 @@ function getNodeViolations(graph: Graph, node: GraphNode) {
 	const inputs = graph.edges
 		.filter((edge) => edge.target === node.id)
 		.map((edge) => edge.targetIndex)
-		.toSorted((first, second) => first - second);
+		.sort((first, second) => first - second);
 	const outputs = graph.edges
 		.filter((edge) => edge.source === node.id)
 		.map((edge) => edge.sourceIndex)
-		.toSorted((first, second) => first - second);
+		.sort((first, second) => first - second);
 
 	if (String(inputs) !== String(expectedPorts[node.kind].inputs)) {
 		violations.push(`${node.id} inputs [${String(inputs)}]`);

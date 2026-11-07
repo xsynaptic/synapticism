@@ -90,7 +90,7 @@ export function insertNode(graph: Graph, edgeId: string, insertion: Insertion): 
 
 	return {
 		counter: graph.counter + nodes.length,
-		edges: graph.edges.toSpliced(edgeIndex, 1, ...edges),
+		edges: [...graph.edges.slice(0, edgeIndex), ...edges, ...graph.edges.slice(edgeIndex + 1)],
 		nodes: { ...graph.nodes, ...Object.fromEntries(nodes.map((node) => [node.id, node])) },
 	};
 }

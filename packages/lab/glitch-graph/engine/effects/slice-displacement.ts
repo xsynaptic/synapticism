@@ -34,5 +34,5 @@ function getCuts(height: number, slices: number, random: IRandom) {
 		cuts.add(random.minmaxInt(1, height));
 	}
 
-	return [...cuts].toSorted((first, second) => first - second);
+	return [...cuts].sort((first, second) => first - second);
 }

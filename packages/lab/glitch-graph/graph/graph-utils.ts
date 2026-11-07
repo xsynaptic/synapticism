@@ -43,7 +43,7 @@ export function getEdgeWithSource(graph: Graph, edgeId: string) {
 export function getIncomingEdges(graph: Graph, id: string) {
 	return graph.edges
 		.filter((edge) => edge.target === id)
-		.toSorted((first, second) => first.targetIndex - second.targetIndex);
+		.sort((first, second) => first.targetIndex - second.targetIndex);
 }
 
 // Depth-first from the Source with branch A before B, so ELK's model order puts A on the left
@@ -61,7 +61,7 @@ export function getModelOrder(graph: Graph) {
 		visited.add(id);
 		order.push(id);
 
-		for (const edge of getOutgoingEdges(graph, id).toReversed()) {
+		for (const edge of getOutgoingEdges(graph, id).reverse()) {
 			stack.push(edge.target);
 		}
 	}
@@ -88,7 +88,7 @@ export function getStructureSignature(graph: Graph) {
 function getOutgoingEdges(graph: Graph, id: string) {
 	return graph.edges
 		.filter((edge) => edge.source === id)
-		.toSorted((first, second) => first.sourceIndex - second.sourceIndex);
+		.sort((first, second) => first.sourceIndex - second.sourceIndex);
 }
 
 function getSourceId(graph: Graph) {

@@ -118,7 +118,7 @@
 	font-size: 0.65rem;
 	font-variant-numeric: tabular-nums;
 	line-height: 1.4;
-	color: #fff;
+	color: var(--gg-on-accent);
 	white-space: nowrap;
 	pointer-events: none;
 	background: var(--gg-accent);

@@ -58,7 +58,7 @@ export async function layoutGraph(graph: Graph, sizes: ReadonlyMap<string, NodeS
 
 function buildElkEdges(graph: Graph, order: Array<string>): Array<ElkExtendedEdge> {
 	const rank = new Map(order.map((id, index) => [id, index]));
-	const edges = graph.edges.toSorted(
+	const edges = [...graph.edges].sort(
 		(first, second) =>
 			(rank.get(first.source) ?? 0) - (rank.get(second.source) ?? 0) ||
 			first.sourceIndex - second.sourceIndex,

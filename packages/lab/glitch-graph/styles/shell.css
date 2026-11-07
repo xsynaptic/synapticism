@@ -1,6 +1,7 @@
 .glitch-graph {
 	--gg-surface: var(--color-primary-50, #fafafa);
 	--gg-panel: #fff;
+	--gg-on-accent: #fff;
 	--gg-ink: var(--color-primary-700, #3f3f46);
 	--gg-ink-soft: var(--color-primary-600, #52525b);
 	--gg-ink-muted: var(--color-primary-500, #71717a);
@@ -92,7 +93,7 @@
 }
 
 .gg-button[data-variant='primary'] {
-	color: #fff;
+	color: var(--gg-on-accent);
 	background: var(--gg-accent);
 	border-color: var(--gg-accent);
 }
