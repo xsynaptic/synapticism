@@ -30,6 +30,8 @@ check:
           # Health prints its report even at zero findings, so output shows only on failure
           - name: complexity
             run: out=$(fallow health --complexity --quiet 2>&1) || { printf '%s\n' "$out"; exit 1; }
+          - name: styling
+            run: fallow audit --gate all --quiet
           - name: architecture
             run: fallow architecture --quiet
           - name: test
@@ -63,5 +65,7 @@ fix:
             run: fallow dupes --quiet
           - name: complexity
             run: out=$(fallow health --complexity --quiet 2>&1) || { printf '%s\n' "$out"; exit 1; }
+          - name: styling
+            run: fallow audit --gate all --quiet
           - name: architecture
             run: fallow architecture --quiet

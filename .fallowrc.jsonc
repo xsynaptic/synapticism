@@ -1,5 +1,4 @@
 {
-	"ignorePatterns": ["packages/scripts/src/validate-content/fixtures/**"],
 	"failOnParseError": true,
 	"rulePacks": ["fallow-rules.jsonc"],
 	// Rule packs only check reachable files; MDX components are reached by auto-import
@@ -25,6 +24,10 @@
 		"re-export-cycle": "error",
 		"package-cycle": "error",
 		"unused-component-props": "error",
+		"policy-violation": "error",
+		"css-token-drift": "error",
+		"css-duplicate-block": "error",
+		"css-broken-reference": "error",
 	},
 	"health": {
 		// Zero disables CRAP, which fallow otherwise estimates without coverage data

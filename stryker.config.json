@@ -12,8 +12,7 @@
 		"!**/*.test.ts",
 		"!**/*-test-utils.ts",
 		"!**/*.d.ts",
-		"!src/dev/**",
-		"!packages/scripts/src/validate-content/fixtures/**"
+		"!src/dev/**"
 	],
 	"ignorePatterns": [
 		"**",

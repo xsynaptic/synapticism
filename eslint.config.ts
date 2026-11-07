@@ -3,6 +3,7 @@ import {
 	getBrowserConfig,
 	getConfig,
 	getWebComponentConfig,
+	restrictedSyntaxDefaults,
 } from '@xsynaptic/eslint-config';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
@@ -46,6 +47,35 @@ export default getConfig(
 			files: ['packages/lab/**/*.tsx'],
 		},
 		getBrowserConfig(['src/components/**/*']),
+		{
+			files: ['**/*.astro/*.{js,ts}', 'src/components/**/*.{ts,tsx}', 'packages/lab/**/*.{ts,tsx}'],
+			ignores: ['**/*.test.{ts,tsx}'],
+			rules: {
+				'no-restricted-properties': [
+					'error',
+					...['toReversed', 'toSorted', 'toSpliced', 'with'].map((property) => ({
+						message: 'Copy then mutate instead (`[...array].sort()`)',
+						property,
+					})),
+				],
+				'unicorn/no-array-reverse': 'off',
+				'unicorn/no-array-sort': 'off',
+			},
+		},
+		{
+			files: ['packages/scripts/src/**/*.{ts,tsx}'],
+			rules: {
+				'no-console': 'error',
+				'no-restricted-syntax': [
+					'error',
+					...restrictedSyntaxDefaults,
+					{
+						message: '`runCommand` owns exit codes; throw a `UserError` instead',
+						selector: "CallExpression[callee.object.name='process'][callee.property.name='exit']",
+					},
+				],
+			},
+		},
 		{
 			files: ['verify/e2e/**/*', 'playwright.config.ts'],
 			languageOptions: {
