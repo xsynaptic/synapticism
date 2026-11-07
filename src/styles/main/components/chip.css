@@ -26,6 +26,7 @@
 	transition: color var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
+/* fallow-ignore-next-line css-duplicate-block */
 .chip:focus-visible {
 	--chip-depth: 2px;
 	--chip-border: var(--chip-edge-strong);

@@ -46,7 +46,9 @@ await runCommand({
 		assertDeployAuth();
 		reportDeployConfig();
 
-		// `pnpm build` carries no type check, so this is the only gate a deploy runs
+		await runSubprocess('Validating content', ['pnpm', 'validate-content'], { cwd: rootPath });
+
+		// `pnpm build` carries no type check, so the deploy runs the gate itself
 		if (values['skip-build'] || values['skip-check']) log.warn('Skipping quality gate');
 		else await runSubprocess('Checking', ['pnpm', 'check'], { cwd: rootPath });
 

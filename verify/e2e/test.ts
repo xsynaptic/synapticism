@@ -31,7 +31,8 @@ export const test = base.extend<{
 			const allowed: Array<RegExp> = [blockedResourcePattern, ...devPatterns];
 
 			page.on('console', (message) => {
-				if (message.type() === 'error') errors.push(message.text());
+				if (message.type() === 'error')
+					errors.push(`${message.text()} (${message.location().url})`);
 			});
 			page.on('pageerror', (error) => {
 				errors.push(error.message);

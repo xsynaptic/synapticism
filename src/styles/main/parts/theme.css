@@ -1,3 +1,4 @@
+/* fallow-ignore-file css-token-drift */
 @theme {
 	/* Spacing */
 	--spacing-content: 54rem;
@@ -5,6 +6,8 @@
 	--spacing-site-title: 3.25rem;
 	--spacing-site-nav: 2.5rem;
 	--spacing-site-nav-baseline: 0.875rem;
+	--spacing-site-min: 350px;
+	--spacing-hero: 70svh;
 
 	/* Stacking order */
 	--z-index-header: 40;
