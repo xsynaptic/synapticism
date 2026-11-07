@@ -14,4 +14,9 @@
   Cache-Control: public, max-age=604800
 
 /pagefind/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=31536000, immutable
+
+# Names a shard hash the next deploy deletes, so it opts out of the immutable rule above
+/pagefind/:version/pagefind-entry.json
+  ! Cache-Control
+  Cache-Control: public, max-age=600
