@@ -4,7 +4,7 @@ interface TileThemeColors {
 }
 
 // colorA is the darker endpoint, colorB the lighter
-export const TILE_THEMES = {
+export const tileThemes = {
 	blue: { colorA: '#245ca9', colorB: '#2d89e3' },
 	brown: { colorA: '#855b49', colorB: '#a07056' },
 	green: { colorA: '#2a7f5f', colorB: '#3fa07a' },
@@ -21,15 +21,15 @@ export const TILE_THEMES = {
 	yellow: { colorA: '#d4a542', colorB: '#e6bc5a' },
 } as const satisfies Record<string, TileThemeColors>;
 
-export type TileTheme = keyof typeof TILE_THEMES;
+export type TileTheme = keyof typeof tileThemes;
 
-export const DEFAULT_TILE_THEME = 'grey' satisfies TileTheme;
+export const defaultTileTheme = 'grey' satisfies TileTheme;
 
 export function isTileTheme(value: string): value is TileTheme {
-	return Object.hasOwn(TILE_THEMES, value);
+	return Object.hasOwn(tileThemes, value);
 }
 
-export const GLOSS_BLENDS = [
+export const glossBlends = [
 	'color-dodge',
 	'hard-light',
 	'lighten',
@@ -40,9 +40,9 @@ export const GLOSS_BLENDS = [
 	'soft-light',
 ] as const;
 
-export type GlossBlend = (typeof GLOSS_BLENDS)[number];
+export type GlossBlend = (typeof glossBlends)[number];
 
-export const TILE_DEFAULTS = {
+export const tileDefaults = {
 	aspectRatio: 16 / 7,
 	bevel: 0.3,
 	gloss: 0.2,
@@ -59,26 +59,26 @@ export const TILE_DEFAULTS = {
 	unitCells: 12,
 } as const satisfies Record<string, number | string>;
 
-export const GEOMETRY = {
+export const geometryTuning = {
 	// Non-seamless viewBox width; painted to fit the box width, so it sets cell density, not size
 	canvasWidth: 768,
 	cornerRadiusRatio: 0.04,
 	groutRatio: 0.08,
 } as const;
 
-export const JITTER = {
+export const jitterTuning = {
 	drift: 0.15,
 	hueDegrees: 2,
 	lightness: 0.05,
 	saturation: 0.08,
 } as const;
 
-export const TILT = {
+export const tiltTuning = {
 	degrees: 0.6,
 	spread: 0.5,
 } as const;
 
-export const GLOSS = {
+export const glossTuning = {
 	clumpScale: 4,
 	gamma: 3,
 	intensityMin: 0.3,
@@ -88,20 +88,20 @@ export const GLOSS = {
 	variantSplit: 0.6,
 } as const;
 
-export const GRAIN = {
+export const grainTuning = {
 	groutFrequency: 1.6,
 	groutLift: 0.35,
 	tileFrequency: 1.1,
 } as const;
 
-export const BEVEL = {
+export const bevelTuning = {
 	darkAlpha: 0.26,
 	insetRatio: 0.04,
 	lightAlpha: 0.32,
 	radiusFalloff: 0.6,
 } as const;
 
-export const MACRO = {
+export const macroTuning = {
 	cols: 4,
 	lightnessRange: 0.12,
 	rows: 3,

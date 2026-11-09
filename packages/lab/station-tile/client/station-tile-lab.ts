@@ -5,9 +5,9 @@ import type { TileInput } from '#station-tile/core/options.ts';
 
 import {
 	formatRangeValue,
-	LAB_ASPECT_RATIO,
-	LAB_COLORS,
-	LAB_RANGES,
+	labAspectRatio,
+	labColors,
+	labRanges,
 } from '#station-tile/station-tile-lab-controls.ts';
 
 // Markup arrives as declarative shadow DOM from station-tile-lab.astro; the form holds all state
@@ -102,15 +102,15 @@ function randomSeed(): string {
 function readInput(form: HTMLFormElement): TileInput {
 	const data = new FormData(form);
 	const input: TileInput = {
-		aspectRatio: LAB_ASPECT_RATIO,
+		aspectRatio: labAspectRatio,
 		glossBlend: formText(data, 'glossBlend') as GlossBlend,
 		seamless: data.has('seamless'),
 		seed: formText(data, 'seed'),
 		theme: formText(data, 'theme') as TileTheme,
 	};
 
-	for (const range of LAB_RANGES) input[range.key] = Number(formText(data, range.key));
-	for (const color of LAB_COLORS) input[color.key] = formText(data, color.key);
+	for (const range of labRanges) input[range.key] = Number(formText(data, range.key));
+	for (const color of labColors) input[color.key] = formText(data, color.key);
 
 	return input;
 }

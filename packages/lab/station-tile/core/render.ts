@@ -1,7 +1,13 @@
 import type { Cell } from '#station-tile/core/layout.ts';
 import type { ResolvedOptions, TileInput } from '#station-tile/core/options.ts';
 
-import { BEVEL, GEOMETRY, GLOSS, GRAIN, TILT } from '#station-tile/core/appearance.ts';
+import {
+	bevelTuning,
+	geometryTuning,
+	glossTuning,
+	grainTuning,
+	tiltTuning,
+} from '#station-tile/core/appearance.ts';
 import { toHex } from '#station-tile/core/color.ts';
 import { layoutTiles } from '#station-tile/core/layout.ts';
 import { resolveOptions } from '#station-tile/core/options.ts';
@@ -115,7 +121,7 @@ function buildCellParts(cells: Array<Cell>, halfTile: number, showGloss: boolean
 // `transform ∘ translate(x,y)`, so the rotation would resolve in the wrong space
 function buildCellTransform(cell: Cell, halfTile: number): string {
 	const position = `translate(${formatSvgCoord(cell.x + halfTile)},${formatSvgCoord(cell.y + halfTile)})`;
-	const degrees = Math.round((cell.tiltX - cell.tiltY) * TILT.degrees * 10) / 10;
+	const degrees = Math.round((cell.tiltX - cell.tiltY) * tiltTuning.degrees * 10) / 10;
 	if (degrees === 0) return ` transform="${position}"`;
 	return ` transform="${position}rotate(${formatSvgCoord(degrees)})"`;
 }
@@ -124,7 +130,7 @@ function buildCellTransform(cell: Cell, halfTile: number): string {
 // Defs are centred on their own origin so each instance transform is just translate + rotate
 function buildDefs(options: ResolvedOptions, layers: TileLayers, turbulenceSeed: number): string {
 	const { height, tileSize, width } = options;
-	const cornerRadius = Math.max(1, tileSize * GEOMETRY.cornerRadiusRatio);
+	const cornerRadius = Math.max(1, tileSize * geometryTuning.cornerRadiusRatio);
 	const halfTile = tileSize / 2;
 	const cellGeometry =
 		` x="${formatSvgNumber(-halfTile)}" y="${formatSvgNumber(-halfTile)}"` +
@@ -153,9 +159,9 @@ function buildGlossFilter(
 ): string {
 	const { gloss, glossColor, height, tileSize, width } = options;
 	const glossSeed = (turbulenceSeed + (variant === 0 ? 0 : 113)) & 0xff;
-	const variantFrequency = variant === 0 ? 1 : GLOSS.variantFrequency;
+	const variantFrequency = variant === 0 ? 1 : glossTuning.variantFrequency;
 	// Keeps clump width at ~25% of a tile across all sizes
-	const clumpFrequency = (GLOSS.clumpScale / Math.max(4, tileSize)) * variantFrequency;
+	const clumpFrequency = (glossTuning.clumpScale / Math.max(4, tileSize)) * variantFrequency;
 
 	const tint = [glossColor.r, glossColor.g, glossColor.b]
 		.map((channel) => formatSvgNumber(channel / 255))
@@ -166,12 +172,12 @@ function buildGlossFilter(
 		`<feTurbulence type="fractalNoise" baseFrequency="${formatSvgNumber(clumpFrequency)}" numOctaves="3"` +
 		` seed="${String(glossSeed)}" stitchTiles="stitch" result="glossNoise"/>` +
 		`<feComponentTransfer in="glossNoise" result="glossCurved">` +
-		`<feFuncR type="gamma" amplitude="1" exponent="${String(GLOSS.gamma)}" offset="0"/>` +
-		`<feFuncG type="gamma" amplitude="1" exponent="${String(GLOSS.gamma)}" offset="0"/>` +
-		`<feFuncB type="gamma" amplitude="1" exponent="${String(GLOSS.gamma)}" offset="0"/>` +
+		`<feFuncR type="gamma" amplitude="1" exponent="${String(glossTuning.gamma)}" offset="0"/>` +
+		`<feFuncG type="gamma" amplitude="1" exponent="${String(glossTuning.gamma)}" offset="0"/>` +
+		`<feFuncB type="gamma" amplitude="1" exponent="${String(glossTuning.gamma)}" offset="0"/>` +
 		`</feComponentTransfer>` +
 		`<feColorMatrix in="glossCurved" type="matrix"` +
-		` values="0 0 0 0 ${tint}   ${formatSvgNumber(gloss * GLOSS.peakAlpha)} 0 0 0 0"` +
+		` values="0 0 0 0 ${tint}   ${formatSvgNumber(gloss * glossTuning.peakAlpha)} 0 0 0 0"` +
 		` result="glossTinted"/>` +
 		`<feComposite in="glossTinted" in2="SourceGraphic" operator="in"/>` +
 		`</filter>`
@@ -181,11 +187,11 @@ function buildGlossFilter(
 // Multiply blend so grout only darkens, never lightens (no saturation shift on colored tiles)
 function buildGroutGrainFilter(options: ResolvedOptions, turbulenceSeed: number): string {
 	const { grainGrout, height, width } = options;
-	const lift = formatSvgNumber(GRAIN.groutLift);
+	const lift = formatSvgNumber(grainTuning.groutLift);
 
 	return (
 		`<filter id="grout-grain"${filterRegion(width, height)}>` +
-		`<feTurbulence type="fractalNoise" baseFrequency="${formatSvgNumber(GRAIN.groutFrequency)}" numOctaves="2"` +
+		`<feTurbulence type="fractalNoise" baseFrequency="${formatSvgNumber(grainTuning.groutFrequency)}" numOctaves="2"` +
 		` seed="${String((turbulenceSeed + 17) & 0xff)}" stitchTiles="stitch" result="noise"/>` +
 		`<feColorMatrix in="noise" type="matrix"` +
 		` values="1 0 0 0 ${lift}  1 0 0 0 ${lift}  1 0 0 0 ${lift}  0 0 0 0 ${formatSvgNumber(grainGrout)}"/>` +
@@ -199,7 +205,7 @@ function buildTileGrainFilter(options: ResolvedOptions, turbulenceSeed: number):
 
 	return (
 		`<filter id="tile-grain"${filterRegion(width, height)}>` +
-		`<feTurbulence type="fractalNoise" baseFrequency="${formatSvgNumber(GRAIN.tileFrequency)}" numOctaves="2"` +
+		`<feTurbulence type="fractalNoise" baseFrequency="${formatSvgNumber(grainTuning.tileFrequency)}" numOctaves="2"` +
 		` seed="${String((turbulenceSeed + 41) & 0xff)}" stitchTiles="stitch" result="grainNoise"/>` +
 		`<feColorMatrix in="grainNoise" type="matrix"` +
 		` values="0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 ${formatSvgNumber(grain)} 0" result="grainGray"/>` +
@@ -227,21 +233,21 @@ function filterRegion(width: number, height: number): string {
 // Polarity reads the tile as raised above the grout, not recessed
 function renderBevel(size: number, radius: number, strength: number): string {
 	if (strength <= 0) return '';
-	const inset = Math.max(0.5, size * BEVEL.insetRatio);
+	const inset = Math.max(0.5, size * bevelTuning.insetRatio);
 	const near = inset - size / 2;
 	const far = size / 2 - inset;
-	const innerRadius = Math.max(0, radius - inset * BEVEL.radiusFalloff);
+	const innerRadius = Math.max(0, radius - inset * bevelTuning.radiusFalloff);
 	const stroke = ` stroke-width="${formatSvgNumber(inset)}" stroke-linecap="round"`;
 
 	const topLeftEdge =
-		`<path fill="none" stroke="#fff" stroke-opacity="${formatSvgNumber(BEVEL.lightAlpha * strength)}"${stroke}` +
+		`<path fill="none" stroke="#fff" stroke-opacity="${formatSvgNumber(bevelTuning.lightAlpha * strength)}"${stroke}` +
 		` d="M${formatSvgNumber(near)} ${formatSvgNumber(far - innerRadius)}` +
 		` L${formatSvgNumber(near)} ${formatSvgNumber(near + innerRadius)}` +
 		` Q${formatSvgNumber(near)} ${formatSvgNumber(near)} ${formatSvgNumber(near + innerRadius)} ${formatSvgNumber(near)}` +
 		` L${formatSvgNumber(far - innerRadius)} ${formatSvgNumber(near)}"/>`;
 
 	const bottomRightEdge =
-		`<path fill="none" stroke="#000" stroke-opacity="${formatSvgNumber(BEVEL.darkAlpha * strength)}"${stroke}` +
+		`<path fill="none" stroke="#000" stroke-opacity="${formatSvgNumber(bevelTuning.darkAlpha * strength)}"${stroke}` +
 		` d="M${formatSvgNumber(near + innerRadius)} ${formatSvgNumber(far)}` +
 		` L${formatSvgNumber(far - innerRadius)} ${formatSvgNumber(far)}` +
 		` Q${formatSvgNumber(far)} ${formatSvgNumber(far)} ${formatSvgNumber(far)} ${formatSvgNumber(far - innerRadius)}` +

@@ -1,4 +1,4 @@
-import { TILE_DEFAULTS } from '#station-tile/core/appearance.ts';
+import { tileDefaults } from '#station-tile/core/appearance.ts';
 
 interface ColorSpec {
 	key: 'glossColor' | 'grout';
@@ -28,14 +28,14 @@ interface RangeSpec {
 }
 
 // Matches `.preview` in station-tile-lab.css so the canvas fills the box without cropping
-export const LAB_ASPECT_RATIO = 4 / 3;
+export const labAspectRatio = 4 / 3;
 
 // Lab opens at the density of the page's own tiles (sizes 18 to 26), finer than the component default
 // Grout width has no default; the component derives it from tile size
-const LAB_PRESET = { ...TILE_DEFAULTS, groutWidth: 2, tileSize: 28 } as const;
+const labPreset = { ...tileDefaults, groutWidth: 2, tileSize: 28 } as const;
 
 // Paint cost scales with cell count; a frame takes ~100 ms at size 16 and ~275 ms at 10 (GPU Chrome, DPR 2)
-export const LAB_RANGES: ReadonlyArray<RangeSpec> = (
+export const labRanges: ReadonlyArray<RangeSpec> = (
 	[
 		{ key: 'tileSize', label: 'Tile size', max: 64, min: 16, step: 1 },
 		{ key: 'jitter', label: 'Jitter', max: 1, min: 0, step: 0.05 },
@@ -48,11 +48,11 @@ export const LAB_RANGES: ReadonlyArray<RangeSpec> = (
 		{ key: 'grain', label: 'Tile grain', max: 0.3, min: 0, step: 0.01 },
 		{ key: 'grainGrout', label: 'Grout grain', max: 1, min: 0, step: 0.05 },
 	] satisfies Array<Omit<RangeSpec, 'value'>>
-).map((range) => ({ ...range, value: LAB_PRESET[range.key] }));
+).map((range) => ({ ...range, value: labPreset[range.key] }));
 
-export const LAB_COLORS: ReadonlyArray<ColorSpec> = [
-	{ key: 'grout', label: 'Grout', value: LAB_PRESET.grout },
-	{ key: 'glossColor', label: 'Gloss tint', value: LAB_PRESET.glossColor },
+export const labColors: ReadonlyArray<ColorSpec> = [
+	{ key: 'grout', label: 'Grout', value: labPreset.grout },
+	{ key: 'glossColor', label: 'Gloss tint', value: labPreset.glossColor },
 ];
 
 export function formatRangeValue(value: number): string {

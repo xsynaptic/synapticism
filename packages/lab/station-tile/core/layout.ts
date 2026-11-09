@@ -1,7 +1,12 @@
 import type { RgbColor } from '#station-tile/core/color.ts';
 import type { ResolvedOptions } from '#station-tile/core/options.ts';
 
-import { GLOSS, JITTER, MACRO, TILT } from '#station-tile/core/appearance.ts';
+import {
+	glossTuning,
+	jitterTuning,
+	macroTuning,
+	tiltTuning,
+} from '#station-tile/core/appearance.ts';
 import { jitterHsl, mixLinearLight, shiftLightness } from '#station-tile/core/color.ts';
 import { cellSeed, mulberry32, signed } from '#station-tile/core/random.ts';
 
@@ -65,7 +70,10 @@ function applyMacroLighting(
 		center.y / Math.max(1, macroField.height),
 	);
 
-	return shiftLightness(color, (macroValue - 0.5) * MACRO.lightnessRange * macroField.strength);
+	return shiftLightness(
+		color,
+		(macroValue - 0.5) * macroTuning.lightnessRange * macroField.strength,
+	);
 }
 
 // Every draw pulls from one seeded stream, so the property order below is load-bearing
@@ -88,9 +96,9 @@ function buildCell({
 	const rng = mulberry32(cellSeed(rootSeed, col, row));
 
 	const baseMix = mixLinearLight(options.colorA, options.colorB, rng());
-	const hueShift = signed(rng) * JITTER.hueDegrees * jitter;
-	const saturationShift = signed(rng) * JITTER.saturation * jitter;
-	const lightnessShift = signed(rng) * JITTER.lightness * jitter;
+	const hueShift = signed(rng) * jitterTuning.hueDegrees * jitter;
+	const saturationShift = signed(rng) * jitterTuning.saturation * jitter;
+	const lightnessShift = signed(rng) * jitterTuning.lightness * jitter;
 	const jittered = jitterHsl(baseMix, { h: hueShift, l: lightnessShift, s: saturationShift });
 
 	const cellOriginX = col * cellSize + staggerOffsetX;
@@ -101,21 +109,21 @@ function buildCell({
 			x: cellOriginX + cellSize / 2,
 			y: cellOriginY + cellSize / 2,
 		}),
-		glossClumpVariant: rng() < GLOSS.variantSplit ? 0 : 1,
-		glossIntensity: GLOSS.intensityMin + rng() * GLOSS.intensityRange,
+		glossClumpVariant: rng() < glossTuning.variantSplit ? 0 : 1,
+		glossIntensity: glossTuning.intensityMin + rng() * glossTuning.intensityRange,
 		size: tileSize,
-		tiltX: signed(rng) * TILT.spread,
-		tiltY: signed(rng) * TILT.spread,
-		x: cellOriginX + groutWidth / 2 + signed(rng) * groutWidth * JITTER.drift,
-		y: cellOriginY + groutWidth / 2 + signed(rng) * groutWidth * JITTER.drift,
+		tiltX: signed(rng) * tiltTuning.spread,
+		tiltY: signed(rng) * tiltTuning.spread,
+		x: cellOriginX + groutWidth / 2 + signed(rng) * groutWidth * jitterTuning.drift,
+		y: cellOriginY + groutWidth / 2 + signed(rng) * groutWidth * jitterTuning.drift,
 	};
 }
 
 function buildMacroField({ height, macroLighting, rootSeed, width }: ResolvedOptions): MacroField {
 	const samples: Array<number> = [];
-	for (let y = 0; y <= MACRO.rows; y += 1) {
-		for (let x = 0; x <= MACRO.cols; x += 1) {
-			samples.push(mulberry32(cellSeed(rootSeed ^ MACRO.seedSalt, x, y))());
+	for (let y = 0; y <= macroTuning.rows; y += 1) {
+		for (let x = 0; x <= macroTuning.cols; x += 1) {
+			samples.push(mulberry32(cellSeed(rootSeed ^ macroTuning.seedSalt, x, y))());
 		}
 	}
 	return { height, samples, strength: macroLighting, width };
@@ -143,15 +151,15 @@ function getGridBounds(options: ResolvedOptions, cellSize: number): GridBounds {
 }
 
 function sampleMacroField(field: MacroField, normalizedX: number, normalizedY: number): number {
-	const gridX = normalizedX * MACRO.cols;
-	const gridY = normalizedY * MACRO.rows;
+	const gridX = normalizedX * macroTuning.cols;
+	const gridY = normalizedY * macroTuning.rows;
 	const xLow = Math.floor(gridX);
 	const yLow = Math.floor(gridY);
-	const xHigh = Math.min(xLow + 1, MACRO.cols);
-	const yHigh = Math.min(yLow + 1, MACRO.rows);
+	const xHigh = Math.min(xLow + 1, macroTuning.cols);
+	const yHigh = Math.min(yLow + 1, macroTuning.rows);
 	const fractionX = gridX - xLow;
 	const fractionY = gridY - yLow;
-	const stride = MACRO.cols + 1;
+	const stride = macroTuning.cols + 1;
 	const topLeft = field.samples[yLow * stride + xLow] ?? 0;
 	const topRight = field.samples[yLow * stride + xHigh] ?? 0;
 	const bottomLeft = field.samples[yHigh * stride + xLow] ?? 0;

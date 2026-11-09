@@ -1,10 +1,10 @@
 ---
 import type { StationTileProps as Props } from '#station-tile/station-tile-types.ts';
 
-import { TILE_DEFAULTS } from '#station-tile/core/appearance.ts';
+import { tileDefaults } from '#station-tile/core/appearance.ts';
 import { generateTileSvg, tileBackgroundStyle } from '#station-tile/core/render.ts';
 
-const { aspectRatio = TILE_DEFAULTS.aspectRatio, class: className, ...input } = Astro.props;
+const { aspectRatio = tileDefaults.aspectRatio, class: className, ...input } = Astro.props;
 
 const { isFeed } = Astro.locals;
 

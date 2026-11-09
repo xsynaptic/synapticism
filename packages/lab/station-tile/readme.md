@@ -6,7 +6,7 @@ Generative mosaic tile walls in the style of Hong Kong MTR stations, painted as 
 
 Everything under `core/` is pure and runs the same at build time and in the browser:
 
-1. `resolveOptions` (`options.ts`) fills a `TileInput` from `TILE_DEFAULTS`, takes the colour pair from `theme` unless `colorA` / `colorB` override it, hashes `seed` into a root seed, and sizes the canvas: 768 wide at the given aspect ratio, or a repeat unit of whole cells when `seamless`
+1. `resolveOptions` (`options.ts`) fills a `TileInput` from `tileDefaults`, takes the colour pair from `theme` unless `colorA` / `colorB` override it, hashes `seed` into a root seed, and sizes the canvas: 768 wide at the given aspect ratio, or a repeat unit of whole cells when `seamless`
 2. `layoutTiles` (`layout.ts`) places the cells. Each cell draws from its own stream, `cellSeed(rootSeed, col, row)`, so a cell keeps its colour when the grid grows. In seamless mode every cell that overhangs the repeat unit gets a twin on the opposite edge
 3. `generateTileSvg` (`render.ts`) writes the SVG: grout, one `<use>` per tile body, then gloss and grain as `feTurbulence` filters, each skipped at zero strength
 4. `tileBackgroundStyle` (`render.ts`) turns the SVG into a data URI and returns the background properties: `cover` for a canvas, `repeat` at the unit's size for a seamless one

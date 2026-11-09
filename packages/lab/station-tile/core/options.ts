@@ -2,11 +2,11 @@ import type { GlossBlend, TileTheme } from '#station-tile/core/appearance.ts';
 import type { RgbColor } from '#station-tile/core/color.ts';
 
 import {
-	DEFAULT_TILE_THEME,
-	GEOMETRY,
+	defaultTileTheme,
+	geometryTuning,
 	isTileTheme,
-	TILE_DEFAULTS,
-	TILE_THEMES,
+	tileDefaults,
+	tileThemes,
 } from '#station-tile/core/appearance.ts';
 import { parseHex } from '#station-tile/core/color.ts';
 import { hashSeed } from '#station-tile/core/random.ts';
@@ -74,21 +74,21 @@ export function resolveOptions(input: TileInput): ResolvedOptions {
 		...resolveColors(input),
 		...resolveGeometry(input),
 		...resolveGloss(input),
-		bevel: input.bevel ?? TILE_DEFAULTS.bevel,
-		grain: input.grain ?? TILE_DEFAULTS.grain,
-		grainGrout: input.grainGrout ?? TILE_DEFAULTS.grainGrout,
-		grout: input.grout ?? TILE_DEFAULTS.grout,
-		jitter: input.jitter ?? TILE_DEFAULTS.jitter,
-		macroLighting: input.macroLighting ?? TILE_DEFAULTS.macroLighting,
-		rootSeed: hashSeed(input.seed ?? TILE_DEFAULTS.seed),
+		bevel: input.bevel ?? tileDefaults.bevel,
+		grain: input.grain ?? tileDefaults.grain,
+		grainGrout: input.grainGrout ?? tileDefaults.grainGrout,
+		grout: input.grout ?? tileDefaults.grout,
+		jitter: input.jitter ?? tileDefaults.jitter,
+		macroLighting: input.macroLighting ?? tileDefaults.macroLighting,
+		rootSeed: hashSeed(input.seed ?? tileDefaults.seed),
 	};
 }
 
 function resolveCellSize(input: TileInput, seamless: boolean) {
 	// Integer cells keep the repeat on whole device pixels; fractional ones resample into a seam
-	const rawTileSize = input.tileSize ?? TILE_DEFAULTS.tileSize;
+	const rawTileSize = input.tileSize ?? tileDefaults.tileSize;
 	const tileSize = seamless ? Math.round(rawTileSize) : rawTileSize;
-	const rawGroutWidth = input.groutWidth ?? Math.max(1, tileSize * GEOMETRY.groutRatio);
+	const rawGroutWidth = input.groutWidth ?? Math.max(1, tileSize * geometryTuning.groutRatio);
 
 	return {
 		groutWidth: seamless ? Math.max(1, Math.round(rawGroutWidth)) : rawGroutWidth,
@@ -97,8 +97,8 @@ function resolveCellSize(input: TileInput, seamless: boolean) {
 }
 
 function resolveColors(input: TileInput): ResolvedColors {
-	const themeName = input.theme && isTileTheme(input.theme) ? input.theme : DEFAULT_TILE_THEME;
-	const themeColors = TILE_THEMES[themeName];
+	const themeName = input.theme && isTileTheme(input.theme) ? input.theme : defaultTileTheme;
+	const themeColors = tileThemes[themeName];
 
 	return {
 		colorA: parseHex(input.colorA ?? themeColors.colorA),
@@ -108,13 +108,13 @@ function resolveColors(input: TileInput): ResolvedColors {
 
 function resolveGeometry(input: TileInput): ResolvedGeometry {
 	const seamless = input.seamless ?? false;
-	const stagger = input.stagger ?? TILE_DEFAULTS.stagger;
+	const stagger = input.stagger ?? tileDefaults.stagger;
 	const { groutWidth, tileSize } = resolveCellSize(input, seamless);
 	const canvas = seamless
 		? resolveRepeatUnit(input, tileSize + groutWidth, stagger)
 		: {
-				height: GEOMETRY.canvasWidth / (input.aspectRatio ?? TILE_DEFAULTS.aspectRatio),
-				width: GEOMETRY.canvasWidth,
+				height: geometryTuning.canvasWidth / (input.aspectRatio ?? tileDefaults.aspectRatio),
+				width: geometryTuning.canvasWidth,
 			};
 
 	return { groutWidth, seamless, stagger, tileSize, ...canvas };
@@ -122,14 +122,14 @@ function resolveGeometry(input: TileInput): ResolvedGeometry {
 
 function resolveGloss(input: TileInput): ResolvedGloss {
 	return {
-		gloss: input.gloss ?? TILE_DEFAULTS.gloss,
-		glossBlend: input.glossBlend ?? TILE_DEFAULTS.glossBlend,
-		glossColor: parseHex(input.glossColor ?? TILE_DEFAULTS.glossColor),
+		gloss: input.gloss ?? tileDefaults.gloss,
+		glossBlend: input.glossBlend ?? tileDefaults.glossBlend,
+		glossColor: parseHex(input.glossColor ?? tileDefaults.glossColor),
 	};
 }
 
 function resolveRepeatUnit(input: TileInput, cellSize: number, stagger: number) {
-	const cols = Math.max(2, Math.round(input.unitCells ?? TILE_DEFAULTS.unitCells));
+	const cols = Math.max(2, Math.round(input.unitCells ?? tileDefaults.unitCells));
 	// Staggered bonds alternate per row, so the vertical period needs an even row count
 	const rows = stagger > 0 ? cols + (cols % 2) : cols;
 

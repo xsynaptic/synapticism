@@ -3,24 +3,20 @@ import type { StationTileLabProps as Props } from '#station-tile/station-tile-ty
 
 import styles from '#station-tile/client/station-tile-lab.css?inline';
 import {
-	DEFAULT_TILE_THEME,
-	GLOSS_BLENDS,
+	defaultTileTheme,
+	glossBlends,
 	isTileTheme,
-	TILE_DEFAULTS,
-	TILE_THEMES,
+	tileDefaults,
+	tileThemes,
 } from '#station-tile/core/appearance.ts';
-import {
-	formatRangeValue,
-	LAB_COLORS,
-	LAB_RANGES,
-} from '#station-tile/station-tile-lab-controls.ts';
+import { formatRangeValue, labColors, labRanges } from '#station-tile/station-tile-lab-controls.ts';
 
 // Declarative shadow DOM lays the lab out at full height before its script loads
 // A shadow root cannot read the page cascade, so its styles ship inline with it
-const { class: className, href, seed = TILE_DEFAULTS.seed, theme } = Astro.props;
+const { class: className, href, seed = tileDefaults.seed, theme } = Astro.props;
 
 // MDX props arrive unchecked; the select must show the theme the generator actually falls back to
-const selectedTheme = theme !== undefined && isTileTheme(theme) ? theme : DEFAULT_TILE_THEME;
+const selectedTheme = theme !== undefined && isTileTheme(theme) ? theme : defaultTileTheme;
 
 const { isFeed } = Astro.locals;
 ---
@@ -45,7 +41,7 @@ const { isFeed } = Astro.locals;
 							<span class="field-name">Theme</span>
 						</span>
 						<select name="theme">
-							{Object.keys(TILE_THEMES).map((name) => (
+							{Object.keys(tileThemes).map((name) => (
 								<option selected={name === selectedTheme}>{name}</option>
 							))}
 						</select>
@@ -74,7 +70,7 @@ const { isFeed } = Astro.locals;
 							</button>
 						</div>
 					</div>
-					{LAB_RANGES.map((range) => (
+					{labRanges.map((range) => (
 						<label class="field">
 							<span class="field-head">
 								<span class="field-name">{range.label}</span>
@@ -91,7 +87,7 @@ const { isFeed } = Astro.locals;
 							/>
 						</label>
 					))}
-					{LAB_COLORS.map((color) => (
+					{labColors.map((color) => (
 						<label class="field">
 							<span class="field-head">
 								<span class="field-name">{color.label}</span>
@@ -104,8 +100,8 @@ const { isFeed } = Astro.locals;
 							<span class="field-name">Gloss blend</span>
 						</span>
 						<select name="glossBlend">
-							{GLOSS_BLENDS.map((name) => (
-								<option selected={name === TILE_DEFAULTS.glossBlend}>{name}</option>
+							{glossBlends.map((name) => (
+								<option selected={name === tileDefaults.glossBlend}>{name}</option>
 							))}
 						</select>
 					</label>
