@@ -22,10 +22,10 @@ const { class: className, href, seed = TILE_DEFAULTS.seed, theme } = Astro.props
 // MDX props arrive unchecked; the select must show the theme the generator actually falls back to
 const selectedTheme = theme !== undefined && isTileTheme(theme) ? theme : DEFAULT_TILE_THEME;
 
-const { isRss } = Astro.locals;
+const { isFeed } = Astro.locals;
 ---
 
-{isRss ? (
+{isFeed ? (
 	href === undefined ? undefined : (
 		<p>
 			<a href={href}>Open the interactive station tile lab.</a>

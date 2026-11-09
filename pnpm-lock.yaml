@@ -239,6 +239,9 @@ importers:
       '@xsynaptic/astro-sitemap-lastmod':
         specifier: ^0.3.1
         version: 0.3.1(astro@7.4.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
+      '@xsynaptic/astro-syndication':
+        specifier: ^0.2.0
+        version: 0.2.0(@astrojs/rss@4.0.19)(astro@7.4.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
       '@xsynaptic/eslint-config':
         specifier: ^6.8.0
         version: 6.8.0(@typescript-eslint/parser@8.72.1(eslint@10.14.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint-plugin-jsx-a11y@6.10.2(eslint@10.14.0(jiti@2.7.0)(supports-color@10.2.2)))(eslint@10.14.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)
@@ -2931,6 +2934,16 @@ packages:
     engines: {node: '>=24.0.0'}
     peerDependencies:
       astro: ^7.4.2
+
+  '@xsynaptic/astro-syndication@0.2.0':
+    resolution: {integrity: sha512-38qR1KnIHH2C9/Vnflx3psDr6wLywAin0P356XeTJWkxbzhufaFVI3w08nz5GhNqWXynGMZow8+3bhn+vVsS7g==}
+    engines: {node: '>=24.0.0'}
+    peerDependencies:
+      '@astrojs/rss': ^4.0.19
+      astro: ^7.4.2
+    peerDependenciesMeta:
+      '@astrojs/rss':
+        optional: true
 
   '@xsynaptic/eslint-config@6.8.0':
     resolution: {integrity: sha512-DWKEfz8FMqr75FG2hwphE6PLCYfyq6jhBjERJfqntaTaIRpviDlTrZsHJOJiquKntod7J1m5FD6k0m58BJQ0ag==}
@@ -8827,6 +8840,16 @@ snapshots:
   '@xsynaptic/astro-sitemap-lastmod@0.3.1(astro@7.4.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       astro: 7.4.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)
+
+  '@xsynaptic/astro-syndication@0.2.0(@astrojs/rss@4.0.19)(astro@7.4.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))':
+    dependencies:
+      astro: 7.4.7(@types/node@24.19.2)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)
+      hast-util-from-html: 2.1.0
+      hast-util-sanitize: 5.0.2
+      hast-util-to-html: 9.0.6
+      unist-util-visit: 5.2.0
+    optionalDependencies:
+      '@astrojs/rss': 4.0.19
 
   '@xsynaptic/eslint-config@6.8.0(@typescript-eslint/parser@8.72.1(eslint@10.14.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3))(eslint-plugin-jsx-a11y@6.10.2(eslint@10.14.0(jiti@2.7.0)(supports-color@10.2.2)))(eslint@10.14.0(jiti@2.7.0)(supports-color@10.2.2))(supports-color@10.2.2)(typescript@6.0.3)':
     dependencies:

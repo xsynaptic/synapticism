@@ -11,8 +11,6 @@ export const mdxComponentFiles = {
 
 export const mdxComponents = Object.keys(mdxComponentFiles);
 
-export const millisecondsPerHour = 3_600_000;
-
 export const siteYearFounded = 2024;
 export const siteAuthorName = 'Alexander Synaptic';
 

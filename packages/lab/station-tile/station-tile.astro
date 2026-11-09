@@ -6,7 +6,7 @@ import { generateTileSvg, tileBackgroundStyle } from '#station-tile/core/render.
 
 const { aspectRatio = TILE_DEFAULTS.aspectRatio, class: className, ...input } = Astro.props;
 
-const { isRss } = Astro.locals;
+const { isFeed } = Astro.locals;
 
 const generated = generateTileSvg({ ...input, aspectRatio });
 
@@ -16,6 +16,6 @@ const style = {
 };
 ---
 
-{isRss ? undefined : (
+{isFeed ? undefined : (
 	<div aria-hidden="true" class:list={['station-tile', className]} style={style} />
 )}

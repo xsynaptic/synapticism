@@ -5,10 +5,10 @@ import GlitchGraphIsland from '#glitch-graph/glitch-graph-island.tsx';
 
 const { class: className, href } = Astro.props;
 
-const { isRss } = Astro.locals;
+const { isFeed } = Astro.locals;
 ---
 
-{isRss ? (
+{isFeed ? (
 	href === undefined ? undefined : (
 		<p>
 			<a href={href}>Open the interactive glitch graph.</a>
