@@ -1,4 +1,4 @@
-import type { SyndicationItem } from '@xsynaptic/astro-syndication';
+import type { SyndicationItem, SyndicationPublication } from '@xsynaptic/astro-syndication';
 import type { CollectionEntry } from 'astro:content';
 
 import mdxRenderer from '@astrojs/mdx/server.js';
@@ -9,17 +9,17 @@ import { createSyndicationRenderer } from '@xsynaptic/astro-syndication/render';
 import { stripTags } from '@xsynaptic/unified-tools';
 import { getImage } from 'astro:assets';
 import { render } from 'astro:content';
-import { performance } from 'node:perf_hooks';
 import * as R from 'remeda';
 
-import { siteAuthorName, siteTimezoneOffsetHours } from '#constants.ts';
+import { siteAuthorName, siteTimezoneOffsetHours, syndicationItemCount } from '#constants.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
-import { sortByDateReverseChronological } from '#lib/utils/date.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getCopyrightYears, sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getMediaImage } from '#lib/utils/media.ts';
 import { getAbsoluteUrl, getContentPath } from '#lib/utils/routing.ts';
-import { stripFootnotes } from '#lib/utils/text.ts';
+import { formatStringTemplate, stripFootnotes } from '#lib/utils/text.ts';
 
 const site = new URL(import.meta.env.SITE);
 
@@ -28,9 +28,9 @@ const renderFeed = await createSyndicationRenderer({
 	site,
 });
 
-const feedImageWidth = 1200;
+const syndicationImageWidth = 1200;
 
-const feedAuthors = [{ name: siteAuthorName }];
+const syndicationAuthors = [{ name: siteAuthorName }];
 
 function getSiteDate(date: Date) {
 	return anchorDateOnly(date, { utcOffsetHours: siteTimezoneOffsetHours });
@@ -45,7 +45,7 @@ async function getSyndicationImage({ imageFeatured, title }: CollectionEntry<'po
 	const image = await getImage({
 		format: 'jpg',
 		src: getMediaImage(imageId),
-		width: feedImageWidth,
+		width: syndicationImageWidth,
 	});
 
 	return toSyndicationImage(image, {
@@ -53,44 +53,22 @@ async function getSyndicationImage({ imageFeatured, title }: CollectionEntry<'po
 	});
 }
 
-async function getSyndicationContentHtml(
-	entry: CollectionEntry<'posts'>,
-	{ excludeFootnotes }: { excludeFootnotes: boolean },
-) {
-	const { Content } = await render(entry);
-	const renderedHtml = await renderFeed(Content);
-
-	return prepareSyndicationHtml(excludeFootnotes ? stripFootnotes(renderedHtml) : renderedHtml, {
-		site,
-	});
-}
-
 async function getSyndicationItem({
-	debug,
 	entry,
-	excludeFootnotes,
 	getTagsByIds,
 }: {
-	debug: boolean;
 	entry: CollectionEntry<'posts'>;
-	excludeFootnotes: boolean;
 	getTagsByIds: Awaited<ReturnType<typeof createTagsByIdsFunction>>;
 }) {
-	const startTime = performance.now();
 	const { data } = entry;
 
-	const contentHtml = await getSyndicationContentHtml(entry, { excludeFootnotes });
+	const { Content } = await render(entry);
+	const contentHtml = prepareSyndicationHtml(stripFootnotes(await renderFeed(Content)), { site });
 	const description = getDescriptionRenderedText(entry);
 	const image = await getSyndicationImage(data);
 
-	if (debug) {
-		console.log(
-			`[RSS] Generated entry for "${data.title}" in ${(performance.now() - startTime).toFixed(5)}ms`,
-		);
-	}
-
 	return {
-		authors: feedAuthors,
+		authors: syndicationAuthors,
 		dateCreated: getSiteDate(data.dateCreated),
 		tags: getTagsByIds(data.tags?.map(({ id }) => id) ?? []).map((tag) => tag.data.title),
 		title: data.title,
@@ -102,21 +80,23 @@ async function getSyndicationItem({
 	} satisfies SyndicationItem;
 }
 
-export async function getSyndicationItems({
-	debug,
-	excludeFootnotes,
-	itemCount,
-}: {
-	debug: boolean;
-	excludeFootnotes: boolean;
-	itemCount: number;
-}) {
+export async function getSyndicationItems() {
 	const { entries: posts } = await getPostsCollection();
 	const getTagsByIds = await createTagsByIdsFunction();
 
 	return Promise.all(
-		R.pipe(posts, R.sort(sortByDateReverseChronological), R.take(itemCount)).map((entry) =>
-			getSyndicationItem({ debug, entry, excludeFootnotes, getTagsByIds }),
+		R.pipe(posts, R.sort(sortByDateReverseChronological), R.take(syndicationItemCount)).map(
+			(entry) => getSyndicationItem({ entry, getTagsByIds }),
 		),
 	);
+}
+
+export function getSyndicationPublication(site: SyndicationPublication['site']) {
+	return {
+		copyright: formatStringTemplate(t('footer.copyright'), { years: getCopyrightYears() }),
+		description: t('site.description'),
+		language: 'en-us',
+		site,
+		title: t('site.title'),
+	} satisfies SyndicationPublication;
 }
