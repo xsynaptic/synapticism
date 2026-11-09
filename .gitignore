@@ -7,6 +7,7 @@ temp/
 # generated types and caches
 .astro/
 .cache/
+.fallow/
 .wrangler/
 worker-configuration.d.ts
 
