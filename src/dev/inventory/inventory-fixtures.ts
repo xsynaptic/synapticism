@@ -2,6 +2,7 @@ import type { OpenGraphCardInput } from '@synapticism/shared/open-graph';
 import type { Page } from 'astro';
 import type { ComponentProps } from 'astro/types';
 
+import type ContentCard from '#components/content/content-card.astro';
 import type ChipRow from '#components/parts/chip-row.astro';
 import type LabeledRow from '#components/parts/labeled-row.astro';
 import type { PaginationEntry } from '#components/types.ts';
@@ -206,3 +207,11 @@ export function getSampleOpenGraphCards() {
 
 	return sampleOpenGraphCards;
 }
+
+export const sampleCardTagItems = sampleChipItems.map(({ title, url }) => ({
+	title,
+	url,
+})) satisfies ComponentProps<typeof ContentCard>['tagItems'];
+
+export const sampleCardDescription =
+	'A <em>rendered</em> Description, authored in frontmatter or clipped from the opening of the body.';

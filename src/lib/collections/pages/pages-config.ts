@@ -1,5 +1,5 @@
 import { glob } from 'astro/loaders';
-import { defineCollection, reference } from 'astro:content';
+import { defineCollection } from 'astro:content';
 
 import { contentCollectionsPath } from '#constants.ts';
 import { withSitemapLastmod } from '#lib/collections/collections-sitemap.ts';
@@ -15,10 +15,5 @@ export const pages = defineCollection({
 			pattern: '**/[^_]*.(md|mdx)',
 		}),
 	),
-	schema: contentBaseSchema
-		.extend({
-			tags: reference('tags').array().optional(),
-			template: TemplateSchema.default('sidebar'),
-		})
-		.strict(),
+	schema: contentBaseSchema.extend({ template: TemplateSchema.default('sidebar') }).strict(),
 });

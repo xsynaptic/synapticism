@@ -23,9 +23,7 @@ export interface DescriptionRendered {
 	text: string;
 }
 
-// Word count fed into the parser, buffered so any orphan markdown syntax falls outside the final clip
-const wordCountBuffer = 150;
-const wordCountFinal = 100;
+const wordCount = 100;
 
 // Keep only inline emphasis in the display form; everything else collapses to plain text
 const descriptionSchema = { tagNames: ['em', 'strong'] };
@@ -33,13 +31,13 @@ const descriptionSchema = { tagNames: ['em', 'strong'] };
 export function createDescriptionRenderers({ cache }: { cache: Cache<DescriptionRendered> }) {
 	// Render and cache both the HTML (display) and plain-text (SEO) forms in a single parse
 	function getDescriptionRendered(entry: DescriptionEntry): DescriptionRendered | undefined {
-		const source = getDescription(entry, { wordCount: wordCountBuffer });
+		const source = getDescription(entry);
 
 		if (!source) return undefined;
 
 		// Key by entry ID so edits overwrite the old row; the hash validates cached content
 		// MDX component names participate so render-affecting code changes self-invalidate
-		const sourceHash = hash({ mdxComponents, source, version: 1 });
+		const sourceHash = hash({ mdxComponents, source, version: 2 });
 
 		const cached = cache.get(entry.id, sourceHash);
 
@@ -48,8 +46,7 @@ export function createDescriptionRenderers({ cache }: { cache: Cache<Description
 		const rawHtml = renderMarkdownInline(source);
 
 		const html = sanitizeHtml(rawHtml, descriptionSchema);
-		const stripped = stripTags(rawHtml).replaceAll(/\s+/g, ' ').trim();
-		const text = textClipper(stripped, { wordCount: wordCountFinal });
+		const text = stripTags(rawHtml).replaceAll(/\s+/g, ' ').trim();
 
 		const rendered: DescriptionRendered = { html, text };
 
@@ -70,10 +67,7 @@ export function createDescriptionRenderers({ cache }: { cache: Cache<Description
 }
 
 // Return the frontmatter description or derive a clipped excerpt from the body
-function getDescription(
-	entry: DescriptionEntry,
-	options: { wordCount?: number } = {},
-): string | undefined {
+function getDescription(entry: DescriptionEntry): string | undefined {
 	if (entry.data.description) {
 		return entry.data.description;
 	}
@@ -83,7 +77,7 @@ function getDescription(
 			entry.body,
 			(body) => stripMdxComponents(body, mdxComponents),
 			stripFootnoteReferences,
-			(text) => textClipper(text.trim(), { wordCount: options.wordCount ?? wordCountFinal }),
+			(text) => textClipper(text.trim(), { wordCount }),
 		);
 	}
 

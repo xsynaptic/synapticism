@@ -3,6 +3,7 @@ import type { ComponentProps } from 'astro/types';
 
 import { openGraphImageHeight, openGraphImageWidth } from '@synapticism/shared/constants';
 
+import ContentCard from '#components/content/content-card.astro';
 import ContentDate from '#components/content/content-date.astro';
 import ContentExcerpt from '#components/content/content-excerpt.astro';
 import ContentHeader from '#components/content/content-header.astro';
@@ -20,7 +21,6 @@ import LabeledRow from '#components/parts/labeled-row.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
 import ListRow from '#components/parts/list-row.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
-import PreviewImage from '#components/parts/preview-image.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
 import SectionBacklinks from '#components/sections/section-backlinks.astro';
@@ -29,6 +29,8 @@ import SectionPagination from '#components/sections/section-pagination.astro';
 import {
 	createSamplePage,
 	getSampleOpenGraphCards,
+	sampleCardDescription,
+	sampleCardTagItems,
 	sampleCatalogItems,
 	sampleChipItems,
 	sampleDate,
@@ -82,6 +84,8 @@ const fontFamilies = [
 	{ name: 'font-display', note: 'Aleo, 300 to 700, normal and italic' },
 	{ name: 'font-mono', note: 'Red Hat Mono, 300 to 700' },
 ];
+
+const iconNames = ['chevron-down', 'chevron-up', 'github', 'rss', 'search'];
 
 const sections = ['Foundations', 'Prose', 'Parts', 'Content', 'Open Graph'];
 
@@ -243,6 +247,22 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 							<div style={`font-family: var(--${family.name}); font-size: var(--text-xl)`}>
 								Synapticism 0123456789 <em>italic</em> <strong>bold</strong>
 							</div>
+						</div>
+					))}
+				</div>
+			</Specimen>
+			<Specimen
+				name="Icons"
+				note='Symbols drawn in <code>currentColor</code> at <code>1em</code>; each use is an <code>svg</code> holding <code>&lt;use href="#icon:name"&gt;</code>.'
+				source="components/main/main-sprites.astro"
+			>
+				<div class="flex flex-wrap gap-6 text-2xl text-primary-700">
+					{iconNames.map((iconName) => (
+						<div class="flex flex-col items-center gap-2">
+							<svg aria-hidden="true" height="1em" width="1em">
+								<use href={`#icon:${iconName}`} />
+							</svg>
+							<span class="font-mono text-xs text-primary-500">{iconName}</span>
 						</div>
 					))}
 				</div>
@@ -413,21 +433,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<PaginationSelect pagination={getPagePagination(samplePageMiddle)} />
 				</div>
 			</Specimen>
-			<Specimen
-				name="preview-image"
-				note="The square image beside an Entry in a listing: 4rem, 5rem from <code>md</code> up."
-				source="components/parts/preview-image.astro"
-			>
-				{sampleImageId ? (
-					<PreviewImage
-						imgAlt="Preview image alt text"
-						showMicroformats={true}
-						src={sampleImageId}
-					/>
-				) : (
-					<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
-				)}
-			</Specimen>
 		</Section>
 		<Section title="Content">
 			<Specimen
@@ -524,6 +529,30 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					</Fragment>
 					<ProseSample />
 				</ContentExcerpt>
+			</Specimen>
+			<Specimen
+				name="content-card"
+				note="An Entry in a listing, led by its first Featured Image cropped to 3:2 at the column's width, then title, subtitle, Description, Tags, and a links slot. The Projects list renders one per Project; without an image the card starts at the title."
+				source="components/content/content-card.astro"
+			>
+				<ContentCard
+					description={sampleCardDescription}
+					imageId={sampleImageId}
+					isPriority={false}
+					tagItems={sampleCardTagItems}
+					title="A card title, linked to its Entry"
+					url="/inventory/#content-card"
+				>
+					<Fragment slot="card-subtitle">2012&ndash;present</Fragment>
+					<div class="text-sm font-medium" slot="card-links">
+						<Anchor anchorColor="title" href="/inventory/#content-card">
+							{t('content.continueReading')}
+						</Anchor>
+					</div>
+				</ContentCard>
+				{sampleImageId ? undefined : (
+					<p class="mt-4 font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+				)}
 			</Specimen>
 			<Specimen
 				bleed={true}

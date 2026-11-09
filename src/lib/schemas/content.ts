@@ -29,6 +29,9 @@ export const DateStringSchema = z
 	)
 	.transform((value) => (value instanceof Date ? value : parseFrontmatterDate(value)));
 
+// YAML reads a bare year as a number; it stays one so the display shows only the year
+const YearOrDateSchema = z.union([z.number().int(), DateStringSchema]);
+
 export const TemplateSchema = z.enum(['full', 'sidebar']);
 
 export type Template = z.infer<typeof TemplateSchema>;
@@ -38,12 +41,21 @@ export const contentBaseSchema = z.object({
 	dateUpdated: DateStringSchema.optional(),
 	description: DescriptionSchema.optional(),
 	imageFeatured: ImageFeaturedSchema.optional(),
+	tags: reference('tags').array().optional(),
 	title: StylizedTextSchema,
 });
 
 export const postSchema = contentBaseSchema
+	.extend({ projects: reference('projects').array().optional() })
+	.strict();
+
+export const projectSchema = contentBaseSchema
 	.extend({
-		projects: reference('projects').array().optional(),
-		tags: reference('tags').array().optional(),
+		dateEnded: YearOrDateSchema.optional(),
+		dateStarted: YearOrDateSchema.optional(),
+		featuredOrder: z.number().int().positive().optional(),
+		homeUrl: z.url().optional(),
+		sourceUrl: z.url().optional(),
+		template: TemplateSchema.default('sidebar'),
 	})
 	.strict();

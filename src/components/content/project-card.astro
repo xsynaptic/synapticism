@@ -1,0 +1,72 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import { getImageFeaturedId } from '@synapticism/shared/image-featured';
+
+import ContentCard from '#components/content/content-card.astro';
+import Anchor from '#components/parts/anchor.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import { getTagChipItems } from '#lib/collections/tags/tags-utils.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getDescriptionRenderedHtml } from '#lib/utils/description-data.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
+
+interface Props {
+	class?: string | undefined;
+	entry: CollectionEntry<'projects'>;
+	isPriority: boolean;
+}
+
+const { class: className, entry, isPriority } = Astro.props;
+
+const { data } = entry;
+
+const url = getContentPath('projects', entry.id);
+const isGitHubSource =
+	data.sourceUrl !== undefined && new URL(data.sourceUrl).hostname === 'github.com';
+---
+
+<ContentCard
+	class={className}
+	description={getDescriptionRenderedHtml(entry)}
+	imageId={getImageFeaturedId(data.imageFeatured)}
+	isPriority={isPriority}
+	tagItems={await getTagChipItems(data.tags)}
+	title={data.title}
+	url={url}
+>
+	{data.dateStarted ? (
+		<span slot="card-subtitle">
+			<DateDisplay date={data.dateStarted} />
+			&ndash;{data.dateEnded ? <DateDisplay date={data.dateEnded} /> : t('content.present')}
+		</span>
+	) : undefined}
+	<div class="gap-1 text-sm font-medium sm:flex sm:flex-wrap sm:items-baseline" slot="card-links">
+		{data.homeUrl ? (
+			<DividedItem>
+				<Anchor href={data.homeUrl}>{t('projects.homepage')}</Anchor>
+			</DividedItem>
+		) : undefined}
+		{data.sourceUrl ? (
+			<DividedItem>
+				<Anchor class="inline-flex items-center gap-1.5" href={data.sourceUrl}>
+					<span>{t('projects.sourceCode')}</span>
+					{isGitHubSource ? (
+						<svg aria-hidden="true" class="text-primary-500" height="1em" width="1em">
+							<use href="#icon:github" />
+						</svg>
+					) : undefined}
+				</Anchor>
+			</DividedItem>
+		) : undefined}
+		<DividedItem class="italic">
+			<Anchor anchorColor="title" href={url}>
+				{t('content.continueReading')}
+			</Anchor>{' '}
+			<span aria-hidden="true" class="text-primary-600">
+				&rarr;
+			</span>
+		</DividedItem>
+	</div>
+</ContentCard>

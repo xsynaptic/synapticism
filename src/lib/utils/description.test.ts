@@ -31,6 +31,20 @@ describe('createDescriptionRenderers', () => {
 		expect(rendered?.text).toBe('A thoroughly ordinary place.');
 	});
 
+	test('clips a description derived from the body to 100 words', () => {
+		const { getDescriptionRendered } = setup();
+		const words = Array.from({ length: 140 }, (_, index) => `word${String(index)}`);
+
+		const rendered = getDescriptionRendered({
+			body: `An *emphatic* opening. ${words.join(' ')}`,
+			data: {},
+			id: 'alpha',
+		});
+
+		expect(rendered?.html).toMatch(/^An <em>emphatic<\/em> opening\. word0 .* word96…$/);
+		expect(rendered?.text).toMatch(/^An emphatic opening\. word0 .* word96…$/);
+	});
+
 	test('serves a repeat call from the cache', () => {
 		const { getDescriptionRendered, setSpy } = setup();
 		const entry = { data: { description: 'A place.' }, id: 'alpha' };

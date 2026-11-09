@@ -16,6 +16,7 @@ import Meta from '#components/main/main-meta.astro';
 import RecentPosts from '#components/main/main-recent-posts.astro';
 import SiteTitle from '#components/main/main-site-title.astro';
 import SkipLink from '#components/main/main-skip-link.astro';
+import Sprites from '#components/main/main-sprites.astro';
 import TopButton from '#components/main/main-top-button.astro';
 import NavigationFooter from '#components/navigation/navigation-footer.astro';
 import NavigationHeader from '#components/navigation/navigation-header.astro';
@@ -86,6 +87,7 @@ const themeColor = '#23272f';
 			'print:min-h-0 print:bg-white',
 		]}
 	>
+		<Sprites />
 		<ProgressLoading
 			class:list={[
 				'z-progress-loading rounded-br-md shadow-lg shadow-current',

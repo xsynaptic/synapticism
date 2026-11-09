@@ -22,7 +22,12 @@ const { backlinks, entry, relatedContent } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<ContentEntryDetail entry={entry} hasReadingBar={true} isArticle={false}>
+<ContentEntryDetail
+	entry={entry}
+	hasReadingBar={true}
+	isArticle={false}
+	template={entry.data.template}
+>
 	<Content />
 	<ContentSectionReferences slot="after-body" tags={entry.data.tags} />
 	<Fragment slot="after-article">

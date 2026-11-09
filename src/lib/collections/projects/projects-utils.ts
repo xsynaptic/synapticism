@@ -6,6 +6,7 @@ import { getCatalog } from '#lib/catalog/catalog-data.ts';
 import { sortCatalogByDate } from '#lib/catalog/catalog-utils.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
+import { compareProjectsForIndex } from '#lib/collections/projects/projects-order.ts';
 import { createCollectionLookupByIds } from '#lib/utils/collections.ts';
 
 export const createProjectsByIdsFunction = createCollectionLookupByIds(
@@ -23,7 +24,7 @@ export async function queryProjectEntryContent(entry: CollectionEntry<'projects'
 }
 
 export async function queryProjectsIndex() {
-	const catalog = await getCatalog();
+	const { entries } = await getProjectsCollection();
 
-	return R.pipe(catalog.byCollection('projects'), R.sort(sortCatalogByDate));
+	return entries.toSorted(compareProjectsForIndex);
 }

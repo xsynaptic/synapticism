@@ -1,0 +1,75 @@
+---
+import type { ComponentProps } from 'astro/types';
+
+import { getPlaceholder } from '@xsynaptic/astro-image-pipeline/node';
+import { Image } from 'astro:assets';
+
+import ContentSubtitle from '#components/content/content-subtitle.astro';
+import Anchor from '#components/parts/anchor.astro';
+import ChipRow from '#components/parts/chip-row.astro';
+import { MicroformatClassNames } from '#components/types.ts';
+import { renderSlot } from '#lib/utils/astro.ts';
+import { getMediaImage } from '#lib/utils/media.ts';
+
+interface Props {
+	class?: string | undefined;
+	description: string | undefined;
+	imageId: string | undefined;
+	isPriority: boolean;
+	tagItems: ComponentProps<typeof ChipRow>['items'];
+	title: string;
+	url: string;
+}
+
+const { class: className, description, imageId, isPriority, tagItems, title, url } = Astro.props;
+
+const image = imageId ? getMediaImage(imageId) : undefined;
+const placeholder =
+	imageId && image
+		? await getPlaceholder({ height: image.height, id: imageId, width: image.width })
+		: undefined;
+
+const subtitle = await renderSlot(Astro.slots, 'card-subtitle');
+---
+
+<article class:list={['flex flex-col gap-4', MicroformatClassNames.Entry, className]}>
+	{image ? (
+		<a
+			aria-hidden="true"
+			class="block aspect-3/2 overflow-hidden rounded-xs border border-primary-200 bg-primary-100 bg-placeholder"
+			href={url}
+			style={placeholder ? `background-image:url(${placeholder})` : undefined}
+			tabindex="-1"
+		>
+			<Image
+				alt=""
+				class:list={['block size-full object-cover', MicroformatClassNames.Photo]}
+				layout="constrained"
+				priority={isPriority}
+				sizes="(min-width: 54rem) 54rem, 100vw"
+				src={image}
+				width={1600}
+			/>
+		</a>
+	) : undefined}
+	<header>
+		<h2 class="-ml-0.5 trim-text font-display text-xl leading-title font-semibold md:text-2xl">
+			<Anchor
+				anchorColor="title"
+				class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+				href={url}
+			>
+				{title}
+			</Anchor>
+		</h2>
+		{subtitle ? <ContentSubtitle html={subtitle} /> : undefined}
+	</header>
+	{description ? (
+		<p
+			class:list={['leading-relaxed text-primary-700', MicroformatClassNames.Summary]}
+			set:html={description}
+		/>
+	) : undefined}
+	<ChipRow chipProps={{ class: MicroformatClassNames.Category }} items={tagItems} />
+	<slot name="card-links" />
+</article>

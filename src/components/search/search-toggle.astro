@@ -27,16 +27,8 @@ const props = Astro.props;
 		data-umami-event="search-open"
 		title={t('site.search.toggle.title')}
 	>
-		<svg height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg">
-			<path d="M0 0h24v24H0z" fill="none"></path>
-			<path
-				d="m20 20l-4.05-4.05m0 0a7 7 0 1 0-9.9-9.9a7 7 0 0 0 9.9 9.9"
-				fill="none"
-				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-			></path>
+		<svg aria-hidden="true" height="1em" width="1em">
+			<use href="#icon:search"></use>
 		</svg>
 	</button>
 </search-toggle>

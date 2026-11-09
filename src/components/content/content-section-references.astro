@@ -5,9 +5,8 @@ import ChipRow from '#components/parts/chip-row.astro';
 import LabeledRow from '#components/parts/labeled-row.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { createProjectsByIdsFunction } from '#lib/collections/projects/projects-utils.ts';
-import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
+import { getTagChipItems } from '#lib/collections/tags/tags-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { sortByEntryCount } from '#lib/utils/collections.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
 
 interface Props {
@@ -17,7 +16,7 @@ interface Props {
 
 const { projects, tags } = Astro.props;
 
-function getRowItems(entries: Array<ComputedEntry<'projects' | 'tags'>>) {
+function getRowItems(entries: Array<ComputedEntry<'projects'>>) {
 	return entries.map((item) => ({
 		title: item.data.title,
 		url: getContentPath(item.collection, item.id),
@@ -25,7 +24,6 @@ function getRowItems(entries: Array<ComputedEntry<'projects' | 'tags'>>) {
 }
 
 const getProjectsByIds = await createProjectsByIdsFunction();
-const getTagsByIds = await createTagsByIdsFunction();
 
 const projectItems = projects
 	? getRowItems(
@@ -35,9 +33,7 @@ const projectItems = projects
 		)
 	: [];
 
-const tagItems = tags
-	? getRowItems(getTagsByIds(tags.map(({ id }) => id)).toSorted(sortByEntryCount))
-	: [];
+const tagItems = await getTagChipItems(tags);
 ---
 
 <LabeledRow

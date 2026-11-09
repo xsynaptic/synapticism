@@ -1,14 +1,14 @@
 import { glob } from 'astro/loaders';
-import { defineCollection, reference } from 'astro:content';
+import { defineCollection } from 'astro:content';
 
 import { contentCollectionsPath } from '#constants.ts';
 import { withSitemapLastmod } from '#lib/collections/collections-sitemap.ts';
-import { contentBaseSchema } from '#lib/schemas/content.ts';
+import { projectSchema } from '#lib/schemas/content.ts';
 
 export const projects = defineCollection({
 	loader: withSitemapLastmod(
 		'projects',
 		glob({ base: `${contentCollectionsPath}/projects`, pattern: '**/[^_]*.(md|mdx)' }),
 	),
-	schema: contentBaseSchema.extend({ tags: reference('tags').array().optional() }).strict(),
+	schema: projectSchema,
 });

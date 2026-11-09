@@ -9,7 +9,7 @@ import { DatePresetEnum, hasUtcTime, parseContentDate } from '#lib/utils/date.ts
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props extends HTMLAttributes<'time'> {
-	date: Date | string;
+	date: Date | number | string;
 	dateOptions?: Intl.DateTimeFormatOptions | undefined;
 	datePreset?: DatePreset;
 }
@@ -38,32 +38,37 @@ const timeOptions = {
 
 const { date, dateOptions, datePreset = DatePresetEnum.Long, ...props } = Astro.props;
 
-const dateRaw = parseContentDate(date);
+function getDateTime(): { attribute: string; display: string } {
+	if (typeof date === 'number') return { attribute: String(date), display: String(date) };
 
-if (!dateRaw) throw new Error(`Invalid date: "${JSON.stringify(date)}"`);
+	const dateRaw = parseContentDate(date);
 
-const dateTimeAttribute = dateRaw.toISOString();
+	if (!dateRaw) throw new Error(`Invalid date: "${JSON.stringify(date)}"`);
 
-const dateDisplay = getDateTimeFormat('en', {
-	...datePresets[datePreset],
-	...dateOptions,
-}).format(dateRaw);
+	const dateDisplay = getDateTimeFormat('en', {
+		...datePresets[datePreset],
+		...dateOptions,
+	}).format(dateRaw);
 
-const timeDisplay = hasUtcTime(dateRaw)
-	? formatStringTemplate(t('content.timeUtc'), {
-			time: getDateTimeFormat('en', timeOptions).format(dateRaw),
-		})
-	: undefined;
+	if (!hasUtcTime(dateRaw)) return { attribute: dateRaw.toISOString(), display: dateDisplay };
 
-const dateTimeTemplate = t(
-	datePreset === DatePresetEnum.Short ? 'content.dateTimeShort' : 'content.dateTime',
-);
+	const timeDisplay = formatStringTemplate(t('content.timeUtc'), {
+		time: getDateTimeFormat('en', timeOptions).format(dateRaw),
+	});
 
-const dateTimeDisplay = timeDisplay
-	? formatStringTemplate(dateTimeTemplate, { date: dateDisplay, time: timeDisplay })
-	: dateDisplay;
+	const dateTimeTemplate = t(
+		datePreset === DatePresetEnum.Short ? 'content.dateTimeShort' : 'content.dateTime',
+	);
+
+	return {
+		attribute: dateRaw.toISOString(),
+		display: formatStringTemplate(dateTimeTemplate, { date: dateDisplay, time: timeDisplay }),
+	};
+}
+
+const dateTime = getDateTime();
 ---
 
-<time datetime={dateTimeAttribute} {...props}>
-	{dateTimeDisplay}
+<time datetime={dateTime.attribute} {...props}>
+	{dateTime.display}
 </time>

@@ -30,6 +30,7 @@ Add a line here only when an agent cannot see it in the repo or work it out quic
 - A hook class carries only what the stylesheet targets, under a descriptive prefix naming that target. Microformat prefixes (`p-`, `h-`, `u-`, `dt-`, `e-`) stay out.
 - Stylesheets read tokens as `var(--…)`; `@apply` where it replaces a media query or composes a project `@utility`.
 - Stacking order is `--z-index-*`, applied as `z-*` utilities or `var()`.
+- Icons are `<symbol id="icon:…">`s in `main-sprites.astro`, its header naming each Iconify source, drawn as `<svg aria-hidden="true" height width><use href="#icon:…"></use></svg>`; a new one joins the Inventory's Icons Specimen.
 - `main.css` scans `components/`, `layouts/` and `pages/` only. A directory left off that list gets no utilities and cannot reach the production stylesheet.
 - Every `hover:` on a focusable element has its `focus-visible:` twin where relevant. A stylesheet `:hover` sits under `@media (hover: hover)`; its `:focus-visible` partner stays outside it.
 

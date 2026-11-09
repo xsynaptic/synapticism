@@ -12,8 +12,19 @@ import {
 	filterHasEntries,
 	sortByEntryCount,
 } from '#lib/utils/collections.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
 
 export const createTagsByIdsFunction = createCollectionLookupByIds('Tags', getTagsCollection);
+
+export async function getTagChipItems(tags: Array<{ id: string }> | undefined) {
+	if (!tags) return [];
+
+	const getTagsByIds = await createTagsByIdsFunction();
+
+	return getTagsByIds(tags.map(({ id }) => id))
+		.toSorted(sortByEntryCount)
+		.map((tag) => ({ title: tag.data.title, url: getContentPath('tags', tag.id) }));
+}
 
 export async function queryTagsEntryContent(entry: ComputedEntry<'tags'>) {
 	const [posts, { entries: projects }, catalog] = await Promise.all([
