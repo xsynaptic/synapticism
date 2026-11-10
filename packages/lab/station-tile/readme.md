@@ -14,7 +14,7 @@ Everything under `core/` is pure and runs the same at build time and in the brow
 ## Consumers
 
 - `station-tile.astro` runs the pipeline at build time and ships no JavaScript; the tile is an inline style on a `div`
-- `<station-tile>` (`client/station-tile.ts`) runs it in the browser whenever its `options` property is set. The Lab on `station-tile-lab.mdx` (`station-tile-lab.astro`, `client/station-tile-lab.ts`) drives one from a form
+- `<station-tile>` (`client/station-tile.ts`) runs it in the browser whenever its `options` property is set. The Lab on `station-tile-lab.mdx` (`station-tile-lab.astro`, `client/station-tile-lab.ts`) drives one from a form, and downloads the current tile as SVG or as a 3× PNG drawn through a canvas (`client/station-tile-export.ts`)
 
 `tileBackgroundStyle` is shared, so both paint identically.
 

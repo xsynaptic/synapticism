@@ -23,12 +23,15 @@ interface RangeSpec {
 	label: string;
 	max: number;
 	min: number;
+	onlyIn?: TileMode;
 	step: number;
 	value: number;
 }
 
+type TileMode = 'canvas' | 'seamless';
+
 // Matches `.preview` in station-tile-lab.css so the canvas fills the box without cropping
-export const labAspectRatio = 4 / 3;
+export const labAspectRatio = 16 / 9;
 
 // Lab opens at the density of the page's own tiles (sizes 18 to 26), finer than the component default
 // Grout width has no default; the component derives it from tile size
@@ -41,9 +44,9 @@ export const labRanges: ReadonlyArray<RangeSpec> = (
 		{ key: 'jitter', label: 'Jitter', max: 1, min: 0, step: 0.05 },
 		{ key: 'gloss', label: 'Gloss', max: 1, min: 0, step: 0.05 },
 		{ key: 'bevel', label: 'Bevel', max: 1, min: 0, step: 0.05 },
-		{ key: 'macroLighting', label: 'Macro light', max: 1, min: 0, step: 0.05 },
+		{ key: 'macroLighting', label: 'Macro light', max: 1, min: 0, onlyIn: 'canvas', step: 0.05 },
 		{ key: 'stagger', label: 'Stagger', max: 0.5, min: 0, step: 0.05 },
-		{ key: 'unitCells', label: 'Unit cells', max: 24, min: 4, step: 1 },
+		{ key: 'unitCells', label: 'Unit cells', max: 24, min: 4, onlyIn: 'seamless', step: 1 },
 		{ key: 'groutWidth', label: 'Grout width', max: 8, min: 1, step: 0.5 },
 		{ key: 'grain', label: 'Tile grain', max: 0.3, min: 0, step: 0.01 },
 		{ key: 'grainGrout', label: 'Grout grain', max: 1, min: 0, step: 0.05 },
@@ -54,6 +57,20 @@ export const labColors: ReadonlyArray<ColorSpec> = [
 	{ key: 'grout', label: 'Grout', value: labPreset.grout },
 	{ key: 'glossColor', label: 'Gloss tint', value: labPreset.glossColor },
 ];
+
+export const exportFormats = ['svg', 'png'] as const;
+
+export type ExportFormat = (typeof exportFormats)[number];
+
+export function isExportFormat(value: string | undefined): value is ExportFormat {
+	return exportFormats.some((format) => format === value);
+}
+
+export function isRangeActive(range: RangeSpec, isSeamless: boolean): boolean {
+	if (range.onlyIn === undefined) return true;
+
+	return range.onlyIn === (isSeamless ? 'seamless' : 'canvas');
+}
 
 export function formatRangeValue(value: number): string {
 	return Number.isSafeInteger(value) ? value.toString() : value.toFixed(2);

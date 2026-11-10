@@ -9,7 +9,13 @@ import {
 	tileDefaults,
 	tileThemes,
 } from '#station-tile/core/appearance.ts';
-import { formatRangeValue, labColors, labRanges } from '#station-tile/station-tile-lab-controls.ts';
+import {
+	exportFormats,
+	formatRangeValue,
+	isRangeActive,
+	labColors,
+	labRanges,
+} from '#station-tile/station-tile-lab-controls.ts';
 
 // Declarative shadow DOM lays the lab out at full height before its script loads
 // A shadow root cannot read the page cascade, so its styles ship inline with it
@@ -50,22 +56,22 @@ const { isFeed } = Astro.locals;
 						<label class="field-head" for="seed">
 							<span class="field-name">Seed</span>
 						</label>
-						<div class="seed-row">
+						<div class="control-row">
 							<input id="seed" name="seed" type="text" value={String(seed)} />
-							<button aria-label="Randomize seed" type="button">
+							<button aria-label="Randomize seed" class="randomize" type="button">
 								<svg
 									aria-hidden="true"
 									fill="none"
-									height="16"
+									height="14"
 									stroke="currentColor"
 									stroke-linecap="round"
 									stroke-linejoin="round"
 									stroke-width="2"
 									viewBox="0 0 24 24"
-									width="16"
+									width="14"
 								>
-									<rect height="18" rx="2" width="18" x="3" y="3" />
-									<path d="M16 8h.01M8 8h.01M8 16h.01M16 16h.01M12 12h.01" />
+									<path d="m18 14l4 4l-4 4m0-20l4 4l-4 4" />
+									<path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22M2 6h1.972a4 4 0 0 1 3.6 2.2M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45" />
 								</svg>
 							</button>
 						</div>
@@ -78,6 +84,7 @@ const { isFeed } = Astro.locals;
 							</span>
 							<input
 								aria-label={range.label}
+								disabled={!isRangeActive(range, false)}
 								max={range.max}
 								min={range.min}
 								name={range.key}
@@ -87,14 +94,16 @@ const { isFeed } = Astro.locals;
 							/>
 						</label>
 					))}
-					{labColors.map((color) => (
-						<label class="field">
-							<span class="field-head">
-								<span class="field-name">{color.label}</span>
-							</span>
-							<input aria-label={color.label} name={color.key} type="color" value={color.value} />
-						</label>
-					))}
+					<div class="field">
+						<span class="field-head">
+							<span class="field-name">Grout / gloss tint</span>
+						</span>
+						<div class="control-row">
+							{labColors.map((color) => (
+								<input aria-label={color.label} name={color.key} type="color" value={color.value} />
+							))}
+						</div>
+					</div>
 					<label class="field">
 						<span class="field-head">
 							<span class="field-name">Gloss blend</span>
@@ -109,6 +118,21 @@ const { isFeed } = Astro.locals;
 						<input name="seamless" type="checkbox" />
 						<span class="field-name">Seamless</span>
 					</label>
+					<div class="field">
+						<span class="field-head">
+							<span class="field-name">Download</span>
+						</span>
+						<div class="control-row">
+							{exportFormats.map((format) => (
+								<button data-format={format} type="button">
+									{format.toUpperCase()}
+								</button>
+							))}
+						</div>
+					</div>
+					<button class="reset" type="button">
+						Reset
+					</button>
 				</form>
 			</div>
 		</template>

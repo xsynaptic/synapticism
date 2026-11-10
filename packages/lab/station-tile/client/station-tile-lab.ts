@@ -3,8 +3,12 @@ import '#station-tile/client/station-tile.ts';
 import type { GlossBlend, TileTheme } from '#station-tile/core/appearance.ts';
 import type { TileInput } from '#station-tile/core/options.ts';
 
+import { downloadTile } from '#station-tile/client/station-tile-export.ts';
+import { generateTileSvg } from '#station-tile/core/render.ts';
 import {
 	formatRangeValue,
+	isExportFormat,
+	isRangeActive,
 	labAspectRatio,
 	labColors,
 	labRanges,
@@ -66,10 +70,8 @@ class StationTileLab extends HTMLElement {
 		this.#form = form;
 		this.#tile = tile;
 
-		form.addEventListener('input', (event) => {
-			if (event.target instanceof HTMLInputElement && event.target.type === 'range') {
-				showRangeValue(event.target);
-			}
+		form.addEventListener('input', () => {
+			syncControls(form);
 			this.#apply();
 		});
 
@@ -77,7 +79,7 @@ class StationTileLab extends HTMLElement {
 			event.preventDefault();
 		});
 
-		form.querySelector('button')?.addEventListener('click', () => {
+		form.querySelector('.randomize')?.addEventListener('click', () => {
 			const seed = form.elements.namedItem('seed');
 
 			if (!(seed instanceof HTMLInputElement)) return;
@@ -85,7 +87,40 @@ class StationTileLab extends HTMLElement {
 			seed.value = randomSeed();
 			this.#apply();
 		});
+
+		wireDownloads(form);
+
+		// A native reset button restores values after its click listeners run, too late to sync here
+		form.querySelector('.reset')?.addEventListener('click', () => {
+			form.reset();
+			syncControls(form);
+			this.#apply();
+		});
 	}
+}
+
+function wireDownloads(form: HTMLFormElement) {
+	for (const button of form.querySelectorAll<HTMLButtonElement>('button[data-format]')) {
+		button.addEventListener('click', () => {
+			const format = button.dataset.format;
+
+			if (!isExportFormat(format)) return;
+
+			const input = readInput(form);
+
+			void downloadTile(generateTileSvg(input), format, exportName(input));
+		});
+	}
+}
+
+function exportName(input: TileInput): string {
+	const seed = String(input.seed ?? '')
+		.toLowerCase()
+		.replaceAll(/[^\da-z]+/g, '-')
+		.replaceAll(/^-|-$/g, '');
+	const parts = ['station-tile', input.theme, seed, input.seamless ? 'seamless' : undefined];
+
+	return parts.filter(Boolean).join('-');
 }
 
 function formText(data: FormData, name: string): string {
@@ -109,16 +144,30 @@ function readInput(form: HTMLFormElement): TileInput {
 		theme: formText(data, 'theme') as TileTheme,
 	};
 
-	for (const range of labRanges) input[range.key] = Number(formText(data, range.key));
+	// Disabled controls drop out of FormData, leaving the generator's default in place
+	for (const range of labRanges) {
+		if (data.has(range.key)) input[range.key] = Number(formText(data, range.key));
+	}
 	for (const color of labColors) input[color.key] = formText(data, color.key);
 
 	return input;
 }
 
-function showRangeValue(range: HTMLInputElement) {
-	const output = range.closest('.field')?.querySelector('.field-value');
+function syncControls(form: HTMLFormElement) {
+	const seamless = form.elements.namedItem('seamless');
+	const isSeamless = seamless instanceof HTMLInputElement && seamless.checked;
 
-	if (output) output.textContent = formatRangeValue(range.valueAsNumber);
+	for (const range of labRanges) {
+		const control = form.elements.namedItem(range.key);
+
+		if (!(control instanceof HTMLInputElement)) continue;
+
+		control.disabled = !isRangeActive(range, isSeamless);
+
+		const output = control.closest('.field')?.querySelector('.field-value');
+
+		if (output) output.textContent = formatRangeValue(control.valueAsNumber);
+	}
 }
 
 if (!customElements.get('station-tile-lab')) {
