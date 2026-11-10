@@ -11,12 +11,10 @@ export const getStaticPaths = (async ({ paginate }) => {
 
 	const paths = await Promise.all(
 		entries.map(async (entry) => {
-			const { posts, projects } = await queryTagsEntryContent(entry);
-
-			return paginate(posts, {
+			return paginate(await queryTagsEntryContent(entry), {
 				pageSize: postListPageSize,
 				params: { id: entry.id },
-				props: { entry, projects },
+				props: { entry },
 			});
 		}),
 	);

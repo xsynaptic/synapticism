@@ -1,7 +1,6 @@
 ---
 import ContentSubtitle from '#components/content/content-subtitle.astro';
-import Anchor from '#components/parts/anchor.astro';
-import { MicroformatClassNames } from '#components/types.ts';
+import EntryTitle from '#components/content/entry-title.astro';
 import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
@@ -18,23 +17,9 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 
 <div class:list={['content-column mb-2 pb-2', className]}>
 	<div class:list={['pt-4 md:pt-8', { 'site-shell-title': isLeading }]}>
-		<h1
-			class="-ml-0.5 trim-text font-display text-2xl leading-title font-semibold text-primary-900 md:text-3xl lg:text-4xl"
-			data-pagefind-weight="3"
-		>
-			{titleUrl ? (
-				<Anchor
-					anchorColor="title"
-					class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-					href={titleUrl}
-					rel="bookmark"
-				>
-					{title}
-				</Anchor>
-			) : (
-				title
-			)}
-		</h1>
+		<EntryTitle as="h1" data-pagefind-weight="3" href={titleUrl} rel="bookmark">
+			{title}
+		</EntryTitle>
 	</div>
 	{subtitle ? <ContentSubtitle data-pagefind-ignore html={subtitle} /> : undefined}
 </div>

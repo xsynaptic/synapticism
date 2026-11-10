@@ -1,10 +1,10 @@
 ---
+import ContentContinueReading from '#components/content/content-continue-reading.astro';
 import ContentSubtitle from '#components/content/content-subtitle.astro';
-import Anchor from '#components/parts/anchor.astro';
+import EntryTitle from '#components/content/entry-title.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { contentExcerptIdentifier } from '#constants.ts';
-import { t } from '#lib/i18n/i18n-strings.ts';
 import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
@@ -27,15 +27,9 @@ const hasExcerpt = excerptSplit.length > 1;
 <article class:list={[className, MicroformatClassNames.Entry]}>
 	<header class="content-column mb-2 pb-2">
 		<div class:list={[{ 'site-shell-title pt-4 md:pt-8': isLeading }]}>
-			<h2 class="-ml-0.5 trim-text font-display text-xl leading-title font-semibold md:text-2xl lg:text-3xl">
-				<Anchor
-					anchorColor="title"
-					class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
-					href={entryUrl}
-				>
-					<slot name="excerpt-title" />
-				</Anchor>
-			</h2>
+			<EntryTitle as="h2" href={entryUrl}>
+				<slot name="excerpt-title" />
+			</EntryTitle>
 		</div>
 		{subtitle ? <ContentSubtitle html={subtitle} /> : undefined}
 	</header>
@@ -44,13 +38,6 @@ const hasExcerpt = excerptSplit.length > 1;
 		<Fragment set:html={excerptContent} />
 	</ProseBody>
 	{hasExcerpt ? (
-		<div class="content-column flex items-baseline justify-end gap-1 text-sm font-medium italic">
-			<Anchor anchorColor="title" href={entryUrl}>
-				{t('content.continueReading')}
-			</Anchor>
-			<span aria-hidden="true" class="shrink-0 text-primary-600">
-				&rarr;
-			</span>
-		</div>
+		<ContentContinueReading class="content-column justify-end" href={entryUrl} />
 	) : undefined}
 </article>

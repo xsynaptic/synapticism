@@ -9,7 +9,11 @@ const { class: className, frame = 'column', ...props } = Astro.props;
 ---
 
 <div
-	class:list={['prose-x', frame === 'bleed' ? 'prose-bleed' : 'content-column', className]}
+	class:list={[
+		'prose-x anchor-scope',
+		frame === 'bleed' ? 'prose-bleed' : 'content-column',
+		className,
+	]}
 	{...props}
 >
 	<slot />

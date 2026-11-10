@@ -20,6 +20,10 @@ export const syndicationItemCount = 20;
 
 export const postListPageSize = 10;
 
+export const listTagLimit = 5;
+
+export const projectImageAspectRatio = { height: 1, width: 2 };
+
 export const postReadingTimeMinimumMinutes = 3;
 
 export const recentPostsCount = 5;

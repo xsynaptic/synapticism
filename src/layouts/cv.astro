@@ -86,13 +86,13 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 			<header class="flex break-inside-avoid flex-col gap-1 pt-1 pb-3">
 				<h1 class="text-2xl font-semibold sm:text-4xl">{basics.name}</h1>
 				<p class="text-base text-primary-500 sm:text-lg">{basics.label}</p>
-				<div class="flex flex-col gap-0.5 pt-1 text-sm">
+				<div class="flex flex-col gap-0.5 pt-1 text-sm [--anchor-ink:var(--color-primary-600)] [--anchor-ink-hover:var(--color-primary-400)]">
 					<CvContactRow>
 						<DividedItem as="span" class="text-primary-700">
 							{basics.location.city}, {basics.location.region}
 						</DividedItem>
 						<DividedItem as="span">
-							<Anchor anchorColor="primary-bright" href={`mailto:${basics.email}`}>
+							<Anchor href={`mailto:${basics.email}`} underline="hover">
 								{basics.email}
 							</Anchor>
 						</DividedItem>
@@ -100,13 +100,13 @@ const printFilename = `${basics.name.toLowerCase().replaceAll(' ', '-')}-cv`;
 					</CvContactRow>
 					<CvContactRow>
 						<DividedItem as="span">
-							<Anchor anchorColor="primary-bright" href={basics.website}>
+							<Anchor href={basics.website} underline="hover">
 								{formatUrl(basics.website)}
 							</Anchor>
 						</DividedItem>
 						{basics.profiles.map((profile) => (
 							<DividedItem as="span">
-								<Anchor anchorColor="primary-bright" href={profile.url} rel="me">
+								<Anchor href={profile.url} rel="me" underline="hover">
 									{formatUrl(profile.url)}
 								</Anchor>
 							</DividedItem>

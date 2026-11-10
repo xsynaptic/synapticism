@@ -2,20 +2,16 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import ProjectDetail from '#layouts/project-detail.astro';
-import { getCatalog } from '#lib/catalog/catalog-data.ts';
-import { filterIsEditorialEntry } from '#lib/catalog/catalog-utils.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
 import { queryProjectEntryContent } from '#lib/collections/projects/projects-utils.ts';
 
 export const getStaticPaths = (async () => {
 	const { entries } = await getProjectsCollection();
-	const catalog = await getCatalog();
 
 	return Promise.all(
 		entries.map(async (entry) => ({
 			params: { project: entry.id },
 			props: {
-				backlinks: catalog.backlinksOf(entry.id).filter(filterIsEditorialEntry),
 				entry,
 				relatedContent: await queryProjectEntryContent(entry),
 			},

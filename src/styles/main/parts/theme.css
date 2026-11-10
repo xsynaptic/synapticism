@@ -10,6 +10,7 @@
 	--spacing-hero: 70svh;
 
 	/* Stacking order */
+	--z-index-image-navigation: 10;
 	--z-index-header: 40;
 	--z-index-top-button: 45;
 	--z-index-progress: 60;
@@ -22,7 +23,8 @@
 	--font-mono: var(--font-red-hat-mono);
 	--font-cv: var(--font-aleo-static);
 	--list-style-type-bullet: '• ';
-	--leading-title: 1.125;
+	--leading-title: 1.08;
+	--tracking-title: -0.012em;
 
 	/* Blue-grey primitive */
 	--color-pale-sky-50: #f9fafb;

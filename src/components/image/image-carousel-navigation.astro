@@ -1,0 +1,28 @@
+---
+import { t } from '#lib/i18n/i18n-strings.ts';
+---
+
+<button
+	aria-label={t('carousel.nav.previous')}
+	class="carousel-nav carousel-nav-prev z-image-navigation"
+	data-carousel-nav="prev"
+	type="button"
+>
+	<svg aria-hidden="true" height="24" width="24">
+		<use href="#icon:chevron-left"></use>
+	</svg>
+</button>
+<button
+	aria-label={t('carousel.nav.next')}
+	class="carousel-nav carousel-nav-next z-image-navigation"
+	data-carousel-nav="next"
+	type="button"
+>
+	<svg aria-hidden="true" height="24" width="24">
+		<use href="#icon:chevron-right"></use>
+	</svg>
+</button>
+
+<script>
+	import '#components/image/image-carousel.ts';
+</script>

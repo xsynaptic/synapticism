@@ -1,5 +1,8 @@
 /* Typography only; ProseBody picks the frame, content-column or .prose-bleed below */
 .prose-x {
+	--anchor-ink: var(--color-accent-600);
+	--anchor-ink-hover: var(--color-highlight-500);
+
 	font-size: var(--text-lg);
 	line-height: var(--leading-relaxed);
 	color: var(--color-primary-700);
@@ -94,29 +97,6 @@
 	line-height: var(--leading-snug);
 }
 
-.prose-x a {
-	color: var(--color-accent-600);
-	text-decoration-line: underline;
-	text-decoration-thickness: 2px;
-	text-decoration-color: var(--color-primary-200);
-	text-underline-offset: 2px;
-	transition-timing-function: var(--default-transition-timing-function);
-	transition-duration: var(--default-transition-duration);
-	transition-property: color, text-decoration-color;
-}
-
-.prose-x a:focus-visible {
-	color: var(--color-highlight-500);
-	text-decoration-color: var(--color-accent-300);
-}
-
-@media (hover: hover) {
-	.prose-x a:hover {
-		color: var(--color-highlight-500);
-		text-decoration-color: var(--color-accent-300);
-	}
-}
-
 .prose-x strong {
 	font-weight: 600;
 	color: var(--color-primary-800);
@@ -148,7 +128,6 @@
 	margin-top: 0.4em;
 }
 
-/* A hanging quotation mark rather than a side stripe */
 .prose-x blockquote {
 	position: relative;
 	padding-inline-start: 1.25rem;
@@ -160,7 +139,7 @@
 
 .prose-x blockquote::before {
 	position: absolute;
-	inset-inline-start: 0;
+	inset-inline-start: -0.15rem;
 	font-size: 3em;
 	font-style: normal;
 	line-height: 1;

@@ -1,4 +1,6 @@
 .divided-item {
+	--divider-glyph: var(--content-slash);
+
 	display: inline;
 
 	@media (width >= 40rem) {
@@ -9,7 +11,7 @@
 
 .divided-item:has(~ .divided-item)::after {
 	color: var(--color-primary-400);
-	content: var(--content-word-joiner) var(--content-slash) var(--content-zero-width-space);
+	content: var(--content-word-joiner) var(--divider-glyph) var(--content-zero-width-space);
 }
 
 /* Glyphs need spacing below sm breakpoint due to jsx whitespace handling */
@@ -17,6 +19,10 @@
 	.divided-item::after {
 		margin-inline: calc(var(--spacing) * 1);
 	}
+}
+
+.divided-dot {
+	--divider-glyph: var(--content-dot);
 }
 
 .divided-thin::after {

@@ -1,65 +1,57 @@
-.anchor {
-	color: var(--anchor-color);
+.anchor,
+:where(.anchor-scope a:is(:not([class]), [data-footnote-backref])) {
+	color: var(--anchor-ink, var(--anchor-accent-ink, var(--color-primary-800)));
+	text-decoration-line: underline;
+	text-decoration-thickness: var(--anchor-thickness, max(1px, 0.08em));
+	text-decoration-color: color-mix(in srgb, currentcolor 40%, transparent);
+	text-decoration-skip-ink: auto;
+	text-underline-offset: var(--anchor-offset, 0.09em);
 	cursor: pointer;
-	transition-timing-function: var(--default-transition-timing-function);
-	transition-duration: var(--default-transition-duration);
-	transition-property: color, text-decoration-color;
+	transition:
+		color var(--default-transition-duration) var(--default-transition-timing-function),
+		text-decoration-color 250ms ease;
 }
 
-.anchor:focus-visible {
-	color: var(--anchor-hover);
+.anchor:focus-visible,
+:where(.anchor-scope a:is(:not([class]), [data-footnote-backref])):focus-visible {
+	color: var(--anchor-ink-hover, var(--anchor-accent-ink-hover, var(--color-primary-600)));
+	text-decoration-color: currentcolor;
 }
 
 @media (hover: hover) {
-	.anchor:hover {
-		color: var(--anchor-hover);
+	.anchor:hover,
+	:where(.anchor-scope a:is(:not([class]), [data-footnote-backref])):hover {
+		color: var(--anchor-ink-hover, var(--anchor-accent-ink-hover, var(--color-primary-600)));
+		text-decoration-color: currentcolor;
 	}
-}
-
-.anchor-primary {
-	--anchor-color: var(--color-primary-800);
-	--anchor-hover: var(--color-primary-600);
-}
-
-.anchor-primary-bright {
-	--anchor-color: var(--color-primary-600);
-	--anchor-hover: var(--color-primary-400);
-}
-
-.anchor-title {
-	--anchor-color: var(--color-accent-500);
-	--anchor-hover: var(--color-highlight-400);
 }
 
 .anchor-accent {
-	--anchor-color: var(--color-accent-600);
-	--anchor-hover: var(--color-highlight-500);
+	--anchor-accent-ink: var(--color-accent-600);
+	--anchor-accent-ink-hover: var(--color-highlight-500);
 }
 
-.anchor-on-dark {
-	--anchor-color: var(--color-white);
-	--anchor-hover: var(--color-primary-300);
+.anchor-underline-hover {
+	text-decoration-color: transparent;
 }
 
-.anchor-on-accent {
-	--anchor-color: var(--color-white);
-	--anchor-hover: var(--color-accent-100);
+.anchor-underline-none {
+	text-decoration-line: none;
 }
 
-/* Matches the prose link treatment in prose.css; pair with anchorColor="accent" */
-.anchor-underline {
+.anchor-split {
+	display: inline-flex;
+	gap: 0.4em;
+	align-items: center;
+	text-decoration-line: none;
+}
+
+.anchor-label {
 	text-decoration-line: underline;
-	text-decoration-thickness: 2px;
-	text-decoration-color: var(--color-primary-200);
-	text-underline-offset: 2px;
+	text-decoration-thickness: inherit;
+	text-decoration-color: inherit;
 }
 
-.anchor-underline:focus-visible {
-	text-decoration-color: var(--color-accent-300);
-}
-
-@media (hover: hover) {
-	.anchor-underline:hover {
-		text-decoration-color: var(--color-accent-300);
-	}
+.anchor-underline-none .anchor-label {
+	text-decoration-line: none;
 }

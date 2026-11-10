@@ -1,6 +1,8 @@
+import type { ImageFeaturedReference } from '@synapticism/shared/image-featured';
 import type { OpenGraphCardInput } from '@synapticism/shared/open-graph';
 import type { Page } from 'astro';
 import type { ComponentProps } from 'astro/types';
+import type { CollectionEntry } from 'astro:content';
 
 import type ContentCard from '#components/content/content-card.astro';
 import type ChipRow from '#components/parts/chip-row.astro';
@@ -30,6 +32,13 @@ export const sampleImageFeatured = sampleImageId
 			title: 'A caption authored on the featured image',
 		} satisfies ImageFeaturedObject)
 	: undefined;
+
+export const sampleCarouselImages = sampleImageId
+	? (['One', 'Two', 'Three'].map((label) => ({
+			id: sampleImageId,
+			title: `Slide ${label}`,
+		})) satisfies Array<ImageFeaturedReference>)
+	: [];
 
 export const sampleDate = '2026-04-17';
 export const sampleDateTime = '2026-04-17T14:30:00Z';
@@ -215,3 +224,37 @@ export const sampleCardTagItems = sampleChipItems.map(({ title, url }) => ({
 
 export const sampleCardDescription =
 	'A <em>rendered</em> Description, authored in frontmatter or clipped from the opening of the body.';
+
+export const sampleSubtitlePost = {
+	collection: 'posts',
+	data: {
+		dateCreated: new Date(sampleDateTime),
+		dateUpdated: new Date(sampleDateUpdated),
+		title: 'A Post',
+	},
+	id: 'sample-post',
+} satisfies CollectionEntry<'posts'>;
+
+export const sampleSubtitleProjectOngoing = {
+	collection: 'projects',
+	data: {
+		dateCreated: new Date(sampleDateTime),
+		dateStarted: 2012,
+		homeUrl: 'https://synapticism.com',
+		sourceUrl: 'https://github.com/xsynaptic',
+		template: 'sidebar',
+		title: 'An ongoing Project',
+	},
+	id: 'sample-project-ongoing',
+} satisfies CollectionEntry<'projects'>;
+
+export const sampleSubtitleProjectOneOff = {
+	collection: 'projects',
+	data: {
+		dateCreated: new Date(sampleDateTime),
+		sourceUrl: 'https://codeberg.org',
+		template: 'sidebar',
+		title: 'A one-off Project',
+	},
+	id: 'sample-project-one-off',
+} satisfies CollectionEntry<'projects'>;

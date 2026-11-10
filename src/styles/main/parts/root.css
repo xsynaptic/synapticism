@@ -4,6 +4,7 @@
 	color-scheme: light;
 
 	--content-bullet: '\2022';
+	--content-dot: '\00B7';
 	--content-slash: '/';
 	--content-word-joiner: '\2060';
 	--content-zero-width-space: '\200B';

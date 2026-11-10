@@ -4,12 +4,17 @@ import type { ComponentProps } from 'astro/types';
 import { openGraphImageHeight, openGraphImageWidth } from '@synapticism/shared/constants';
 
 import ContentCard from '#components/content/content-card.astro';
+import ContentContinueReading from '#components/content/content-continue-reading.astro';
 import ContentDate from '#components/content/content-date.astro';
 import ContentExcerpt from '#components/content/content-excerpt.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentHero from '#components/content/content-hero.astro';
 import ContentImage from '#components/content/content-image.astro';
 import ContentSection from '#components/content/content-section.astro';
+import ContentSubtitle from '#components/content/content-subtitle.astro';
+import EntrySubtitle from '#components/content/entry-subtitle.astro';
+import EntryTitle from '#components/content/entry-title.astro';
+import ImageCarousel from '#components/image/image-carousel.astro';
 import MainSite from '#components/main/main-site.astro';
 import Link from '#components/mdx/link.astro';
 import Anchor from '#components/parts/anchor.astro';
@@ -23,14 +28,15 @@ import ListRow from '#components/parts/list-row.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
 import ProseBody from '#components/parts/prose-body.astro';
 import ProseDescription from '#components/parts/prose-description.astro';
-import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionEntryList from '#components/sections/section-entry-list.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
+import { projectImageAspectRatio } from '#constants.ts';
 import {
 	createSamplePage,
 	getSampleOpenGraphCards,
 	sampleCardDescription,
 	sampleCardTagItems,
+	sampleCarouselImages,
 	sampleCatalogItems,
 	sampleChipItems,
 	sampleDate,
@@ -42,6 +48,9 @@ import {
 	samplePaginationNewer,
 	samplePaginationOlder,
 	sampleRowItems,
+	sampleSubtitlePost,
+	sampleSubtitleProjectOneOff,
+	sampleSubtitleProjectOngoing,
 } from '#dev/inventory/inventory-fixtures.ts';
 import ProseSample from '#dev/inventory/inventory-prose-sample.mdx';
 import Section from '#dev/inventory/inventory-section.astro';
@@ -85,9 +94,17 @@ const fontFamilies = [
 	{ name: 'font-mono', note: 'Red Hat Mono, 300 to 700' },
 ];
 
-const iconNames = ['chevron-down', 'chevron-up', 'github', 'rss', 'search'];
+const iconNames = [
+	'chevron-down',
+	'chevron-up',
+	'chevron-left',
+	'chevron-right',
+	'github',
+	'rss',
+	'search',
+];
 
-const sections = ['Foundations', 'Prose', 'Parts', 'Content', 'Open Graph'];
+const sections = ['Foundations', 'Prose', 'Anchors', 'Parts', 'Content', 'Open Graph'];
 
 interface OpenGraphSpecimen {
 	key: string;
@@ -138,22 +155,33 @@ const openGraphSpecimens: Array<OpenGraphSpecimen> = [
 	},
 ];
 
-type AnchorColor = NonNullable<ComponentProps<typeof Anchor>['anchorColor']>;
+const anchorUnderlineModes = [
+	{
+		label: 'always (default)',
+		note: 'faint line at rest; text and line darken together',
+		underline: 'always',
+	},
+	{
+		label: 'hover',
+		note: 'no line at rest; the line fades in with the colour',
+		underline: 'hover',
+	},
+	{ label: 'none', note: 'colour change only, never a line', underline: 'none' },
+] satisfies Array<{
+	label: string;
+	note: string;
+	underline: NonNullable<ComponentProps<typeof Anchor>['underline']>;
+}>;
 
-// Split by the ground each colour is designed for; removing one from the union breaks the build
-const anchorColorsOnLight = [
-	'primary',
-	'primary-bright',
-	'title',
-	'accent',
-] satisfies Array<AnchorColor>;
-
-const anchorColorsOnDark = ['on-dark'] satisfies Array<AnchorColor>;
+const componentOwnedLinks = [
+	{ name: 'chip', source: 'components/parts/chip.astro' },
+	{ name: 'header navigation', source: 'components/navigation/navigation-header.astro' },
+	{ name: 'skip link', source: 'components/main/main-skip-link.astro' },
+];
 
 const chipEdgeColors = ['primary', 'accent', 'highlight'] satisfies Array<
 	NonNullable<ComponentProps<typeof Chip>['edgeColor']>
 >;
-const anchorColorOnAccent = 'on-accent' satisfies AnchorColor;
 
 const datePresets = Object.values(DatePresetEnum);
 
@@ -172,7 +200,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</p>
 			<nav class="mt-4 flex flex-wrap gap-x-5 font-mono text-sm">
 				{sections.map((section) => (
-					<Anchor anchorColor="accent" href={`#${getSectionId(section)}`}>
+					<Anchor accent={true} href={`#${getSectionId(section)}`} underline="hover">
 						{section}
 					</Anchor>
 				))}
@@ -304,37 +332,103 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				</ProseBody>
 			</Specimen>
 		</Section>
-		<Section title="Parts">
+		<Section
+			note="Text links go through one component. Colour comes from the host's --anchor-ink and --anchor-ink-hover, or the accent opt-in; the line comes from the underline prop and follows the ink. Hover and Tab through each row."
+			title="Anchors"
+		>
 			<Specimen
-				name="anchor"
-				note="Every <code>anchorColor</code> on the ground it was designed for; each has a <code>focus-visible</code> twin. <code>anchor-underline</code> adds the prose link treatment."
+				name="underline modes"
+				note="Every mode shifts the ink on hover and focus. The line is the same in each: a fraction of an em thick, sitting just under the baseline so descenders cross it."
 				source="components/parts/anchor.astro"
 			>
 				<div class="flex flex-col gap-4">
-					<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3">
-						{anchorColorsOnLight.map((anchorColor) => (
-							<Anchor anchorColor={anchorColor} href="#anchor">
-								{anchorColor}
+					{anchorUnderlineModes.map((mode) => (
+						<p class="grid gap-1 sm:grid-cols-[10rem_1fr]">
+							<span class="font-mono text-xs text-primary-500">{mode.label}</span>
+							<span>
+								A sentence with{' '}
+								<Anchor href="#anchors" underline={mode.underline}>
+									a link in it
+								</Anchor>
+								, then{' '}
+								<Anchor accent={true} href="#anchors" underline={mode.underline}>
+									an accent link
+								</Anchor>
+								; {mode.note}.
+							</span>
+						</p>
+					))}
+					<p class="grid gap-1 sm:grid-cols-[10rem_1fr]">
+						<span class="font-mono text-xs text-primary-500">end slot</span>
+						<span>
+							An icon link:{' '}
+							<Anchor href="#anchors">
+								Source Code
+								<svg aria-hidden="true" height="1em" slot="end" width="1em">
+									<use href="#icon:github"></use>
+								</svg>
 							</Anchor>
-						))}
-						<Anchor anchorColor="accent" class="anchor-underline" href="#anchor">
-							accent + anchor-underline
+							; the icon is never underlined.
+						</span>
+					</p>
+				</div>
+			</Specimen>
+			<Specimen name="type sizes" note="Typography is the caller's; the line scales with the em.">
+				<div class="flex flex-col gap-4">
+					<EntryTitle as="h2" href="#anchors">
+						A display title, no line
+					</EntryTitle>
+					<p class="text-lg">
+						<Anchor href="#anchors">Body text at prose size, spanning enough words to wrap</Anchor>
+					</p>
+					<p class="text-xs text-primary-500">
+						2012&ndash;present &middot;{' '}
+						<Anchor href="#anchors" underline="hover">
+							Homepage
 						</Anchor>
-					</div>
-					<div class="flex flex-wrap items-baseline gap-x-6 gap-y-3 rounded-sm bg-primary-800 px-5 py-4">
-						{anchorColorsOnDark.map((anchorColor) => (
-							<Anchor anchorColor={anchorColor} href="#anchor">
-								{anchorColor}
-							</Anchor>
-						))}
-					</div>
-					<div class="rounded-sm bg-accent-500 px-5 py-4">
-						<Anchor anchorColor={anchorColorOnAccent} href="#anchor">
-							{anchorColorOnAccent}
+					</p>
+				</div>
+			</Specimen>
+			<Specimen
+				name="hosts and scope"
+				note="A host sets the ink for every Anchor inside it; anchor-scope gives the bare links Markdown emits the same rules."
+			>
+				<div class="flex flex-col gap-4">
+					<ProseBody class="px-0!" frame="column">
+						<p>
+							Prose sets the accent ink, and a <a href="#anchors">bare Markdown link</a> picks up
+							the same line as an Anchor.
+						</p>
+					</ProseBody>
+					<p class="anchor-ink-title">
+						anchor-ink-title, on Entry titles and Continue reading:{' '}
+						<Anchor href="#anchors" underline="hover">
+							{t('content.continueReading')}
+						</Anchor>
+					</p>
+					<div class="anchor-ink-on-dark flex flex-wrap items-baseline gap-x-6 gap-y-3 rounded-sm bg-primary-800 px-5 py-4 text-sm text-primary-300">
+						anchor-ink-on-dark, on the header, sidebar and footer:
+						<Anchor href="#anchors" underline="hover">
+							Recent Post title
+						</Anchor>
+						<Anchor href="#anchors" underline="none">
+							Site title
 						</Anchor>
 					</div>
 				</div>
 			</Specimen>
+			<Specimen name="owned by a component" note="Link treatments that are not Anchors.">
+				<ul class="flex flex-col gap-1 text-sm">
+					{componentOwnedLinks.map((link) => (
+						<li>
+							<span class="font-medium text-primary-800">{link.name}</span>{' '}
+							<span class="font-mono text-xs text-primary-500">{link.source}</span>
+						</li>
+					))}
+				</ul>
+			</Specimen>
+		</Section>
+		<Section title="Parts">
 			<Specimen
 				name="date-display"
 				note="Presets read from <code>DatePresetEnum</code>. A date authored with a time shows the time; a bare date does not."
@@ -438,29 +532,43 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-header"
-				note="The <code>h1</code> of an Entry page. The title links to itself; the subtitle slot takes divided items."
+				note="The <code>h1</code> of an Entry page. The title links to itself; the subtitle slot takes an <code>entry-subtitle</code>."
 				source="components/content/content-header.astro"
 			>
 				<ContentHeader
 					title="An Entry title long enough to wrap and show the balance"
 					titleUrl="#header"
 				>
-					<Fragment slot="header-subtitle">
-						<ContentDate
-							dateCreated={new Date(sampleDate)}
-							dateUpdated={new Date(sampleDateUpdated)}
-						/>
-						<DividedItem>8 minute read</DividedItem>
-					</Fragment>
+					<EntrySubtitle entry={sampleSubtitlePost} minutesRead={8} slot="header-subtitle" />
 				</ContentHeader>
 				<ContentHeader title="The same header with no subtitle and no self-link" />
+			</Specimen>
+			<Specimen
+				name="entry-title"
+				note="Every Entry title: <code>h1</code> on an Entry page, <code>h2</code> in a list. Only the cap height is trimmed, so the subtitle clears descenders at every size."
+				source="components/content/entry-title.astro"
+			>
+				<div class="flex flex-col gap-6">
+					<div>
+						<EntryTitle as="h1" href="#entry-title">
+							A page title with descenders: gjpqy
+						</EntryTitle>
+						<ContentSubtitle html="September 2, 2026" />
+					</div>
+					<div>
+						<EntryTitle as="h2" href="#entry-title">
+							A list title with descenders: gjpqy
+						</EntryTitle>
+						<ContentSubtitle html="September 2, 2026" />
+					</div>
+				</div>
 			</Specimen>
 			<Specimen
 				name="content-date"
 				note="Divided <code>date-display</code> items carrying the microformat classes: the published date, then the “Updated” one when present."
 				source="components/content/content-date.astro"
 			>
-				<div class="flex flex-col gap-3 font-mono text-xs">
+				<div class="flex flex-col gap-3 text-xs text-primary-500">
 					<div class="flex flex-wrap items-center gap-1">
 						<ContentDate dateCreated={new Date(sampleDate)} />
 					</div>
@@ -469,6 +577,23 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 							dateCreated={new Date(sampleDate)}
 							dateUpdated={new Date(sampleDateUpdated)}
 						/>
+					</div>
+				</div>
+			</Specimen>
+			<Specimen
+				name="entry-subtitle"
+				note="The line under every Entry title: on its page, in Excerpts and on cards. Posts and Pages show their dates, Posts add the reading time, and Projects show their date range with Homepage and Source Code links."
+				source="components/content/entry-subtitle.astro"
+			>
+				<div class="flex flex-col gap-3 text-xs text-primary-500">
+					<div class="flex flex-wrap items-center gap-1">
+						<EntrySubtitle entry={sampleSubtitlePost} minutesRead={8} />
+					</div>
+					<div class="flex flex-wrap items-center gap-1">
+						<EntrySubtitle entry={sampleSubtitleProjectOngoing} />
+					</div>
+					<div class="flex flex-wrap items-center gap-1">
+						<EntrySubtitle entry={sampleSubtitleProjectOneOff} />
 					</div>
 				</div>
 			</Specimen>
@@ -519,53 +644,64 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-excerpt"
-				note="A Post or Note in a list, cut at the fold the author placed with <code>More</code>."
+				note="A Post or Project in a list, cut at the fold the author placed with <code>More</code>."
 				source="components/content/content-excerpt.astro"
 			>
 				<ContentExcerpt entryUrl="#excerpt">
 					<Fragment slot="excerpt-title">An excerpt title, linked to its Entry</Fragment>
-					<Fragment slot="excerpt-subtitle">
-						<DateDisplay date={sampleDate} />
-					</Fragment>
+					<EntrySubtitle entry={sampleSubtitlePost} slot="excerpt-subtitle" />
 					<ProseSample />
 				</ContentExcerpt>
 			</Specimen>
 			<Specimen
 				name="content-card"
-				note="An Entry in a listing, led by its first Featured Image cropped to 3:2 at the column's width, then title, subtitle, Description, Tags, and a links slot. The Projects list renders one per Project; without an image the card starts at the title."
+				note="An Entry in a listing: an optional media slot, then title, subtitle, Description, Tags, and a links slot. The Projects list fills the media slot with a 2:1 carousel for featured Projects and leaves it empty for the rest."
 				source="components/content/content-card.astro"
 			>
 				<ContentCard
 					description={sampleCardDescription}
-					imageId={sampleImageId}
-					isPriority={false}
 					tagItems={sampleCardTagItems}
 					title="A card title, linked to its Entry"
 					url="/inventory/#content-card"
 				>
-					<Fragment slot="card-subtitle">2012&ndash;present</Fragment>
-					<div class="text-sm font-medium" slot="card-links">
-						<Anchor anchorColor="title" href="/inventory/#content-card">
-							{t('content.continueReading')}
-						</Anchor>
-					</div>
+					<ImageCarousel
+						aspectRatio={projectImageAspectRatio}
+						images={sampleCarouselImages}
+						isPriority={false}
+						slot="card-media"
+					/>
+					<EntrySubtitle entry={sampleSubtitleProjectOngoing} slot="card-subtitle" />
+					<ContentContinueReading href="/inventory/#content-card" slot="card-links" />
 				</ContentCard>
 				{sampleImageId ? undefined : (
 					<p class="mt-4 font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
 				)}
 			</Specimen>
 			<Specimen
-				bleed={true}
-				name="section-backlinks"
-				note="Inbound Links, capped at ten, newest first."
-				source="components/sections/section-backlinks.astro"
+				name="image-carousel"
+				note="Featured Images cut by the image service to the ratio given, here the 2:1 Projects ratio, and scroll-snapped. One image renders as a plain figure; two or more become a carousel with buttons on hover or focus, swipe, and a live region announcing the slide."
+				source="components/image/image-carousel.astro"
 			>
-				<SectionBacklinks backlinks={sampleCatalogItems} />
+				<div class="flex flex-col gap-6">
+					<ImageCarousel
+						aspectRatio={projectImageAspectRatio}
+						images={sampleCarouselImages.slice(0, 1)}
+						isPriority={false}
+					/>
+					<ImageCarousel
+						aspectRatio={projectImageAspectRatio}
+						images={sampleCarouselImages}
+						isPriority={false}
+					/>
+				</div>
+				{sampleImageId ? undefined : (
+					<p class="mt-4 font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
+				)}
 			</Specimen>
 			<Specimen
 				bleed={true}
 				name="section-entry-list"
-				note="A titled list of Entry links: backlinks, and the writing that points at a Project."
+				note="A titled list of Entry links, such as the writing that points at a Project."
 				source="components/sections/section-entry-list.astro"
 			>
 				<SectionEntryList entries={sampleCatalogItems} title={t('section.relatedWriting')} />

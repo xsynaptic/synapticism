@@ -4,11 +4,19 @@ import type { HTMLTag, Polymorphic } from 'astro/types';
 type Props<Tag extends HTMLTag = HTMLTag> = Polymorphic<{
 	as: Tag;
 	class?: string | undefined;
+	dividerContent?: 'dot' | 'slash' | undefined;
 }>;
 
-const { as: Tag = 'div', class: className, ...props } = Astro.props;
+const { as: Tag = 'div', class: className, dividerContent = 'slash', ...props } = Astro.props;
 ---
 
-<Tag class:list={['divided-item', className]} {...props}>
+<Tag
+	class:list={[
+		'divided-item',
+		dividerContent === 'slash' ? undefined : `divided-${dividerContent}`,
+		className,
+	]}
+	{...props}
+>
 	<slot />
 </Tag>

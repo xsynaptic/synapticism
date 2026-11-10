@@ -5,7 +5,7 @@ import ProjectList from '#layouts/project-list.astro';
 import { queryProjectsIndex } from '#lib/collections/projects/projects-utils.ts';
 
 export const getStaticPaths = (async ({ paginate }) => {
-	return paginate(await queryProjectsIndex(), { pageSize: 100 });
+	return paginate(await queryProjectsIndex(), { pageSize: 20 });
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;

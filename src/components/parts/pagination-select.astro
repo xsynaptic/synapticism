@@ -93,7 +93,7 @@ const isEmptyWithoutScript = !counter && !previous && !next && !middleContent;
 				{previous ? (
 					<span class="flex flex-wrap gap-1">
 						<span class="text-accent-300 select-none">&lsaquo;</span>
-						<Anchor aria-label={previous.ariaLabel} href={previous.url}>
+						<Anchor aria-label={previous.ariaLabel} href={previous.url} underline="hover">
 							{previous.label}
 						</Anchor>
 					</span>
@@ -101,7 +101,7 @@ const isEmptyWithoutScript = !counter && !previous && !next && !middleContent;
 				<Fragment set:html={middleContent} />
 				{next ? (
 					<span class="flex flex-wrap gap-1">
-						<Anchor aria-label={next.ariaLabel} href={next.url}>
+						<Anchor aria-label={next.ariaLabel} href={next.url} underline="hover">
 							{next.label}
 						</Anchor>
 						<span class="text-accent-300 select-none">&rsaquo;</span>

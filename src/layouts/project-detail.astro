@@ -7,17 +7,15 @@ import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
-import SectionBacklinks from '#components/sections/section-backlinks.astro';
 import SectionEntryList from '#components/sections/section-entry-list.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface Props {
-	backlinks: Array<CatalogItem> | undefined;
 	entry: CollectionEntry<'projects'>;
 	relatedContent: Array<CatalogItem> | undefined;
 }
 
-const { backlinks, entry, relatedContent } = Astro.props;
+const { entry, relatedContent } = Astro.props;
 
 const { Content } = await render(entry);
 ---
@@ -30,8 +28,9 @@ const { Content } = await render(entry);
 >
 	<Content />
 	<ContentSectionReferences slot="after-body" tags={entry.data.tags} />
-	<Fragment slot="after-article">
-		<SectionEntryList entries={relatedContent} title={t('section.relatedWriting')} />
-		<SectionBacklinks backlinks={backlinks} />
-	</Fragment>
+	<SectionEntryList
+		entries={relatedContent}
+		slot="after-article"
+		title={t('section.relatedWriting')}
+	/>
 </ContentEntryDetail>

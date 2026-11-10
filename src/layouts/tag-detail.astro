@@ -2,25 +2,21 @@
 import type { Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
-import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import ContentDescription from '#components/content/content-description.astro';
 import ContentListView from '#components/content/content-list-view.astro';
-import PostExcerptList from '#components/content/post-excerpt-list.astro';
-import SectionEntryList from '#components/sections/section-entry-list.astro';
-import { t } from '#lib/i18n/i18n-strings.ts';
+import EntryExcerptList from '#components/content/entry-excerpt-list.astro';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getPagePagination } from '#lib/utils/pagination.ts';
 import { getEntryOpenGraphCard } from '#lib/utils/seo.ts';
 
 interface Props {
 	entry: ComputedEntry<'tags'>;
-	page: Page<CollectionEntry<'posts'>>;
-	projects: Array<CatalogItem>;
+	page: Page<CollectionEntry<'posts' | 'projects'>>;
 }
 
-const { entry, page, projects } = Astro.props;
+const { entry, page } = Astro.props;
 ---
 
 <ContentListView
@@ -29,8 +25,9 @@ const { entry, page, projects } = Astro.props;
 	title={entry.data.title}
 >
 	<ContentDescription entry={entry} />
-	<PostExcerptList entries={page.data} pagination={getPagePagination(page)} />
-	{page.currentPage === 1 ? (
-		<SectionEntryList entries={projects} title={t('section.projects')} />
-	) : undefined}
+	<EntryExcerptList
+		entries={page.data}
+		isCollectionShown={true}
+		pagination={getPagePagination(page)}
+	/>
 </ContentListView>

@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
-import PostExcerptList from '#components/content/post-excerpt-list.astro';
+import EntryExcerptList from '#components/content/entry-excerpt-list.astro';
 import MainSite from '#components/main/main-site.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import { getPagination } from '#lib/utils/pagination.ts';
@@ -44,5 +44,5 @@ const pagination = getPagination({
 ---
 
 <MainSite isHomepage={true} {...mainProps}>
-	<PostExcerptList entries={entries} isLeading={true} pagination={pagination} />
+	<EntryExcerptList entries={entries} isLeading={true} pagination={pagination} />
 </MainSite>

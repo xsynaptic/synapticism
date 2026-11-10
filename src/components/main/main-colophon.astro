@@ -14,33 +14,31 @@ const copyrightYears = getCopyrightYears();
 		{formatStringTemplate(t('footer.copyright'), { years: copyrightYears })}
 	</DividedItem>
 	<DividedItem as="span">
-		{t('footer.builtWith')}{' '}
-		<Anchor anchorColor="on-dark" href="https://astro.build">
-			{t('footer.astro')}
-		</Anchor>
+		<span>
+			{t('footer.builtWith')}{' '}
+			<Anchor href="https://astro.build" underline="hover">
+				{t('footer.astro')}
+			</Anchor>
+		</span>
 	</DividedItem>
 	<DividedItem as="span">
-		<Anchor
-			anchorColor="on-dark"
-			class="inline-flex items-center gap-1.5"
-			href="https://github.com/xsynaptic/synapticism"
-		>
-			<span>{t('footer.sourceCode')}</span>
-			<svg aria-hidden="true" class="text-primary-300" height="1em" width="1em">
+		<Anchor href="https://github.com/xsynaptic/synapticism" underline="hover">
+			{t('footer.sourceCode')}
+			<svg aria-hidden="true" class="text-primary-300" height="1em" slot="end" width="1em">
 				<use href="#icon:github"></use>
 			</svg>
 		</Anchor>
 	</DividedItem>
 	<DividedItem as="span">
 		<Anchor
-			anchorColor="on-dark"
-			class="group inline-flex items-center gap-1.5"
+			class="group"
 			data-astro-prefetch="false"
 			href={`${getSitePath()}rss.xml`}
 			rel="feed"
+			underline="hover"
 		>
-			<span>{t('footer.rss')}</span>
-			<span class="relative size-2.5 bg-white">
+			{t('footer.rss')}
+			<span class="relative size-2.5 bg-white" slot="end">
 				<svg
 					aria-hidden="true"
 					class="absolute top-1/2 left-1/2 size-4 -translate-1/2 text-highlight-400 transition-colors group-hover:text-highlight-300 group-focus-visible:text-highlight-300"

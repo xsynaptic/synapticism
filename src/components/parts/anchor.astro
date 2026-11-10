@@ -1,22 +1,38 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
-import { renderSlot } from '#lib/utils/astro.ts';
-
-type AnchorColor = 'accent' | 'on-accent' | 'on-dark' | 'primary' | 'primary-bright' | 'title';
-
-interface Props extends HTMLAttributes<'a'> {
-	anchorColor?: AnchorColor | undefined;
+interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
+	accent?: boolean | undefined;
+	href: string;
+	underline?: 'always' | 'hover' | 'none' | undefined;
 }
 
-const { anchorColor = 'primary', class: className, href, ...props } = Astro.props;
+const { accent = false, class: className, href, underline = 'always', ...props } = Astro.props;
 
-const children = await renderSlot(Astro.slots, 'default');
+const hasIcon = Astro.slots.has('start') || Astro.slots.has('end');
+
+const rendered = await Astro.slots.render('default');
+const label = rendered.trim();
 ---
 
 <a
-	class:list={['anchor', `anchor-${anchorColor}`, className]}
+	class:list={[
+		'anchor',
+		accent ? 'anchor-accent' : undefined,
+		underline === 'always' ? undefined : `anchor-underline-${underline}`,
+		hasIcon ? 'anchor-split' : undefined,
+		className,
+	]}
 	href={href}
 	{...props}
-	set:html={children}
-/>
+>
+	{hasIcon ? (
+		<Fragment>
+			<slot name="start" />
+			<span class="anchor-label" set:html={label} />
+			<slot name="end" />
+		</Fragment>
+	) : (
+		<Fragment set:html={label} />
+	)}
+</a>

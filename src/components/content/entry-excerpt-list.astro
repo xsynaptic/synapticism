@@ -3,17 +3,18 @@ import type { CollectionEntry } from 'astro:content';
 
 import type { Pagination } from '#lib/utils/pagination-types.ts';
 
-import PostExcerpt from '#components/content/post-excerpt.astro';
+import EntryExcerpt from '#components/content/entry-excerpt.astro';
 import PaginationSelect from '#components/parts/pagination-select.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 
 interface Props {
-	entries: Array<CollectionEntry<'posts'>>;
+	entries: Array<CollectionEntry<'posts' | 'projects'>>;
+	isCollectionShown?: boolean;
 	isLeading?: boolean;
 	pagination: Pagination;
 }
 
-const { entries, isLeading = false, pagination } = Astro.props;
+const { entries, isCollectionShown = false, isLeading = false, pagination } = Astro.props;
 ---
 
 <div class:list={[MicroformatClassNames.Feed, 'scroll-mt-4']} data-pagination-target>
@@ -24,7 +25,12 @@ const { entries, isLeading = false, pagination } = Astro.props;
 					<hr class="border-primary-300/70" />
 				</div>
 			) : undefined}
-			<PostExcerpt entry={entry} isLeading={isLeading && index === 0} isPriority={index === 0} />
+			<EntryExcerpt
+				entry={entry}
+				isCollectionShown={isCollectionShown}
+				isLeading={isLeading && index === 0}
+				isPriority={index === 0}
+			/>
 		</Fragment>
 	))}
 </div>

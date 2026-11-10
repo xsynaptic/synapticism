@@ -12,11 +12,11 @@ interface Props {
 const { dateCreated, dateUpdated } = Astro.props;
 ---
 
-<DividedItem>
+<DividedItem dividerContent="dot">
 	<DateDisplay class={MicroformatClassNames.DatePublished} date={dateCreated} />
 </DividedItem>
 {dateUpdated ? (
-	<DividedItem>
+	<DividedItem dividerContent="dot">
 		{t('content.updated')}{' '}
 		<DateDisplay class={MicroformatClassNames.DateUpdated} date={dateUpdated} />
 	</DividedItem>

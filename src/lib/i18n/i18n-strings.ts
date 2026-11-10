@@ -41,6 +41,14 @@ const strings = {
 	'aria.pagination': 'Pagination',
 	'aria.prevPage': 'Previous page',
 
+	// Carousel
+	'carousel.label': 'Images',
+	'carousel.nav.next': 'Next image',
+	'carousel.nav.previous': 'Previous image',
+	'carousel.roledescription': 'carousel',
+	'carousel.slide.label': '{current} of {total}',
+	'carousel.slide.roledescription': 'slide',
+
 	// Pagination
 	'pagination.counter': 'Page {current} of {total}',
 	'pagination.next': 'Next',
@@ -50,7 +58,6 @@ const strings = {
 	'pagination.select.total': 'of {total}',
 
 	// Section labels
-	'section.backlinks': 'Backlinks',
 	'section.pagination.label.list': 'All {label}',
 	'section.pagination.label.newer': 'Newer {label}: ',
 	'section.pagination.label.older': 'Older {label}: ',
@@ -75,6 +82,7 @@ const strings = {
 	'posts.description':
 		'Writing on web development, design, and creative coding, from quick notes to long articles.',
 	'posts.title': 'Posts',
+	'projects.dateRange': '{start}–{end}',
 	'projects.description': 'Things I have designed, built, and worked on.',
 	'projects.homepage': 'Homepage',
 	'projects.sourceCode': 'Source Code',

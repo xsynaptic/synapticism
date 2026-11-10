@@ -1,0 +1,43 @@
+---
+import type { ImageFeaturedReference } from '@synapticism/shared/image-featured';
+
+import { getPlaceholder } from '@xsynaptic/astro-image-pipeline/node';
+import { Image } from 'astro:assets';
+
+import { MicroformatClassNames } from '#components/types.ts';
+import { getMediaImage } from '#lib/utils/media.ts';
+
+interface Props extends ImageFeaturedReference {
+	aspectRatio: { height: number; width: number };
+	isPriority: boolean;
+}
+
+const { aspectRatio, id, isPriority, title = '' } = Astro.props;
+
+const width = 1600;
+const height = Math.round((width * aspectRatio.height) / aspectRatio.width);
+
+const image = getMediaImage(id);
+const placeholder = await getPlaceholder({ height: image.height, id, width: image.width });
+
+const style = [
+	`aspect-ratio:${String(aspectRatio.width)}/${String(aspectRatio.height)}`,
+	placeholder ? `background-image:url(${placeholder})` : undefined,
+]
+	.filter(Boolean)
+	.join(';');
+---
+
+<figure class="carousel-item bg-primary-100 bg-placeholder" style={style}>
+	<Image
+		alt={title}
+		class:list={['block size-full object-cover', MicroformatClassNames.Photo]}
+		fit="cover"
+		height={height}
+		layout="constrained"
+		priority={isPriority}
+		sizes="(min-width: 54rem) 54rem, 100vw"
+		src={image}
+		width={width}
+	/>
+</figure>

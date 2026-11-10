@@ -13,6 +13,7 @@
 @import './main/parts/root.css';
 @import './main/parts/base.css' layer(base);
 @import './main/components/anchor.css' layer(components);
+@import './main/components/carousel.css' layer(components);
 @import './main/components/chip.css' layer(components);
 @import './main/components/chrome.css' layer(components);
 @import './main/components/divider.css' layer(components);

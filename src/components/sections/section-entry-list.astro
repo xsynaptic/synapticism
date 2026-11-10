@@ -17,7 +17,7 @@ const { entries, title } = Astro.props;
 		<ul class="flex flex-col gap-1 text-sm">
 			{entries.map((entry) => (
 				<li>
-					<Anchor anchorColor="accent" class="anchor-underline" href={entry.url}>
+					<Anchor accent={true} href={entry.url}>
 						{entry.title}
 					</Anchor>
 				</li>

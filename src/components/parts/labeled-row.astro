@@ -24,7 +24,7 @@ const { items, title, ...props } = Astro.props;
 		<ListRow>
 			{items.map((item) => (
 				<DividedItem as="li" class="divided-thin font-mono text-sm">
-					<Anchor anchorColor="accent" href={item.url}>
+					<Anchor accent={true} href={item.url}>
 						{item.title}
 					</Anchor>
 				</DividedItem>

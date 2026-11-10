@@ -51,7 +51,7 @@
 	--chip-depth: 0px;
 
 	transition-timing-function: ease-out;
-	transition-duration: 60ms;
+	transition-duration: 40ms;
 }
 
 .chip-count {

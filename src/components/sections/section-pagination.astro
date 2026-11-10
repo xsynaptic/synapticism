@@ -32,11 +32,7 @@ const labelSingular = t('collection.posts.singular');
 						<span aria-hidden="true" class="shrink-0 text-primary-600">
 							&larr;
 						</span>
-						<Anchor
-							anchorColor="accent"
-							class="anchor-underline min-w-0 italic"
-							href={newerEntry.url}
-						>
+						<Anchor accent={true} class="min-w-0 italic" href={newerEntry.url}>
 							<span class="sr-only">
 								{formatStringTemplate(t('section.pagination.label.newer'), {
 									label: labelSingular,
@@ -47,17 +43,13 @@ const labelSingular = t('collection.posts.singular');
 					</Fragment>
 				) : undefined}
 			</span>
-			<Anchor anchorColor="accent" class="shrink-0" href={baseUrl}>
+			<Anchor accent={true} class="shrink-0" href={baseUrl} underline="hover">
 				{formatStringTemplate(t('section.pagination.label.list'), { label: labelPlural })}
 			</Anchor>
 			<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
 				{olderEntry ? (
 					<Fragment>
-						<Anchor
-							anchorColor="accent"
-							class="anchor-underline min-w-0 italic"
-							href={olderEntry.url}
-						>
+						<Anchor accent={true} class="min-w-0 italic" href={olderEntry.url}>
 							<span class="sr-only">
 								{formatStringTemplate(t('section.pagination.label.older'), {
 									label: labelSingular,

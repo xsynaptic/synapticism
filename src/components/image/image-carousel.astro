@@ -1,0 +1,50 @@
+---
+import type { ImageFeaturedReference } from '@synapticism/shared/image-featured';
+import type { ComponentProps, HTMLAttributes } from 'astro/types';
+
+import ImageCarouselItem from '#components/image/image-carousel-item.astro';
+import ImageCarouselNavigation from '#components/image/image-carousel-navigation.astro';
+import { t } from '#lib/i18n/i18n-strings.ts';
+
+interface Props {
+	aspectRatio: ComponentProps<typeof ImageCarouselItem>['aspectRatio'];
+	class?: string | undefined;
+	images: Array<ImageFeaturedReference>;
+	isPriority: boolean;
+}
+
+const { aspectRatio, class: className, images, isPriority } = Astro.props;
+
+const isCarousel = images.length > 1;
+const Wrapper = isCarousel ? 'image-carousel' : 'div';
+const carouselAttributes: HTMLAttributes<'div'> = isCarousel
+	? {
+			'aria-label': t('carousel.label'),
+			'aria-roledescription': t('carousel.roledescription'),
+			'data-slide-label': t('carousel.slide.label'),
+			'data-slide-roledescription': t('carousel.slide.roledescription'),
+			role: 'group',
+		}
+	: {};
+---
+
+{images.length > 0 ? (
+	<Wrapper
+		class:list={[
+			'carousel-group relative block overflow-hidden rounded-xs border border-primary-200',
+			className,
+		]}
+		{...carouselAttributes}
+	>
+		<div class="carousel-container">
+			{images.map((image, index) => (
+				<ImageCarouselItem
+					{...image}
+					aspectRatio={aspectRatio}
+					isPriority={isPriority && index === 0}
+				/>
+			))}
+		</div>
+		{isCarousel ? <ImageCarouselNavigation /> : undefined}
+	</Wrapper>
+) : undefined}

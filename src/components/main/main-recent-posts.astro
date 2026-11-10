@@ -14,9 +14,9 @@ const recentEntries = entries.slice(0, recentPostsCount);
 	{recentEntries.map((entry) => (
 		<li class="leading-snug">
 			<Anchor
-				anchorColor="on-dark"
 				class="text-sm font-medium text-pretty"
 				href={getContentPath('posts', entry.id)}
+				underline="hover"
 			>
 				{entry.data.title}
 			</Anchor>

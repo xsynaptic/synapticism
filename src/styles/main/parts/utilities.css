@@ -12,6 +12,30 @@
 	background-size: cover;
 }
 
+@utility anchor-ink-on-dark {
+	--anchor-ink: var(--color-white);
+	--anchor-ink-hover: var(--color-primary-300);
+}
+
+@utility anchor-ink-muted {
+	--anchor-ink: var(--color-primary-700);
+	--anchor-ink-hover: var(--color-accent-500);
+}
+
+@utility anchor-ink-highlight {
+	--anchor-ink: var(--color-highlight-500);
+	--anchor-ink-hover: var(--color-highlight-600);
+}
+
+@utility anchor-ink-title {
+	--anchor-ink: var(--color-accent-500);
+	--anchor-ink-hover: var(--color-highlight-400);
+}
+
 @utility trim-text {
 	text-box: trim-both cap alphabetic;
+}
+
+@utility trim-text-start {
+	text-box: trim-start cap alphabetic;
 }

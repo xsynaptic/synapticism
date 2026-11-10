@@ -3,9 +3,9 @@ import type { CollectionEntry } from 'astro:content';
 
 import type { Template } from '#lib/schemas/content.ts';
 
-import ContentDate from '#components/content/content-date.astro';
 import ContentHeader from '#components/content/content-header.astro';
 import ContentHero from '#components/content/content-hero.astro';
+import EntrySubtitle from '#components/content/entry-subtitle.astro';
 import MainSite from '#components/main/main-site.astro';
 import AuthorCard from '#components/parts/author-card.astro';
 import ProseBody from '#components/parts/prose-body.astro';
@@ -21,10 +21,11 @@ interface Props {
 	entry: CollectionEntry<'pages' | 'posts' | 'projects'>;
 	hasReadingBar: boolean;
 	isArticle: boolean;
+	minutesRead?: number | undefined;
 	template?: Template;
 }
 
-const { entry, hasReadingBar, isArticle, template = 'sidebar' } = Astro.props;
+const { entry, hasReadingBar, isArticle, minutesRead, template = 'sidebar' } = Astro.props;
 
 const url = Astro.url.toString();
 
@@ -70,11 +71,7 @@ const { index } = getUrlPathIndexing(Astro.url.pathname);
 			/>
 		) : undefined}
 		<ContentHeader isLeading={!heroImage} title={entry.data.title} titleUrl={url}>
-			<Fragment slot="header-subtitle">
-				<slot name="header-subtitle">
-					<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
-				</slot>
-			</Fragment>
+			<EntrySubtitle entry={entry} minutesRead={minutesRead} slot="header-subtitle" />
 		</ContentHeader>
 		<ProseBody
 			class:list={['e-content', 'pb-4']}

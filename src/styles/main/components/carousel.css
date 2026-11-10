@@ -1,0 +1,92 @@
+.carousel-container {
+	display: flex;
+	overflow-x: scroll;
+	scroll-behavior: smooth;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.carousel-container::-webkit-scrollbar {
+	display: none;
+}
+
+.carousel-item {
+	box-sizing: content-box;
+	display: flex;
+	flex: none;
+	width: 100%;
+	scroll-snap-align: start;
+}
+
+.carousel-nav {
+	position: absolute;
+	top: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: calc(var(--spacing) * 10);
+	height: calc(var(--spacing) * 10);
+	color: var(--color-white);
+	pointer-events: none;
+	cursor: pointer;
+	background-color: color-mix(in oklab, var(--color-accent-700) 50%, transparent);
+	border-radius: calc(infinity * 1px);
+	opacity: 0;
+	backdrop-filter: grayscale(1);
+	translate: 0 -50%;
+	transition-timing-function: var(--default-transition-timing-function);
+	transition-duration: 200ms;
+	transition-property: color, background-color, opacity, scale;
+
+	&:focus-visible {
+		background-color: color-mix(in oklab, var(--color-accent-700) 80%, transparent);
+	}
+
+	@media (hover: hover) {
+		&:hover {
+			background-color: color-mix(in oklab, var(--color-accent-700) 80%, transparent);
+		}
+	}
+
+	&:active {
+		scale: 0.95;
+	}
+}
+
+image-carousel:not(:defined) .carousel-nav {
+	visibility: hidden;
+}
+
+.carousel-group:focus-within .carousel-nav {
+	pointer-events: auto;
+	opacity: 1;
+}
+
+@media (hover: hover) {
+	.carousel-group:hover .carousel-nav {
+		pointer-events: auto;
+		opacity: 1;
+	}
+}
+
+.carousel-nav svg {
+	width: calc(var(--spacing) * 7.5);
+	height: calc(var(--spacing) * 7.5);
+}
+
+.carousel-nav-prev {
+	left: 0.5em;
+}
+
+.carousel-nav-prev svg {
+	translate: -0.125rem 0;
+}
+
+.carousel-nav-next {
+	right: 0.5em;
+}
+
+.carousel-nav-next svg {
+	translate: 0.125rem 0;
+}

@@ -45,7 +45,7 @@ class CvPrint extends HTMLElement {
 	#writePhone(phone: string) {
 		const link = document.createElement('a');
 
-		link.className = 'anchor anchor-primary-bright';
+		link.className = 'anchor anchor-underline-hover';
 		link.href = `tel:${phone.replaceAll(' ', '')}`;
 		link.textContent = phone;
 		this.querySelector('[data-cv-phone]')?.replaceChildren(link);

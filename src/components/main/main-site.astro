@@ -112,7 +112,11 @@ const themeColor = '#23272f';
 			]}
 		>
 			<header
-				class:list={['z-header', { 'lg:col-start-3 lg:row-start-1': isSidebar }, 'print:hidden']}
+				class:list={[
+					'anchor-ink-on-dark z-header',
+					{ 'lg:col-start-3 lg:row-start-1': isSidebar },
+					'print:hidden',
+				]}
 			>
 				<div
 					class:list={[
@@ -138,7 +142,7 @@ const themeColor = '#23272f';
 			</main>
 			<aside
 				class:list={[
-					'site-shell-aside pt-6 pb-6',
+					'site-shell-aside anchor-ink-on-dark pt-6 pb-6',
 					{ 'lg:col-start-3 lg:row-start-2': isSidebar },
 					'print:hidden',
 				]}
@@ -158,7 +162,7 @@ const themeColor = '#23272f';
 			</aside>
 			<footer
 				class:list={[
-					'grid min-h-site-nav items-center bg-linear-to-b from-primary-700 to-primary-800 py-2',
+					'anchor-ink-on-dark grid min-h-site-nav items-center bg-linear-to-b from-primary-700 to-primary-800 py-2',
 					{ 'lg:col-span-full lg:grid lg:grid-cols-subgrid': isSidebar },
 					'print:hidden',
 				]}

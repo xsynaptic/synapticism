@@ -1,0 +1,75 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import ContentDate from '#components/content/content-date.astro';
+import Anchor from '#components/parts/anchor.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import { getProjectDateDisplay } from '#lib/collections/projects/projects-dates.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
+
+interface Props {
+	entry: CollectionEntry<'pages' | 'posts' | 'projects'>;
+	isCollectionShown?: boolean | undefined;
+	minutesRead?: number | undefined;
+}
+
+const { entry, isCollectionShown = false, minutesRead } = Astro.props;
+
+const collectionLink =
+	isCollectionShown && entry.collection !== 'pages'
+		? { title: t(`collection.${entry.collection}.plural`), url: getContentPath(entry.collection) }
+		: undefined;
+const projectData = entry.collection === 'projects' ? entry.data : undefined;
+const projectDate = projectData ? getProjectDateDisplay(projectData) : undefined;
+const isGitHubSource =
+	projectData?.sourceUrl !== undefined && new URL(projectData.sourceUrl).hostname === 'github.com';
+---
+
+{collectionLink ? (
+	<DividedItem dividerContent="dot">
+		<Anchor
+			class="anchor-ink-highlight font-semibold uppercase"
+			href={collectionLink.url}
+			underline="hover"
+		>
+			{collectionLink.title}
+		</Anchor>
+	</DividedItem>
+) : undefined}
+{projectDate ? (
+	<DividedItem dividerContent="dot">
+		{projectDate.attribute ? (
+			<time datetime={projectDate.attribute}>{projectDate.display}</time>
+		) : (
+			projectDate.display
+		)}
+	</DividedItem>
+) : (
+	<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
+)}
+{minutesRead ? (
+	<DividedItem dividerContent="dot">
+		{formatStringTemplate(t('content.minutesRead'), { minutesRead })}
+	</DividedItem>
+) : undefined}
+{projectData?.homeUrl ? (
+	<DividedItem dividerContent="dot">
+		<Anchor href={projectData.homeUrl} underline="hover">
+			{t('projects.homepage')}
+		</Anchor>
+	</DividedItem>
+) : undefined}
+{projectData?.sourceUrl ? (
+	<DividedItem dividerContent="dot">
+		<Anchor href={projectData.sourceUrl} underline="hover">
+			{t('projects.sourceCode')}
+			{isGitHubSource ? (
+				<svg aria-hidden="true" height="1em" slot="end" width="1em">
+					<use href="#icon:github" />
+				</svg>
+			) : undefined}
+		</Anchor>
+	</DividedItem>
+) : undefined}

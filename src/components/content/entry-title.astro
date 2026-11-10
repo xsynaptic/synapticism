@@ -1,0 +1,36 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+import Anchor from '#components/parts/anchor.astro';
+import { MicroformatClassNames } from '#components/types.ts';
+
+interface Props extends HTMLAttributes<'h1'> {
+	as: 'h1' | 'h2';
+	href?: string | undefined;
+	rel?: string | undefined;
+}
+
+const { as: Tag, class: className, href, rel, ...props } = Astro.props;
+---
+
+<Tag
+	class:list={[
+		'anchor-ink-title trim-text-start font-display leading-title font-bold tracking-title text-primary-900',
+		Tag === 'h1' ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-xl md:text-2xl lg:text-3xl',
+		className,
+	]}
+	{...props}
+>
+	{href ? (
+		<Anchor
+			class:list={[MicroformatClassNames.Url, MicroformatClassNames.Name]}
+			href={href}
+			rel={rel}
+			underline="none"
+		>
+			<slot />
+		</Anchor>
+	) : (
+		<slot />
+	)}
+</Tag>
