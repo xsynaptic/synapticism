@@ -4,18 +4,22 @@ import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
 
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
+import type { PaginationEntry } from '#lib/utils/pagination-types.ts';
 
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
 import SectionEntryList from '#components/sections/section-entry-list.astro';
+import SectionPagination from '#components/sections/section-pagination.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface Props {
 	entry: CollectionEntry<'projects'>;
+	nextEntry: PaginationEntry | undefined;
+	previousEntry: PaginationEntry | undefined;
 	relatedContent: Array<CatalogItem> | undefined;
 }
 
-const { entry, relatedContent } = Astro.props;
+const { entry, nextEntry, previousEntry, relatedContent } = Astro.props;
 
 const { Content } = await render(entry);
 ---
@@ -28,9 +32,8 @@ const { Content } = await render(entry);
 >
 	<Content />
 	<ContentSectionReferences slot="after-body" tags={entry.data.tags} />
-	<SectionEntryList
-		entries={relatedContent}
-		slot="after-article"
-		title={t('section.relatedWriting')}
-	/>
+	<Fragment slot="after-article">
+		<SectionEntryList entries={relatedContent} title={t('section.relatedWriting')} />
+		<SectionPagination collection="projects" nextEntry={nextEntry} previousEntry={previousEntry} />
+	</Fragment>
 </ContentEntryDetail>

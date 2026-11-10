@@ -1,5 +1,5 @@
 ---
-import type { PaginationEntry } from '#components/types.ts';
+import type { PaginationEntry } from '#lib/utils/pagination-types.ts';
 
 import Anchor from '#components/parts/anchor.astro';
 import LabeledSection from '#components/parts/labeled-section.astro';
@@ -8,18 +8,28 @@ import { getContentPath } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
-	newerEntry: PaginationEntry | undefined;
-	olderEntry: PaginationEntry | undefined;
+	collection: 'posts' | 'projects';
+	nextEntry: PaginationEntry | undefined;
+	previousEntry: PaginationEntry | undefined;
 }
 
-const { newerEntry, olderEntry } = Astro.props;
+const { collection, nextEntry, previousEntry } = Astro.props;
 
-const baseUrl = getContentPath('posts');
-const labelPlural = t('collection.posts.plural');
-const labelSingular = t('collection.posts.singular');
+const directionLabelKeys = {
+	posts: { next: 'section.pagination.label.older', previous: 'section.pagination.label.newer' },
+	projects: {
+		next: 'section.pagination.label.next',
+		previous: 'section.pagination.label.previous',
+	},
+} as const;
+
+const baseUrl = getContentPath(collection);
+const labelPlural = t(`collection.${collection}.plural`);
+const labelSingular = t(`collection.${collection}.singular`);
+const labelKeys = directionLabelKeys[collection];
 ---
 
-{newerEntry || olderEntry ? (
+{previousEntry || nextEntry ? (
 	<LabeledSection
 		data-nosnippet
 		data-pagefind-ignore
@@ -27,18 +37,16 @@ const labelSingular = t('collection.posts.singular');
 	>
 		<nav class="flex items-baseline gap-4 text-sm">
 			<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
-				{newerEntry ? (
+				{previousEntry ? (
 					<Fragment>
 						<span aria-hidden="true" class="shrink-0 text-primary-600">
 							&larr;
 						</span>
-						<Anchor accent={true} class="min-w-0 italic" href={newerEntry.url}>
+						<Anchor accent={true} class="min-w-0 italic" href={previousEntry.url}>
 							<span class="sr-only">
-								{formatStringTemplate(t('section.pagination.label.newer'), {
-									label: labelSingular,
-								})}
+								{formatStringTemplate(t(labelKeys.previous), { label: labelSingular })}
 							</span>
-							{newerEntry.title}
+							{previousEntry.title}
 						</Anchor>
 					</Fragment>
 				) : undefined}
@@ -47,15 +55,13 @@ const labelSingular = t('collection.posts.singular');
 				{formatStringTemplate(t('section.pagination.label.list'), { label: labelPlural })}
 			</Anchor>
 			<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
-				{olderEntry ? (
+				{nextEntry ? (
 					<Fragment>
-						<Anchor accent={true} class="min-w-0 italic" href={olderEntry.url}>
+						<Anchor accent={true} class="min-w-0 italic" href={nextEntry.url}>
 							<span class="sr-only">
-								{formatStringTemplate(t('section.pagination.label.older'), {
-									label: labelSingular,
-								})}
+								{formatStringTemplate(t(labelKeys.next), { label: labelSingular })}
 							</span>
-							{olderEntry.title}
+							{nextEntry.title}
 						</Anchor>
 						<span aria-hidden="true" class="shrink-0 text-primary-600">
 							&rarr;

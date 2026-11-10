@@ -17,12 +17,6 @@ export interface MetaProps {
 	title?: string | undefined;
 }
 
-// A single previous/next target for entry pagination
-export interface PaginationEntry {
-	title: string;
-	url: string;
-}
-
 export const MicroformatClassNames = {
 	Author: 'p-author',
 	Card: 'h-card',

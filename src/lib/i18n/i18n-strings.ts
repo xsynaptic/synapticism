@@ -60,7 +60,9 @@ const strings = {
 	// Section labels
 	'section.pagination.label.list': 'All {label}',
 	'section.pagination.label.newer': 'Newer {label}: ',
+	'section.pagination.label.next': 'Next {label}: ',
 	'section.pagination.label.older': 'Older {label}: ',
+	'section.pagination.label.previous': 'Previous {label}: ',
 	'section.pagination.title': 'More {label}',
 	'section.projects': 'Projects',
 	'section.relatedWriting': 'Related writing',

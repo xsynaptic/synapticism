@@ -1,9 +1,10 @@
 import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 
-import type { Pagination } from '#lib/utils/pagination-types.ts';
+import type { Pagination, PaginationEntry } from '#lib/utils/pagination-types.ts';
 
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { joinUrl } from '#lib/utils/routing.ts';
+import { getContentPath, joinUrl } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface PaginationOptions {
@@ -66,4 +67,22 @@ export function getPagePagination(page: Page) {
 			pageNumber === 1 ? joinUrl(basePath, '/') : joinUrl(basePath, String(pageNumber), '/'),
 		lastPage,
 	});
+}
+
+function getPaginationEntry(
+	entry: CollectionEntry<'posts' | 'projects'> | undefined,
+): PaginationEntry | undefined {
+	if (!entry) return undefined;
+
+	return { title: entry.data.title, url: getContentPath(entry.collection, entry.id) };
+}
+
+export function getAdjacentPaginationEntries(
+	entries: Array<CollectionEntry<'posts' | 'projects'>>,
+	index: number,
+) {
+	return {
+		nextEntry: getPaginationEntry(entries[index + 1]),
+		previousEntry: getPaginationEntry(entries[index - 1]),
+	};
 }

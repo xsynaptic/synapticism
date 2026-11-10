@@ -3,28 +3,15 @@ import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import PostDetail from '#layouts/post-detail.astro';
 import { queryPostEntries } from '#lib/collections/posts/posts-utils.ts';
-import { getContentPath } from '#lib/utils/routing.ts';
+import { getAdjacentPaginationEntries } from '#lib/utils/pagination.ts';
 
 export const getStaticPaths = (async () => {
 	const entries = await queryPostEntries();
 
-	return entries.map((entry, index) => {
-		const newer = entries[index - 1];
-		const older = entries[index + 1];
-
-		return {
-			params: { post: entry.id },
-			props: {
-				entry,
-				newerEntry: newer
-					? { title: newer.data.title, url: getContentPath('posts', newer.id) }
-					: undefined,
-				olderEntry: older
-					? { title: older.data.title, url: getContentPath('posts', older.id) }
-					: undefined,
-			},
-		};
-	});
+	return entries.map((entry, index) => ({
+		params: { post: entry.id },
+		props: { entry, ...getAdjacentPaginationEntries(entries, index) },
+	}));
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;

@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import { render } from 'astro:content';
 
-import type { PaginationEntry } from '#components/types.ts';
+import type { PaginationEntry } from '#lib/utils/pagination-types.ts';
 
 import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
@@ -12,11 +12,11 @@ import { getPostMinutesRead } from '#lib/collections/posts/posts-utils.ts';
 
 interface Props {
 	entry: CollectionEntry<'posts'>;
-	newerEntry: PaginationEntry | undefined;
-	olderEntry: PaginationEntry | undefined;
+	nextEntry: PaginationEntry | undefined;
+	previousEntry: PaginationEntry | undefined;
 }
 
-const { entry, newerEntry, olderEntry } = Astro.props;
+const { entry, nextEntry, previousEntry } = Astro.props;
 
 const { Content, remarkPluginFrontmatter } = await render(entry);
 
@@ -35,5 +35,10 @@ const minutesRead = getPostMinutesRead(remarkPluginFrontmatter);
 		slot="after-body"
 		tags={entry.data.tags}
 	/>
-	<SectionPagination newerEntry={newerEntry} olderEntry={olderEntry} slot="after-article" />
+	<SectionPagination
+		collection="posts"
+		nextEntry={nextEntry}
+		previousEntry={previousEntry}
+		slot="after-article"
+	/>
 </ContentEntryDetail>

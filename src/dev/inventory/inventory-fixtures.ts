@@ -7,9 +7,9 @@ import type { CollectionEntry } from 'astro:content';
 import type ContentCard from '#components/content/content-card.astro';
 import type ChipRow from '#components/parts/chip-row.astro';
 import type LabeledRow from '#components/parts/labeled-row.astro';
-import type { PaginationEntry } from '#components/types.ts';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import type { ImageFeaturedObject } from '#lib/schemas/image-featured.ts';
+import type { PaginationEntry } from '#lib/utils/pagination-types.ts';
 
 import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
@@ -105,14 +105,14 @@ export function createSamplePage(currentPage: number, lastPage: number): Page<Ca
 	};
 }
 
-export const samplePaginationNewer = {
+export const samplePaginationPrevious = {
 	title: 'A newer entry, one step forward in the archive',
-	url: '/inventory/#newer',
+	url: '/inventory/#previous',
 } satisfies PaginationEntry;
 
-export const samplePaginationOlder = {
+export const samplePaginationNext = {
 	title: 'An older entry, one step back',
-	url: '/inventory/#older',
+	url: '/inventory/#next',
 } satisfies PaginationEntry;
 
 // LabeledRow keeps its item interface local, so reach it through the component's own props

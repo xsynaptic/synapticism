@@ -2,18 +2,22 @@
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import ProjectDetail from '#layouts/project-detail.astro';
-import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
-import { queryProjectEntryContent } from '#lib/collections/projects/projects-utils.ts';
+import {
+	queryProjectEntryContent,
+	queryProjectsIndex,
+} from '#lib/collections/projects/projects-utils.ts';
+import { getAdjacentPaginationEntries } from '#lib/utils/pagination.ts';
 
 export const getStaticPaths = (async () => {
-	const { entries } = await getProjectsCollection();
+	const entries = await queryProjectsIndex();
 
 	return Promise.all(
-		entries.map(async (entry) => ({
+		entries.map(async (entry, index) => ({
 			params: { project: entry.id },
 			props: {
 				entry,
 				relatedContent: await queryProjectEntryContent(entry),
+				...getAdjacentPaginationEntries(entries, index),
 			},
 		})),
 	);

@@ -63,11 +63,6 @@
 	margin-top: 0.5em;
 }
 
-.prose-x > .content-image,
-.prose-x > .content-image + p {
-	margin-top: 0;
-}
-
 .prose-x :is(h1, h2, h3, h4) {
 	font-family: var(--font-display);
 	font-weight: 600;
@@ -100,6 +95,10 @@
 .prose-x strong {
 	font-weight: 600;
 	color: var(--color-primary-800);
+}
+
+.prose-x a :is(strong, code) {
+	color: inherit;
 }
 
 .prose-x em {
@@ -147,7 +146,6 @@
 	content: '\201C';
 }
 
-/* stylelint-disable-next-line no-descending-specificity -- targets blockquote paragraphs, unrelated to the image-adjacent rule above */
 .prose-x blockquote p + p {
 	margin-top: 0.8em;
 }
@@ -196,7 +194,7 @@
 }
 
 .prose-x img {
-	border-radius: var(--radius-sm);
+	border-radius: var(--radius-xs);
 }
 
 .prose-x figcaption {

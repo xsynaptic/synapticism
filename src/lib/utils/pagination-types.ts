@@ -10,6 +10,11 @@ export interface Pagination {
 	submitLabel: string;
 }
 
+export interface PaginationEntry {
+	title: string;
+	url: string;
+}
+
 interface PaginationLink {
 	ariaLabel?: string;
 	label: string;

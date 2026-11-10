@@ -45,8 +45,8 @@ import {
 	sampleImageFeatured,
 	sampleImageId,
 	sampleImageMissingNote,
-	samplePaginationNewer,
-	samplePaginationOlder,
+	samplePaginationNext,
+	samplePaginationPrevious,
 	sampleRowItems,
 	sampleSubtitlePost,
 	sampleSubtitleProjectOneOff,
@@ -709,11 +709,19 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="section-pagination"
-				note="Previous and next Post. Each arm renders alone when the other end is missing."
+				note="Previous and next Entry in a Collection: newer and older for Posts, index order for Projects. Each arm renders alone when the other end is missing."
 				source="components/sections/section-pagination.astro"
 			>
-				<SectionPagination newerEntry={samplePaginationNewer} olderEntry={samplePaginationOlder} />
-				<SectionPagination newerEntry={undefined} olderEntry={samplePaginationOlder} />
+				<SectionPagination
+					collection="posts"
+					nextEntry={samplePaginationNext}
+					previousEntry={samplePaginationPrevious}
+				/>
+				<SectionPagination
+					collection="projects"
+					nextEntry={samplePaginationNext}
+					previousEntry={undefined}
+				/>
 			</Specimen>
 		</Section>
 		<Section
