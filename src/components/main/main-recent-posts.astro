@@ -20,10 +20,7 @@ const recentEntries = entries.slice(0, recentPostsCount);
 			>
 				{entry.data.title}
 			</Anchor>
-			<DateDisplay
-				class="block pt-0.5 font-mono text-xs text-primary-500"
-				date={entry.data.dateCreated}
-			/>
+			<DateDisplay class="block pt-0.5 text-xs text-primary-500" date={entry.data.dateCreated} />
 		</li>
 	))}
 </ul>

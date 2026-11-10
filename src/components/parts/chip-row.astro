@@ -18,7 +18,7 @@ const { chipProps, class: className, items, ...props } = Astro.props;
 ---
 
 {items.length > 0 ? (
-	<ul class:list={['flex flex-wrap gap-x-2 gap-y-3', className]} {...props}>
+	<ul class:list={['flex flex-wrap gap-x-2 gap-y-1.5', className]} {...props}>
 		{items.map((item) => (
 			<li>
 				<Chip count={item.count} href={item.url} {...chipProps}>

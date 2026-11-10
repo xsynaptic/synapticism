@@ -15,8 +15,10 @@ const { as: Tag, class: className, href, rel, ...props } = Astro.props;
 
 <Tag
 	class:list={[
-		'anchor-ink-title trim-text-start font-display leading-title font-bold tracking-title text-primary-900',
-		Tag === 'h1' ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-xl md:text-2xl lg:text-3xl',
+		'anchor-ink-title trim-text-start font-display leading-title text-primary-900',
+		Tag === 'h1'
+			? 'text-3xl font-medium md:text-4xl lg:text-5xl'
+			: 'text-xl font-semibold md:text-2xl lg:text-3xl',
 		className,
 	]}
 	{...props}
