@@ -18,7 +18,7 @@ The language of the site itself: what an author writes, how it is grouped, and h
 
 **Catalog**: The unified, cross-collection view of every Entry reduced to a common shape, used for listing, counting, sorting, and resolving references. _Avoid_: index, registry, manifest.
 
-**Excerpt**: The opening portion of a Post shown when it appears in a list (the homepage, the Posts list), ending where the author places the fold. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).
+**Excerpt**: The opening portion of a Post or Project shown when it appears in a list (the homepage, the Posts list, a Tag), ending where the author places the fold. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).
 
 **Description**: A short summary of an Entry, either authored in frontmatter or derived by clipping the opening of the body. Appears in listings, social previews, and search results. _Avoid_: summary, blurb, abstract, excerpt.
 
