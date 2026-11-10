@@ -261,8 +261,7 @@
 	user-select: none;
 }
 
-.prose-bleed
-	> :is(figure:not(.quotation), video, iframe, astro-island, station-tile-lab, .station-tile) {
+.prose-bleed > :is(figure:not(.quotation), video, iframe, astro-island) {
 	grid-column: full;
 	max-width: none;
 }

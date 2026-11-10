@@ -1,0 +1,36 @@
+---
+import Anchor from '#components/parts/anchor.astro';
+import DateDisplay from '#components/parts/date-display.astro';
+import { recentActivityCount } from '#constants.ts';
+import { queryPostEntries } from '#lib/collections/posts/posts-utils.ts';
+import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
+import { sortByDateReverseChronological } from '#lib/utils/date.ts';
+import { getContentPath } from '#lib/utils/routing.ts';
+
+const [posts, { entries: projects }] = await Promise.all([
+	queryPostEntries(),
+	getProjectsCollection(),
+]);
+
+const recentEntries = [...posts, ...projects]
+	.toSorted(sortByDateReverseChronological)
+	.slice(0, recentActivityCount);
+---
+
+<ul class="space-y-3">
+	{recentEntries.map((entry) => (
+		<li class="leading-snug">
+			<Anchor
+				class="text-sm font-medium text-pretty"
+				href={getContentPath(entry.collection, entry.id)}
+				underline="hover"
+			>
+				{entry.data.title}
+			</Anchor>
+			<DateDisplay
+				class="block pt-0.5 text-xs text-primary-500"
+				date={entry.data.dateUpdated ?? entry.data.dateCreated}
+			/>
+		</li>
+	))}
+</ul>

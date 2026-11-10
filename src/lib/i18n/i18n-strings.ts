@@ -103,7 +103,7 @@ const strings = {
 
 	// Sidebar
 	'aside.about': 'About',
-	'aside.recentPosts': 'Recent posts',
+	'aside.recentActivity': 'Recent activity',
 
 	// Footer colophon
 	'footer.astro': 'Astro',
