@@ -19,6 +19,8 @@ interface Props {
 
 const { class: className, entry, isCollectionShown, isLeading, isPriority } = Astro.props;
 
+Astro.locals.isExcerpt = true;
+
 const { Content } = await render(entry);
 
 const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFeatured })?.[0];

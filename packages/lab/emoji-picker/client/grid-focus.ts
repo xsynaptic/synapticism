@@ -64,3 +64,19 @@ export function moveFocus(root: Element, from: HTMLButtonElement, key: GridKey) 
 
 	if (next instanceof HTMLButtonElement) setActiveCell(root, next, true);
 }
+
+export function cloneCells(
+	hexcodes: Array<string>,
+	cellFor: (hexcode: string) => HTMLButtonElement | undefined,
+) {
+	const clones = hexcodes
+		.map((hexcode) => cellFor(hexcode)?.cloneNode(true))
+		.filter((clone) => clone instanceof HTMLButtonElement);
+
+	for (const clone of clones) {
+		clone.tabIndex = -1;
+		clone.style.removeProperty('anchor-name');
+	}
+
+	return clones;
+}

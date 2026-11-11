@@ -1,11 +1,14 @@
 /* Top layer: inherits the Lab's tokens through the DOM, but sits above every stacking context */
+:is(.ep-tones, .ep-bubble) {
+	margin: calc(var(--spacing) * 1);
+	position-area: block-start;
+	position-anchor: --ep-cell-anchor;
+	position-try-fallbacks: flip-block;
+}
+
 .ep-tones {
 	gap: calc(var(--spacing) * 1);
 	padding: calc(var(--spacing) * 1.5);
-	margin: calc(var(--spacing) * 1);
-	position-area: block-start;
-	position-anchor: --ep-tone-anchor;
-	position-try-fallbacks: flip-block;
 	background: var(--ep-surface);
 	border: 1px solid var(--ep-hairline);
 	border-radius: var(--radius-md);
@@ -16,7 +19,7 @@
 	display: flex;
 }
 
-.ep-tones-unanchored {
+.ep-unanchored {
 	inset: auto;
 	translate: -50% -100%;
 }
@@ -34,10 +37,10 @@
 .ep-detail-glyph {
 	display: grid;
 	place-items: center;
-	width: 3.25rem;
+	width: 3.5rem;
 	aspect-ratio: 1;
 	font-family: var(--emoji-picker-font);
-	font-size: 2.25rem;
+	font-size: 2.5rem;
 	line-height: 1;
 	background: var(--ep-well);
 	border-radius: var(--radius-md);
@@ -45,7 +48,6 @@
 
 .ep-detail-text {
 	display: grid;
-	gap: calc(var(--spacing) * 1);
 	min-width: 0;
 }
 
@@ -53,6 +55,7 @@
 	margin: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	line-height: 1.125rem;
 	white-space: nowrap;
 }
 
@@ -104,14 +107,8 @@
 	border-radius: var(--radius-xs);
 }
 
-.ep-toast {
-	position: absolute;
-	inset-inline: 0;
-	bottom: calc(var(--ep-detail-height) + var(--spacing) * 3);
-	justify-self: center;
-	width: fit-content;
+.ep-bubble {
 	padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
-	margin: 0;
 	font-family: var(--font-mono);
 	font-size: var(--text-sm);
 	color: var(--color-primary-700);
@@ -120,10 +117,8 @@
 	border: 1px solid var(--ep-hairline);
 	border-radius: var(--radius-sm);
 	box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
-	opacity: 0;
-	transition: opacity 120ms ease-out;
 }
 
-.ep-toast:not(:empty) {
-	opacity: 1;
+.ep-bubble.ep-bubble-error {
+	color: var(--color-highlight-600);
 }

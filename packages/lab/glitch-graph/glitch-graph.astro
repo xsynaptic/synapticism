@@ -1,19 +1,12 @@
 ---
 import type { GlitchGraphProps as Props } from '#glitch-graph/glitch-graph-types.ts';
 
-import GlitchGraphIsland from '#glitch-graph/glitch-graph-island.tsx';
+import GlitchGraphFull from '#glitch-graph/glitch-graph-full.astro';
+import LabGate from '#lab-gate.astro';
 
 const { class: className, href } = Astro.props;
-
-const { isFeed } = Astro.locals;
 ---
 
-{isFeed ? (
-	href === undefined ? undefined : (
-		<p>
-			<a href={href}>Open the interactive glitch graph.</a>
-		</p>
-	)
-) : (
-	<GlitchGraphIsland className={className} client:visible={{ rootMargin: '400px' }} />
-)}
+<LabGate href={href}>
+	<GlitchGraphFull class={className} />
+</LabGate>

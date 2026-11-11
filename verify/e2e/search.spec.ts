@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 
 import { routes } from '#e2e/constants.ts';
-import { expect, test, visit } from '#e2e/test.ts';
+import { expect, navigateClientSide, test, visit } from '#e2e/test.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 const resultTimeout = 10_000;
@@ -52,28 +52,6 @@ test('the shortcut opens search from a cold start without dropping the keypress'
 		'true',
 	);
 });
-
-async function navigateClientSide(page: Page, path: string): Promise<void> {
-	await page.evaluate(
-		(href) =>
-			new Promise<void>((resolve) => {
-				document.addEventListener(
-					'astro:page-load',
-					() => {
-						resolve();
-					},
-					{ once: true },
-				);
-
-				const link = document.createElement('a');
-
-				link.href = href;
-				document.body.append(link);
-				link.click();
-			}),
-		path,
-	);
-}
 
 function getRegisteredCount(page: Page): Promise<number | undefined> {
 	return page.evaluate(() => document.querySelector('search-toggle')?.instance?.components.length);

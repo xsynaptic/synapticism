@@ -6,3 +6,9 @@ interface ImportMeta {
 interface ImportMetaEnv {
 	readonly BUILD_VERSION: string | undefined;
 }
+
+declare namespace App {
+	interface Locals {
+		isExcerpt?: boolean;
+	}
+}

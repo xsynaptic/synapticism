@@ -1,0 +1,11 @@
+---
+import GlitchGraphIsland from '#glitch-graph/glitch-graph-island.tsx';
+
+interface Props {
+	class?: string | undefined;
+}
+
+const { class: className } = Astro.props;
+---
+
+<GlitchGraphIsland className={className} client:visible={{ rootMargin: '400px' }} />

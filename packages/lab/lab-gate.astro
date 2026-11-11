@@ -1,0 +1,18 @@
+---
+interface Props {
+	href?: string | undefined;
+}
+
+const { href } = Astro.props;
+
+const { isExcerpt, isFeed } = Astro.locals;
+
+const isFullPage = isExcerpt !== true && isFeed !== true;
+---
+
+{isFullPage && <slot />}
+{!isFullPage && href !== undefined && (
+	<p>
+		<a href={href}>Open the interactive version.</a>
+	</p>
+)}

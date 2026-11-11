@@ -1,10 +1,12 @@
-import type { SupportProbe } from '#emoji-picker/core/support-probes.ts';
+import type { ResultsState } from '#emoji-picker/client/search-results.ts';
 
 import { wireCategoryBar } from '#emoji-picker/client/category-bar.ts';
+import { CopyBubble } from '#emoji-picker/client/copy-bubble.ts';
 import { queryDetailParts, renderDetail } from '#emoji-picker/client/detail-panel.ts';
 import { isEmojiSize, pickerStore } from '#emoji-picker/client/emoji-picker-store.ts';
 import {
 	cellSelector,
+	cloneCells,
 	focusFirstCell,
 	isCell,
 	isGridKey,
@@ -18,21 +20,9 @@ import {
 	searchEmoji,
 } from '#emoji-picker/client/search-client.ts';
 import { queryResultsView, renderResults } from '#emoji-picker/client/search-results.ts';
-import { highestSupportedVersion } from '#emoji-picker/client/support-probe.ts';
+import { markUnsupported, probeSupport } from '#emoji-picker/client/support-marking.ts';
 import { TonePopover } from '#emoji-picker/client/tone-popover.ts';
-
-const toastDuration = 1600;
-
-let supportProbed = false;
-
-function whenIdle(callback: () => void) {
-	if ('requestIdleCallback' in globalThis) {
-		requestIdleCallback(callback, { timeout: 2000 });
-		return;
-	}
-
-	setTimeout(callback, 200);
-}
+import { whenIdle } from '#emoji-picker/client/when-idle.ts';
 
 function isTyping(target: EventTarget | null) {
 	return (
@@ -41,17 +31,11 @@ function isTyping(target: EventTarget | null) {
 	);
 }
 
-function readProbes(element: HTMLElement): Array<SupportProbe> {
-	try {
-		return JSON.parse(element.dataset.probes ?? '[]') as Array<SupportProbe>;
-	} catch {
-		return [];
-	}
-}
-
 class EmojiPicker extends HTMLElement {
 	#abort: AbortController | undefined;
+	#announcer: HTMLElement | undefined;
 	#baseGlyphs = new Map<string, string>();
+	#bubble: CopyBubble | undefined;
 	#cells = new Map<string, HTMLButtonElement>();
 	#focused: string | undefined;
 	#query = '';
@@ -59,8 +43,7 @@ class EmojiPicker extends HTMLElement {
 	#refreshCategories: (() => void) | undefined;
 	#scroller: HTMLElement | undefined;
 	#search: HTMLInputElement | undefined;
-	#toast: HTMLElement | undefined;
-	#toastTimer: ReturnType<typeof setTimeout> | undefined;
+	#searchFailed = false;
 	#tones: TonePopover | undefined;
 
 	connectedCallback() {
@@ -76,7 +59,7 @@ class EmojiPicker extends HTMLElement {
 		this.#scroller = scroller;
 		this.#search = search;
 		this.#recents = recents;
-		this.#toast = this.querySelector<HTMLElement>(':scope .ep-toast') ?? undefined;
+		this.#announcer = this.querySelector<HTMLElement>(':scope .ep-announcer') ?? undefined;
 
 		this.#indexCells();
 		recents.hidden = false;
@@ -84,7 +67,7 @@ class EmojiPicker extends HTMLElement {
 		this.#applyTones();
 		this.#renderRecents();
 		this.#wire(scroller, search, this.#abort.signal);
-		this.#probeSupport();
+		probeSupport(this, this.#cells);
 		whenIdle(() => {
 			void this.#loadSearch();
 		});
@@ -93,7 +76,11 @@ class EmojiPicker extends HTMLElement {
 	disconnectedCallback() {
 		this.#abort?.abort();
 		this.#abort = undefined;
-		clearTimeout(this.#toastTimer);
+		this.#bubble?.hide();
+	}
+
+	#announce(message: string) {
+		if (this.#announcer) this.#announcer.textContent = message;
 	}
 
 	#applySize() {
@@ -131,12 +118,13 @@ class EmojiPicker extends HTMLElement {
 		try {
 			await navigator.clipboard.writeText(glyph);
 		} catch {
-			this.#showToast('Copy failed: the browser blocked clipboard access');
+			this.#notify(cell, 'Copy blocked by the browser', true);
 			return;
 		}
 
 		pickerStore.getState().addRecent(hexcode);
-		this.#showToast(`Copied ${glyph}`);
+		this.#notify(this.#liveCell(cell, hexcode), 'Copied', false);
+		this.#announce(`Copied ${glyph}`);
 	}
 
 	#handleCellKey(event: KeyboardEvent, cell: HTMLButtonElement) {
@@ -197,55 +185,38 @@ class EmojiPicker extends HTMLElement {
 		}
 	}
 
+	#liveCell(cell: HTMLButtonElement, hexcode: string) {
+		if (cell.isConnected) return cell;
+
+		return (
+			this.#recents?.querySelector<HTMLButtonElement>(`[data-hexcode="${CSS.escape(hexcode)}"]`) ??
+			cell
+		);
+	}
+
 	// A query typed before the index lands runs when it does
 	async #loadSearch() {
 		if (isSearchReady()) return;
 
+		this.#searchFailed = false;
+
 		try {
 			await ensureSearch();
 		} catch {
-			this.#showToast('Search could not load; reload the page to try again');
-			return;
+			this.#searchFailed = true;
 		}
 
 		if (!this.#abort) return;
 
-		void this.#renderResults();
+		if (this.#query.trim() !== '') void this.#renderResults();
+
 		void this.#renderDetail();
 	}
 
-	#markUnsupported() {
-		const { supportedVersion, tones } = pickerStore.getState();
+	#notify(cell: HTMLButtonElement, message: string, isError: boolean) {
+		this.#bubble?.show(cell, message, isError);
 
-		for (const [hexcode, cell] of this.#cells) {
-			const isToned = (tones[hexcode] ?? 0) > 0;
-			const version = Number(
-				(isToned ? cell.dataset.skinVersion : undefined) ?? cell.dataset.version,
-			);
-
-			cell.classList.toggle('ep-unsupported', version > supportedVersion);
-		}
-	}
-
-	#probeSupport() {
-		if (supportProbed) {
-			this.#markUnsupported();
-			return;
-		}
-
-		whenIdle(() => {
-			const sample = this.#cells.values().next().value;
-
-			if (!sample) return;
-
-			supportProbed = true;
-			pickerStore.setState({
-				supportedVersion: highestSupportedVersion(
-					readProbes(this),
-					getComputedStyle(sample).fontFamily,
-				),
-			});
-		});
+		if (isError) this.#announce(message);
 	}
 
 	// Once the index is up, the panel waits for the entry so keywords never flash empty
@@ -272,12 +243,9 @@ class EmojiPicker extends HTMLElement {
 		const active = document.activeElement;
 		const focused =
 			isCell(active) && container.contains(active) ? active.dataset.hexcode : undefined;
-		const clones = pickerStore
-			.getState()
-			.recents.map((hexcode) => this.#cells.get(hexcode)?.cloneNode(true))
-			.filter((clone) => clone instanceof HTMLButtonElement);
-
-		for (const clone of clones) clone.tabIndex = -1;
+		const clones = cloneCells(pickerStore.getState().recents, (hexcode) =>
+			this.#cells.get(hexcode),
+		);
 
 		container.replaceChildren(...clones);
 
@@ -297,7 +265,7 @@ class EmojiPicker extends HTMLElement {
 
 		this.#syncSearchField(query);
 
-		const hexcodes = isSearching && isSearchReady() ? await searchEmoji(query) : undefined;
+		const state = await this.#resultsState(query);
 		const view = queryResultsView(this);
 
 		// A slower answer for an earlier keystroke must not overwrite a newer one
@@ -305,10 +273,20 @@ class EmojiPicker extends HTMLElement {
 
 		this.toggleAttribute('data-searching', isSearching);
 		view.section.hidden = !isSearching;
-		renderResults(view, isSearching ? hexcodes : [], (hexcode) => this.#cells.get(hexcode));
+		renderResults(view, state, (hexcode) => this.#cells.get(hexcode));
 		this.#scroller?.scrollTo({ top: 0 });
 		this.#refreshCategories?.();
 		focusFirstCell(this, false);
+	}
+
+	async #resultsState(query: string): Promise<ResultsState> {
+		if (query.trim() === '') return { hexcodes: [], kind: 'ready' };
+
+		if (this.#searchFailed) return { kind: 'failed' };
+
+		if (!isSearchReady()) return { kind: 'pending' };
+
+		return { hexcodes: await searchEmoji(query), kind: 'ready' };
 	}
 
 	#setFocused(hexcode: string | undefined) {
@@ -325,18 +303,6 @@ class EmojiPicker extends HTMLElement {
 		void this.#renderResults();
 	}
 
-	#showToast(message: string) {
-		const toast = this.#toast;
-
-		if (!toast) return;
-
-		clearTimeout(this.#toastTimer);
-		toast.textContent = message;
-		this.#toastTimer = setTimeout(() => {
-			toast.textContent = '';
-		}, toastDuration);
-	}
-
 	#subscribe(signal: AbortSignal) {
 		const unsubscribe = pickerStore.subscribe((state, previous) => {
 			const cellsChanged =
@@ -346,7 +312,7 @@ class EmojiPicker extends HTMLElement {
 
 			if (cellsChanged) {
 				this.#applyTones();
-				this.#markUnsupported();
+				markUnsupported(this.#cells);
 				void this.#renderDetail();
 			}
 
@@ -361,6 +327,10 @@ class EmojiPicker extends HTMLElement {
 	}
 
 	#wire(scroller: HTMLElement, search: HTMLInputElement, signal: AbortSignal) {
+		const bubble = this.querySelector<HTMLElement>(':scope .ep-bubble');
+
+		if (bubble) this.#bubble = new CopyBubble(bubble, scroller);
+
 		this.#wireGrid(scroller, signal);
 		this.#wireKeys(signal);
 		this.#wireSearch(search, signal);
@@ -479,6 +449,9 @@ class EmojiPicker extends HTMLElement {
 				onChoose: (cell, tone) => {
 					pickerStore.getState().setTone(cell.dataset.hexcode ?? '', tone);
 					void this.#copy(cell);
+				},
+				onShow: () => {
+					this.#bubble?.hide();
 				},
 				popover,
 				scroller,

@@ -138,5 +138,8 @@ export default defineConfig({
 				ignored: ['./*.md', '**/temp/**'],
 			},
 		},
+		worker: {
+			format: 'es',
+		},
 	},
 });

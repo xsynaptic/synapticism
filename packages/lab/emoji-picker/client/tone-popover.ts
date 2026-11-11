@@ -1,12 +1,13 @@
+import { anchorCell, hidePlaced, placeWithoutAnchor } from '#emoji-picker/client/cell-anchor.ts';
 import { isCell } from '#emoji-picker/client/grid-focus.ts';
 
 const longPressDelay = 450;
 const moveTolerance = 8;
-const anchorName = '--ep-tone-anchor';
 
 interface TonePopoverOptions {
 	baseGlyph: (hexcode: string) => string | undefined;
 	onChoose: (cell: HTMLButtonElement, tone: number) => void;
+	onShow: () => void;
 	popover: HTMLElement;
 	scroller: HTMLElement;
 }
@@ -17,17 +18,6 @@ function toneCell(target: unknown) {
 
 function toneButtons(popover: HTMLElement) {
 	return [...popover.querySelectorAll<HTMLButtonElement>(':scope > button[data-tone]')];
-}
-
-// Firefox may lack anchor positioning; there the popover is placed from the cell's rect once
-function placeWithoutAnchor(popover: HTMLElement, cell: HTMLButtonElement) {
-	if (CSS.supports(`anchor-name: ${anchorName}`)) return;
-
-	const rect = cell.getBoundingClientRect();
-
-	popover.style.left = `${String(rect.left + rect.width / 2)}px`;
-	popover.style.top = `${String(rect.top)}px`;
-	popover.classList.add('ep-tones-unanchored');
 }
 
 function fillTones(popover: HTMLElement, cell: HTMLButtonElement, baseGlyph: string | undefined) {
@@ -186,8 +176,7 @@ export class TonePopover {
 
 		const hadFocus = popover.contains(document.activeElement);
 
-		popover.hidePopover();
-		popover.classList.remove('ep-tones-unanchored');
+		hidePlaced(popover);
 
 		if (hadFocus) this.#anchor?.focus();
 	}
@@ -210,12 +199,12 @@ export class TonePopover {
 	}
 
 	#show(cell: HTMLButtonElement, shouldFocus: boolean) {
-		const { baseGlyph, popover } = this.#options;
+		const { baseGlyph, onShow, popover, scroller } = this.#options;
 		const buttons = fillTones(popover, cell, baseGlyph(cell.dataset.hexcode ?? ''));
 
-		this.#anchor?.style.removeProperty('anchor-name');
+		onShow();
 		this.#anchor = cell;
-		cell.style.setProperty('anchor-name', anchorName);
+		anchorCell(scroller, cell);
 
 		// Android fires contextmenu after the long-press timer has already opened it
 		if (!this.isOpen()) popover.showPopover();

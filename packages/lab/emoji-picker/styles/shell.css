@@ -1,4 +1,4 @@
-.ep {
+emoji-picker {
 	--emoji-picker-font: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
 	--ep-surface: var(--color-white);
 	--ep-well: var(--color-primary-100);
@@ -9,12 +9,14 @@
 	--ep-pad: calc(var(--spacing) * 3);
 	--ep-glyph: 1.5rem;
 	--ep-heading: 2rem;
+	--ep-fade: calc(var(--ep-heading) * 0.3);
 	--ep-detail-height: 4.75rem;
 
 	position: relative;
 	display: grid;
 	grid-template-rows: auto minmax(0, 1fr) auto;
 	height: min(32rem, 80dvh);
+	anchor-scope: --ep-cell-anchor;
 	container: emoji-picker / inline-size;
 	overflow: hidden;
 	font-family: var(--font-sans);
@@ -24,7 +26,7 @@
 	border-radius: var(--radius-md);
 }
 
-.ep[data-size='large'] {
+emoji-picker[data-size='large'] {
 	--ep-glyph: 2rem;
 }
 
@@ -128,7 +130,7 @@
 	transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
 }
 
-.ep[data-searching] .ep-categories {
+emoji-picker[data-searching] .ep-categories {
 	opacity: 0.4;
 }
 
@@ -176,7 +178,7 @@
 }
 
 /* Hidden rather than removed keeps their layout, so clearing a query repaints instead of rebuilding */
-.ep[data-searching] :is(.ep-group, .ep-recents) {
+emoji-picker[data-searching] :is(.ep-group, .ep-recents) {
 	contain-intrinsic-size: 0 0;
 	content-visibility: hidden;
 	overflow: hidden;
@@ -186,6 +188,7 @@
 	--ep-columns: 8;
 
 	padding-inline: var(--ep-pad);
+	container: emoji-picker-grid / inline-size;
 	overflow-y: auto;
 	overscroll-behavior: contain;
 }
@@ -204,7 +207,18 @@
 	color: var(--ep-ink-soft);
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
-	background: linear-gradient(var(--ep-surface) 70%, transparent);
+	background: linear-gradient(var(--ep-surface) calc(100% - var(--ep-fade)), transparent);
+}
+
+.ep-scroll::after {
+	position: sticky;
+	bottom: 0;
+	z-index: 1;
+	display: block;
+	height: var(--ep-fade);
+	pointer-events: none;
+	content: '';
+	background: linear-gradient(transparent, var(--ep-surface));
 }
 
 /* Skipped sections still claim their height, so the scrollbar and category jumps land true */
@@ -215,7 +229,7 @@
 
 @supports (width: round(up, 1px, 1px)) {
 	.ep-group {
-		--ep-row: calc((100cqi - 2 * var(--ep-pad)) / var(--ep-columns));
+		--ep-row: calc(100cqi / var(--ep-columns));
 
 		contain-intrinsic-size: auto
 			calc(var(--ep-heading) + round(up, var(--ep-count) / var(--ep-columns), 1) * var(--ep-row));
@@ -228,6 +242,7 @@
 }
 
 .ep-results-empty,
+.ep-results-failed,
 .ep-recents-empty {
 	padding-block: calc(var(--spacing) * 1) calc(var(--spacing) * 4);
 	margin: 0;
@@ -239,7 +254,7 @@
 	display: none;
 }
 
-.ep[data-size='large'] .ep-scroll {
+emoji-picker[data-size='large'] .ep-scroll {
 	--ep-columns: 6;
 }
 
@@ -248,7 +263,7 @@
 		--ep-columns: 9;
 	}
 
-	.ep[data-size='large'] .ep-scroll {
+	emoji-picker[data-size='large'] .ep-scroll {
 		--ep-columns: 7;
 	}
 }
@@ -258,7 +273,7 @@
 		--ep-columns: 10;
 	}
 
-	.ep[data-size='large'] .ep-scroll {
+	emoji-picker[data-size='large'] .ep-scroll {
 		--ep-columns: 8;
 	}
 }
@@ -268,7 +283,7 @@
 		--ep-columns: 12;
 	}
 
-	.ep[data-size='large'] .ep-scroll {
+	emoji-picker[data-size='large'] .ep-scroll {
 		--ep-columns: 9;
 	}
 }
@@ -278,7 +293,7 @@
 		--ep-columns: 14;
 	}
 
-	.ep[data-size='large'] .ep-scroll {
+	emoji-picker[data-size='large'] .ep-scroll {
 		--ep-columns: 10;
 	}
 }
@@ -288,7 +303,7 @@
 		--ep-columns: 16;
 	}
 
-	.ep[data-size='large'] .ep-scroll {
+	emoji-picker[data-size='large'] .ep-scroll {
 		--ep-columns: 12;
 	}
 }

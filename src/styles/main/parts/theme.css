@@ -1,5 +1,5 @@
 /* fallow-ignore-file css-token-drift */
-@theme {
+@theme static {
 	/* Spacing */
 	--spacing-content: 54rem;
 	--spacing-sidebar: 24rem;
