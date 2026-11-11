@@ -82,6 +82,7 @@ emoji-picker[data-size='large'] {
 
 /* Only while the field is empty, where the browser's clear button would otherwise sit on it */
 @media (hover: hover) {
+	/* fallow-ignore-next-line css-selector-complexity */
 	.ep-search:has(input:placeholder-shown):not(:focus-within) kbd {
 		display: block;
 	}
@@ -177,18 +178,11 @@ emoji-picker[data-searching] .ep-categories {
 	filter: none;
 }
 
-/* Hidden rather than removed keeps their layout, so clearing a query repaints instead of rebuilding */
-emoji-picker[data-searching] :is(.ep-group, .ep-recents) {
-	contain-intrinsic-size: 0 0;
-	content-visibility: hidden;
-	overflow: hidden;
-}
-
 .ep-scroll {
 	--ep-columns: 8;
 
 	padding-inline: var(--ep-pad);
-	container: emoji-picker-grid / inline-size;
+	container-type: inline-size;
 	overflow-y: auto;
 	overscroll-behavior: contain;
 }
@@ -236,6 +230,14 @@ emoji-picker[data-searching] :is(.ep-group, .ep-recents) {
 	}
 }
 
+/* Hidden rather than removed keeps their layout, so clearing a query repaints instead of rebuilding */
+emoji-picker[data-searching] .ep-group,
+emoji-picker[data-searching] .ep-recents {
+	contain-intrinsic-size: 0 0;
+	content-visibility: hidden;
+	overflow: hidden;
+}
+
 .ep-cells {
 	display: grid;
 	grid-template-columns: repeat(var(--ep-columns), minmax(0, 1fr));
@@ -250,8 +252,12 @@ emoji-picker[data-searching] :is(.ep-group, .ep-recents) {
 	color: var(--ep-ink-muted);
 }
 
-.ep-recents .ep-cells:not(:empty) + .ep-recents-empty {
+.ep-recents-empty {
 	display: none;
+}
+
+.ep-cells:empty + .ep-recents-empty {
+	display: block;
 }
 
 emoji-picker[data-size='large'] .ep-scroll {

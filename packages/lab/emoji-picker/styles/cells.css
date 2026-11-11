@@ -1,4 +1,5 @@
-:is(.ep-cells, .ep-tones) > button {
+.ep-cells > button,
+.ep-tones > button {
 	display: grid;
 	place-items: center;
 	aspect-ratio: 1;
@@ -27,31 +28,34 @@
 	font-size: 1.75rem;
 }
 
-:is(.ep-cells, .ep-tones) > button:focus-visible {
+.ep-cells > button:focus-visible,
+.ep-tones > button:focus-visible {
 	background: var(--ep-well);
 	box-shadow: inset 0 0 0 2px var(--color-accent-400);
 }
 
 @media (hover: hover) {
-	:is(.ep-cells, .ep-tones) > button:hover {
+	.ep-cells > button:hover,
+	.ep-tones > button:hover {
 		background: var(--ep-well);
 	}
 }
 
-:is(.ep-cells, .ep-tones) > button:active {
+.ep-cells > button:active,
+.ep-tones > button:active {
 	background: var(--ep-hairline);
 }
 
-.ep-cells > button.ep-unsupported {
+.ep-unsupported {
 	opacity: 0.45;
 }
 
-.ep-cells > button.ep-unsupported:focus-visible {
+.ep-unsupported:focus-visible {
 	opacity: 0.8;
 }
 
 @media (hover: hover) {
-	.ep-cells > button.ep-unsupported:hover {
+	.ep-unsupported:hover {
 		opacity: 0.8;
 	}
 }

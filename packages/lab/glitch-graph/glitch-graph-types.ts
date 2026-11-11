@@ -1,5 +1,5 @@
 export interface GlitchGraphProps {
 	class?: string | undefined;
-	// Canonical URL where the lab runs; used for the RSS link-to-live fallback
+	// Canonical URL where the lab runs; feeds and listings link here instead of rendering it
 	href?: string | undefined;
 }
