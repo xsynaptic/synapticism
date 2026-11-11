@@ -1,0 +1,57 @@
+:is(.ep-cells, .ep-tones) > button {
+	display: grid;
+	place-items: center;
+	aspect-ratio: 1;
+	padding: 0;
+	font-family: var(--emoji-picker-font);
+	line-height: 1;
+	user-select: none;
+	outline: none;
+	background: transparent;
+	border: 0;
+	border-radius: var(--radius-sm);
+	transition:
+		background-color var(--default-transition-duration) var(--default-transition-timing-function),
+		opacity var(--default-transition-duration) var(--default-transition-timing-function);
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
+}
+
+.ep-cells > button {
+	margin: 2px;
+	font-size: var(--ep-glyph);
+}
+
+.ep-tones > button {
+	width: 2.75rem;
+	font-size: 1.75rem;
+}
+
+:is(.ep-cells, .ep-tones) > button:focus-visible {
+	background: var(--ep-well);
+	box-shadow: inset 0 0 0 2px var(--color-accent-400);
+}
+
+@media (hover: hover) {
+	:is(.ep-cells, .ep-tones) > button:hover {
+		background: var(--ep-well);
+	}
+}
+
+:is(.ep-cells, .ep-tones) > button:active {
+	background: var(--ep-hairline);
+}
+
+.ep-cells > button.ep-unsupported {
+	opacity: 0.45;
+}
+
+.ep-cells > button.ep-unsupported:focus-visible {
+	opacity: 0.8;
+}
+
+@media (hover: hover) {
+	.ep-cells > button.ep-unsupported:hover {
+		opacity: 0.8;
+	}
+}

@@ -1,0 +1,4 @@
+/* Unlayered, so these rules outrank the prose styles the Lab sits inside */
+@import './styles/shell.css';
+@import './styles/cells.css';
+@import './styles/panels.css';

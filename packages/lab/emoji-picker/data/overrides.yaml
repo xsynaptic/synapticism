@@ -1,0 +1,13 @@
+# Keyed by the emoji itself; FE0F is optional, the generator normalizes it
+# `add` joins the CLDR keywords; `remove` strips a word from every source below it
+
+🐐:
+  add: [greatest of all time]
+🧢:
+  add: [lie, no cap]
+🗿:
+  add: [bruh, deadpan]
+🤌:
+  add: [chef's kiss, italian]
+🔥:
+  remove: [remove, tool]

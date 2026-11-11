@@ -1,0 +1,129 @@
+/* Top layer: inherits the Lab's tokens through the DOM, but sits above every stacking context */
+.ep-tones {
+	gap: calc(var(--spacing) * 1);
+	padding: calc(var(--spacing) * 1.5);
+	margin: calc(var(--spacing) * 1);
+	position-area: block-start;
+	position-anchor: --ep-tone-anchor;
+	position-try-fallbacks: flip-block;
+	background: var(--ep-surface);
+	border: 1px solid var(--ep-hairline);
+	border-radius: var(--radius-md);
+	box-shadow: 0 6px 20px rgb(0 0 0 / 12%);
+}
+
+.ep-tones:popover-open {
+	display: flex;
+}
+
+.ep-tones-unanchored {
+	inset: auto;
+	translate: -50% -100%;
+}
+
+.ep-detail {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: calc(var(--spacing) * 3);
+	align-items: center;
+	height: var(--ep-detail-height);
+	padding-inline: var(--ep-pad);
+	border-top: 1px solid var(--ep-hairline);
+}
+
+.ep-detail-glyph {
+	display: grid;
+	place-items: center;
+	width: 3.25rem;
+	aspect-ratio: 1;
+	font-family: var(--emoji-picker-font);
+	font-size: 2.25rem;
+	line-height: 1;
+	background: var(--ep-well);
+	border-radius: var(--radius-md);
+}
+
+.ep-detail-text {
+	display: grid;
+	gap: calc(var(--spacing) * 1);
+	min-width: 0;
+}
+
+.ep-detail-text > * {
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ep-detail-name {
+	font-family: var(--font-mono);
+	font-size: var(--text-sm);
+	font-weight: var(--font-weight-semibold);
+	color: var(--ep-ink);
+}
+
+.ep-detail-name::first-letter {
+	text-transform: uppercase;
+}
+
+.ep-detail-meta {
+	display: flex;
+	gap: calc(var(--spacing) * 2);
+	align-items: center;
+}
+
+.ep-detail-code,
+.ep-detail-hint,
+.ep-detail-keywords,
+.ep-detail-note {
+	font-family: var(--font-mono);
+	font-size: var(--text-xs);
+	color: var(--ep-ink-muted);
+}
+
+.ep-detail-note {
+	color: var(--color-highlight-600);
+}
+
+.ep-detail-shortcodes {
+	display: flex;
+	gap: calc(var(--spacing) * 1.5);
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.ep-detail-shortcodes li {
+	padding-inline: calc(var(--spacing) * 1.5);
+	margin: 0;
+	font-family: var(--font-mono);
+	font-size: var(--text-xs);
+	color: var(--color-primary-700);
+	background: var(--ep-well);
+	border-radius: var(--radius-xs);
+}
+
+.ep-toast {
+	position: absolute;
+	inset-inline: 0;
+	bottom: calc(var(--ep-detail-height) + var(--spacing) * 3);
+	justify-self: center;
+	width: fit-content;
+	padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
+	margin: 0;
+	font-family: var(--font-mono);
+	font-size: var(--text-sm);
+	color: var(--color-primary-700);
+	pointer-events: none;
+	background: var(--ep-surface);
+	border: 1px solid var(--ep-hairline);
+	border-radius: var(--radius-sm);
+	box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+	opacity: 0;
+	transition: opacity 120ms ease-out;
+}
+
+.ep-toast:not(:empty) {
+	opacity: 1;
+}

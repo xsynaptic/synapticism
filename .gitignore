@@ -10,6 +10,7 @@ temp/
 .fallow/
 .wrangler/
 worker-configuration.d.ts
+packages/lab/emoji-picker/data/*.json
 
 # dependencies
 node_modules/

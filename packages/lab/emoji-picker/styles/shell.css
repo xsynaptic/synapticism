@@ -1,0 +1,294 @@
+.ep {
+	--emoji-picker-font: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+	--ep-surface: var(--color-white);
+	--ep-well: var(--color-primary-100);
+	--ep-hairline: var(--color-primary-200);
+	--ep-ink: var(--color-primary-800);
+	--ep-ink-soft: var(--color-primary-600);
+	--ep-ink-muted: var(--color-primary-500);
+	--ep-pad: calc(var(--spacing) * 3);
+	--ep-glyph: 1.5rem;
+	--ep-heading: 2rem;
+	--ep-detail-height: 4.75rem;
+
+	position: relative;
+	display: grid;
+	grid-template-rows: auto minmax(0, 1fr) auto;
+	height: min(32rem, 80dvh);
+	container: emoji-picker / inline-size;
+	overflow: hidden;
+	font-family: var(--font-sans);
+	color: var(--ep-ink);
+	background: var(--ep-surface);
+	border: 1px solid var(--ep-hairline);
+	border-radius: var(--radius-md);
+}
+
+.ep[data-size='large'] {
+	--ep-glyph: 2rem;
+}
+
+.ep-top {
+	display: grid;
+	gap: calc(var(--spacing) * 2);
+	padding: var(--ep-pad) var(--ep-pad) 0;
+	border-bottom: 1px solid var(--ep-hairline);
+}
+
+.ep-toolbar {
+	display: flex;
+	gap: calc(var(--spacing) * 2);
+}
+
+.ep-search {
+	position: relative;
+	display: block;
+	flex: 1;
+}
+
+.ep-search input {
+	width: 100%;
+	padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+	font: inherit;
+	font-size: var(--text-base);
+	color: var(--ep-ink);
+	outline: none;
+	background: var(--ep-well);
+	border: 1px solid transparent;
+	border-radius: var(--radius-sm);
+}
+
+.ep-search input:focus-visible {
+	background: var(--ep-surface);
+	border-color: var(--color-accent-400);
+}
+
+.ep-search kbd {
+	position: absolute;
+	inset-block: 0;
+	inset-inline-end: calc(var(--spacing) * 2);
+	display: none;
+	place-self: center end;
+	padding-inline: calc(var(--spacing) * 1.5);
+	font-family: var(--font-mono);
+	font-size: var(--text-xs);
+	line-height: 1.6;
+	color: var(--ep-ink-muted);
+	border: 1px solid var(--color-primary-300);
+	border-radius: var(--radius-xs);
+}
+
+/* Only while the field is empty, where the browser's clear button would otherwise sit on it */
+@media (hover: hover) {
+	.ep-search:has(input:placeholder-shown):not(:focus-within) kbd {
+		display: block;
+	}
+}
+
+.ep-size {
+	display: flex;
+	padding: 2px;
+	background: var(--ep-well);
+	border-radius: var(--radius-sm);
+}
+
+.ep-size button {
+	display: grid;
+	place-items: center;
+	width: 2.25rem;
+	padding: 0;
+	font-family: var(--emoji-picker-font);
+	line-height: 1;
+	cursor: pointer;
+	outline: none;
+	background: transparent;
+	border: 0;
+	border-radius: var(--radius-xs);
+}
+
+.ep-size [data-size='small'] {
+	font-size: var(--text-sm);
+}
+
+.ep-size [data-size='large'] {
+	font-size: var(--text-xl);
+}
+
+.ep-size [aria-pressed='true'] {
+	background: var(--ep-surface);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+}
+
+.ep-size button:focus-visible {
+	box-shadow: inset 0 0 0 2px var(--color-accent-400);
+}
+
+.ep-categories {
+	display: flex;
+	transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
+}
+
+.ep[data-searching] .ep-categories {
+	opacity: 0.4;
+}
+
+/* Inactive tabs sit in greyscale, so the current one reads as selected rather than as another emoji */
+.ep-categories a {
+	display: grid;
+	flex: 1 1 0;
+	place-items: center;
+	min-width: 0;
+	padding-block: calc(var(--spacing) * 2);
+	margin-bottom: -1px;
+	font-family: var(--emoji-picker-font);
+	font-size: var(--text-lg);
+	line-height: 1;
+	text-decoration: none;
+	user-select: none;
+	outline: none;
+	border-bottom: 2px solid transparent;
+	opacity: 0.55;
+	filter: grayscale(1);
+	transition:
+		opacity var(--default-transition-duration) var(--default-transition-timing-function),
+		filter var(--default-transition-duration) var(--default-transition-timing-function),
+		border-color var(--default-transition-duration) var(--default-transition-timing-function);
+	-webkit-tap-highlight-color: transparent;
+}
+
+.ep-categories a:focus-visible {
+	background: var(--ep-well);
+	opacity: 1;
+	filter: none;
+}
+
+@media (hover: hover) {
+	.ep-categories a:hover {
+		opacity: 1;
+		filter: none;
+	}
+}
+
+.ep-categories a[aria-current='true'] {
+	border-bottom-color: var(--color-accent-500);
+	opacity: 1;
+	filter: none;
+}
+
+/* Hidden rather than removed keeps their layout, so clearing a query repaints instead of rebuilding */
+.ep[data-searching] :is(.ep-group, .ep-recents) {
+	contain-intrinsic-size: 0 0;
+	content-visibility: hidden;
+	overflow: hidden;
+}
+
+.ep-scroll {
+	--ep-columns: 8;
+
+	padding-inline: var(--ep-pad);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+
+.ep-scroll h2 {
+	position: sticky;
+	top: 0;
+	z-index: 1;
+	height: var(--ep-heading);
+	padding-top: calc(var(--spacing) * 2);
+	margin: 0;
+	font-family: var(--font-sans);
+	font-size: var(--text-xs);
+	font-weight: var(--font-weight-semibold);
+	line-height: 1rem;
+	color: var(--ep-ink-soft);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	background: linear-gradient(var(--ep-surface) 70%, transparent);
+}
+
+/* Skipped sections still claim their height, so the scrollbar and category jumps land true */
+.ep-group {
+	contain-intrinsic-size: auto 40rem;
+	content-visibility: auto;
+}
+
+@supports (width: round(up, 1px, 1px)) {
+	.ep-group {
+		--ep-row: calc((100cqi - 2 * var(--ep-pad)) / var(--ep-columns));
+
+		contain-intrinsic-size: auto
+			calc(var(--ep-heading) + round(up, var(--ep-count) / var(--ep-columns), 1) * var(--ep-row));
+	}
+}
+
+.ep-cells {
+	display: grid;
+	grid-template-columns: repeat(var(--ep-columns), minmax(0, 1fr));
+}
+
+.ep-results-empty,
+.ep-recents-empty {
+	padding-block: calc(var(--spacing) * 1) calc(var(--spacing) * 4);
+	margin: 0;
+	font-size: var(--text-sm);
+	color: var(--ep-ink-muted);
+}
+
+.ep-recents .ep-cells:not(:empty) + .ep-recents-empty {
+	display: none;
+}
+
+.ep[data-size='large'] .ep-scroll {
+	--ep-columns: 6;
+}
+
+@container emoji-picker (width >= 26rem) {
+	.ep-scroll {
+		--ep-columns: 9;
+	}
+
+	.ep[data-size='large'] .ep-scroll {
+		--ep-columns: 7;
+	}
+}
+
+@container emoji-picker (width >= 30rem) {
+	.ep-scroll {
+		--ep-columns: 10;
+	}
+
+	.ep[data-size='large'] .ep-scroll {
+		--ep-columns: 8;
+	}
+}
+
+@container emoji-picker (width >= 34rem) {
+	.ep-scroll {
+		--ep-columns: 12;
+	}
+
+	.ep[data-size='large'] .ep-scroll {
+		--ep-columns: 9;
+	}
+}
+
+@container emoji-picker (width >= 40rem) {
+	.ep-scroll {
+		--ep-columns: 14;
+	}
+
+	.ep[data-size='large'] .ep-scroll {
+		--ep-columns: 10;
+	}
+}
+
+@container emoji-picker (width >= 46rem) {
+	.ep-scroll {
+		--ep-columns: 16;
+	}
+
+	.ep[data-size='large'] .ep-scroll {
+		--ep-columns: 12;
+	}
+}
