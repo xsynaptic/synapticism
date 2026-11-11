@@ -34,6 +34,7 @@ import { projectImageAspectRatio } from '#constants.ts';
 import {
 	createSamplePage,
 	getSampleOpenGraphCards,
+	openGraphSampleKeys,
 	sampleCardDescription,
 	sampleCardTagItems,
 	sampleCarouselImages,
@@ -106,78 +107,9 @@ const iconNames = [
 
 const sections = ['Foundations', 'Prose', 'Anchors', 'Parts', 'Content', 'Open Graph'];
 
-interface OpenGraphSpecimen {
-	key: string;
-	missing?: string;
-	name: string;
-	note: string;
-}
-
-// Only the cards needing a Featured Image can go missing, so only those carry a fallback
-const openGraphSpecimens: Array<OpenGraphSpecimen> = [
-	{
-		key: 'image-split',
-		missing: 'No Entry resolves a Featured Image, so there is no panel to fill.',
-		name: 'og-image (split)',
-		note: 'The image takes the right panel behind a teal seam; the text column narrows to what is left.',
-	},
-	{
-		key: 'image-long',
-		missing: 'No Entry resolves a Featured Image, so there is no panel to fill.',
-		name: 'og-image (split, long title)',
-		note: 'Thresholds ride the text measure, so this half-width column steps the title down a size sooner than the full-bleed cards below.',
-	},
-	{
-		key: 'title-only',
-		missing: 'Every Entry resolves a Featured Image, so nothing falls back to full-bleed.',
-		name: 'og-image (title only)',
-		note: 'No Featured Image: the text column takes the full width and the padding opens up.',
-	},
-	{
-		key: 'label-none',
-		name: 'og-image (no label)',
-		note: 'Index cards and Pages carry no label, so the rule stands alone above the title.',
-	},
-	{
-		key: 'title-short',
-		name: 'og-image (72px title)',
-		note: 'The top of the four-step size ramp. Written rather than found: every real title lands on this step.',
-	},
-	{
-		key: 'title-medium',
-		name: 'og-image (60px title)',
-		note: 'Past 32 characters.',
-	},
-	{
-		key: 'title-clamped',
-		name: 'og-image (40px title, clamped)',
-		note: 'Past 96 characters, the bottom of the ramp, overrunning the four-line clamp.',
-	},
-];
-
-const anchorUnderlineModes = [
-	{
-		label: 'always (default)',
-		note: 'faint line at rest; text and line darken together',
-		underline: 'always',
-	},
-	{
-		label: 'hover',
-		note: 'no line at rest; the line fades in with the colour',
-		underline: 'hover',
-	},
-	{ label: 'none', note: 'colour change only, never a line', underline: 'none' },
-] satisfies Array<{
-	label: string;
-	note: string;
-	underline: NonNullable<ComponentProps<typeof Anchor>['underline']>;
-}>;
-
-const componentOwnedLinks = [
-	{ name: 'chip', source: 'components/parts/chip.astro' },
-	{ name: 'header navigation', source: 'components/navigation/navigation-header.astro' },
-	{ name: 'skip link', source: 'components/main/main-skip-link.astro' },
-];
+const anchorUnderlineModes = ['always', 'hover', 'none'] satisfies Array<
+	NonNullable<ComponentProps<typeof Anchor>['underline']>
+>;
 
 const chipEdgeColors = ['primary', 'accent', 'highlight'] satisfies Array<
 	NonNullable<ComponentProps<typeof Chip>['edgeColor']>
@@ -195,9 +127,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 	<div class="pb-16">
 		<div class="content-column pt-8">
 			<h1 class="font-mono text-base font-medium text-primary-800">Inventory</h1>
-			<p class="mt-2 max-w-(--prose-measure) text-sm leading-relaxed text-primary-600">
-				Every common component, rendered from its real source with fixture props. Dev only.
-			</p>
 			<nav class="mt-4 flex flex-wrap gap-x-5 font-mono text-sm">
 				{sections.map((section) => (
 					<Anchor accent={true} href={`#${getSectionId(section)}`} underline="hover">
@@ -232,7 +161,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen
 				name="Technocrat palette"
-				note="The 2015 WordPress theme's colours, resolved from its compiled stylesheet, for comparison with the ramps above. Reference only; no token reads them."
+				note="Reference only; no token reads them."
 				source="wp-technocrat/src/scss/config/_colours.scss"
 			>
 				<div class="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3">
@@ -249,11 +178,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					))}
 				</div>
 			</Specimen>
-			<Specimen
-				name="Type scale"
-				note="Prose headings size in <code>em</code> against the body, so they sit in Prose rather than here."
-				source="styles/main/parts/theme.css"
-			>
+			<Specimen name="Type scale" source="styles/main/parts/theme.css">
 				<div class="flex flex-col gap-4">
 					{typeSteps.map((step) => (
 						<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
@@ -279,11 +204,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					))}
 				</div>
 			</Specimen>
-			<Specimen
-				name="Icons"
-				note='Symbols drawn in <code>currentColor</code> at <code>1em</code>; each use is an <code>svg</code> holding <code>&lt;use href="#icon:name"&gt;</code>.'
-				source="components/main/main-sprites.astro"
-			>
+			<Specimen name="Icons" source="components/main/main-sprites.astro">
 				<div class="flex flex-wrap gap-6 text-2xl text-primary-700">
 					{iconNames.map((iconName) => (
 						<div class="flex flex-col items-center gap-2">
@@ -297,21 +218,12 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 		</Section>
 		<Section title="Prose">
-			<Specimen
-				bleed={true}
-				name="prose-body"
-				note="The <code>.prose-x</code> surface at full size, from an MDX fixture through the real satteri pipeline. Carries <code>data-reading-frame</code>, so the reading bar tracks it."
-				source="components/parts/prose-body.astro"
-			>
+			<Specimen bleed={true} name="prose-body" source="components/parts/prose-body.astro">
 				<ProseBody data-reading-frame>
 					<ProseSample />
 				</ProseBody>
 			</Specimen>
-			<Specimen
-				name="prose-description"
-				note="The same typography one step down, for Descriptions and excerpt summaries."
-				source="components/parts/prose-description.astro"
-			>
+			<Specimen name="prose-description" source="components/parts/prose-description.astro">
 				<ProseDescription>
 					<p>
 						A Description renders inline markdown only: <em>emphasis</em>, <strong>strong</strong>,
@@ -322,7 +234,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="mdx/link"
-				note="Resolves an Entry id against the Catalog. A fixture id has no target, so this is the fallback: unlinked text rather than a throw."
+				note="A fixture id has no target, so this is the unlinked fallback."
 				source="components/mdx/link.astro"
 			>
 				<ProseBody>
@@ -332,29 +244,22 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				</ProseBody>
 			</Specimen>
 		</Section>
-		<Section
-			note="Text links go through one component. Colour comes from the host's --anchor-ink and --anchor-ink-hover, or the accent opt-in; the line comes from the underline prop and follows the ink. Hover and Tab through each row."
-			title="Anchors"
-		>
-			<Specimen
-				name="underline modes"
-				note="Every mode shifts the ink on hover and focus. The line is the same in each: a fraction of an em thick, sitting just under the baseline so descenders cross it."
-				source="components/parts/anchor.astro"
-			>
+		<Section title="Anchors">
+			<Specimen name="underline modes" source="components/parts/anchor.astro">
 				<div class="flex flex-col gap-4">
-					{anchorUnderlineModes.map((mode) => (
+					{anchorUnderlineModes.map((underline) => (
 						<p class="grid gap-1 sm:grid-cols-[10rem_1fr]">
-							<span class="font-mono text-xs text-primary-500">{mode.label}</span>
+							<span class="font-mono text-xs text-primary-500">{underline}</span>
 							<span>
 								A sentence with{' '}
-								<Anchor href="#anchors" underline={mode.underline}>
+								<Anchor href="#anchors" underline={underline}>
 									a link in it
 								</Anchor>
 								, then{' '}
-								<Anchor accent={true} href="#anchors" underline={mode.underline}>
+								<Anchor accent={true} href="#anchors" underline={underline}>
 									an accent link
 								</Anchor>
-								; {mode.note}.
+								.
 							</span>
 						</p>
 					))}
@@ -368,12 +273,11 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 									<use href="#icon:github"></use>
 								</svg>
 							</Anchor>
-							; the icon is never underlined.
 						</span>
 					</p>
 				</div>
 			</Specimen>
-			<Specimen name="type sizes" note="Typography is the caller's; the line scales with the em.">
+			<Specimen name="type sizes">
 				<div class="flex flex-col gap-4">
 					<EntryTitle as="h2" href="#anchors">
 						A display title, no line
@@ -389,25 +293,21 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					</p>
 				</div>
 			</Specimen>
-			<Specimen
-				name="hosts and scope"
-				note="A host sets the ink for every Anchor inside it; anchor-scope gives the bare links Markdown emits the same rules."
-			>
+			<Specimen name="hosts and scope">
 				<div class="flex flex-col gap-4">
 					<ProseBody class="px-0!" frame="column">
 						<p>
-							Prose sets the accent ink, and a <a href="#anchors">bare Markdown link</a> picks up
-							the same line as an Anchor.
+							A <a href="#anchors">bare Markdown link</a> inside prose.
 						</p>
 					</ProseBody>
 					<p class="anchor-ink-title">
-						anchor-ink-title, on Entry titles and Continue reading:{' '}
+						anchor-ink-title:{' '}
 						<Anchor href="#anchors" underline="hover">
 							{t('content.continueReading')}
 						</Anchor>
 					</p>
 					<div class="anchor-ink-on-dark flex flex-wrap items-baseline gap-x-6 gap-y-3 rounded-sm bg-primary-800 px-5 py-4 text-sm text-primary-300">
-						anchor-ink-on-dark, on the header, sidebar and footer:
+						anchor-ink-on-dark:
 						<Anchor href="#anchors" underline="hover">
 							Recent Post title
 						</Anchor>
@@ -417,23 +317,9 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					</div>
 				</div>
 			</Specimen>
-			<Specimen name="owned by a component" note="Link treatments that are not Anchors.">
-				<ul class="flex flex-col gap-1 text-sm">
-					{componentOwnedLinks.map((link) => (
-						<li>
-							<span class="font-medium text-primary-800">{link.name}</span>{' '}
-							<span class="font-mono text-xs text-primary-500">{link.source}</span>
-						</li>
-					))}
-				</ul>
-			</Specimen>
 		</Section>
 		<Section title="Parts">
-			<Specimen
-				name="date-display"
-				note="Presets read from <code>DatePresetEnum</code>. A date authored with a time shows the time; a bare date does not."
-				source="components/parts/date-display.astro"
-			>
+			<Specimen name="date-display" source="components/parts/date-display.astro">
 				<div class="flex flex-col gap-4">
 					{datePresets.map((datePreset) => (
 						<div class="border-t border-primary-200 pt-4 first:border-0 first:pt-0">
@@ -446,11 +332,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					))}
 				</div>
 			</Specimen>
-			<Specimen
-				name="chip"
-				note="A keycap link that presses on hover, focus, and click. <code>edgeColor</code> sets the border and base; the hash is generated content, so it stays out of the accessible name and microformat values. The optional count sits behind a divider in the edge's lightest step."
-				source="components/parts/chip.astro"
-			>
+			<Specimen name="chip" source="components/parts/chip.astro">
 				<div class="flex flex-col gap-3">
 					{chipEdgeColors.map((edgeColor) => (
 						<div class="flex flex-wrap items-center gap-x-2 gap-y-3">
@@ -465,18 +347,10 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					))}
 				</div>
 			</Specimen>
-			<Specimen
-				name="chip-row"
-				note="Chips wrapping in a list. The post coda renders an Entry's Tags in one; the Tags list renders one per letter, with counts."
-				source="components/parts/chip-row.astro"
-			>
+			<Specimen name="chip-row" source="components/parts/chip-row.astro">
 				<ChipRow items={sampleChipItems} />
 			</Specimen>
-			<Specimen
-				name="divided-item / list-row"
-				note="<code>list-row</code> lays items out inline and wrapping; <code>divided-item</code> puts a slash between them and drops it on the last. Enlarged so <code>divided-thin</code> reads at all."
-				source="components/parts/"
-			>
+			<Specimen name="divided-item / list-row" source="components/parts/">
 				<div class="flex flex-col gap-3 text-lg">
 					<ListRow>
 						<DividedItem as="li">Default</DividedItem>
@@ -496,12 +370,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					</ListRow>
 				</div>
 			</Specimen>
-			<Specimen
-				bleed={true}
-				name="labeled-section"
-				note="The rule-and-label header under every Entry. Heading level is a prop, defaulting to <code>h2</code>."
-				source="components/parts/labeled-section.astro"
-			>
+			<Specimen bleed={true} name="labeled-section" source="components/parts/labeled-section.astro">
 				<LabeledSection title="Heading level two">
 					<p>Section body</p>
 				</LabeledSection>
@@ -509,19 +378,10 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<p>Section body</p>
 				</LabeledSection>
 			</Specimen>
-			<Specimen
-				bleed={true}
-				name="labeled-row"
-				note="A labeled section wrapping a divided row of links. <code>content-section-references</code> looks up Projects into one."
-				source="components/parts/labeled-row.astro"
-			>
+			<Specimen bleed={true} name="labeled-row" source="components/parts/labeled-row.astro">
 				<LabeledRow items={sampleRowItems} title="Projects" />
 			</Specimen>
-			<Specimen
-				name="pagination-select"
-				note="Hides itself when there is one page. With JavaScript the counter swaps for a select."
-				source="components/parts/pagination-select.astro"
-			>
+			<Specimen name="pagination-select" source="components/parts/pagination-select.astro">
 				<div class="flex flex-col gap-4">
 					<PaginationSelect pagination={getPagePagination(samplePageFirst)} />
 					<PaginationSelect pagination={getPagePagination(samplePageMiddle)} />
@@ -529,12 +389,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 		</Section>
 		<Section title="Content">
-			<Specimen
-				bleed={true}
-				name="content-header"
-				note="The <code>h1</code> of an Entry page. The title links to itself; the subtitle slot takes an <code>entry-subtitle</code>."
-				source="components/content/content-header.astro"
-			>
+			<Specimen bleed={true} name="content-header" source="components/content/content-header.astro">
 				<ContentHeader
 					title="An Entry title long enough to wrap and show the balance"
 					titleUrl="#header"
@@ -543,11 +398,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				</ContentHeader>
 				<ContentHeader title="The same header with no subtitle and no self-link" />
 			</Specimen>
-			<Specimen
-				name="entry-title"
-				note="Every Entry title: <code>h1</code> on an Entry page, <code>h2</code> in a list. Only the cap height is trimmed, so the subtitle clears descenders at every size."
-				source="components/content/entry-title.astro"
-			>
+			<Specimen name="entry-title" source="components/content/entry-title.astro">
 				<div class="flex flex-col gap-6">
 					<div>
 						<EntryTitle as="h1" href="#entry-title">
@@ -563,11 +414,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					</div>
 				</div>
 			</Specimen>
-			<Specimen
-				name="content-date"
-				note="Divided <code>date-display</code> items carrying the microformat classes: the published date, then the “Updated” one when present."
-				source="components/content/content-date.astro"
-			>
+			<Specimen name="content-date" source="components/content/content-date.astro">
 				<div class="flex flex-col gap-3 text-xs text-primary-500">
 					<div class="flex flex-wrap items-center gap-1">
 						<ContentDate dateCreated={new Date(sampleDate)} />
@@ -580,11 +427,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					</div>
 				</div>
 			</Specimen>
-			<Specimen
-				name="entry-subtitle"
-				note="The line under every Entry title: on its page, in Excerpts and on cards. Posts and Pages show their dates, Posts add the reading time, and Projects show their date range with Homepage and Source Code links."
-				source="components/content/entry-subtitle.astro"
-			>
+			<Specimen name="entry-subtitle" source="components/content/entry-subtitle.astro">
 				<div class="flex flex-col gap-3 text-xs text-primary-500">
 					<div class="flex flex-wrap items-center gap-1">
 						<EntrySubtitle entry={sampleSubtitlePost} minutesRead={8} />
@@ -597,12 +440,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					</div>
 				</div>
 			</Specimen>
-			<Specimen
-				bleed={true}
-				name="content-hero"
-				note="A Featured Image promoted to a full-bleed banner above the title, cropped 3:2, then 2:1 from md, over its LQIP placeholder. Against <code>content-image</code>: an object rather than a path, <code>priority</code>, no caption, no radius, no border."
-				source="components/content/content-hero.astro"
-			>
+			<Specimen bleed={true} name="content-hero" source="components/content/content-hero.astro">
 				{sampleImageFeatured ? (
 					<ContentHero
 						{...sampleImageFeatured}
@@ -614,12 +452,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<p class="font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
 				)}
 			</Specimen>
-			<Specimen
-				bleed={true}
-				name="content-image"
-				note="The in-body figure, breaking out past the reading measure. Against <code>content-hero</code>: lazy, a caption doubling as alt text, larger radius on a bordered frame."
-				source="components/content/content-image.astro"
-			>
+			<Specimen bleed={true} name="content-image" source="components/content/content-image.astro">
 				{sampleImageId ? (
 					<ProseBody>
 						<ContentImage src={sampleImageId}>A caption beneath the frame</ContentImage>
@@ -631,7 +464,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-section"
-				note="A content column; the optional description slot renders as a header above the children."
 				source="components/content/content-section.astro"
 			>
 				<ContentSection>
@@ -644,7 +476,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="content-excerpt"
-				note="A Post or Project in a list, cut at the fold the author placed with <code>More</code>."
 				source="components/content/content-excerpt.astro"
 			>
 				<ContentExcerpt entryUrl="#excerpt">
@@ -653,11 +484,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<ProseSample />
 				</ContentExcerpt>
 			</Specimen>
-			<Specimen
-				name="content-card"
-				note="An Entry in a listing: an optional media slot, then title, subtitle, Description, Tags, and a links slot. The Projects list fills the media slot with a 2:1 carousel for featured Projects and leaves it empty for the rest."
-				source="components/content/content-card.astro"
-			>
+			<Specimen name="content-card" source="components/content/content-card.astro">
 				<ContentCard
 					description={sampleCardDescription}
 					tagItems={sampleCardTagItems}
@@ -677,11 +504,7 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					<p class="mt-4 font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>
 				)}
 			</Specimen>
-			<Specimen
-				name="image-carousel"
-				note="Featured Images cut by the image service to the ratio given, here the 2:1 Projects ratio, and scroll-snapped. One image renders as a plain figure; two or more become a carousel with buttons on hover or focus, swipe, and a live region announcing the slide."
-				source="components/image/image-carousel.astro"
-			>
+			<Specimen name="image-carousel" source="components/image/image-carousel.astro">
 				<div class="flex flex-col gap-6">
 					<ImageCarousel
 						aspectRatio={projectImageAspectRatio}
@@ -701,7 +524,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="section-entry-list"
-				note="A titled list of Entry links, such as the writing that points at a Project."
 				source="components/sections/section-entry-list.astro"
 			>
 				<SectionEntryList entries={sampleCatalogItems} title={t('section.relatedWriting')} />
@@ -709,7 +531,6 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen
 				bleed={true}
 				name="section-pagination"
-				note="Previous and next Entry in a Collection: newer and older for Posts, index order for Projects. Each arm renders alone when the other end is missing."
 				source="components/sections/section-pagination.astro"
 			>
 				<SectionPagination
@@ -724,30 +545,34 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				/>
 			</Specimen>
 		</Section>
-		<Section
-			note="Drawn by a batch script rather than by Astro; this route renders that template on demand."
-			title="Open Graph"
-		>
-			{openGraphSpecimens.map(({ key, missing, name, note }) => {
-				const card = sampleOpenGraphCards.find((item) => item.key === key);
+		<Section note="packages/scripts/src/og-image/element.tsx" title="Open Graph">
+			<div class="mx-auto mt-6 grid max-w-7xl gap-x-6 gap-y-8 px-4 md:grid-cols-2 md:px-8">
+				{openGraphSampleKeys.map((key) => {
+					const card = sampleOpenGraphCards.find((item) => item.key === key);
 
-				return (
-					<Specimen name={name} note={note} source="packages/scripts/src/og-image/element.tsx">
-						{card ? (
-							<img
-								alt={card.title}
-								class="h-auto w-full"
-								height={openGraphImageHeight}
-								loading="lazy"
-								src={`/inventory/og/${card.key}.jpg`}
-								width={openGraphImageWidth}
-							/>
-						) : (
-							<p class="font-mono text-xs text-primary-500">{missing}</p>
-						)}
-					</Specimen>
-				);
-			})}
+					return (
+						<figure>
+							{card ? (
+								<a href={`/inventory/og/${key}.jpg`}>
+									<img
+										alt={card.title}
+										class="h-auto w-full rounded-sm border border-primary-300"
+										height={openGraphImageHeight}
+										loading="lazy"
+										src={`/inventory/og/${key}.jpg`}
+										width={openGraphImageWidth}
+									/>
+								</a>
+							) : (
+								<div class="flex aspect-[1200/630] items-center justify-center rounded-sm border border-dashed border-primary-300 font-mono text-xs text-primary-500">
+									no sample
+								</div>
+							)}
+							<figcaption class="mt-2 font-mono text-xs text-primary-500">{key}</figcaption>
+						</figure>
+					);
+				})}
+			</div>
 		</Section>
 	</div>
 </MainSite>

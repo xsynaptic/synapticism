@@ -1,7 +1,6 @@
 import type { APIRoute, GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
 import { createCardRenderer, decodeImage, resolveMediaPath } from '@synapticism/scripts/og-image';
-import { existsSync } from 'node:fs';
 
 import { getSampleOpenGraphCards } from '#dev/inventory/inventory-fixtures.ts';
 
@@ -18,9 +17,7 @@ function getRenderCard() {
 async function readImage(imageId: string | undefined) {
 	if (imageId === undefined) return;
 
-	const imagePath = resolveMediaPath(imageId);
-
-	return existsSync(imagePath) ? decodeImage(imagePath) : undefined;
+	return decodeImage(resolveMediaPath(imageId));
 }
 
 export const getStaticPaths = (async () => {
@@ -35,7 +32,7 @@ export const GET = (async ({ props: { card } }) => {
 
 	// Takumi can hand back a view on a SharedArrayBuffer, which Response rejects
 	return new Response(
-		new Uint8Array(await render({ label: card.label, title: card.title }, image)),
+		new Uint8Array(await render({ description: card.description, title: card.title }, image)),
 		{
 			headers: { 'cache-control': 'no-store', 'content-type': 'image/jpeg' },
 		},

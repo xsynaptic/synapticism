@@ -22,7 +22,10 @@ const groups = groupTagsByLetter(tags);
 <MainSite
 	meta={{
 		description: t('tags.description'),
-		openGraphCard: getIndexOpenGraphCard('tags', t('tags.title')),
+		openGraphCard: getIndexOpenGraphCard('tags', {
+			description: t('tags.description'),
+			title: t('tags.title'),
+		}),
 		title: t('tags.title'),
 	}}
 >

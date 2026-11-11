@@ -23,7 +23,10 @@ const unfeatured = page.data.filter((entry) => entry.data.featuredOrder === unde
 
 <ContentListView
 	description={t('projects.description')}
-	openGraphCard={getIndexOpenGraphCard('projects', t('projects.title'))}
+	openGraphCard={getIndexOpenGraphCard('projects', {
+		description: t('projects.description'),
+		title: t('projects.title'),
+	})}
 	title={t('projects.title')}
 >
 	<ContentSection>

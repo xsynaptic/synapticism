@@ -29,10 +29,10 @@ const templateVersion = hashTemplateVersion({
 	parts: [openGraphImageWidth, openGraphImageHeight],
 });
 
-function toCardInput({ label, title }: RecordedCardInput) {
+function toCardInput({ description, title }: RecordedCardInput) {
 	if (typeof title !== 'string') throw new TypeError('OpenGraph card recorded without a title');
 
-	return { label: typeof label === 'string' ? label : undefined, title };
+	return { description: typeof description === 'string' ? description : undefined, title };
 }
 
 function reportOutcomes(

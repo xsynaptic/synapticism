@@ -7,7 +7,7 @@ import path from 'node:path';
 import { render, setGlyphCacheMaxBytes } from 'takumi-js';
 import { Renderer } from 'takumi-js/node';
 
-import { openGraphJpegQuality, openGraphPanelWidth } from '#og-image/constants.ts';
+import { openGraphBandHeight, openGraphJpegQuality } from '#og-image/constants.ts';
 import { getOpenGraphElement } from '#og-image/element.tsx';
 import { loadOpenGraphFonts } from '#og-image/fonts.ts';
 
@@ -44,15 +44,15 @@ export function resolveMediaPath(imageId: string): string {
 	return path.join(findWorkspaceRoot(), mediaDir, imageId);
 }
 
-// The panel is a tall crop of a wide source, so let sharp pick the region of interest
+// The band is a short strip of a wide source, so let sharp pick the region of interest
 // Raw RGBA hands off to Takumi without an encode, so the card takes one lossy pass instead of two
 export async function decodeImage(filePath: string): Promise<ProcessedImage> {
 	const { data, info } = await openImageSource(filePath)
 		.resize({
 			fit: 'cover',
-			height: openGraphImageHeight,
+			height: openGraphBandHeight,
 			position: 'attention',
-			width: openGraphPanelWidth,
+			width: openGraphImageWidth,
 		})
 		.ensureAlpha()
 		.raw()

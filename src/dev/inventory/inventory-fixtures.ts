@@ -14,8 +14,9 @@ import type { PaginationEntry } from '#lib/utils/pagination-types.ts';
 import { getPagesCollection } from '#lib/collections/pages/pages-data.ts';
 import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
 import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
 import { hasMediaImage, mediaRoot } from '#lib/utils/media.ts';
-import { getEntryOpenGraphCard } from '#lib/utils/seo.ts';
+import { getEntryOpenGraphCard, getIndexOpenGraphCard, homeOpenGraphCard } from '#lib/utils/seo.ts';
 
 // getMediaImage throws on a path the glob never saw, so an image is the one thing a fixture cannot invent
 // The media store is gitignored; a fresh checkout resolves nothing here, hence the fallback note
@@ -130,80 +131,82 @@ export const sampleChipItems = [
 ] satisfies ComponentProps<typeof ChipRow>['items'];
 
 // A key doubles as the route param, so `inventory-og-image.ts` resolves one back through this list
-interface OpenGraphCardSample extends OpenGraphCardInput {
+interface SampleOpenGraphCard extends OpenGraphCardInput {
 	imageId?: string | undefined;
-}
-
-interface SampleOpenGraphCard extends OpenGraphCardSample {
 	key: string;
 }
 
-// Written rather than found: the corpus is small enough that every real title lands on one step
-// Lengths ride the thresholds in `titleFontSize`, measured against the full-width text column
-const openGraphTitleSamples = [
-	{ key: 'title-short', title: 'Cascade layers, in brief' },
-	{ key: 'title-medium', title: 'Reading the grain of a typeface at small sizes' },
-	{
-		key: 'title-clamped',
-		title:
-			'A title long enough to run past the four lines the card allows, which is what the clamp is for: the words keep coming, the size has already bottomed out on the ramp, and the last of it is dropped rather than allowed to push the wordmark off the foot of the frame',
-	},
-];
+export const openGraphSampleKeys = [
+	'home',
+	'index',
+	'description',
+	'excerpt',
+	'image',
+	'image-overflow',
+	'overflow',
+	'title-only',
+] as const;
 
-// Borrowed by the split-layout card, whose column is barely half the width the ramp is tuned against
-const openGraphImageTitle = 'Drawing a social preview card without a browser anywhere in the loop';
+type OpenGraphSampleKey = (typeof openGraphSampleKeys)[number];
 
-async function createSampleOpenGraphCards() {
+const openGraphOverflowInput = {
+	description:
+		'A description long enough to overrun the two lines the card gives it, so the ellipsis shows where the clamp lands, whatever size the title above it settles on.',
+	title:
+		'A title long enough to run past the three lines the card allows, so the size bottoms out on the ramp and the clamp cuts the rest',
+} satisfies OpenGraphCardInput;
+
+async function findEntryOpenGraphCards() {
 	const [pages, posts, projects] = await Promise.all([
 		getPagesCollection(),
 		getPostsCollection(),
 		getProjectsCollection(),
 	]);
 
-	const candidates = [...pages.entries, ...posts.entries, ...projects.entries].map(
-		(entry): OpenGraphCardSample => {
-			const { imageId, input } = getEntryOpenGraphCard(entry);
-
-			return { imageId, ...input };
-		},
-	);
-
-	const titleCards = openGraphTitleSamples.map(({ key, title }) => ({
-		key,
-		label: 'inventory',
-		title,
+	const cards = [...pages.entries, ...posts.entries, ...projects.entries].map((entry) => ({
+		card: getEntryOpenGraphCard(entry),
+		isAuthored: entry.data.description !== undefined,
 	}));
+	const textCards = cards.filter(({ card }) => card.imageId === undefined);
 
-	const imageCard = candidates.find((card) => card.imageId && hasMediaImage(card.imageId));
+	return {
+		authored: textCards.find(({ isAuthored }) => isAuthored)?.card,
+		excerpted: textCards.find(
+			({ card, isAuthored }) => !isAuthored && card.input.description !== undefined,
+		)?.card,
+		image: cards.find(({ card }) => card.imageId !== undefined && hasMediaImage(card.imageId))
+			?.card,
+	};
+}
+
+async function createSampleOpenGraphCards() {
+	const { authored, excerpted, image } = await findEntryOpenGraphCards();
+	const imageId = image?.imageId;
 
 	return [
-		...toOpenGraphCard('image-split', imageCard),
-		...toOpenGraphCard(
-			'image-long',
-			imageCard
-				? {
-						imageId: imageCard.imageId,
-						label: 'inventory',
-						title: openGraphImageTitle,
-					}
-				: undefined,
+		toOpenGraphCard('home', homeOpenGraphCard.input),
+		toOpenGraphCard(
+			'index',
+			getIndexOpenGraphCard('posts', {
+				description: t('posts.description'),
+				title: t('posts.title'),
+			}).input,
 		),
-		...toOpenGraphCard(
-			'title-only',
-			candidates.find((card) => !card.imageId),
-		),
-		...toOpenGraphCard('label-none', {
-			title: 'A card with no eyebrow, as index pages draw',
-		}),
-		...titleCards,
-	];
+		toOpenGraphCard('description', authored?.input),
+		toOpenGraphCard('excerpt', excerpted?.input),
+		toOpenGraphCard('image', image?.input, imageId),
+		toOpenGraphCard('image-overflow', imageId ? openGraphOverflowInput : undefined, imageId),
+		toOpenGraphCard('overflow', openGraphOverflowInput),
+		toOpenGraphCard('title-only', { title: 'Cascade layers' }),
+	].filter((card) => card !== undefined);
 }
 
 function toOpenGraphCard(
-	key: string,
-	entry: OpenGraphCardSample | undefined,
-): Array<SampleOpenGraphCard> {
-	return entry ? [{ key, ...entry }] : [];
+	key: OpenGraphSampleKey,
+	input: OpenGraphCardInput | undefined,
+	imageId?: string,
+): SampleOpenGraphCard | undefined {
+	return input ? { imageId, key, ...input } : undefined;
 }
 
 // The page renders one img per card and the route re-enters here for each, so sample once

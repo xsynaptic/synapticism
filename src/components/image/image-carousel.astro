@@ -20,9 +20,9 @@ const Wrapper = isCarousel ? 'image-carousel' : 'div';
 const carouselAttributes: HTMLAttributes<'div'> = isCarousel
 	? {
 			'aria-label': t('carousel.label'),
-			'aria-roledescription': t('carousel.roledescription'),
+			'aria-roledescription': t('carousel.roleDescription'),
 			'data-slide-label': t('carousel.slide.label'),
-			'data-slide-roledescription': t('carousel.slide.roledescription'),
+			'data-slide-roledescription': t('carousel.slide.roleDescription'),
 			role: 'group',
 		}
 	: {};

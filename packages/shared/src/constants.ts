@@ -22,4 +22,4 @@ export const siteTitle = 'Synapticism';
 
 // The home card's line, and the app's `site.description`
 export const siteTagline =
-	'Web development, design, and creative coding, by Alexander Synaptic, a senior front-end engineer in Taiwan.';
+	'Technical notes on web development in the agentic era: frontend application design, Astro, creative coding, LLMs, and more.';

@@ -31,7 +31,7 @@ const strings = {
 	'navigation.github.label': 'GitHub',
 	'navigation.linkedin.label': 'LinkedIn',
 	'navigation.mastodon.label': 'Mastodon',
-	'navigation.x.label': 'X',
+	'navigation.x.label': 'Twitter',
 
 	// Accessibility (aria-labels, screen-reader text)
 	'aria.footerNavigation': 'Footer navigation',
@@ -45,9 +45,9 @@ const strings = {
 	'carousel.label': 'Images',
 	'carousel.nav.next': 'Next image',
 	'carousel.nav.previous': 'Previous image',
-	'carousel.roledescription': 'carousel',
+	'carousel.roleDescription': 'carousel',
 	'carousel.slide.label': '{current} of {total}',
-	'carousel.slide.roledescription': 'slide',
+	'carousel.slide.roleDescription': 'slide',
 
 	// Pagination
 	'pagination.counter': 'Page {current} of {total}',
@@ -82,14 +82,16 @@ const strings = {
 
 	// List pages (heading + SEO title/description)
 	'posts.description':
-		'Writing on web development, design, and creative coding, from quick notes to long articles.',
+		'A technical notebook on web development, AI, and internet culture, from quick notes and annotated links to longer pieces.',
 	'posts.title': 'Posts',
 	'projects.dateRange': '{start}–{end}',
-	'projects.description': 'Things I have designed, built, and worked on.',
+	'projects.description':
+		'Websites, command-line tools, and open source packages, mostly built with Astro, React, and TypeScript.',
 	'projects.homepage': 'Homepage',
 	'projects.sourceCode': 'Source Code',
 	'projects.title': 'Projects',
-	'tags.description': 'Browse all tags on Synapticism.',
+	'tags.description':
+		'Posts and projects grouped by topic, from TypeScript and Astro to AI and internet culture.',
 	'tags.empty': 'No tags yet.',
 	'tags.title': 'Tags',
 
@@ -107,14 +109,15 @@ const strings = {
 
 	// Footer colophon
 	'footer.astro': 'Astro',
-	'footer.bio': `I'm Alexander Synaptic, a web developer from Canada currently based in Taiwan. Front-end has been my home base for years but I'm leaning into the full stack at the dawn of the agentic era. This site is my technical notebook and portfolio.`,
+	'footer.bio': `I'm Alexander Synaptic, a web developer from Canada currently based in Taiwan. Front-end has been my home base for years but I'm leaning into the full stack at the dawn of the agentic era. I spent years in the WordPress community, branched out into React and TypeScript, and now work on ambitious projects with Astro, EmDash, and Payload. This site is my technical notebook and portfolio.`,
 	'footer.builtWith': 'Built with',
 	'footer.copyright': '©{years} A. Synaptic',
 	'footer.rss': 'RSS Feed',
 	'footer.sourceCode': 'Source Code',
 
 	// CV
-	'cv.description': 'The professional background of Alexander Synaptic, senior front-end engineer.',
+	'cv.description':
+		'Work history, skills, and selected projects of a senior front-end engineer with two decades on the web.',
 	'cv.education': 'Education',
 	'cv.experience': 'Experience',
 	'cv.github': 'GitHub',

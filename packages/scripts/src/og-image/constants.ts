@@ -1,7 +1,8 @@
-export const openGraphPanelWidth = 540;
-export const openGraphSeamWidth = 2;
+export const openGraphBandHeight = 230;
 
-export const openGraphPaddingSplit = 72;
-export const openGraphPaddingFull = 80;
+export const openGraphMastheadHeight = 112;
+
+export const openGraphPaddingX = 96;
+export const openGraphPaddingY = 72;
 
 export const openGraphJpegQuality = 90;

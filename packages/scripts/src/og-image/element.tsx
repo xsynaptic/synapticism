@@ -11,102 +11,117 @@ import { Bitmap } from 'takumi-js/helpers/jsx';
 import type { ProcessedImage } from '#og-image/generate.ts';
 
 import {
-	openGraphPaddingFull,
-	openGraphPaddingSplit,
-	openGraphPanelWidth,
-	openGraphSeamWidth,
+	openGraphBandHeight,
+	openGraphMastheadHeight,
+	openGraphPaddingX,
+	openGraphPaddingY,
 } from '#og-image/constants.ts';
 
-// Mirrors src/styles/main/theme.css; scale positions given so they trace back to the site
+// Mirrors src/styles/main/parts/theme.css and the site header; scale positions trace back to the site
 const colors = {
-	accent: '#2b7e8f', // accent-600
-	accentBright: '#4cb6c4', // accent-400, readable on carbon
-	carbon: '#27272a', // primary-800, the site background
-	surface: '#f4f4f5', // primary-100, the reading surface
+	primary50: '#f9fafb',
+	primary100: '#f3f4f6',
+	primary200: '#e2e5e9',
+	primary600: '#4d5360',
+	primary700: '#3a404b',
+	primary800: '#23272f',
+	primary900: '#15181f',
+	white: '#ffffff',
 } as const;
 
 const styles = {
-	accentBar: {
-		backgroundColor: colors.accent,
-		borderRadius: '2px',
+	band: {
 		display: 'flex',
-		height: '4px',
-		width: '56px',
+		flexDirection: 'column',
+		height: px(openGraphBandHeight),
+		position: 'relative',
+	},
+	bandLayer: {
+		display: 'flex',
+		inset: 0,
+		position: 'absolute',
+	},
+	bandScrim: {
+		backgroundImage: `linear-gradient(to bottom, rgba(21, 24, 31, 0.85), rgba(21, 24, 31, 0.15) 60%)`,
+	},
+	body: {
+		backgroundImage: `linear-gradient(to bottom, ${colors.white}, ${colors.primary100} 55%, ${colors.primary200})`,
+		display: 'flex',
+		flexDirection: 'column',
+		flexGrow: 1,
+		justifyContent: 'flex-end',
+		padding: `0 ${px(openGraphPaddingX)} ${px(openGraphPaddingY)}`,
 	},
 	canvas: {
-		backgroundColor: colors.carbon,
 		display: 'flex',
+		flexDirection: 'column',
 		height: px(openGraphImageHeight),
 		width: px(openGraphImageWidth),
 	},
-	column: {
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'space-between',
+	description: {
+		color: colors.primary600,
+		fontFamily: 'Red Hat Text',
+		fontSize: '34px',
+		lineClamp: 2,
+		lineHeight: 1.35,
+		marginTop: '28px',
+		textOverflow: 'ellipsis',
 	},
-	header: { alignItems: 'center', display: 'flex' },
-	label: {
-		color: colors.accentBright,
-		fontFamily: 'Red Hat Mono',
-		fontSize: '22px',
-		fontWeight: 500,
-		letterSpacing: '2px',
-		marginLeft: '20px',
-	},
-	seam: {
-		backgroundColor: colors.accent,
-		display: 'flex',
-		height: px(openGraphImageHeight),
-		width: px(openGraphSeamWidth),
-	},
-	siteTitle: {
-		color: colors.surface,
+	masthead: {
+		alignItems: 'center',
+		color: colors.primary50,
 		display: 'flex',
 		fontFamily: 'Aleo',
-		fontSize: '22px',
+		fontSize: '34px',
 		fontWeight: 600,
+		height: px(openGraphMastheadHeight),
 		letterSpacing: '0.1em',
+		padding: `0 ${px(openGraphPaddingX)}`,
+		position: 'relative',
+	},
+	mastheadGround: {
+		backgroundImage: `linear-gradient(to bottom, ${colors.primary800}, ${colors.primary700})`,
 	},
 	title: {
-		color: colors.surface,
+		color: colors.primary900,
 		fontFamily: 'Aleo',
-		fontWeight: 600,
-		letterSpacing: '-0.01em',
-		lineClamp: 4,
-		lineHeight: 1.15,
+		fontWeight: 500,
+		lineHeight: 1.08,
 		textOverflow: 'ellipsis',
+		textWrap: 'balance',
 	},
 } satisfies Record<string, CSSProperties>;
 
 export function getOpenGraphElement(entry: OpenGraphCardInput, image?: ProcessedImage) {
-	const columnWidth = image
-		? openGraphImageWidth - openGraphPanelWidth - openGraphSeamWidth
-		: openGraphImageWidth;
-	const padding = image ? openGraphPaddingSplit : openGraphPaddingFull;
+	const masthead = <div style={styles.masthead}>{siteTitle.toUpperCase()}</div>;
 
 	return (
 		<div style={styles.canvas}>
-			<div style={{ ...styles.column, padding: px(padding), width: px(columnWidth) }}>
-				<div style={styles.header}>
-					<div style={styles.accentBar} />
-					{entry.label ? <span style={styles.label}>{entry.label.toUpperCase()}</span> : undefined}
+			{image ? (
+				<div style={styles.band}>
+					<div style={styles.bandLayer}>
+						<Bitmap data={image.data} height={image.height} width={image.width} />
+					</div>
+					<div style={{ ...styles.bandLayer, ...styles.bandScrim }} />
+					{masthead}
 				</div>
+			) : (
+				<div style={{ ...styles.mastheadGround, display: 'flex', flexDirection: 'column' }}>
+					{masthead}
+				</div>
+			)}
+			<div style={styles.body}>
 				<div
 					style={{
 						...styles.title,
-						fontSize: px(titleFontSize(entry.title.length, columnWidth)),
+						fontSize: px(titleFontSize(entry.title.length, image !== undefined)),
+						lineClamp: image ? 2 : 3,
 					}}
 				>
 					{entry.title}
 				</div>
-				<div style={styles.siteTitle}>{siteTitle.toUpperCase()}</div>
+				{entry.description ? <div style={styles.description}>{entry.description}</div> : undefined}
 			</div>
-			{image ? (
-				<>
-					<div style={styles.seam} />
-					<Bitmap data={image.data} height={image.height} width={image.width} />
-				</>
-			) : undefined}
 		</div>
 	);
 }
@@ -115,12 +130,9 @@ function px(value: number): string {
 	return `${String(value)}px`;
 }
 
-// Thresholds ride the measure: the split layout gives the text far less room
-function titleFontSize(length: number, columnWidth: number): number {
-	const scale = columnWidth / openGraphImageWidth;
-
-	if (length <= 32 * scale) return 72;
-	if (length <= 64 * scale) return 60;
-	if (length <= 96 * scale) return 48;
-	return 40;
+function titleFontSize(length: number, hasImage: boolean): number {
+	if (!hasImage && length <= 16) return 104;
+	if (length <= 32) return 88;
+	if (length <= 56) return 72;
+	return 60;
 }

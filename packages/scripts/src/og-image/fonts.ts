@@ -25,14 +25,14 @@ const fontConfigs: Array<FontsourceConfig> = [
 		name: 'Aleo',
 		package: 'aleo',
 		variants: [
-			{ style: 'normal', subset: 'latin', weight: 400 },
+			{ style: 'normal', subset: 'latin', weight: 500 },
 			{ style: 'normal', subset: 'latin', weight: 600 },
 		],
 	},
 	{
-		name: 'Red Hat Mono',
-		package: 'red-hat-mono',
-		variants: [{ style: 'normal', subset: 'latin', weight: 500 }],
+		name: 'Red Hat Text',
+		package: 'red-hat-text',
+		variants: [{ style: 'normal', subset: 'latin', weight: 400 }],
 	},
 ];
 

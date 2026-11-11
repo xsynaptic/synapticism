@@ -3,7 +3,7 @@ import { getCardName } from '@xsynaptic/astro-image-pipeline/names';
 import { openGraphBasePath, openGraphImageFormat } from '#constants.ts';
 
 export interface OpenGraphCardInput {
-	label?: string | undefined;
+	description?: string | undefined;
 	title: string;
 }
 
@@ -22,19 +22,8 @@ export const openGraphIndexIds = {
 	tags: 'index-tags',
 } as const;
 
-// `pages` is absent: its cards draw with no label
-const collectionLabels: Record<string, string> = {
-	posts: 'post',
-	projects: 'project',
-	tags: 'tag',
-};
-
 export function getOpenGraphId(collection: string, id: string): string {
 	return `${collection}-${id}`;
-}
-
-export function getOpenGraphLabel(collection: string): string | undefined {
-	return collectionLabels[collection];
 }
 
 export function getOpenGraphCardPath({ id, imageId, input }: PageOpenGraphCard): string {
@@ -42,7 +31,7 @@ export function getOpenGraphCardPath({ id, imageId, input }: PageOpenGraphCard):
 		{
 			id,
 			...(imageId === undefined ? {} : { image: { id: imageId } }),
-			input: { label: input.label, title: input.title },
+			input: { description: input.description, title: input.title },
 		},
 		{ format: openGraphImageFormat },
 	);

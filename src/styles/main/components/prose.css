@@ -97,7 +97,7 @@
 	color: var(--color-primary-800);
 }
 
-.prose-x a :is(strong, code) {
+.prose-x :any-link :is(strong, code) {
 	color: inherit;
 }
 
