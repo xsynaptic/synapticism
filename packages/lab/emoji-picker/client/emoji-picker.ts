@@ -199,12 +199,7 @@ class EmojiPicker extends HTMLElement {
 		if (isSearchReady()) return;
 
 		this.#searchFailed = false;
-
-		try {
-			await ensureSearch();
-		} catch {
-			this.#searchFailed = true;
-		}
+		this.#searchFailed = !(await ensureSearch());
 
 		if (!this.#abort) return;
 

@@ -1,7 +1,7 @@
 import type { SupportProbe } from '#emoji-picker/core/support-probes.ts';
 
 import { pickerStore } from '#emoji-picker/client/emoji-picker-store.ts';
-import { highestSupportedVersion } from '#emoji-picker/client/support-probe.ts';
+import { probeSupportedVersion } from '#emoji-picker/client/search-client.ts';
 import { whenIdle } from '#emoji-picker/client/when-idle.ts';
 
 let supportProbed = false;
@@ -39,11 +39,10 @@ export function probeSupport(root: HTMLElement, cells: Map<string, HTMLButtonEle
 		if (!sample) return;
 
 		supportProbed = true;
-		pickerStore.setState({
-			supportedVersion: highestSupportedVersion(
-				readProbes(root),
-				getComputedStyle(sample).fontFamily,
-			),
-		});
+		void probeSupportedVersion(readProbes(root), getComputedStyle(sample).fontFamily).then(
+			(supportedVersion) => {
+				pickerStore.setState({ supportedVersion });
+			},
+		);
 	});
 }

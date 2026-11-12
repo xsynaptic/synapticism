@@ -25,7 +25,7 @@ function normalizeQuery(query: string) {
 
 export function createEmojiSearch(catalog: SearchCatalog) {
 	const order = new Map(catalog.emoji.map((item, index) => [item.hexcode, index]));
-	const labels = new Map(catalog.emoji.map((item) => [item.hexcode, item.label]));
+	const labels = new Map(catalog.emoji.map((item) => [item.hexcode, normalizeQuery(item.label)]));
 	const lookup = buildLookup(catalog);
 	const index = new MiniSearch<SearchEmoji>({
 		fields: ['label', 'keywords', 'shortcodes', 'community'],

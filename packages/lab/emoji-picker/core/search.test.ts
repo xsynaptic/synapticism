@@ -26,6 +26,14 @@ describe('emoji search', () => {
 		expect(labelsFor(query)[0]).toBe(label);
 	});
 
+	it('puts every emoji first when its whole label is the query, capitals included', () => {
+		const misranked = catalog.emoji
+			.filter((item) => search(item.label)[0] !== item.hexcode)
+			.map((item) => item.label);
+
+		expect(misranked).toEqual([]);
+	});
+
 	it.each([
 		[':+1:', 'thumbs up'],
 		[':thumbsup:', 'thumbs up'],

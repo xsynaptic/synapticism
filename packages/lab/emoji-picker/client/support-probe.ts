@@ -4,11 +4,9 @@ const canvasSize = 32;
 
 // From emoji-picker-element (Apache-2.0): colour glyphs ignore fillStyle; broken sequences draw too wide
 function createGlyphTest(fontFamily: string) {
-	const canvas = document.createElement('canvas');
+	if (typeof OffscreenCanvas === 'undefined') return;
 
-	canvas.width = canvasSize;
-	canvas.height = canvasSize;
-
+	const canvas = new OffscreenCanvas(canvasSize, canvasSize);
 	const context = canvas.getContext('2d', { willReadFrequently: true });
 
 	if (!context) return;

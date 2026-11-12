@@ -1,5 +1,6 @@
 import type { SearchRequest, SearchResponse } from '#emoji-picker/client/search-worker.ts';
 import type { SearchEmoji } from '#emoji-picker/core/catalog-types.ts';
+import type { SupportProbe } from '#emoji-picker/core/support-probes.ts';
 
 type Answer = Extract<SearchResponse, { id: number }>;
 
@@ -8,7 +9,7 @@ const pending = new Map<number, (answer: Answer | undefined) => void>();
 const entryCache = new Map<string, SearchEmoji | undefined>();
 
 let nextId = 0;
-let ready: Promise<void> | undefined;
+let ready: Promise<boolean> | undefined;
 let isReady = false;
 let worker: undefined | Worker;
 
@@ -27,26 +28,27 @@ function discardWorker() {
 }
 
 // Module state outlives ClientRouter navigation, so the index builds once per page load
+// Settles false rather than rejecting, so the probe can start the worker without awaiting it
 function startWorker() {
 	const created = new Worker(new URL('search-worker.ts', import.meta.url), { type: 'module' });
 
 	worker = created;
 	performance.mark('emoji-picker-search-start');
 
-	return new Promise<void>((resolve, reject) => {
+	return new Promise<boolean>((resolve) => {
 		created.addEventListener('message', (event: MessageEvent<SearchResponse>) => {
 			const response = event.data;
 
 			if (response.kind === 'ready') {
 				isReady = true;
 				performance.measure('emoji-picker-search-ready', 'emoji-picker-search-start');
-				resolve();
+				resolve(true);
 				return;
 			}
 
 			if (response.kind === 'unavailable') {
 				discardWorker();
-				reject(new Error('Search data could not load'));
+				resolve(false);
 				return;
 			}
 
@@ -54,20 +56,27 @@ function startWorker() {
 		});
 		created.addEventListener('error', () => {
 			discardWorker();
-			reject(new Error('The search worker failed'));
+			resolve(false);
 		});
 	});
 }
 
-async function ask(build: (id: number) => SearchRequest) {
-	await ensureSearch();
+async function send(build: (id: number) => SearchRequest) {
+	if (!worker) return;
 
+	const target = worker;
 	const id = (nextId += 1);
 
 	return new Promise<Answer | undefined>((resolve) => {
 		pending.set(id, resolve);
-		worker?.postMessage(build(id));
+		target.postMessage(build(id));
 	});
+}
+
+async function ask(build: (id: number) => SearchRequest) {
+	if (!(await ensureSearch())) return;
+
+	return send(build);
 }
 
 export async function ensureSearch() {
@@ -78,6 +87,15 @@ export async function ensureSearch() {
 
 export function isSearchReady() {
 	return isReady;
+}
+
+// Infinity when the worker dies first, so nothing dims on a guess
+export async function probeSupportedVersion(probes: Array<SupportProbe>, fontFamily: string) {
+	void ensureSearch();
+
+	const answer = await send((id) => ({ fontFamily, id, kind: 'probe', probes }));
+
+	return answer?.kind === 'probe' ? answer.version : Infinity;
 }
 
 export async function searchEmoji(query: string) {
