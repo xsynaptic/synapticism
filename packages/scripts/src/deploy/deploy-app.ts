@@ -3,6 +3,8 @@ import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import { getWranglerEnv } from '#deploy/deploy-config.ts';
+
 // Cloudflare Workers allows 20,000 assets per version and 25 MiB per asset
 // wrangler's own `Read N files` line counts directories too, so it runs ahead of this count
 const fileCountError = 19_500;
@@ -35,7 +37,7 @@ export async function deployApp({ distPath, dryRun, rootPath }: DeployAppOptions
 	await runSubprocess(
 		dryRun ? 'Deploying to Cloudflare Workers (dry run)' : 'Deploying to Cloudflare Workers',
 		['pnpm', 'exec', 'wrangler', 'deploy', ...(dryRun ? ['--dry-run'] : [])],
-		{ cwd: rootPath, onLine: isWranglerSummaryLine },
+		{ cwd: rootPath, env: getWranglerEnv(), onLine: isWranglerSummaryLine },
 	);
 
 	return { assets: files.length };
