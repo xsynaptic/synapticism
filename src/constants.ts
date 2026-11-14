@@ -27,3 +27,7 @@ export const projectImageAspectRatio = { height: 1, width: 2 };
 export const postReadingTimeMinimumMinutes = 3;
 
 export const recentActivityCount = 8;
+
+export const millisecondsPerDay = 86_400_000;
+
+export const buildVersionStorageKey = 'syn-build-version';

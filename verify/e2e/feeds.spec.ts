@@ -39,6 +39,9 @@ test(
 
 test('feed item content has no root-relative links', { tag: '@smoke' }, async ({ request }) => {
 	const response = await request.get(feedPath);
+
+	expect(response.status()).toBe(200);
+
 	const feed = await response.text();
 
 	expect(feed).not.toMatch(/(?:href|src)=(?:"|&quot;)\/(?!\/)/);

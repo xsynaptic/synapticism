@@ -11,6 +11,7 @@ import '#styles/main.css';
 import Analytics from '#components/main/main-analytics.astro';
 import AsideSection from '#components/main/main-aside-section.astro';
 import Bio from '#components/main/main-bio.astro';
+import BuildVersion from '#components/main/main-build-version.astro';
 import Colophon from '#components/main/main-colophon.astro';
 import Meta from '#components/main/main-meta.astro';
 import RecentActivity from '#components/main/main-recent-activity.astro';
@@ -67,18 +68,7 @@ const themeColor = '#23272f';
 			<Analytics umamiDomain={UMAMI_DOMAIN} umamiId={UMAMI_ID} />
 		) : undefined}
 		<ClientRouter />
-		<meta content={import.meta.env.BUILD_VERSION} name="build-version" />
-		<script is:inline>
-			// A session older than the deploy soft-navigates onto hashed chunks Cloudflare no longer serves
-			(() => {
-				const version = document.querySelector('meta[name="build-version"]')?.content;
-				if (!version) return;
-				document.addEventListener('astro:before-swap', (event) => {
-					const next = event.newDocument.querySelector('meta[name="build-version"]')?.content;
-					if (next && next !== version) window.location.assign(event.to.href);
-				});
-			})();
-		</script>
+		<BuildVersion />
 	</head>
 	<body
 		class:list={[

@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 
 import { routes } from '#e2e/constants.ts';
 import { expect, navigateClientSide, test, visit } from '#e2e/test.ts';
+import { getTracked, recordTracking } from '#e2e/tracking.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 const resultTimeout = 10_000;
@@ -89,36 +90,6 @@ test('search still works after client-side navigation', async ({ page, site }) =
 	await expect(toggle).toBeFocused();
 	await expect(toggle).toHaveAttribute('aria-expanded', 'false');
 });
-
-interface TrackedEvent {
-	data: unknown;
-	name: string;
-}
-
-async function recordTracking(page: Page) {
-	await page.addInitScript(() => {
-		const tracked: Array<TrackedEvent> = [];
-
-		Object.assign(window, {
-			tracked,
-			umami: {
-				track: (name: string, data: unknown) => {
-					tracked.push({ data, name });
-				},
-			},
-		});
-	});
-}
-
-function getTracked(page: Page, name: string) {
-	return page.evaluate(
-		(eventName) =>
-			((window as { tracked?: Array<TrackedEvent> }).tracked ?? []).filter(
-				(event) => event.name === eventName,
-			),
-		name,
-	);
-}
 
 async function searchFor(page: Page, query: string) {
 	const searchInput = page.locator('pagefind-input input');
