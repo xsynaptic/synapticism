@@ -19,7 +19,9 @@ const allowedHost = new URL(getBaseUrl()).host;
 const blockedResourcePattern = /static\.cloudflareinsights\.com/;
 
 // Vite logs to the console under dev, and a dependency re-optimization answers 504 once
-const devPatterns = isDev ? [/\[vite\]/, /Outdated Optimize Dep/] : [];
+const devPatterns = isDev
+	? [/\[vite\]/, /Outdated Optimize Dep/, /failed: Page entered Back-Forward Cache/]
+	: [];
 
 export const test = base.extend<{
 	consoleGuard: ConsoleGuard;

@@ -13,11 +13,13 @@ class ProgressLoading extends HTMLElement {
 	connectedCallback() {
 		document.addEventListener('astro:before-preparation', this.#handlePreparation);
 		document.addEventListener('astro:before-swap', this.#handleSwap);
+		window.addEventListener('pagehide', this.#handlePageHide);
 	}
 
 	disconnectedCallback() {
 		document.removeEventListener('astro:before-preparation', this.#handlePreparation);
 		document.removeEventListener('astro:before-swap', this.#handleSwap);
+		window.removeEventListener('pagehide', this.#handlePageHide);
 
 		// Fires mid-swap on browsers without moveBefore; the fade and reset must outlive it or the bar sticks at full
 		this.#clearLoadTimers();
@@ -29,6 +31,17 @@ class ProgressLoading extends HTMLElement {
 		this.#thresholdTimeout = undefined;
 		this.#trickleInterval = undefined;
 	}
+
+	// A navigation handed to the browser never swaps, so the back-forward cache would restore the bar mid-run
+	#handlePageHide = () => {
+		if (!this.#isLoading) return;
+
+		this.#isLoading = false;
+		this.#clearLoadTimers();
+		this.#progress = startProgress;
+		this.#setOpacity(0);
+		this.#setProgress(startProgress);
+	};
 
 	#handlePreparation = () => {
 		// A second navigation before the swap strands the previous run's timers; the trickle would never stop

@@ -27,7 +27,6 @@ function getProjectDate(value: Date | number): ProjectDate {
 	};
 }
 
-// One `<time>` cannot hold a range, so each end is its own part
 export function getProjectDateParts({
 	dateCreated,
 	dateEnded,
