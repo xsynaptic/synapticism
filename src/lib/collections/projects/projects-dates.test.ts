@@ -1,37 +1,41 @@
 import { describe, expect, test } from 'vitest';
 
-import { getProjectDateDisplay } from '#lib/collections/projects/projects-dates.ts';
+import { getProjectDateParts } from '#lib/collections/projects/projects-dates.ts';
 
 const dateCreated = new Date('2026-07-01T00:00:00Z');
 
-describe('getProjectDateDisplay', () => {
+describe('getProjectDateParts', () => {
 	test('dates a one-off by its creation month', () => {
-		expect(getProjectDateDisplay({ dateCreated })).toEqual({
-			attribute: '2026-07',
-			display: 'July 2026',
-		});
+		expect(getProjectDateParts({ dateCreated })).toEqual([
+			{ attribute: '2026-07', display: 'July 2026' },
+		]);
 	});
 
 	test('runs an open start to the present', () => {
-		expect(getProjectDateDisplay({ dateCreated, dateStarted: 2012 }).display).toBe('2012–present');
-		expect(getProjectDateDisplay({ dateCreated, dateStarted: dateCreated }).display).toBe(
-			'July 2026–present',
-		);
+		expect(getProjectDateParts({ dateCreated, dateStarted: 2012 })).toEqual([
+			{ attribute: '2012', display: '2012' },
+			{ display: 'present' },
+		]);
+		expect(getProjectDateParts({ dateCreated, dateStarted: dateCreated })).toEqual([
+			{ attribute: '2026-07', display: 'July 2026' },
+			{ display: 'present' },
+		]);
 	});
 
 	test('shows a closed range of years', () => {
-		expect(getProjectDateDisplay({ dateCreated, dateEnded: 2026, dateStarted: 2024 })).toEqual({
-			display: '2024–2026',
-		});
+		expect(getProjectDateParts({ dateCreated, dateEnded: 2026, dateStarted: 2024 })).toEqual([
+			{ attribute: '2024', display: '2024' },
+			{ attribute: '2026', display: '2026' },
+		]);
 	});
 
 	test('collapses ends that display the same', () => {
 		expect(
-			getProjectDateDisplay({
+			getProjectDateParts({
 				dateCreated,
 				dateEnded: new Date('2026-07-28T00:00:00Z'),
 				dateStarted: new Date('2026-07-03T00:00:00Z'),
 			}),
-		).toEqual({ attribute: '2026-07', display: 'July 2026' });
+		).toEqual([{ attribute: '2026-07', display: 'July 2026' }]);
 	});
 });

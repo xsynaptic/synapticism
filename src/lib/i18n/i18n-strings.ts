@@ -84,7 +84,7 @@ const strings = {
 	'posts.description':
 		'A technical notebook on web development, AI, and internet culture, from quick notes and annotated links to longer pieces.',
 	'posts.title': 'Posts',
-	'projects.dateRange': '{start}–{end}',
+	'projects.dateRangeSeparator': '–',
 	'projects.description':
 		'Websites, command-line tools, and open source packages, mostly built with Astro, React, and TypeScript.',
 	'projects.homepage': 'Homepage',
