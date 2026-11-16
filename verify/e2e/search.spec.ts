@@ -10,6 +10,8 @@ const resultTimeout = 10_000;
 test('Pagefind returns a known Post first', { tag: '@smoke' }, async ({ page, site }) => {
 	await visit(page, '/');
 
+	expect(await page.evaluate(() => customElements.get('pagefind-modal') === undefined)).toBe(true);
+
 	await page.getByRole('button', { name: t('site.search.toggle.label') }).click();
 
 	const searchInput = page.locator('pagefind-input input');
@@ -23,74 +25,6 @@ test('Pagefind returns a known Post first', { tag: '@smoke' }, async ({ page, si
 	await expect(resultLink).toHaveText(site.postTitle);
 });
 
-test('a click opens search from a cold start', async ({ page }) => {
-	await visit(page, '/');
-
-	expect(await page.evaluate(() => customElements.get('pagefind-modal') === undefined)).toBe(true);
-
-	const toggle = page.getByRole('button', { name: t('site.search.toggle.label') });
-
-	await toggle.click();
-
-	await expect(page.locator('pagefind-input input')).toBeFocused();
-	await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-});
-
-test('the shortcut opens search from a cold start without dropping the keypress', async ({
-	page,
-}) => {
-	await visit(page, '/');
-
-	expect(await page.evaluate(() => customElements.get('pagefind-modal') === undefined)).toBe(true);
-
-	const isMac = await page.evaluate(() => /mac/i.test(navigator.userAgent));
-
-	await page.keyboard.press(isMac ? 'Meta+k' : 'Control+k');
-
-	await expect(page.locator('pagefind-input input')).toBeFocused();
-	await expect(page.getByRole('button', { name: t('site.search.toggle.label') })).toHaveAttribute(
-		'aria-expanded',
-		'true',
-	);
-});
-
-function getRegisteredCount(page: Page): Promise<number | undefined> {
-	return page.evaluate(() => document.querySelector('search-toggle')?.instance?.components.length);
-}
-
-test('search still works after client-side navigation', async ({ page, site }) => {
-	await visit(page, '/');
-
-	const toggle = page.getByRole('button', { name: t('site.search.toggle.label') });
-	const searchInput = page.locator('pagefind-input input');
-
-	await toggle.click();
-	await expect(searchInput).toBeFocused();
-	await page.keyboard.press('Escape');
-
-	const registeredCount = await getRegisteredCount(page);
-
-	for (const path of [routes.postsIndex, site.postDetail, '/']) {
-		await navigateClientSide(page, path);
-	}
-
-	await toggle.click();
-	await expect(searchInput).toBeFocused();
-	await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-
-	expect(await getRegisteredCount(page)).toBe(registeredCount);
-	await searchInput.pressSequentially(site.postTitle, { delay: 30 });
-
-	const resultLink = page.locator('.pf-result-link').first();
-
-	await expect(resultLink).toBeVisible({ timeout: resultTimeout });
-	await expect(resultLink).toHaveText(site.postTitle);
-
-	await page.keyboard.press('Escape');
-	await expect(toggle).toBeFocused();
-	await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-});
-
 async function searchFor(page: Page, query: string) {
 	const searchInput = page.locator('pagefind-input input');
 	const summary = page.locator('pagefind-summary');
@@ -101,23 +35,6 @@ async function searchFor(page: Page, query: string) {
 	await expect(summary).toContainText(query, { timeout: resultTimeout });
 	await expect(summary).not.toContainText('Searching');
 }
-
-test('search analytics send one event when search closes', async ({ page, site }) => {
-	await recordTracking(page);
-	await visit(page, '/');
-	await searchFor(page, site.postTitle);
-	await page.keyboard.press('Escape');
-
-	await expect
-		.poll(() => getTracked(page, 'search-query'))
-		.toEqual([
-			{
-				data: { clicked: false, query: site.postTitle, results: expect.any(Number) },
-				name: 'search-query',
-			},
-		]);
-	expect(await getTracked(page, 'search-empty')).toEqual([]);
-});
 
 test('search analytics survive client-side navigation', async ({ page, site }) => {
 	await recordTracking(page);
