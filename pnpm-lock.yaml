@@ -246,8 +246,8 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(sharp@0.35.5(@types/node@26.6.6))
       '@xsynaptic/astro-pagefind':
-        specifier: ^0.2.0
-        version: 0.2.0(@pagefind/component-ui@1.6.0)(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(pagefind@1.6.0)
+        specifier: ^0.2.1
+        version: 0.2.1(@pagefind/component-ui@1.6.0)(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(pagefind@1.6.0)
       '@xsynaptic/astro-sitemap-lastmod':
         specifier: ^0.3.1
         version: 0.3.1(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -2838,8 +2838,8 @@ packages:
       astro: ^7.4.2
       sharp: ^0.35
 
-  '@xsynaptic/astro-pagefind@0.2.0':
-    resolution: {integrity: sha512-zjWX5OQk4ulTyrrTdsdOJJVyjgs6Gx7bB2x/0hnKUB146ccPrU2NjLgrkrgHzf+va6WaxlA/Qi6GR4Przhx+uA==}
+  '@xsynaptic/astro-pagefind@0.2.1':
+    resolution: {integrity: sha512-Pu8Fz6O9iuJGyDDFeja650U6u646Fn0Ne4vy/XHkidr8wRMQtOyvBMte2umvxjlKgYmergq+X7IWnU4MMC/I/A==}
     engines: {node: '>=24.0.0'}
     peerDependencies:
       '@pagefind/component-ui': ^1.6.0
@@ -8702,7 +8702,7 @@ snapshots:
       sharp: 0.35.5(@types/node@26.6.6)
       zod: 4.6.7
 
-  '@xsynaptic/astro-pagefind@0.2.0(@pagefind/component-ui@1.6.0)(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(pagefind@1.6.0)':
+  '@xsynaptic/astro-pagefind@0.2.1(@pagefind/component-ui@1.6.0)(astro@7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))(pagefind@1.6.0)':
     dependencies:
       astro: 7.4.12(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1)
       pagefind: 1.6.0

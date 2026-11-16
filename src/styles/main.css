@@ -12,7 +12,6 @@
 @import './main/parts/utilities.css';
 @import './main/parts/root.css';
 @import './main/parts/base.css' layer(base);
-@import '@xsynaptic/astro-pagefind/search-toggle.css' layer(components);
 @import './main/components/anchor.css' layer(components);
 @import './main/components/carousel.css' layer(components);
 @import './main/components/chip.css' layer(components);
