@@ -62,7 +62,7 @@ async function publish({ cards, directory }: PreparedCardRender, distPath: strin
 
 	await mkdir(publishPath, { recursive: true });
 
-	for (const name of cards) {
+	for (const { name } of cards) {
 		await copyFile(path.join(directory, name), path.join(publishPath, name));
 	}
 
