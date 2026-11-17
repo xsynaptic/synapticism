@@ -83,22 +83,22 @@ const probes = JSON.stringify(supportProbes(catalog));
 		<section
 			aria-labelledby="emoji-picker-recents-title"
 			class="ep-recents"
-			hidden={true}
+			hidden
 			id="emoji-picker-recents"
 		>
 			<h2 id="emoji-picker-recents-title">Recently used</h2>
 			<div class="ep-cells" />
 			<p class="ep-recents-empty">Emoji you copy land here.</p>
 		</section>
-		<section aria-labelledby="emoji-picker-results-title" class="ep-results" hidden={true}>
+		<section aria-labelledby="emoji-picker-results-title" class="ep-results" hidden>
 			<h2 class="sr-only" id="emoji-picker-results-title">
 				Search results
 			</h2>
 			<div class="ep-cells" />
-			<p class="ep-results-empty" hidden={true}>
+			<p class="ep-results-empty" hidden>
 				No emoji match. Try a broader word, or a shortcode such as <code>:smile:</code>.
 			</p>
-			<p class="ep-results-failed" hidden={true}>
+			<p class="ep-results-failed" hidden>
 				Search could not load. Reload the page to try again.
 			</p>
 		</section>
@@ -134,10 +134,10 @@ const probes = JSON.stringify(supportProbes(catalog));
 			<p class="ep-detail-name">Pick an emoji to copy it</p>
 			<div class="ep-detail-meta">
 				<span class="ep-detail-code" />
-				<span class="ep-detail-hint" hidden={true}>
+				<span class="ep-detail-hint" hidden>
 					Hold for skin tones
 				</span>
-				<span class="ep-detail-note" hidden={true}>
+				<span class="ep-detail-note" hidden>
 					May not display on this device
 				</span>
 				<ul aria-label="Shortcodes" class="ep-detail-shortcodes" />

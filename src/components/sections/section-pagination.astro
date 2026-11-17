@@ -31,8 +31,8 @@ const labelKeys = directionLabelKeys[collection];
 
 {previousEntry || nextEntry ? (
 	<LabeledSection
-		data-nosnippet
-		data-pagefind-ignore
+		data-nosnippet={true}
+		data-pagefind-ignore={true}
 		title={formatStringTemplate(t('section.pagination.title'), { label: labelPlural })}
 	>
 		<nav class="flex items-baseline gap-4 text-sm">

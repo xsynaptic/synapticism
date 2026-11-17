@@ -13,7 +13,7 @@ const { entries, title } = Astro.props;
 ---
 
 {entries && entries.length > 0 ? (
-	<LabeledSection data-nosnippet data-pagefind-ignore title={title}>
+	<LabeledSection data-nosnippet={true} data-pagefind-ignore={true} title={title}>
 		<ul class="flex flex-col gap-1 text-sm">
 			{entries.map((entry) => (
 				<li>

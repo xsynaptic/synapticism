@@ -37,15 +37,15 @@ const tagItems = await getTagChipItems(tags);
 ---
 
 <LabeledRow
-	data-nosnippet
-	data-pagefind-ignore
+	data-nosnippet={true}
+	data-pagefind-ignore={true}
 	items={projectItems}
 	title={t('section.projects')}
 />
 <ChipRow
 	chipProps={{ class: MicroformatClassNames.Category, 'data-pagefind-filter': 'tag' }}
 	class="content-column mb-4"
-	data-nosnippet
-	data-pagefind-ignore
+	data-nosnippet={true}
+	data-pagefind-ignore={true}
 	items={tagItems}
 />

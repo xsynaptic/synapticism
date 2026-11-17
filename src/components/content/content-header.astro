@@ -21,5 +21,5 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 			{title}
 		</EntryTitle>
 	</div>
-	{subtitle ? <ContentSubtitle data-pagefind-ignore html={subtitle} /> : undefined}
+	{subtitle ? <ContentSubtitle data-pagefind-ignore={true} html={subtitle} /> : undefined}
 </div>
