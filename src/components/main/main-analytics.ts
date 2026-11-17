@@ -1,12 +1,24 @@
-let isTraversing = false;
+import { recordTraversalPageviews } from '@xsynaptic/analytics/umami';
+import {
+	normalizeSearchQuery,
+	searchToggleSearchEndEventName,
+} from '@xsynaptic/astro-pagefind/search-toggle';
 
-// The tracker learns the URL only from pushState and replaceState, which back and forward never call
-document.addEventListener('astro:before-swap', (event) => {
-	isTraversing = event.navigationType === 'traverse';
-});
+import { sendEvent } from '#lib/analytics/analytics-events.ts';
 
-document.addEventListener('astro:after-swap', () => {
-	if (!isTraversing) return;
+document.addEventListener(
+	searchToggleSearchEndEventName,
+	({ detail: { clicked, query, results } }) => {
+		const reportedQuery = normalizeSearchQuery(query);
 
-	history.replaceState(history.state, '', location.href);
-});
+		if (reportedQuery === undefined) return;
+
+		sendEvent('search-query', { clicked, query: reportedQuery, results });
+
+		if (results > 0) return;
+
+		sendEvent('search-empty', { query: reportedQuery });
+	},
+);
+
+recordTraversalPageviews();

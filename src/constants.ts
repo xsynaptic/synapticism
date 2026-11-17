@@ -29,5 +29,6 @@ export const postReadingTimeMinimumMinutes = 3;
 export const recentActivityCount = 8;
 
 export const millisecondsPerDay = 86_400_000;
+export const millisecondsPerHour = 3_600_000;
 
-export const buildVersionStorageKey = 'syn-build-version';
+export const buildVersionStorageKey = 'syn-build-version-reload';

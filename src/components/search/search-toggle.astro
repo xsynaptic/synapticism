@@ -1,6 +1,7 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
+import { sendEventAttributes } from '#lib/analytics/analytics-events.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 import pagefindCssUrl from '#styles/pagefind-component.css?url';
 
@@ -24,7 +25,7 @@ const { class: className, ...props } = Astro.props;
 		aria-haspopup="dialog"
 		aria-label={t('site.search.toggle.label')}
 		class="text-lg text-white"
-		data-umami-event="search-open"
+		{...sendEventAttributes('search-open')}
 		title={t('site.search.toggle.title')}
 		type="button"
 	>
