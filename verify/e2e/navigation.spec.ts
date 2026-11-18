@@ -13,6 +13,7 @@ test('the current page is the only one marked', async ({ page }) => {
 	await expect(
 		nav.getByRole('link', { exact: true, name: t('collection.projects.plural') }),
 	).not.toHaveAttribute('aria-current');
+	await expect(nav.locator('[aria-current]')).toHaveCount(1);
 });
 
 test(

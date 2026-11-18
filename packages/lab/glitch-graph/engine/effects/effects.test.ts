@@ -56,14 +56,18 @@ describe('sliceDisplacement', () => {
 		Array.from({ length: 16 * 12 }, (_, index) => index),
 	);
 
-	it('rotates whole rows only, and moves some of them', () => {
-		const output = sliceDisplacement(frame, { maxOffset: 8, slices: 6 }, new SFC32([3, 2, 0, 0]));
+	it('rotates whole rows within the max offset, and moves some of them', () => {
+		const maxOffset = 3;
+		const output = sliceDisplacement(frame, { maxOffset, slices: 6 }, new SFC32([3, 2, 0, 0]));
 		const rotations = Array.from({ length: frame.height }, (_, y) =>
 			getRotation(getRow(frame, y), getRow(output, y)),
 		);
 
 		expect(rotations).not.toContain(-1);
 		expect(rotations.some((offset) => offset !== 0)).toBe(true);
+		expect(rotations.every((offset) => Math.min(offset, frame.width - offset) <= maxOffset)).toBe(
+			true,
+		);
 	});
 
 	it('changes nothing with a zero max offset', () => {

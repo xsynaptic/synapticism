@@ -23,6 +23,9 @@ describe('stripMdxComponents', () => {
 		expect(stripMdxComponents('One <Img src="a.jpg" /> two <More />three', ['Img', 'More'])).toBe(
 			'One  two three',
 		);
+		expect(stripMdxComponents('<Img src="a.jpg">caption</Img> after', ['Img'])).toBe(
+			'caption after',
+		);
 	});
 
 	test('leaves a component whose name merely starts with a stripped name', () => {

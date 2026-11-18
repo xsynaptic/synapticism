@@ -32,6 +32,8 @@ pnpm-debug.log*
 .claude/settings*.json
 .claude/worktrees/
 .claude/devlog/
+.claude/test-audit.json
+.claude/test-audit-stryker.json
 .claude/skills/devlog/
 
 # content

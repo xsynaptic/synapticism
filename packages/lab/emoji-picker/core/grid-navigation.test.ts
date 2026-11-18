@@ -166,7 +166,8 @@ describe('moveInGrid over generated grids', () => {
 		'moves up or down exactly one row, counting rows across sections',
 		({ from, grid }) => {
 			const row = rowAcrossSections(grid, from);
-			const lastRow = rowAcrossSections(grid, moveInGrid(grid, from, 'end'));
+			const lastRow =
+				grid.sizes.reduce((total, size) => total + Math.ceil(size / grid.columns), 0) - 1;
 
 			expect(rowAcrossSections(grid, moveInGrid(grid, from, 'down'))).toBe(
 				Math.min(row + 1, lastRow),

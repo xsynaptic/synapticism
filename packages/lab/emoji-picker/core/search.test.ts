@@ -37,6 +37,8 @@ describe('emoji search', () => {
 	it.each([
 		[':+1:', 'thumbs up'],
 		[':thumbsup:', 'thumbs up'],
+		[':-1:', 'thumbs down'],
+		[':heart:', 'red heart'],
 		[':Joy:', 'face with tears of joy'],
 		[':)', 'slightly smiling face'],
 		['<3', 'red heart'],

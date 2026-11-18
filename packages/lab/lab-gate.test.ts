@@ -15,6 +15,8 @@ const processedScriptPattern = /<script(?![^>]*(?:is:inline|define:vars))[^>]*>/
 const clientDirectivePattern = /\sclient:[a-z]+/;
 const stylesheetSideEffectPattern = /^import\s+['"][^'"]+\.css['"]/m;
 const fullImportPattern = /from\s+['"][^'"]+-full\.astro['"]/;
+const fullImportNamePattern = /import\s+(\w+)\s+from\s+['"][^'"]+-full\.astro['"]/;
+const gatedPattern = /<LabGate[\s>][\s\S]*?<\/LabGate>/g;
 
 test.each(components.filter((component) => !component.isFull))(
 	'$file ships no script or island outside a -full component',
@@ -31,6 +33,12 @@ test.each(components)('$file imports no stylesheet for its side effect', ({ sour
 test.each(components.filter((component) => fullImportPattern.test(component.source)))(
 	'$file renders its -full component inside LabGate',
 	({ source }) => {
-		expect(source).toMatch(/<LabGate[\s>]/);
+		const [, fullName = ''] = fullImportNamePattern.exec(source) ?? [];
+		const fullTag = new RegExp(String.raw`<${fullName}[\s/>]`);
+		const gated = source.match(gatedPattern)?.join('') ?? '';
+
+		expect(fullName).not.toBe('');
+		expect(gated).toMatch(fullTag);
+		expect(source.replaceAll(gatedPattern, '')).not.toMatch(fullTag);
 	},
 );

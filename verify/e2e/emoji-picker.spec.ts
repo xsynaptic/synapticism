@@ -11,10 +11,10 @@ function getParts(page: Page) {
 	const picker = page.locator('emoji-picker');
 
 	return {
-		bubble: picker.locator('.ep-bubble'),
+		bubble: picker.getByText('Copied', { exact: true }),
 		picker,
-		recents: picker.locator('.ep-recents .ep-cells > button'),
-		results: picker.locator('.ep-results .ep-cells > button'),
+		recents: picker.getByRole('region', { name: 'Recently used' }).getByRole('button'),
+		results: picker.getByRole('region', { name: 'Search results' }).getByRole('button'),
 		search: picker.getByRole('searchbox', { name: 'Search emoji' }),
 		tones: picker.getByRole('group', { name: 'Skin tones' }),
 	};
@@ -106,7 +106,7 @@ test('the size toggle persists and applies before the element upgrades', async (
 	await visit(page, pickerPath);
 	await large.click();
 
-	await expect(picker).toHaveAttribute('data-size', 'large');
+	await expect(large).toHaveAttribute('aria-pressed', 'true');
 
 	await page.addInitScript(() => {
 		const define = customElements.define.bind(customElements);
@@ -114,7 +114,11 @@ test('the size toggle persists and applies before the element upgrades', async (
 		customElements.define = (name, ...rest) => {
 			if (name === 'emoji-picker') {
 				Object.assign(globalThis, {
-					sizeAtDefine: document.querySelector<HTMLElement>('emoji-picker')?.dataset.size,
+					sizeAtDefine: document
+						.querySelector(
+							'emoji-picker [role="group"][aria-label="Emoji size"] [aria-pressed="true"]',
+						)
+						?.getAttribute('aria-label'),
 				});
 			}
 
@@ -124,9 +128,8 @@ test('the size toggle persists and applies before the element upgrades', async (
 	await page.reload();
 
 	expect(await page.evaluate(() => (globalThis as { sizeAtDefine?: string }).sizeAtDefine)).toBe(
-		'large',
+		'Large emoji',
 	);
-	await expect(picker).toHaveAttribute('data-size', 'large');
 	await expect(large).toHaveAttribute('aria-pressed', 'true');
 });
 

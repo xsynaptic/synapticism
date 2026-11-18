@@ -9,9 +9,11 @@ describe('generateTileSvg', () => {
 		expect(generateTileSvg(input).svg).toBe(generateTileSvg(input).svg);
 	});
 
-	it('gives a different seed a different SVG', () => {
-		expect(generateTileSvg({ seed: 'admiralty' }).svg).not.toBe(
-			generateTileSvg({ seed: 'causeway-bay' }).svg,
+	it('gives a different seed different cells', () => {
+		const flat = { gloss: 0, grain: 0, grainGrout: 0, macroLighting: 0 } as const;
+
+		expect(generateTileSvg({ ...flat, seed: 'admiralty' }).svg).not.toBe(
+			generateTileSvg({ ...flat, seed: 'causeway-bay' }).svg,
 		);
 	});
 });

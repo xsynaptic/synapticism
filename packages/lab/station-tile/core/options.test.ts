@@ -17,6 +17,9 @@ describe('resolveOptions', () => {
 	);
 
 	it('leaves an unstaggered repeat unit square', () => {
+		const { height, width } = resolveOptions({ seamless: true, stagger: 0, unitCells: 5 });
+
 		expect(repeatRows(5, 0)).toBe(5);
+		expect(width).toBe(height);
 	});
 });

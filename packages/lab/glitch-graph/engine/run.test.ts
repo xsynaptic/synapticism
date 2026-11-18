@@ -199,11 +199,13 @@ describe('mergeByMask', () => {
 	});
 
 	it('leaves both branches untouched', () => {
-		const before = [...branchA.data];
+		const beforeA = [...branchA.data];
+		const beforeB = [...branchB.data];
 
 		mergeByMask({ branchA, branchB, mask, params: { blend: 'difference' } });
 
-		expect([...branchA.data]).toEqual(before);
+		expect([...branchA.data]).toEqual(beforeA);
+		expect([...branchB.data]).toEqual(beforeB);
 	});
 });
 

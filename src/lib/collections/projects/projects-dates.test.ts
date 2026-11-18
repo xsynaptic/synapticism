@@ -11,6 +11,12 @@ describe('getProjectDateParts', () => {
 		]);
 	});
 
+	test('dates by the UTC month whatever the machine zone', () => {
+		expect(getProjectDateParts({ dateCreated: new Date('2026-06-30T23:59:59Z') })).toEqual([
+			{ attribute: '2026-06', display: 'June 2026' },
+		]);
+	});
+
 	test('runs an open start to the present', () => {
 		expect(getProjectDateParts({ dateCreated, dateStarted: 2012 })).toEqual([
 			{ attribute: '2012', display: '2012' },

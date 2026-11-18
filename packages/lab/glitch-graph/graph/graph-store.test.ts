@@ -56,15 +56,18 @@ describe('undo and redo', () => {
 		deleteNode('n2');
 
 		const counts: Array<number> = [];
+		const graphs: Array<unknown> = [];
 
 		for (const step of [undo, undo, redo, redo]) {
 			step();
 			counts.push(getNodeCount());
+			graphs.push(useGraphStore.getState().graph);
 			expect(getViolations(useGraphStore.getState().graph)).toEqual([]);
 		}
 
 		expect(counts).toEqual([10, 8, 10, 9]);
-		expect(useGraphStore.getState().history[1]?.graph).toBe(split);
+		expect(graphs[0]).toBe(split);
+		expect(graphs[2]).toBe(split);
 	});
 
 	it('restores the seed and the params a Randomize moved', () => {
@@ -90,8 +93,6 @@ describe('undo and redo', () => {
 			setParam('n2', 'dx', step + 1);
 			commitEdit('Set Shift x');
 		}
-
-		expect(useGraphStore.getState().history).toHaveLength(historyCap);
 
 		for (let step = 1; step <= edits; step++) undo();
 
@@ -132,10 +133,7 @@ describe('undo and redo', () => {
 
 		commitEdit('Set Shift x');
 
-		const { history } = useGraphStore.getState();
-
-		expect(history).toHaveLength(2);
-		expect(history[1]?.label).toBe('Set Shift x');
+		expect(getUndoLabel(useGraphStore.getState())).toBe('Set Shift x');
 		expect(getShiftX('n2')).toBe(50);
 
 		undo();

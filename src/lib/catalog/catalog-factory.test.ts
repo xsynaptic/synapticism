@@ -67,7 +67,8 @@ describe('lookups', () => {
 describe('backlinksOf', () => {
 	const catalog = createCatalog([
 		makeCatalogItem({
-			backlinks: new Set(['linker-post', 'linker-tag']),
+			// eslint-disable-next-line perfectionist/sort-sets -- unsorted on purpose so the test fails when backlinksOf drops its date sort
+			backlinks: new Set(['linker-tag', 'linker-post']),
 			collection: 'posts',
 			id: 'target',
 		}),

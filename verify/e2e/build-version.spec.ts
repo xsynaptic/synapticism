@@ -81,6 +81,10 @@ test('a soft navigation onto a newer build does a full load instead', async ({ p
 	await page.goBack({ waitUntil: 'commit' });
 
 	await expect(page).toHaveURL(routes.postsIndex);
+	expect(loads, 'restored from the back-forward cache').toEqual([
+		routes.postsIndex,
+		site.postDetail,
+	]);
 	await expect(page.locator('progress-loading')).toHaveCSS('opacity', '0');
 });
 
