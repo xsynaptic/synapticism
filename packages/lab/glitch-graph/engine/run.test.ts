@@ -1,6 +1,6 @@
 import type { IntBuffer } from '@thi.ng/pixel';
 
-import { describe, expect, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
 
 import type { Graph, GraphNode } from '#glitch-graph/graph/graph-types.ts';
 
@@ -106,7 +106,7 @@ describe('runToStage', () => {
 	it('renders a Split as the mask over the frame reaching it, not the Source', async () => {
 		const split = preset.nodes.n3;
 
-		if (split?.kind !== 'split') throw new Error('Preset lost its Split');
+		assert(split?.kind === 'split', 'Preset lost its Split');
 
 		const reachingSplit = channelShift(source, getEffectParams(preset, 'n2'));
 		const mask = luminanceMask(reachingSplit, split.params);

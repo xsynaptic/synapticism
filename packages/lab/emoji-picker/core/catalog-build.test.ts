@@ -102,7 +102,7 @@ describe('buildCatalog', () => {
 
 describe('parseOverrides', () => {
 	it('rejects a key other than add or remove', () => {
-		expect(() => parseOverrides('😂:\n  hidden: true\n')).toThrow();
+		expect(() => parseOverrides('😂:\n  hidden: true\n')).toThrow(/hidden/);
 	});
 
 	it('reads an empty file as no overrides', () => {
