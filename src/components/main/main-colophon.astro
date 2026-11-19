@@ -9,7 +9,7 @@ import { formatStringTemplate } from '#lib/utils/text.ts';
 const copyrightYears = getCopyrightYears();
 ---
 
-<div class="flex flex-wrap items-center gap-x-1 text-xs text-primary-300">
+<div class="flex flex-wrap items-center gap-y-2 text-xs text-primary-300 sm:gap-x-1">
 	<DividedItem as="span">
 		{formatStringTemplate(t('footer.copyright'), { years: copyrightYears })}
 	</DividedItem>

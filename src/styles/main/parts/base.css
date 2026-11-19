@@ -1,5 +1,6 @@
 html {
 	scrollbar-gutter: stable;
+	font-synthesis-style: none;
 }
 
 :where(a, button, summary, input, select, textarea, [tabindex]:not([tabindex='-1'])):focus-visible {

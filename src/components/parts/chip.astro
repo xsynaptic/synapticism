@@ -21,5 +21,7 @@ const { class: className, count, edgeColor = 'primary', ...props } = Astro.props
 	{...props}
 >
 	<slot />
-	{count === undefined ? undefined : <span class="chip-count ms-2 border-s ps-2">{count}</span>}
+	{count === undefined ? undefined : (
+		<span class="chip-count ms-2 border-s ps-2 font-medium">{count}</span>
+	)}
 </a>

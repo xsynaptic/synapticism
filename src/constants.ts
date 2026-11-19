@@ -22,7 +22,7 @@ export const postListPageSize = 10;
 
 export const imageColumnWidth = 1600;
 export const imageColumnSizes = '(min-width: 54rem) 54rem, 100vw';
-export const imageAlignedSizes = '18rem';
+export const imageAlignedSizes = '(min-width: 40rem) 18rem, 100vw';
 
 export const listTagLimit = 5;
 

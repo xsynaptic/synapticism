@@ -16,8 +16,8 @@ const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 ---
 
 <div class:list={['content-column mb-2 pb-2', className]}>
-	<div class:list={['pt-4 md:pt-8', { 'site-shell-title': isLeading }]}>
-		<EntryTitle as="h1" data-pagefind-weight="3" href={href} rel="bookmark">
+	<div class:list={['pt-6 md:pt-10', { 'site-shell-title': isLeading }]}>
+		<EntryTitle as="h1" data-pagefind-ignore={true} href={href} rel="bookmark">
 			{title}
 		</EntryTitle>
 	</div>

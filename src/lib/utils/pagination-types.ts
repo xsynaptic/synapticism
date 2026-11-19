@@ -16,7 +16,7 @@ export interface PaginationEntry {
 }
 
 export interface SectionPagination {
-	list: PaginationEntry;
+	href: string;
 	next: SectionPaginationLink | undefined;
 	previous: SectionPaginationLink | undefined;
 	title: string;

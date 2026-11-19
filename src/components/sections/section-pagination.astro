@@ -6,41 +6,36 @@ import LabeledSection from '#components/parts/labeled-section.astro';
 
 type Props = SectionPagination;
 
-const { list, next, previous, title } = Astro.props;
+const { href, next, previous, title } = Astro.props;
 ---
 
 {previous || next ? (
-	<LabeledSection data-nosnippet={true} data-pagefind-ignore={true} title={title}>
-		<nav class="flex items-baseline gap-4 text-sm">
-			<span class="flex min-w-0 flex-1 items-baseline justify-start gap-1">
-				{previous ? (
-					<Fragment>
-						<span aria-hidden="true" class="shrink-0 text-primary-600">
-							&larr;
-						</span>
-						<Anchor accent={true} class="min-w-0 italic" href={previous.url}>
-							<span class="sr-only">{previous.label}</span>
-							{previous.title}
-						</Anchor>
-					</Fragment>
-				) : undefined}
-			</span>
-			<Anchor accent={true} class="shrink-0" href={list.url} underline="hover">
-				{list.title}
-			</Anchor>
-			<span class="flex min-w-0 flex-1 items-baseline justify-end gap-1">
-				{next ? (
-					<Fragment>
-						<Anchor accent={true} class="min-w-0 italic" href={next.url}>
-							<span class="sr-only">{next.label}</span>
-							{next.title}
-						</Anchor>
-						<span aria-hidden="true" class="shrink-0 text-primary-600">
-							&rarr;
-						</span>
-					</Fragment>
-				) : undefined}
-			</span>
+	<LabeledSection data-nosnippet={true} data-pagefind-ignore={true} href={href} title={title}>
+		<nav class="grid gap-4 text-sm sm:grid-cols-2 sm:gap-8">
+			{previous ? (
+				<p>
+					<span aria-hidden="true" class="text-primary-600">
+						&larr;
+					</span>
+					&nbsp;
+					<Anchor accent={true} class="italic" href={previous.url}>
+						<span class="sr-only">{previous.label}</span>
+						{previous.title}
+					</Anchor>
+				</p>
+			) : undefined}
+			{next ? (
+				<p class="sm:col-start-2 sm:text-end">
+					<Anchor accent={true} class="italic" href={next.url}>
+						<span class="sr-only">{next.label}</span>
+						{next.title}
+					</Anchor>
+					&nbsp;
+					<span aria-hidden="true" class="text-primary-600">
+						&rarr;
+					</span>
+				</p>
+			) : undefined}
 		</nav>
 	</LabeledSection>
 ) : undefined}

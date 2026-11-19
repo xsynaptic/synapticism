@@ -92,7 +92,7 @@ const isEmptyWithoutScript = !counter && !previous && !next && !middleContent;
 			<div class="flex items-center gap-6">
 				{previous ? (
 					<span class="flex flex-wrap gap-1">
-						<span class="text-accent-300 select-none">&lsaquo;</span>
+						<span class="text-accent-400 select-none">&lsaquo;</span>
 						<Anchor aria-label={previous.ariaLabel} href={previous.url} underline="hover">
 							{previous.label}
 						</Anchor>
@@ -104,7 +104,7 @@ const isEmptyWithoutScript = !counter && !previous && !next && !middleContent;
 						<Anchor aria-label={next.ariaLabel} href={next.url} underline="hover">
 							{next.label}
 						</Anchor>
-						<span class="text-accent-300 select-none">&rsaquo;</span>
+						<span class="text-accent-400 select-none">&rsaquo;</span>
 					</span>
 				) : undefined}
 			</div>

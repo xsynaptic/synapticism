@@ -109,10 +109,7 @@ export function getCollectionSectionPagination(
 	const labelKeys = directionLabelKeys[collection];
 
 	return {
-		list: {
-			title: formatStringTemplate(t('section.pagination.label.list'), { label: labelPlural }),
-			url: getContentPath(collection),
-		},
+		href: getContentPath(collection),
 		next: getSectionPaginationLink(
 			nextEntry,
 			formatStringTemplate(t(labelKeys.next), { label: labelSingular }),
@@ -144,7 +141,7 @@ export function getArchiveSectionPagination({
 	previousMonth: ArchiveMonth | undefined;
 }): SectionPagination {
 	return {
-		list: { title: String(archiveMonth.year), url: getArchivePath(archiveMonth.year) },
+		href: getArchivePath(archiveMonth.year),
 		next: getSectionPaginationLink(getArchiveMonthEntry(nextMonth), t('archive.pagination.next')),
 		previous: getSectionPaginationLink(
 			getArchiveMonthEntry(previousMonth),

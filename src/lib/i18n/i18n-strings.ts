@@ -58,7 +58,6 @@ const strings = {
 	'pagination.select.total': 'of {total}',
 
 	// Section labels
-	'section.pagination.label.list': 'All {label}',
 	'section.pagination.label.newer': 'Newer {label}: ',
 	'section.pagination.label.next': 'Next {label}: ',
 	'section.pagination.label.older': 'Older {label}: ',
@@ -101,7 +100,7 @@ const strings = {
 	'archive.description.year': 'Posts and projects published in {year}, month by month.',
 	'archive.pagination.next': 'Next month: ',
 	'archive.pagination.previous': 'Previous month: ',
-	'archive.pagination.title': 'More from the archives',
+	'archive.pagination.title': 'More From The Archives',
 	'archive.years': 'Years',
 
 	// 404

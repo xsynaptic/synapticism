@@ -203,18 +203,21 @@
 	font-size: var(--text-xs);
 	line-height: var(--text-xs--line-height);
 	color: var(--color-primary-600);
-	text-align: center;
 }
 
-/* Centered on phones, where a float would squeeze the text into a sliver
-   Always centered in .prose-bleed: grid items cannot float */
+/* Full measure on phones, where a float would squeeze the text into a sliver */
 .prose-x > .content-image[data-align] {
-	width: min(100%, 18rem);
-	margin-inline: auto;
+	max-width: var(--prose-measure);
 }
 
 /* Zero top margin lines the float up with the first line of the text beside it */
 @variant sm {
+	/* Centered in .prose-bleed: grid items cannot float */
+	.prose-x > .content-image[data-align] {
+		width: 18rem;
+		margin-inline: auto;
+	}
+
 	.prose-x:not(.prose-bleed) > .content-image[data-align] {
 		margin-top: 0;
 		margin-bottom: 1em;
