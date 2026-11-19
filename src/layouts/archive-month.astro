@@ -1,0 +1,49 @@
+---
+import type { Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+
+import type { ArchiveMonth } from '#lib/archives/archives-utils.ts';
+
+import ContentListView from '#components/content/content-list-view.astro';
+import EntryExcerptList from '#components/content/entry-excerpt-list.astro';
+import SectionPagination from '#components/sections/section-pagination.astro';
+import { getArchiveMonthTitle } from '#lib/archives/archives-utils.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getArchiveSectionPagination, getPagePagination } from '#lib/utils/pagination.ts';
+import { getArchiveOpenGraphCard } from '#lib/utils/seo.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
+
+interface Props {
+	archiveMonth: ArchiveMonth;
+	nextMonth: ArchiveMonth | undefined;
+	page: Page<CollectionEntry<'posts' | 'projects'>>;
+	previousMonth: ArchiveMonth | undefined;
+}
+
+const { archiveMonth, nextMonth, page, previousMonth } = Astro.props;
+
+const title = getArchiveMonthTitle(archiveMonth);
+const description = formatStringTemplate(t('archive.description.month'), { month: title });
+---
+
+<ContentListView
+	description={description}
+	openGraphCard={getArchiveOpenGraphCard({
+		description,
+		month: archiveMonth.month,
+		title,
+		year: archiveMonth.year,
+	})}
+	title={title}
+>
+	<EntryExcerptList
+		entries={page.data}
+		isCollectionShown={true}
+		pagination={getPagePagination(page)}
+	/>
+	<div class="mt-auto pt-8">
+		<SectionPagination
+			{...getArchiveSectionPagination({ archiveMonth, nextMonth, previousMonth })}
+		/>
+	</div>
+</ContentListView>

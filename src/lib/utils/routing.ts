@@ -1,5 +1,7 @@
 import type { CollectionKey } from 'astro:content';
 
+import { getArchiveMonthParam } from '#lib/archives/archives-utils.ts';
+
 const { BASE_URL, SITE } = import.meta.env;
 
 // Join URL path segments, collapsing the double slashes the join introduces; the scheme's `//` is spared
@@ -16,6 +18,11 @@ export const getSitePath = (...routeParts: Array<string>): string =>
 
 export const getHomePaginationPath = (pageNumber: number): string =>
 	pageNumber === 1 ? getSitePath() : getSitePath('page', String(pageNumber));
+
+export const getArchivePath = (year: number, month?: number): string =>
+	month === undefined
+		? getSitePath(String(year))
+		: getSitePath(String(year), getArchiveMonthParam(month));
 
 export const getAbsoluteUrl = (path: string): string => new URL(path, SITE).href;
 

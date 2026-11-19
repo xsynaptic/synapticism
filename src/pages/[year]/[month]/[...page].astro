@@ -1,0 +1,24 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+
+import { postListPageSize } from '#constants.ts';
+import ArchiveMonthLayout from '#layouts/archive-month.astro';
+import { getArchive } from '#lib/archives/archives-data.ts';
+import { getAdjacentArchiveMonths, getArchiveMonthParam } from '#lib/archives/archives-utils.ts';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const archive = await getArchive();
+
+	return getAdjacentArchiveMonths(archive).flatMap(({ archiveMonth, nextMonth, previousMonth }) =>
+		paginate(archiveMonth.entries, {
+			pageSize: postListPageSize,
+			params: { month: getArchiveMonthParam(archiveMonth.month), year: String(archiveMonth.year) },
+			props: { archiveMonth, nextMonth, previousMonth },
+		}),
+	);
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+---
+
+<ArchiveMonthLayout {...Astro.props} />

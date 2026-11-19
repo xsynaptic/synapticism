@@ -18,6 +18,8 @@ The language of the site itself: what an author writes, how it is grouped, and h
 
 **Tag**: A subject grouping that cuts across collections. Tags are flat and do not nest, and each is an Entry in its own right with a title and description. _Avoid_: topic, category, theme, keyword.
 
+**Archive**: Posts and Projects browsed by posting date. A Year Archive lists a year's Entries by month; a Month Archive lists one month's Excerpts. UI copy names the set in the plural, Archives. _Avoid_: date index, history, timeline, calendar.
+
 **Catalog**: The unified, cross-collection view of every Entry reduced to a common shape, used for listing, counting, sorting, and resolving references. _Avoid_: index, registry, manifest.
 
 **Excerpt**: The opening portion of a Post or Project, ending where the author places the fold, shown in a list in place of the whole Entry. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).

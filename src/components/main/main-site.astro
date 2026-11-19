@@ -21,10 +21,13 @@ import Sprites from '#components/main/main-sprites.astro';
 import TopButton from '#components/main/main-top-button.astro';
 import NavigationFooter from '#components/navigation/navigation-footer.astro';
 import NavigationHeader from '#components/navigation/navigation-header.astro';
+import LinkRow from '#components/parts/link-row.astro';
 import ProgressLoading from '#components/progress/progress-loading.astro';
 import ProgressReading from '#components/progress/progress-reading.astro';
 import SearchModal from '#components/search/search-modal.astro';
+import { getArchive } from '#lib/archives/archives-data.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
+import { getArchivePath } from '#lib/utils/routing.ts';
 import { serializeGraph } from '#lib/utils/structured-data.ts';
 
 interface Props {
@@ -46,6 +49,13 @@ const {
 const isSidebar = template === 'sidebar';
 
 const columnClass = isSidebar ? 'sidebar-column' : 'content-column';
+
+const archive = await getArchive();
+
+const archiveYearItems = archive.map(({ year }) => ({
+	title: String(year),
+	url: getArchivePath(year),
+}));
 
 // Tracks --color-primary-800, the band behind the header
 const themeColor = '#23272f';
@@ -143,10 +153,15 @@ const themeColor = '#23272f';
 					<AsideSection title={t('aside.recentActivity')}>
 						<RecentActivity />
 					</AsideSection>
-					<AsideSection title={t('aside.about')}>
-						<Bio />
-						<NavigationFooter />
-					</AsideSection>
+					<div class="flex flex-col gap-8">
+						<AsideSection title={t('aside.about')}>
+							<Bio />
+							<NavigationFooter />
+						</AsideSection>
+						<AsideSection title={t('aside.archives')}>
+							<LinkRow items={archiveYearItems} />
+						</AsideSection>
+					</div>
 				</div>
 			</aside>
 			<footer

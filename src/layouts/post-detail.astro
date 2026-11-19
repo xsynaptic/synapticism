@@ -9,6 +9,7 @@ import ContentEntryDetail from '#components/content/content-entry-detail.astro';
 import ContentSectionReferences from '#components/content/content-section-references.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
 import { getPostMinutesRead } from '#lib/collections/posts/posts-utils.ts';
+import { getCollectionSectionPagination } from '#lib/utils/pagination.ts';
 
 interface Props {
 	entry: CollectionEntry<'posts'>;
@@ -36,9 +37,7 @@ const minutesRead = getPostMinutesRead(remarkPluginFrontmatter);
 		tags={entry.data.tags}
 	/>
 	<SectionPagination
-		collection="posts"
-		nextEntry={nextEntry}
-		previousEntry={previousEntry}
+		{...getCollectionSectionPagination('posts', { nextEntry, previousEntry })}
 		slot="after-article"
 	/>
 </ContentEntryDetail>

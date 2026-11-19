@@ -15,6 +15,17 @@ export interface PaginationEntry {
 	url: string;
 }
 
+export interface SectionPagination {
+	list: PaginationEntry;
+	next: SectionPaginationLink | undefined;
+	previous: SectionPaginationLink | undefined;
+	title: string;
+}
+
+interface SectionPaginationLink extends PaginationEntry {
+	label: string;
+}
+
 interface PaginationLink {
 	ariaLabel?: string;
 	label: string;

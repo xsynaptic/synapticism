@@ -11,6 +11,7 @@ import ContentSectionReferences from '#components/content/content-section-refere
 import SectionEntryList from '#components/sections/section-entry-list.astro';
 import SectionPagination from '#components/sections/section-pagination.astro';
 import { t } from '#lib/i18n/i18n-strings.ts';
+import { getCollectionSectionPagination } from '#lib/utils/pagination.ts';
 
 interface Props {
 	entry: CollectionEntry<'projects'>;
@@ -34,6 +35,8 @@ const { Content } = await render(entry);
 	<ContentSectionReferences slot="after-body" tags={entry.data.tags} />
 	<Fragment slot="after-article">
 		<SectionEntryList entries={relatedContent} title={t('section.relatedWriting')} />
-		<SectionPagination collection="projects" nextEntry={nextEntry} previousEntry={previousEntry} />
+		<SectionPagination
+			{...getCollectionSectionPagination('projects', { nextEntry, previousEntry })}
+		/>
 	</Fragment>
 </ContentEntryDetail>

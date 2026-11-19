@@ -1,10 +1,16 @@
 import type { Page } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 
-import type { Pagination, PaginationEntry } from '#lib/utils/pagination-types.ts';
+import type { ArchiveMonth } from '#lib/archives/archives-utils.ts';
+import type {
+	Pagination,
+	PaginationEntry,
+	SectionPagination,
+} from '#lib/utils/pagination-types.ts';
 
+import { getArchiveMonthTitle } from '#lib/archives/archives-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { getContentPath, joinUrl } from '#lib/utils/routing.ts';
+import { getArchivePath, getContentPath, joinUrl } from '#lib/utils/routing.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface PaginationOptions {
@@ -75,6 +81,77 @@ function getPaginationEntry(
 	if (!entry) return undefined;
 
 	return { title: entry.data.title, url: getContentPath(entry.collection, entry.id) };
+}
+
+const directionLabelKeys = {
+	posts: { next: 'section.pagination.label.older', previous: 'section.pagination.label.newer' },
+	projects: {
+		next: 'section.pagination.label.next',
+		previous: 'section.pagination.label.previous',
+	},
+} as const;
+
+function getSectionPaginationLink(entry: PaginationEntry | undefined, label: string) {
+	if (!entry) return;
+
+	return { ...entry, label };
+}
+
+export function getCollectionSectionPagination(
+	collection: 'posts' | 'projects',
+	{
+		nextEntry,
+		previousEntry,
+	}: { nextEntry: PaginationEntry | undefined; previousEntry: PaginationEntry | undefined },
+): SectionPagination {
+	const labelPlural = t(`collection.${collection}.plural`);
+	const labelSingular = t(`collection.${collection}.singular`);
+	const labelKeys = directionLabelKeys[collection];
+
+	return {
+		list: {
+			title: formatStringTemplate(t('section.pagination.label.list'), { label: labelPlural }),
+			url: getContentPath(collection),
+		},
+		next: getSectionPaginationLink(
+			nextEntry,
+			formatStringTemplate(t(labelKeys.next), { label: labelSingular }),
+		),
+		previous: getSectionPaginationLink(
+			previousEntry,
+			formatStringTemplate(t(labelKeys.previous), { label: labelSingular }),
+		),
+		title: formatStringTemplate(t('section.pagination.title'), { label: labelPlural }),
+	};
+}
+
+function getArchiveMonthEntry(archiveMonth: ArchiveMonth | undefined): PaginationEntry | undefined {
+	if (!archiveMonth) return undefined;
+
+	return {
+		title: getArchiveMonthTitle(archiveMonth),
+		url: getArchivePath(archiveMonth.year, archiveMonth.month),
+	};
+}
+
+export function getArchiveSectionPagination({
+	archiveMonth,
+	nextMonth,
+	previousMonth,
+}: {
+	archiveMonth: ArchiveMonth;
+	nextMonth: ArchiveMonth | undefined;
+	previousMonth: ArchiveMonth | undefined;
+}): SectionPagination {
+	return {
+		list: { title: String(archiveMonth.year), url: getArchivePath(archiveMonth.year) },
+		next: getSectionPaginationLink(getArchiveMonthEntry(nextMonth), t('archive.pagination.next')),
+		previous: getSectionPaginationLink(
+			getArchiveMonthEntry(previousMonth),
+			t('archive.pagination.previous'),
+		),
+		title: t('archive.pagination.title'),
+	};
 }
 
 export function getAdjacentPaginationEntries(

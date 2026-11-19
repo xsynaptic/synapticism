@@ -1,0 +1,21 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+
+import ArchiveYearLayout from '#layouts/archive-year.astro';
+import { getArchive } from '#lib/archives/archives-data.ts';
+
+export const getStaticPaths = (async () => {
+	const archive = await getArchive();
+
+	const years = archive.map(({ year }) => year);
+
+	return archive.map((archiveYear) => ({
+		params: { year: String(archiveYear.year) },
+		props: { archiveYear, years },
+	}));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+---
+
+<ArchiveYearLayout {...Astro.props} />

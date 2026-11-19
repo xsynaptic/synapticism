@@ -2,7 +2,8 @@
 import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
 import ChipRow from '#components/parts/chip-row.astro';
-import LabeledRow from '#components/parts/labeled-row.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
+import LinkRow from '#components/parts/link-row.astro';
 import { MicroformatClassNames } from '#components/types.ts';
 import { createProjectsByIdsFunction } from '#lib/collections/projects/projects-utils.ts';
 import { getTagChipItems } from '#lib/collections/tags/tags-utils.ts';
@@ -36,12 +37,11 @@ const projectItems = projects
 const tagItems = await getTagChipItems(tags);
 ---
 
-<LabeledRow
-	data-nosnippet={true}
-	data-pagefind-ignore={true}
-	items={projectItems}
-	title={t('section.projects')}
-/>
+{projectItems.length > 0 ? (
+	<LabeledSection data-nosnippet={true} data-pagefind-ignore={true} title={t('section.projects')}>
+		<LinkRow items={projectItems} />
+	</LabeledSection>
+) : undefined}
 <ChipRow
 	chipProps={{ class: MicroformatClassNames.Category, 'data-pagefind-filter': 'tag' }}
 	class="content-column mb-4"

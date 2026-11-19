@@ -1,0 +1,32 @@
+---
+import Anchor from '#components/parts/anchor.astro';
+import DividedItem from '#components/parts/divided-item.astro';
+import ListRow from '#components/parts/list-row.astro';
+
+interface Props {
+	items: Array<LinkRowItem>;
+}
+
+interface LinkRowItem {
+	isCurrent?: boolean | undefined;
+	title: string;
+	url: string;
+}
+
+const { items } = Astro.props;
+---
+
+<ListRow>
+	{items.map((item) => (
+		<DividedItem as="li" class="divided-thin font-mono text-sm">
+			<Anchor
+				accent={true}
+				aria-current={item.isCurrent ? 'page' : undefined}
+				class:list={{ 'font-semibold': item.isCurrent }}
+				href={item.url}
+			>
+				{item.title}
+			</Anchor>
+		</DividedItem>
+	))}
+</ListRow>

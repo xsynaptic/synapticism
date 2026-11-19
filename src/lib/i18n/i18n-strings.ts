@@ -96,6 +96,14 @@ const strings = {
 	'tags.empty': 'No tags yet.',
 	'tags.title': 'Tags',
 
+	// Archives
+	'archive.description.month': 'Posts and projects published in {month}.',
+	'archive.description.year': 'Posts and projects published in {year}, month by month.',
+	'archive.pagination.next': 'Next month: ',
+	'archive.pagination.previous': 'Previous month: ',
+	'archive.pagination.title': 'More from the archives',
+	'archive.years': 'Years',
+
 	// 404
 	'notFound.body':
 		'The page you were looking for could not be found. It may have been moved or deleted.',
@@ -106,6 +114,7 @@ const strings = {
 
 	// Sidebar
 	'aside.about': 'About',
+	'aside.archives': 'Archives',
 	'aside.recentActivity': 'Recent activity',
 
 	// Footer colophon

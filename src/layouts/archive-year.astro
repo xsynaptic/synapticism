@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+import type { ArchiveYear } from '#lib/archives/archives-utils.ts';
+
+import ContentListView from '#components/content/content-list-view.astro';
+import LabeledSection from '#components/parts/labeled-section.astro';
+import LinkRow from '#components/parts/link-row.astro';
+import SectionEntryList from '#components/sections/section-entry-list.astro';
+import { getArchiveMonthName } from '#lib/archives/archives-utils.ts';
+import { getCatalog } from '#lib/catalog/catalog-data.ts';
+import { t } from '#lib/i18n/i18n-strings.ts';
+import { getArchivePath } from '#lib/utils/routing.ts';
+import { getArchiveOpenGraphCard } from '#lib/utils/seo.ts';
+import { formatStringTemplate } from '#lib/utils/text.ts';
+
+interface Props {
+	archiveYear: ArchiveYear<CollectionEntry<'posts' | 'projects'>>;
+	years: Array<number>;
+}
+
+const { archiveYear, years } = Astro.props;
+
+const catalog = await getCatalog();
+
+const title = String(archiveYear.year);
+const description = formatStringTemplate(t('archive.description.year'), { year: title });
+
+const yearItems = years.map((year) => ({
+	isCurrent: year === archiveYear.year,
+	title: String(year),
+	url: getArchivePath(year),
+}));
+---
+
+<ContentListView
+	description={description}
+	openGraphCard={getArchiveOpenGraphCard({ description, title, year: archiveYear.year })}
+	title={title}
+>
+	<div class="flex flex-col gap-6">
+		<LabeledSection title={t('archive.years')}>
+			<LinkRow items={yearItems} />
+		</LabeledSection>
+		{archiveYear.months.map((archiveMonth) => (
+			<SectionEntryList
+				entries={catalog.resolve(archiveMonth.entries)}
+				href={getArchivePath(archiveMonth.year, archiveMonth.month)}
+				title={getArchiveMonthName(archiveMonth.month)}
+			/>
+		))}
+	</div>
+</ContentListView>

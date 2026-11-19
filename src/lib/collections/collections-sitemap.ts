@@ -7,7 +7,8 @@ import {
 	createSitemapLastmodWriter,
 } from '@xsynaptic/astro-sitemap-lastmod/write';
 
-import { getContentPath, getSitePath } from '#lib/utils/routing.ts';
+import { getArchiveDateParts } from '#lib/archives/archives-utils.ts';
+import { getArchivePath, getContentPath, getSitePath } from '#lib/utils/routing.ts';
 
 const sitemapLastmodWriter = createSitemapLastmodWriter({ filePath: sitemapLastmodPath });
 
@@ -21,6 +22,13 @@ const listingPaths = {
 	tags: [getContentPath('tags')],
 } as const satisfies Record<CollectionKey, ReadonlyArray<string>>;
 
+function getArchivePaths(collection: CollectionKey, dateCreated: unknown): Array<string> {
+	if (collection !== 'posts' && collection !== 'projects') return [];
+	if (!(dateCreated instanceof Date)) return [];
+
+	return [getArchivePath(getArchiveDateParts(dateCreated).year)];
+}
+
 export function withSitemapLastmod(collection: CollectionKey, loader: Loader): Loader {
 	return sitemapLastmodWriter.wrap(loader, async (entries) => {
 		const dates = await readCommitDates(entries);
@@ -28,9 +36,11 @@ export function withSitemapLastmod(collection: CollectionKey, loader: Loader): L
 		return entries.flatMap((entry) => {
 			const date = dates.get(entry.filePath ?? '');
 
-			return [getContentPath(collection, entry.id), ...listingPaths[collection]].map(
-				(pathname) => [pathname, date] as const,
-			);
+			return [
+				getContentPath(collection, entry.id),
+				...listingPaths[collection],
+				...getArchivePaths(collection, entry.data.dateCreated),
+			].map((pathname) => [pathname, date] as const);
 		});
 	});
 }

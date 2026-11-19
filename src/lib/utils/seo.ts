@@ -8,6 +8,7 @@ import {
 	openGraphIndexIds,
 } from '@synapticism/shared/open-graph';
 
+import { getArchiveMonthParam } from '#lib/archives/archives-utils.ts';
 import { parseContentDate } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getAbsoluteUrl } from '#lib/utils/routing.ts';
@@ -49,6 +50,23 @@ export function getIndexOpenGraphCard(
 	{ description, title }: { description: string; title: string },
 ): PageOpenGraphCard {
 	return { id: openGraphIndexIds[index], input: { description, title } };
+}
+
+export function getArchiveOpenGraphCard({
+	description,
+	month,
+	title,
+	year,
+}: {
+	description: string;
+	month?: number;
+	title: string;
+	year: number;
+}): PageOpenGraphCard {
+	const archiveId =
+		month === undefined ? String(year) : `${String(year)}-${getArchiveMonthParam(month)}`;
+
+	return { id: getOpenGraphId('archive', archiveId), input: { description, title } };
 }
 
 export function getOpenGraphImageUrl(card: PageOpenGraphCard): string {

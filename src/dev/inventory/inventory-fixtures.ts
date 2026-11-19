@@ -6,7 +6,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import type ContentCard from '#components/content/content-card.astro';
 import type ChipRow from '#components/parts/chip-row.astro';
-import type LabeledRow from '#components/parts/labeled-row.astro';
+import type LinkRow from '#components/parts/link-row.astro';
 import type { CatalogItem } from '#lib/catalog/catalog-types.ts';
 import type { ImageFeaturedObject } from '#lib/schemas/image-featured.ts';
 import type { PaginationEntry } from '#lib/utils/pagination-types.ts';
@@ -116,13 +116,13 @@ export const samplePaginationNext = {
 	url: '/inventory/#next',
 } satisfies PaginationEntry;
 
-// LabeledRow keeps its item interface local, so reach it through the component's own props
+// LinkRow keeps its item interface local, so reach it through the component's own props
 export const sampleRowItems = [
 	{ title: 'typography', url: '/inventory/#tag-typography' },
 	{ title: 'creative coding', url: '/inventory/#tag-creative-coding' },
 	{ title: 'css', url: '/inventory/#tag-css' },
 	{ title: 'astro', url: '/inventory/#tag-astro' },
-] satisfies ComponentProps<typeof LabeledRow>['items'];
+] satisfies ComponentProps<typeof LinkRow>['items'];
 
 export const sampleChipItems = [
 	{ count: 12, title: 'Astro', url: '/inventory/#tag-astro' },

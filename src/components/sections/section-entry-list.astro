@@ -6,14 +6,15 @@ import LabeledSection from '#components/parts/labeled-section.astro';
 
 interface Props {
 	entries: Array<CatalogItem> | undefined;
+	href?: string | undefined;
 	title: string;
 }
 
-const { entries, title } = Astro.props;
+const { entries, href, title } = Astro.props;
 ---
 
 {entries && entries.length > 0 ? (
-	<LabeledSection data-nosnippet={true} data-pagefind-ignore={true} title={title}>
+	<LabeledSection data-nosnippet={true} data-pagefind-ignore={true} href={href} title={title}>
 		<ul class="flex flex-col gap-1 text-sm">
 			{entries.map((entry) => (
 				<li>
