@@ -1,6 +1,6 @@
 import type { TileInput } from '#station-tile/core/options.ts';
 
-import { generateTileSvg, tileBackgroundStyle } from '#station-tile/core/render.ts';
+import { generateTileSvg, svgDataUri, tileBackgroundStyle } from '#station-tile/core/render.ts';
 
 class StationTile extends HTMLElement {
 	get options() {
@@ -13,6 +13,7 @@ class StationTile extends HTMLElement {
 	}
 
 	#input: TileInput = {};
+	#renderCount = 0;
 
 	connectedCallback() {
 		this.#upgradeOptions();
@@ -22,8 +23,17 @@ class StationTile extends HTMLElement {
 		this.#render();
 	}
 
+	// Swapped only once decoded, so a slider drag never paints a blank frame
 	#render() {
-		Object.assign(this.style, tileBackgroundStyle(generateTileSvg(this.#input)));
+		const tile = generateTileSvg(this.#input);
+		const image = new Image();
+		const renderCount = ++this.#renderCount;
+		const apply = () => {
+			if (renderCount === this.#renderCount) Object.assign(this.style, tileBackgroundStyle(tile));
+		};
+
+		image.src = svgDataUri(tile.svg);
+		void image.decode().then(apply).catch(apply);
 	}
 
 	// Options assigned before the element upgrades land as an own property that shadows the setter

@@ -258,7 +258,7 @@ function renderBevel(size: number, radius: number, strength: number): string {
 
 // `encodeURIComponent` inflates the markup ~45%; escaping only what a data URI requires costs ~9%
 // Single quotes pass through Astro's attribute escaping, which rewrites only `&` and `"`
-function svgDataUri(svg: string): string {
+export function svgDataUri(svg: string): string {
 	const escaped = svg
 		.replaceAll('%', '%25')
 		.replaceAll('#', '%23')
