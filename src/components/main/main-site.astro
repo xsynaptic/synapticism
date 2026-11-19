@@ -14,6 +14,7 @@ import BuildVersion from '#components/main/main-build-version.astro';
 import Colophon from '#components/main/main-colophon.astro';
 import Meta from '#components/main/main-meta.astro';
 import RecentActivity from '#components/main/main-recent-activity.astro';
+import RouterStylesheets from '#components/main/main-router-stylesheets.astro';
 import SiteTitle from '#components/main/main-site-title.astro';
 import SkipLink from '#components/main/main-skip-link.astro';
 import Sprites from '#components/main/main-sprites.astro';
@@ -65,6 +66,7 @@ const themeColor = '#23272f';
 		<Meta {...meta} />
 		<Analytics />
 		<ClientRouter />
+		<RouterStylesheets />
 		<BuildVersion />
 	</head>
 	<body
