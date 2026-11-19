@@ -206,6 +206,31 @@
 	text-align: center;
 }
 
+/* Centered on phones, where a float would squeeze the text into a sliver
+   Always centered in .prose-bleed: grid items cannot float */
+.prose-x > .content-image[data-align] {
+	width: min(100%, 18rem);
+	margin-inline: auto;
+}
+
+/* Zero top margin lines the float up with the first line of the text beside it */
+@variant sm {
+	.prose-x:not(.prose-bleed) > .content-image[data-align] {
+		margin-top: 0;
+		margin-bottom: 1em;
+	}
+
+	.prose-x:not(.prose-bleed) > .content-image[data-align='left'] {
+		float: left;
+		margin-inline: 0 1.5em;
+	}
+
+	.prose-x:not(.prose-bleed) > .content-image[data-align='right'] {
+		float: right;
+		margin-inline: 1.5em 0;
+	}
+}
+
 /* Unlike media figures, quotations stay at the reading measure */
 .prose-x > figure.quotation {
 	max-width: var(--prose-measure);
@@ -261,17 +286,17 @@
 	user-select: none;
 }
 
-.prose-bleed > :is(figure:not(.quotation), video, iframe, astro-island) {
+.prose-bleed > :is(figure:not(.quotation, [data-align]), video, iframe, astro-island) {
 	grid-column: full;
 	max-width: none;
 }
 
-.prose-bleed > .content-image > div {
+.prose-bleed > .content-image:not([data-align]) > div {
 	border-inline-width: 0;
 	border-radius: 0;
 }
 
-.prose-bleed > .content-image > figcaption {
+.prose-bleed > .content-image:not([data-align]) > figcaption {
 	width: min(100% - 2 * var(--prose-gutter), var(--spacing-content) - 2 * var(--prose-gutter));
 	margin-inline: auto;
 }

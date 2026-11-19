@@ -4,17 +4,18 @@ import type { HTMLAttributes } from 'astro/types';
 import { getPlaceholder } from '@xsynaptic/astro-image-pipeline/node';
 import { Image } from 'astro:assets';
 
-import { imageColumnSizes, imageColumnWidth } from '#constants.ts';
+import { imageAlignedSizes, imageColumnSizes, imageColumnWidth } from '#constants.ts';
 import { renderSlot } from '#lib/utils/astro.ts';
 import { getMediaImage } from '#lib/utils/media.ts';
 import { sanitizeAltAttribute } from '#lib/utils/text.ts';
 
 interface Props extends HTMLAttributes<'figure'> {
+	align?: 'left' | 'right';
 	alt?: string;
 	src: string;
 }
 
-const { alt: altProp, src, ...props } = Astro.props;
+const { align, alt: altProp, src, ...props } = Astro.props;
 
 const image = getMediaImage(src);
 const placeholder = await getPlaceholder({ height: image.height, id: src, width: image.width });
@@ -25,7 +26,7 @@ const caption = await renderSlot(Astro.slots);
 const alt = sanitizeAltAttribute(altProp ?? caption ?? '');
 ---
 
-<figure class="content-image" {...props}>
+<figure class="content-image" data-align={align} {...props}>
 	<div
 		class="overflow-hidden rounded-xs border border-primary-200 bg-primary-100 bg-placeholder"
 		style={placeholder ? `background-image:url(${placeholder})` : undefined}
@@ -34,7 +35,7 @@ const alt = sanitizeAltAttribute(altProp ?? caption ?? '');
 			alt={alt}
 			class="block w-full"
 			layout="constrained"
-			sizes={imageColumnSizes}
+			sizes={align ? imageAlignedSizes : imageColumnSizes}
 			src={image}
 			width={imageColumnWidth}
 		/>

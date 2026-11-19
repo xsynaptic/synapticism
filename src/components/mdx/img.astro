@@ -4,6 +4,7 @@ import type { HTMLAttributes } from 'astro/types';
 import ContentImage from '#components/content/content-image.astro';
 
 interface Props extends HTMLAttributes<'figure'> {
+	align?: 'left' | 'right';
 	alt?: string;
 	src: string;
 }
