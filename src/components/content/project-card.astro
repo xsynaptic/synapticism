@@ -7,7 +7,7 @@ import ContentCard from '#components/content/content-card.astro';
 import ContentContinueReading from '#components/content/content-continue-reading.astro';
 import EntrySubtitle from '#components/content/entry-subtitle.astro';
 import ImageCarousel from '#components/image/image-carousel.astro';
-import { listTagLimit, projectImageAspectRatio } from '#constants.ts';
+import { listTagLimit } from '#constants.ts';
 import { getTagChipItems } from '#lib/collections/tags/tags-utils.ts';
 import { getDescriptionRenderedHtml } from '#lib/utils/description-data.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
@@ -23,9 +23,8 @@ const { class: className, entry, isPriority } = Astro.props;
 const { data } = entry;
 
 const url = getContentPath('projects', entry.id);
-const isFeatured = data.featuredOrder !== undefined;
+const isPinned = data.pinnedOrder !== undefined;
 const images = getImageFeaturedItems(data.imageFeatured);
-const aspectRatioStyle = `aspect-ratio:${String(projectImageAspectRatio.width)}/${String(projectImageAspectRatio.height)}`;
 ---
 
 <ContentCard
@@ -35,22 +34,16 @@ const aspectRatioStyle = `aspect-ratio:${String(projectImageAspectRatio.width)}/
 	title={data.title}
 	url={url}
 >
-	{isFeatured && images.length > 0 ? (
-		<ImageCarousel
-			aspectRatio={projectImageAspectRatio}
-			images={images}
-			isPriority={isPriority}
-			slot="card-media"
-		/>
+	{isPinned && images.length > 0 ? (
+		<ImageCarousel images={images} isPriority={isPriority} slot="card-media" />
 	) : undefined}
-	{isFeatured && images.length === 0 ? (
+	{isPinned && images.length === 0 ? (
 		<div
 			aria-hidden="true"
-			class="rounded-xs border border-primary-300 bg-primary-200"
+			class="image-featured-ratio rounded-xs border border-primary-300 bg-primary-200"
 			slot="card-media"
-			style={aspectRatioStyle}
 		/>
 	) : undefined}
 	<EntrySubtitle entry={entry} slot="card-subtitle" />
-	{isFeatured ? <ContentContinueReading href={url} slot="card-links" /> : undefined}
+	{isPinned ? <ContentContinueReading href={url} slot="card-links" /> : undefined}
 </ContentCard>

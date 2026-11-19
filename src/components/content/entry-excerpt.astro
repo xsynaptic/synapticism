@@ -1,12 +1,12 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 
+import { getImageFeaturedItems } from '@synapticism/shared/image-featured';
 import { render } from 'astro:content';
 
 import ContentExcerpt from '#components/content/content-excerpt.astro';
-import ContentHero from '#components/content/content-hero.astro';
 import EntrySubtitle from '#components/content/entry-subtitle.astro';
-import { getImageFeaturedHeroGroup } from '#lib/utils/image-featured.ts';
+import ImageCarousel from '#components/image/image-carousel.astro';
 import { getContentPath } from '#lib/utils/routing.ts';
 
 interface Props {
@@ -23,7 +23,7 @@ Astro.locals.isExcerpt = true;
 
 const { Content } = await render(entry);
 
-const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFeatured })?.[0];
+const images = getImageFeaturedItems(entry.data.imageFeatured);
 ---
 
 <ContentExcerpt
@@ -33,14 +33,8 @@ const heroImage = getImageFeaturedHeroGroup({ imageFeatured: entry.data.imageFea
 >
 	<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
 	<EntrySubtitle entry={entry} isCollectionShown={isCollectionShown} slot="excerpt-subtitle" />
-	{heroImage ? (
-		<ContentHero
-			{...heroImage}
-			fallbackAlt={entry.data.title}
-			isPriority={isPriority}
-			slot="excerpt-hero"
-			template="sidebar"
-		/>
+	{images.length > 0 ? (
+		<ImageCarousel images={images} isPriority={isPriority} slot="excerpt-media" />
 	) : undefined}
 	<Content />
 </ContentExcerpt>

@@ -4,13 +4,13 @@ interface ProjectOrderEntry {
 	data: {
 		dateCreated: Date | string;
 		dateUpdated?: Date | string | undefined;
-		featuredOrder?: number | undefined;
+		pinnedOrder?: number | undefined;
 	};
 }
 
 export function compareProjectsForIndex(entryA: ProjectOrderEntry, entryB: ProjectOrderEntry) {
-	const orderA = entryA.data.featuredOrder ?? Infinity;
-	const orderB = entryB.data.featuredOrder ?? Infinity;
+	const orderA = entryA.data.pinnedOrder ?? Infinity;
+	const orderB = entryB.data.pinnedOrder ?? Infinity;
 
 	if (orderA !== orderB) return orderA - orderB;
 

@@ -12,15 +12,17 @@ The language of the site itself: what an author writes, how it is grouped, and h
 
 **Project**: Something designed, built, or worked on, published as its own Entry. Posts may reference a Project, which gathers them as its related writing. _Avoid_: work, case study, portfolio item.
 
+**Pinned Project**: A Project the author lifts above the rest, in an order of their choosing. _Avoid_: featured (Featured Image owns that word), highlighted, spotlight.
+
 **Page**: A standalone Entry outside the run of Posts (about, colophon). _Avoid_: static page.
 
 **Tag**: A subject grouping that cuts across collections. Tags are flat and do not nest, and each is an Entry in its own right with a title and description. _Avoid_: topic, category, theme, keyword.
 
 **Catalog**: The unified, cross-collection view of every Entry reduced to a common shape, used for listing, counting, sorting, and resolving references. _Avoid_: index, registry, manifest.
 
-**Excerpt**: The opening portion of a Post or Project shown when it appears in a list (the homepage, the Posts list, a Tag), ending where the author places the fold. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).
+**Excerpt**: The opening portion of a Post or Project, ending where the author places the fold, shown in a list in place of the whole Entry. _Avoid_: teaser, preview, snippet, summary (a Description is the summary).
 
-**Description**: A short summary of an Entry, either authored in frontmatter or derived by clipping the opening of the body. Appears in listings, social previews, and search results. _Avoid_: summary, blurb, abstract, excerpt.
+**Description**: A short summary of an Entry, written by the author or clipped from the opening of the body. _Avoid_: summary, blurb, abstract, excerpt.
 
 ## Reference and connection
 
@@ -32,9 +34,9 @@ The language of the site itself: what an author writes, how it is grouped, and h
 
 **Image**: A picture in the media library, addressed by its path within that library rather than by URL. _Avoid_: photo, asset, upload, file.
 
-**Featured Image**: An Image attached to an Entry to represent it, in listings and in social previews. An Entry may carry several; the first is the most representative and is the one used wherever a single image is needed. _Avoid_: cover, thumbnail, OG image.
+**Featured Image**: An Image chosen to represent an Entry. An Entry may carry several; the first is the most representative. _Avoid_: cover, thumbnail, OG image.
 
-**Hero**: A Featured Image promoted to the header display at the top of an Entry's page. Promotion is opt-in per image, so an Entry with Featured Images may still have no Hero. _Avoid_: banner, splash, masthead.
+**Hero**: A Featured Image the author promotes to the header of the Entry's own page. _Avoid_: banner, splash, masthead.
 
 ## Beyond the content model
 

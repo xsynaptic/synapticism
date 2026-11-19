@@ -17,8 +17,8 @@ interface Props {
 
 const { page } = Astro.props;
 
-const featured = page.data.filter((entry) => entry.data.featuredOrder !== undefined);
-const unfeatured = page.data.filter((entry) => entry.data.featuredOrder === undefined);
+const pinned = page.data.filter((entry) => entry.data.pinnedOrder !== undefined);
+const unpinned = page.data.filter((entry) => entry.data.pinnedOrder === undefined);
 ---
 
 <ContentListView
@@ -31,18 +31,18 @@ const unfeatured = page.data.filter((entry) => entry.data.featuredOrder === unde
 >
 	<ContentSection>
 		<div class:list={['flex flex-col', MicroformatClassNames.Feed]}>
-			{featured.map((entry, index) => (
+			{pinned.map((entry, index) => (
 				<Fragment>
 					{index > 0 ? <hr class="my-8 border-primary-300/70 md:my-10" /> : undefined}
 					<ProjectCard entry={entry} isPriority={index === 0} />
 				</Fragment>
 			))}
-			{featured.length > 0 && unfeatured.length > 0 ? (
+			{pinned.length > 0 && unpinned.length > 0 ? (
 				<hr class="my-8 border-primary-300/70 md:my-10" />
 			) : undefined}
-			{unfeatured.length > 0 ? (
+			{unpinned.length > 0 ? (
 				<div class="grid gap-x-8 gap-y-12 md:grid-cols-2">
-					{unfeatured.map((entry) => (
+					{unpinned.map((entry) => (
 						<ProjectCard entry={entry} isPriority={false} />
 					))}
 				</div>

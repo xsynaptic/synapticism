@@ -53,8 +53,8 @@ export const projectSchema = contentBaseSchema
 	.extend({
 		dateEnded: YearOrDateSchema.optional(),
 		dateStarted: YearOrDateSchema.optional(),
-		featuredOrder: z.number().int().positive().optional(),
 		homeUrl: z.url().optional(),
+		pinnedOrder: z.number().int().positive().optional(),
 		sourceUrl: z.url().optional(),
 		template: TemplateSchema.default('sidebar'),
 	})

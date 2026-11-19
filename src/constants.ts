@@ -20,9 +20,10 @@ export const syndicationItemCount = 20;
 
 export const postListPageSize = 10;
 
-export const listTagLimit = 5;
+export const imageColumnWidth = 1600;
+export const imageColumnSizes = '(min-width: 54rem) 54rem, 100vw';
 
-export const projectImageAspectRatio = { height: 1, width: 2 };
+export const listTagLimit = 5;
 
 export const postReadingTimeMinimumMinutes = 3;
 

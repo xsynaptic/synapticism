@@ -6,6 +6,10 @@
 	@apply content-column lg:mx-0 lg:max-w-sidebar;
 }
 
+@utility image-featured-ratio {
+	@apply aspect-3/2 md:aspect-2/1;
+}
+
 /* LQIP backdrop under an Image; the data URI is per instance and stays an inline style */
 @utility bg-placeholder {
 	background-position: center;

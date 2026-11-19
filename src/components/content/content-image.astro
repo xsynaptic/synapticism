@@ -4,6 +4,7 @@ import type { HTMLAttributes } from 'astro/types';
 import { getPlaceholder } from '@xsynaptic/astro-image-pipeline/node';
 import { Image } from 'astro:assets';
 
+import { imageColumnSizes, imageColumnWidth } from '#constants.ts';
 import { renderSlot } from '#lib/utils/astro.ts';
 import { getMediaImage } from '#lib/utils/media.ts';
 import { sanitizeAltAttribute } from '#lib/utils/text.ts';
@@ -33,9 +34,9 @@ const alt = sanitizeAltAttribute(altProp ?? caption ?? '');
 			alt={alt}
 			class="block w-full"
 			layout="constrained"
-			sizes="(min-width: 54rem) 54rem, 100vw"
+			sizes={imageColumnSizes}
 			src={image}
-			width={1600}
+			width={imageColumnWidth}
 		/>
 	</div>
 	{caption ? (
