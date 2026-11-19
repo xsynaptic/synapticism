@@ -1,11 +1,15 @@
 import type { ContentEntry, ValidationResult } from '@xsynaptic/astro-scripts';
 
+import { listImageSources } from '@xsynaptic/astro-image-pipeline/node';
 import { toValidationResult } from '@xsynaptic/astro-scripts';
 
-import { collectMediaFiles, extractImageFeaturedIds, extractMdxImageIds } from '#shared/images.ts';
+import { extractImageFeaturedIds, extractMdxImageIds } from '#shared/images.ts';
 
-export function validateImages(entries: Array<ContentEntry>, mediaPath: string): ValidationResult {
-	const mediaFiles = collectMediaFiles(mediaPath);
+export async function validateImages(
+	entries: Array<ContentEntry>,
+	mediaPath: string,
+): Promise<ValidationResult> {
+	const mediaFiles = await listImageSources(mediaPath);
 
 	if (mediaFiles.size === 0) {
 		return { issues: [], status: 'warn', summary: `No image files found in ${mediaPath}` };

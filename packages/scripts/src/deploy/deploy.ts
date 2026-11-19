@@ -40,7 +40,7 @@ await runCommand({
 		'skip-check': { default: false, description: 'Skip the quality gate', type: 'boolean' },
 		'skip-smoke': { default: false, description: 'Skip the smoke suite', type: 'boolean' },
 	},
-	run: async ({ paths, rootPath, values }) => {
+	run: async ({ rootPath, values }) => {
 		const dryRun = values['dry-run'];
 
 		assertDeployAuth();
@@ -60,7 +60,7 @@ await runCommand({
 		else
 			await runSubprocess('Running the smoke suite', ['pnpm', 'test-e2e-smoke'], { cwd: rootPath });
 
-		const { assets } = await deployApp({ distPath: paths.distPath, dryRun, rootPath });
+		const { assets } = await deployApp({ dryRun, rootPath });
 
 		if (dryRun) {
 			log.warn('Skipping health check (dry run)');

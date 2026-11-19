@@ -1,31 +1,4 @@
 import { findComponentTags, getTagProp } from '@xsynaptic/astro-scripts';
-import { readdirSync, statSync } from 'node:fs';
-import path from 'node:path';
-
-const imageExtensionRegex = /\.(?:avif|gif|jpe?g|png|webp)$/i;
-
-// Keyed the way frontmatter and `<Img src>` address an Image: a path relative to the media root
-export function collectMediaFiles(mediaPath: string): Set<string> {
-	const files = new Set<string>();
-
-	function walk(directory: string, prefix: string) {
-		for (const entry of readdirSync(directory)) {
-			const fullPath = path.join(directory, entry);
-			const relativePath = prefix ? `${prefix}/${entry}` : entry;
-
-			if (statSync(fullPath).isDirectory()) {
-				walk(fullPath, relativePath);
-				continue;
-			}
-
-			if (imageExtensionRegex.test(entry)) files.add(relativePath);
-		}
-	}
-
-	walk(mediaPath, '');
-
-	return files;
-}
 
 export function extractImageFeaturedIds(data: Record<string, unknown>): Array<string> {
 	const { imageFeatured } = data;

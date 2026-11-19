@@ -1,4 +1,4 @@
-import { log, runSubprocess, UserError } from '@xsynaptic/astro-scripts';
+import { getAstroPaths, log, runSubprocess, UserError } from '@xsynaptic/astro-scripts';
 import { existsSync } from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -12,7 +12,6 @@ const fileCountWarn = 15_000;
 const assetSizeWarn = 25 * 1024 * 1024;
 
 interface DeployAppOptions {
-	distPath: string;
 	dryRun: boolean;
 	rootPath: string;
 }
@@ -22,7 +21,9 @@ interface DistFile {
 	size: number;
 }
 
-export async function deployApp({ distPath, dryRun, rootPath }: DeployAppOptions) {
+export async function deployApp({ dryRun, rootPath }: DeployAppOptions) {
+	const { clientDir: distPath } = await getAstroPaths();
+
 	if (!existsSync(distPath)) {
 		throw new UserError(`dist/ not found at ${distPath}`, {
 			detail: 'Run `pnpm build` first',

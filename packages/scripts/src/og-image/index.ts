@@ -13,7 +13,13 @@ import {
 	openGraphImageWidth,
 } from '@synapticism/shared/constants';
 import { hashTemplateVersion, prepareCardRender } from '@xsynaptic/astro-image-pipeline/node';
-import { createProgress, formatCount, log, UserError } from '@xsynaptic/astro-scripts';
+import {
+	createProgress,
+	formatCount,
+	getAstroPaths,
+	log,
+	UserError,
+} from '@xsynaptic/astro-scripts';
 import { copyFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -72,7 +78,7 @@ async function publish({ cards, directory }: PreparedCardRender, distPath: strin
 await runCommand({
 	name: 'og-image',
 	run: async ({ paths, signal }) => {
-		const { distPath } = paths;
+		const { clientDir: distPath } = await getAstroPaths();
 		const renderCard = await createCardRenderer();
 		const render = await prepareCardRender({
 			decode: (source) => decodeImage(source.filePath),

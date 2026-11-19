@@ -10,11 +10,11 @@ await runCommand({
 	options: {
 		'dry-run': { default: false, description: 'Run wrangler without uploading', type: 'boolean' },
 	},
-	run: async ({ paths, rootPath, values }) => {
+	run: async ({ rootPath, values }) => {
 		assertDeployAuth();
 
 		const dryRun = values['dry-run'];
-		const { assets } = await deployApp({ distPath: paths.distPath, dryRun, rootPath });
+		const { assets } = await deployApp({ dryRun, rootPath });
 
 		log.data({ assets, dryRun }, () =>
 			dryRun ? `Dry run: ${String(assets)} assets` : `Deployed ${String(assets)} assets`,
