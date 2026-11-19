@@ -36,7 +36,13 @@ const toneLabels = [
 
 const firstHexcode = groups[0]?.emoji[0]?.hexcode;
 
+const toneSample = groups
+	.flatMap((group) => group.emoji)
+	.find((item) => item.hexcode === '270B' && item.skins !== undefined);
+
 const probes = JSON.stringify(supportProbes(catalog));
+
+// The inline script mirrors the element's paint; keep them in step or the upgrade repaints
 ---
 
 <link href={stylesheetUrl} rel="stylesheet" />
@@ -67,6 +73,20 @@ const probes = JSON.stringify(supportProbes(catalog));
 					</button>
 				))}
 			</div>
+			{toneSample ? (
+				<button
+					aria-expanded="false"
+					aria-haspopup="true"
+					aria-label="Skin tone"
+					class="ep-tone-button"
+					data-hexcode={toneSample.hexcode}
+					data-skins={toneSample.skins && [toneSample.emoji, ...toneSample.skins].join(' ')}
+					title="Skin tone"
+					type="button"
+				>
+					{toneSample.emoji}
+				</button>
+			) : undefined}
 		</div>
 		<nav aria-label="Emoji categories" class="ep-categories">
 			<a aria-label="Recently used" href="#emoji-picker-recents" title="Recently used">
@@ -116,7 +136,7 @@ const probes = JSON.stringify(supportProbes(catalog));
 							aria-label={item.label}
 							data-hexcode={item.hexcode}
 							data-skin-version={item.skinVersion}
-							data-skins={item.skins?.join(' ')}
+							data-skins={item.skins && [item.emoji, ...item.skins].join(' ')}
 							data-version={item.version}
 							tabindex={item.hexcode === firstHexcode ? 0 : -1}
 							type="button"
@@ -155,21 +175,79 @@ const probes = JSON.stringify(supportProbes(catalog));
 </emoji-picker>
 <script define:vars={{ emojiSizes, storageKey }} is:inline>
 	const picker = document.currentScript?.previousElementSibling;
-	let size;
+	let state;
 
 	try {
-		size = JSON.parse(localStorage.getItem(storageKey) ?? '{}').state?.size;
+		state = JSON.parse(localStorage.getItem(storageKey) ?? '{}').state ?? {};
 	} catch {
-		size = undefined;
+		state = {};
 	}
 
-	if (picker && emojiSizes.includes(size)) {
+	function paintTone(button, tone) {
+		const glyph = button.dataset.skins?.split(' ')[tone];
+
+		if (glyph) button.textContent = glyph;
+	}
+
+	function paintRecents(picker, recents) {
+		const section = picker.querySelector(':scope .ep-recents');
+		const container = section?.querySelector(':scope > .ep-cells');
+
+		if (!section || !container) return;
+
+		for (const hexcode of recents) {
+			const clone = picker
+				.querySelector(`:scope .ep-group [data-hexcode="${CSS.escape(hexcode)}"]`)
+				?.cloneNode(true);
+
+			if (!clone) continue;
+
+			clone.tabIndex = -1;
+			container.append(clone);
+		}
+
+		section.hidden = false;
+		picker.querySelector(':scope .ep-categories a')?.setAttribute('aria-current', 'true');
+	}
+
+	function paintSize(picker, size) {
+		if (!emojiSizes.includes(size)) return;
+
 		picker.dataset.size = size;
 
 		for (const button of picker.querySelectorAll(':scope .ep-size button')) {
 			button.setAttribute('aria-pressed', String(button.dataset.size === size));
 		}
 	}
+
+	function paintCell(cell, tone, supportedVersion) {
+		const version = Number(
+			(tone > 0 ? cell.dataset.skinVersion : undefined) ?? cell.dataset.version,
+		);
+
+		paintTone(cell, tone);
+		cell.classList.toggle('ep-unsupported', version > supportedVersion);
+	}
+
+	function paintCells(picker, { supportedVersion = Infinity, tone = 0, tones = {} }) {
+		const toneButton = picker.querySelector(':scope .ep-tone-button');
+
+		if (toneButton) paintTone(toneButton, tone);
+
+		for (const cell of picker.querySelectorAll(':scope .ep-group .ep-cells > button')) {
+			const cellTone = cell.dataset.skins === undefined ? 0 : (tones[cell.dataset.hexcode] ?? tone);
+
+			paintCell(cell, cellTone, supportedVersion);
+		}
+	}
+
+	function paintStored(picker) {
+		paintSize(picker, state.size);
+		paintCells(picker, state);
+		paintRecents(picker, state.recents ?? []);
+	}
+
+	if (picker) paintStored(picker);
 </script>
 
 <script>

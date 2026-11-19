@@ -23,6 +23,7 @@ import { queryResultsView, renderResults } from '#emoji-picker/client/search-res
 import { markUnsupported, probeSupport } from '#emoji-picker/client/support-marking.ts';
 import { TonePopover } from '#emoji-picker/client/tone-popover.ts';
 import { whenIdle } from '#emoji-picker/client/when-idle.ts';
+import { toneFor } from '#emoji-picker/core/tones.ts';
 
 function isTyping(target: EventTarget | null) {
 	return (
@@ -34,7 +35,6 @@ function isTyping(target: EventTarget | null) {
 class EmojiPicker extends HTMLElement {
 	#abort: AbortController | undefined;
 	#announcer: HTMLElement | undefined;
-	#baseGlyphs = new Map<string, string>();
 	#bubble: CopyBubble | undefined;
 	#cells = new Map<string, HTMLButtonElement>();
 	#focused: string | undefined;
@@ -44,6 +44,7 @@ class EmojiPicker extends HTMLElement {
 	#scroller: HTMLElement | undefined;
 	#search: HTMLInputElement | undefined;
 	#searchFailed = false;
+	#toneButton: HTMLButtonElement | undefined;
 	#tones: TonePopover | undefined;
 
 	connectedCallback() {
@@ -60,6 +61,7 @@ class EmojiPicker extends HTMLElement {
 		this.#search = search;
 		this.#recents = recents;
 		this.#announcer = this.querySelector<HTMLElement>(':scope .ep-announcer') ?? undefined;
+		this.#toneButton = this.querySelector<HTMLButtonElement>(':scope .ep-tone-button') ?? undefined;
 
 		this.#indexCells();
 		recents.hidden = false;
@@ -95,16 +97,13 @@ class EmojiPicker extends HTMLElement {
 
 	// Clones in recents and results carry the hexcode too, so they follow a tone change in place
 	#applyTones() {
-		const { tones } = pickerStore.getState();
+		const state = pickerStore.getState();
 
 		for (const cell of this.querySelectorAll<HTMLButtonElement>(`:scope ${cellSelector}`)) {
-			const hexcode = cell.dataset.hexcode ?? '';
-			const tone = tones[hexcode] ?? 0;
-			const glyph =
-				tone > 0 ? cell.dataset.skins?.split(' ')[tone - 1] : this.#baseGlyphs.get(hexcode);
-
-			if (glyph !== undefined && cell.textContent !== glyph) cell.textContent = glyph;
+			this.#paintTone(cell, toneFor(state, cell.dataset.hexcode ?? ''));
 		}
+
+		if (this.#toneButton) this.#paintTone(this.#toneButton, state.tone);
 	}
 
 	async #copy(cell: HTMLButtonElement) {
@@ -181,7 +180,6 @@ class EmojiPicker extends HTMLElement {
 			if (hexcode === undefined) continue;
 
 			this.#cells.set(hexcode, cell);
-			this.#baseGlyphs.set(hexcode, cell.textContent);
 		}
 	}
 
@@ -212,6 +210,12 @@ class EmojiPicker extends HTMLElement {
 		this.#bubble?.show(cell, message, isError);
 
 		if (isError) this.#announce(message);
+	}
+
+	#paintTone(button: HTMLButtonElement, tone: number) {
+		const glyph = button.dataset.skins?.split(' ')[tone];
+
+		if (glyph !== undefined && button.textContent !== glyph) button.textContent = glyph;
 	}
 
 	// Once the index is up, the panel waits for the entry so keywords never flash empty
@@ -301,7 +305,9 @@ class EmojiPicker extends HTMLElement {
 	#subscribe(signal: AbortSignal) {
 		const unsubscribe = pickerStore.subscribe((state, previous) => {
 			const cellsChanged =
-				state.tones !== previous.tones || state.supportedVersion !== previous.supportedVersion;
+				state.tone !== previous.tone ||
+				state.tones !== previous.tones ||
+				state.supportedVersion !== previous.supportedVersion;
 
 			if (state.size !== previous.size) this.#applySize();
 
@@ -324,7 +330,7 @@ class EmojiPicker extends HTMLElement {
 	#wire(scroller: HTMLElement, search: HTMLInputElement, signal: AbortSignal) {
 		const bubble = this.querySelector<HTMLElement>(':scope .ep-bubble');
 
-		if (bubble) this.#bubble = new CopyBubble(bubble, scroller);
+		if (bubble) this.#bubble = new CopyBubble(bubble, this);
 
 		this.#wireGrid(scroller, signal);
 		this.#wireKeys(signal);
@@ -438,20 +444,34 @@ class EmojiPicker extends HTMLElement {
 
 		if (!popover) return;
 
-		this.#tones = new TonePopover(
+		const tones = new TonePopover(
 			{
-				baseGlyph: (hexcode) => this.#baseGlyphs.get(hexcode),
-				onChoose: (cell, tone) => {
-					pickerStore.getState().setTone(cell.dataset.hexcode ?? '', tone);
-					void this.#copy(cell);
+				onChoose: (anchor, tone) => {
+					if (anchor === this.#toneButton) {
+						pickerStore.getState().setGlobalTone(tone);
+						return;
+					}
+
+					pickerStore.getState().setEmojiTone(anchor.dataset.hexcode ?? '', tone);
+					void this.#copy(anchor);
 				},
 				onShow: () => {
 					this.#bubble?.hide();
 				},
 				popover,
+				root: this,
 				scroller,
 			},
 			signal,
+		);
+
+		this.#tones = tones;
+		this.#toneButton?.addEventListener(
+			'click',
+			(event) => {
+				if (event.currentTarget instanceof HTMLButtonElement) tones.toggle(event.currentTarget);
+			},
+			{ signal },
 		);
 	}
 }

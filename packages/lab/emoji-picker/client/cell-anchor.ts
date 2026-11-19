@@ -1,7 +1,7 @@
 const anchorName = '--ep-cell-anchor';
 
-export function anchorCell(scroller: Element, cell: HTMLElement) {
-	for (const anchored of scroller.querySelectorAll<HTMLElement>('[style*="anchor-name"]')) {
+export function anchorCell(root: Element, cell: HTMLElement) {
+	for (const anchored of root.querySelectorAll<HTMLElement>('[style*="anchor-name"]')) {
 		if (anchored !== cell) anchored.style.removeProperty('anchor-name');
 	}
 

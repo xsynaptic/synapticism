@@ -1,5 +1,3 @@
-const reducedMotion = '(prefers-reduced-motion: reduce)';
-
 function sectionTop(scroller: Element, section: Element) {
 	return (
 		section.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop
@@ -54,10 +52,7 @@ export function wireCategoryBar(
 
 				event.preventDefault();
 				beforeJump();
-				scroller.scrollTo({
-					behavior: matchMedia(reducedMotion).matches ? 'auto' : 'smooth',
-					top: sectionTop(scroller, section),
-				});
+				scroller.scrollTo({ top: sectionTop(scroller, section) });
 			},
 			{ signal },
 		);

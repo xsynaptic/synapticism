@@ -11,9 +11,6 @@
 	background: transparent;
 	border: 0;
 	border-radius: var(--radius-sm);
-	transition:
-		background-color var(--default-transition-duration) var(--default-transition-timing-function),
-		opacity var(--default-transition-duration) var(--default-transition-timing-function);
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
 }

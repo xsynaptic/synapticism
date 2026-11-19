@@ -5,10 +5,10 @@ const longPressDelay = 450;
 const moveTolerance = 8;
 
 interface TonePopoverOptions {
-	baseGlyph: (hexcode: string) => string | undefined;
-	onChoose: (cell: HTMLButtonElement, tone: number) => void;
+	onChoose: (anchor: HTMLButtonElement, tone: number) => void;
 	onShow: () => void;
 	popover: HTMLElement;
+	root: HTMLElement;
 	scroller: HTMLElement;
 }
 
@@ -16,12 +16,17 @@ function toneCell(target: unknown) {
 	return isCell(target) && target.dataset.skins !== undefined ? target : undefined;
 }
 
+function setExpanded(anchor: HTMLElement | undefined, isExpanded: boolean) {
+	if (anchor?.hasAttribute('aria-expanded'))
+		anchor.setAttribute('aria-expanded', String(isExpanded));
+}
+
 function toneButtons(popover: HTMLElement) {
 	return [...popover.querySelectorAll<HTMLButtonElement>(':scope > button[data-tone]')];
 }
 
-function fillTones(popover: HTMLElement, cell: HTMLButtonElement, baseGlyph: string | undefined) {
-	const glyphs = [baseGlyph, ...(cell.dataset.skins?.split(' ') ?? [])];
+function fillTones(popover: HTMLElement, anchor: HTMLButtonElement) {
+	const glyphs = anchor.dataset.skins?.split(' ') ?? [];
 	const buttons = toneButtons(popover);
 
 	for (const [tone, button] of buttons.entries()) button.textContent = glyphs[tone] ?? '';
@@ -100,12 +105,13 @@ function wireLongPress(
 
 interface PopoverHandlers {
 	close: () => void;
+	isToggle: (target: Node) => boolean;
 	onChoose: (tone: number) => void;
 }
 
 function wirePopoverEvents(
 	popover: HTMLElement,
-	{ close, onChoose }: PopoverHandlers,
+	{ close, isToggle, onChoose }: PopoverHandlers,
 	signal: AbortSignal,
 ) {
 	popover.addEventListener(
@@ -135,7 +141,12 @@ function wirePopoverEvents(
 	document.addEventListener(
 		'pointerdown',
 		(event) => {
-			if (event.target instanceof Node && popover.contains(event.target)) return;
+			// Left to the toggle's click, which would otherwise reopen it
+			if (
+				event.target instanceof Node &&
+				(popover.contains(event.target) || isToggle(event.target))
+			)
+				return;
 
 			close();
 		},
@@ -161,6 +172,8 @@ export class TonePopover {
 				close: () => {
 					this.close();
 				},
+				isToggle: (target) =>
+					this.isOpen() && this.#anchor?.contains(target) === true && !isCell(this.#anchor),
 				onChoose: (tone) => {
 					this.#choose(tone);
 				},
@@ -177,6 +190,7 @@ export class TonePopover {
 		const hadFocus = popover.contains(document.activeElement);
 
 		hidePlaced(popover);
+		setExpanded(this.#anchor, false);
 
 		if (hadFocus) this.#anchor?.focus();
 	}
@@ -185,35 +199,48 @@ export class TonePopover {
 		return this.#options.popover.matches(':popover-open');
 	}
 
-	open(cell: HTMLButtonElement) {
-		if (toneCell(cell)) this.#show(cell, true);
+	open(anchor: HTMLButtonElement) {
+		if (anchor.dataset.skins !== undefined) this.#show(anchor, true);
+	}
+
+	toggle(anchor: HTMLButtonElement) {
+		if (this.isOpen() && this.#anchor === anchor) {
+			this.close();
+			return;
+		}
+
+		this.open(anchor);
 	}
 
 	#choose(tone: number) {
-		const cell = this.#anchor;
+		const anchor = this.#anchor;
 
-		if (!cell) return;
+		if (!anchor) return;
 
 		this.close();
-		this.#options.onChoose(cell, tone);
+		this.#options.onChoose(anchor, tone);
 	}
 
-	#show(cell: HTMLButtonElement, shouldFocus: boolean) {
-		const { baseGlyph, onShow, popover, scroller } = this.#options;
-		const buttons = fillTones(popover, cell, baseGlyph(cell.dataset.hexcode ?? ''));
+	#show(anchor: HTMLButtonElement, shouldFocus: boolean) {
+		const { onShow, popover, root } = this.#options;
+		const buttons = fillTones(popover, anchor);
 
 		onShow();
-		this.#anchor = cell;
-		anchorCell(scroller, cell);
+
+		if (this.#anchor !== anchor) setExpanded(this.#anchor, false);
+
+		this.#anchor = anchor;
+		anchorCell(root, anchor);
 
 		// Android fires contextmenu after the long-press timer has already opened it
 		if (!this.isOpen()) popover.showPopover();
 
-		placeWithoutAnchor(popover, cell);
+		setExpanded(anchor, true);
+		placeWithoutAnchor(popover, anchor);
 
 		if (!shouldFocus) return;
 
-		const current = buttons.find((button) => button.textContent === cell.textContent);
+		const current = buttons.find((button) => button.textContent === anchor.textContent);
 
 		(current ?? buttons[0])?.focus();
 	}
@@ -222,12 +249,13 @@ export class TonePopover {
 		this.#options.scroller.addEventListener(
 			'contextmenu',
 			(event) => {
-				const cell = toneCell(event.target);
-
-				if (!cell) return;
+				if (!isCell(event.target)) return;
 
 				event.preventDefault();
-				this.#show(cell, event.button !== 2);
+
+				const cell = toneCell(event.target);
+
+				if (cell) this.#show(cell, event.button !== 2);
 			},
 			{ signal },
 		);

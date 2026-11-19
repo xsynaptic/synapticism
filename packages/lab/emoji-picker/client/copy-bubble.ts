@@ -4,12 +4,12 @@ const bubbleDuration = 1600;
 
 export class CopyBubble {
 	#popover: HTMLElement;
-	#scroller: HTMLElement;
+	#root: HTMLElement;
 	#timer: ReturnType<typeof setTimeout> | undefined;
 
-	constructor(popover: HTMLElement, scroller: HTMLElement) {
+	constructor(popover: HTMLElement, root: HTMLElement) {
 		this.#popover = popover;
-		this.#scroller = scroller;
+		this.#root = root;
 	}
 
 	hide() {
@@ -23,7 +23,7 @@ export class CopyBubble {
 		clearTimeout(this.#timer);
 		popover.textContent = message;
 		popover.classList.toggle('ep-bubble-error', isError);
-		anchorCell(this.#scroller, cell);
+		anchorCell(this.#root, cell);
 
 		if (!popover.matches(':popover-open')) popover.showPopover();
 

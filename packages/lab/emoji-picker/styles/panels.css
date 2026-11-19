@@ -19,6 +19,10 @@
 	display: flex;
 }
 
+emoji-picker:has(.ep-tone-button[aria-expanded='true']) .ep-tones {
+	position-area: block-end span-inline-start;
+}
+
 .ep-unanchored {
 	inset: auto;
 	translate: -50% -100%;

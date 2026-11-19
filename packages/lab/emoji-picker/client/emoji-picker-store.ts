@@ -2,6 +2,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { createStore } from 'zustand/vanilla';
 
 import { addRecent } from '#emoji-picker/core/recents.ts';
+import { withEmojiTone } from '#emoji-picker/core/tones.ts';
 import { emojiSizes, recentsLimit, storageKey } from '#emoji-picker/emoji-picker-constants.ts';
 
 export type EmojiSize = (typeof emojiSizes)[number];
@@ -10,13 +11,16 @@ export type EmojiSize = (typeof emojiSizes)[number];
 interface PersistedState {
 	recents: Array<string>;
 	size: EmojiSize;
+	supportedVersion?: number;
+	tone: number;
 	tones: Record<string, number>;
 }
 
 interface PickerState extends PersistedState {
 	addRecent: (hexcode: string) => void;
+	setEmojiTone: (hexcode: string, tone: number) => void;
+	setGlobalTone: (tone: number) => void;
 	setSize: (size: EmojiSize) => void;
-	setTone: (hexcode: string, tone: number) => void;
 	supportedVersion: number;
 }
 
@@ -31,21 +35,30 @@ export const pickerStore = createStore<PickerState>()(
 				set((state) => ({ recents: addRecent(state.recents, hexcode, recentsLimit) }));
 			},
 			recents: [],
+			setEmojiTone: (hexcode, tone) => {
+				set((state) => ({ tones: withEmojiTone(state, hexcode, tone) }));
+			},
+			setGlobalTone: (tone) => {
+				set({ tone, tones: {} });
+			},
 			setSize: (size) => {
 				set({ size });
 			},
-			setTone: (hexcode, tone) => {
-				set((state) => ({ tones: { ...state.tones, [hexcode]: tone } }));
-			},
 			size: 'small',
 			supportedVersion: Infinity,
+			tone: 0,
 			tones: {},
 		}),
 		{
 			name: storageKey,
+			// JSON turns Infinity into null, which would dim everything
 			partialize: (state): PersistedState => ({
 				recents: state.recents,
 				size: state.size,
+				...(Number.isFinite(state.supportedVersion)
+					? { supportedVersion: state.supportedVersion }
+					: {}),
+				tone: state.tone,
 				tones: state.tones,
 			}),
 			storage: createJSONStorage(() => localStorage),

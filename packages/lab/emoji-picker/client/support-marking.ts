@@ -3,6 +3,7 @@ import type { SupportProbe } from '#emoji-picker/core/support-probes.ts';
 import { pickerStore } from '#emoji-picker/client/emoji-picker-store.ts';
 import { probeSupportedVersion } from '#emoji-picker/client/search-client.ts';
 import { whenIdle } from '#emoji-picker/client/when-idle.ts';
+import { toneFor } from '#emoji-picker/core/tones.ts';
 
 let supportProbed = false;
 
@@ -15,10 +16,11 @@ function readProbes(element: HTMLElement): Array<SupportProbe> {
 }
 
 export function markUnsupported(cells: Map<string, HTMLButtonElement>) {
-	const { supportedVersion, tones } = pickerStore.getState();
+	const state = pickerStore.getState();
+	const { supportedVersion } = state;
 
 	for (const [hexcode, cell] of cells) {
-		const isToned = (tones[hexcode] ?? 0) > 0;
+		const isToned = cell.dataset.skins !== undefined && toneFor(state, hexcode) > 0;
 		const version = Number(
 			(isToned ? cell.dataset.skinVersion : undefined) ?? cell.dataset.version,
 		);
