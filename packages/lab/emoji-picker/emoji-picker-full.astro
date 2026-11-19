@@ -46,12 +46,20 @@ const probes = JSON.stringify(supportProbes(catalog));
 ---
 
 <link href={stylesheetUrl} rel="stylesheet" />
-<emoji-picker class={className} data-pagefind-ignore="all" data-probes={probes}>
+<emoji-picker
+	class={className}
+	data-lab
+	data-pagefind-ignore="all"
+	data-probes={probes}
+	style="
+
+--lab-height: min(32rem, 80dvh)"
+>
 	<div class="ep-top">
 		<div class="ep-toolbar">
-			<label class="ep-search">
-				<span class="sr-only">Search emoji</span>
+			<div class="ep-search">
 				<input
+					aria-label="Search emoji"
 					autocomplete="off"
 					enterkeyhint="search"
 					placeholder="Search emoji"
@@ -59,7 +67,23 @@ const probes = JSON.stringify(supportProbes(catalog));
 					type="search"
 				/>
 				<kbd aria-hidden="true">/</kbd>
-			</label>
+				<button
+					aria-label="Clear search"
+					class="ep-search-clear"
+					title="Clear search"
+					type="button"
+				>
+					<svg aria-hidden="true" height="16" viewBox="0 0 16 16" width="16">
+						<path
+							d="M4 4l8 8M12 4l-8 8"
+							fill="none"
+							stroke="currentColor"
+							stroke-linecap="round"
+							stroke-width="1.75"
+						/>
+					</svg>
+				</button>
+			</div>
 			<div aria-label="Emoji size" class="ep-size" role="group">
 				{emojiSizes.map((size) => (
 					<button
@@ -152,17 +176,10 @@ const probes = JSON.stringify(supportProbes(catalog));
 		<span aria-hidden="true" class="ep-detail-glyph" />
 		<div class="ep-detail-text">
 			<p class="ep-detail-name">Pick an emoji to copy it</p>
-			<div class="ep-detail-meta">
-				<span class="ep-detail-code" />
-				<span class="ep-detail-hint" hidden>
-					Hold for skin tones
-				</span>
-				<span class="ep-detail-note" hidden>
-					May not display on this device
-				</span>
-				<ul aria-label="Shortcodes" class="ep-detail-shortcodes" />
-			</div>
-			<p class="ep-detail-keywords" />
+			<p class="ep-detail-hint" hidden>
+				Hold for skin tones
+			</p>
+			<p class="ep-detail-note" hidden />
 		</div>
 	</div>
 	<p aria-hidden="true" class="ep-bubble" popover="manual" />

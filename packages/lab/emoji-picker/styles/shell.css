@@ -14,8 +14,8 @@ emoji-picker {
 
 	position: relative;
 	display: grid;
+	visibility: visible;
 	grid-template-rows: auto minmax(0, 1fr) auto;
-	height: min(32rem, 80dvh);
 	anchor-scope: --ep-cell-anchor;
 	container: emoji-picker / inline-size;
 	overflow: hidden;
@@ -24,6 +24,16 @@ emoji-picker {
 	background: var(--ep-surface);
 	border: 1px solid var(--ep-hairline);
 	border-radius: var(--radius-md);
+}
+
+@media (width < 40rem) {
+	.prose-bleed > emoji-picker {
+		--ep-pad: var(--prose-gutter);
+
+		grid-column: full;
+		border-inline-width: 0;
+		border-radius: 0;
+	}
 }
 
 emoji-picker[data-size='large'] {
@@ -51,6 +61,7 @@ emoji-picker[data-size='large'] {
 .ep-search input {
 	width: 100%;
 	padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+	padding-inline-end: calc(var(--spacing) * 10);
 	font: inherit;
 	font-size: var(--text-base);
 	color: var(--ep-ink);
@@ -80,7 +91,42 @@ emoji-picker[data-size='large'] {
 	border-radius: var(--radius-xs);
 }
 
-/* Only while the field is empty, where the browser's clear button would otherwise sit on it */
+.ep-search input::-webkit-search-cancel-button {
+	display: none;
+}
+
+.ep-search-clear {
+	position: absolute;
+	inset-block: 0;
+	inset-inline-end: 0;
+	display: grid;
+	place-items: center;
+	width: calc(var(--spacing) * 10);
+	padding: 0;
+	color: var(--ep-ink-muted);
+	cursor: pointer;
+	outline: none;
+	background: transparent;
+	border: 0;
+	border-radius: var(--radius-sm);
+	-webkit-tap-highlight-color: transparent;
+}
+
+.ep-search-clear:focus-visible {
+	color: var(--ep-ink);
+	box-shadow: inset 0 0 0 2px var(--color-accent-400);
+}
+
+@media (hover: hover) {
+	.ep-search-clear:hover {
+		color: var(--ep-ink);
+	}
+}
+
+.ep-search:has(input:placeholder-shown) .ep-search-clear {
+	display: none;
+}
+
 @media (hover: hover) {
 	/* fallow-ignore-next-line css-selector-complexity */
 	.ep-search:has(input:placeholder-shown):not(:focus-within) kbd {

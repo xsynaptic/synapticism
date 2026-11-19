@@ -1,0 +1,7 @@
+/* Firefox paints before a Lab's body stylesheet loads; the space stays reserved and hidden until it does */
+[data-lab] {
+	position: relative;
+	visibility: hidden;
+	height: var(--lab-height);
+	overflow: hidden;
+}

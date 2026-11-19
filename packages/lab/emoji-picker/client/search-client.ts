@@ -1,12 +1,9 @@
 import type { SearchRequest, SearchResponse } from '#emoji-picker/client/search-worker.ts';
-import type { SearchEmoji } from '#emoji-picker/core/catalog-types.ts';
 import type { SupportProbe } from '#emoji-picker/core/support-probes.ts';
 
 type Answer = Extract<SearchResponse, { id: number }>;
 
 const pending = new Map<number, (answer: Answer | undefined) => void>();
-
-const entryCache = new Map<string, SearchEmoji | undefined>();
 
 let nextId = 0;
 let ready: Promise<boolean> | undefined;
@@ -102,15 +99,4 @@ export async function searchEmoji(query: string) {
 	const answer = await ask((id) => ({ id, kind: 'search', query }));
 
 	return answer?.kind === 'search' ? answer.hexcodes : [];
-}
-
-export async function lookupEntry(hexcode: string) {
-	if (entryCache.has(hexcode)) return entryCache.get(hexcode);
-
-	const answer = await ask((id) => ({ hexcode, id, kind: 'entry' }));
-	const entry = answer?.kind === 'entry' ? answer.entry : undefined;
-
-	entryCache.set(hexcode, entry);
-
-	return entry;
 }

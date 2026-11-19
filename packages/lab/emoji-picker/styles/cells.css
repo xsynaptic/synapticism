@@ -16,13 +16,27 @@
 }
 
 .ep-cells > button {
+	position: relative;
 	margin: 2px;
 	font-size: var(--ep-glyph);
 }
 
+.ep-cells > button[data-float]::before {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	font-size: var(--ep-glyph);
+	pointer-events: none;
+	content: attr(data-float);
+	opacity: 0;
+}
+
 .ep-tones > button {
+	--ep-glyph: 1.75rem;
+
 	width: 2.75rem;
-	font-size: 1.75rem;
+	font-size: var(--ep-glyph);
 }
 
 .ep-cells > button:focus-visible,
@@ -38,21 +52,35 @@
 	}
 }
 
-.ep-cells > button:active,
-.ep-tones > button:active {
-	background: var(--ep-hairline);
-}
-
-.ep-unsupported {
-	opacity: 0.45;
-}
-
-.ep-unsupported:focus-visible {
-	opacity: 0.8;
-}
-
 @media (hover: hover) {
-	.ep-unsupported:hover {
-		opacity: 0.8;
+	.ep-cells > button:active,
+	.ep-tones > button:active {
+		background: var(--ep-hairline);
 	}
+}
+
+/* Colour glyphs ignore `color`, so only a zero font size hides one */
+
+/* Out of flow, since the hidden text stays a grid item and pushes an in-flow marker off center */
+:is(.ep-cells, .ep-tones) > .ep-unsupported,
+.ep-detail-glyph.ep-unsupported {
+	position: relative;
+	font-size: 0;
+}
+
+.ep-unsupported::after {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	width: calc(var(--ep-glyph) * 1.1);
+	aspect-ratio: 1;
+	margin: auto;
+	font-family: var(--font-mono);
+	font-size: calc(var(--ep-glyph) * 0.55);
+	line-height: 1;
+	color: var(--ep-ink-muted);
+	content: '?';
+	border: 1.5px dashed var(--color-primary-300);
+	border-radius: var(--radius-lg);
 }

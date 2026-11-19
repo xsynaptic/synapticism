@@ -15,17 +15,21 @@ function readProbes(element: HTMLElement): Array<SupportProbe> {
 	}
 }
 
+export function isUnsupported(version: string | undefined) {
+	return Number(version) > pickerStore.getState().supportedVersion;
+}
+
+export function versionShown(cell: HTMLButtonElement) {
+	const isToned =
+		cell.dataset.skins !== undefined &&
+		toneFor(pickerStore.getState(), cell.dataset.hexcode ?? '') > 0;
+
+	return (isToned ? cell.dataset.skinVersion : undefined) ?? cell.dataset.version;
+}
+
 export function markUnsupported(cells: Map<string, HTMLButtonElement>) {
-	const state = pickerStore.getState();
-	const { supportedVersion } = state;
-
-	for (const [hexcode, cell] of cells) {
-		const isToned = cell.dataset.skins !== undefined && toneFor(state, hexcode) > 0;
-		const version = Number(
-			(isToned ? cell.dataset.skinVersion : undefined) ?? cell.dataset.version,
-		);
-
-		cell.classList.toggle('ep-unsupported', version > supportedVersion);
+	for (const cell of cells.values()) {
+		cell.classList.toggle('ep-unsupported', isUnsupported(versionShown(cell)));
 	}
 }
 

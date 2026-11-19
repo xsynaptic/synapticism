@@ -1,5 +1,6 @@
 import { anchorCell, hidePlaced, placeWithoutAnchor } from '#emoji-picker/client/cell-anchor.ts';
 import { isCell } from '#emoji-picker/client/grid-focus.ts';
+import { isUnsupported } from '#emoji-picker/client/support-marking.ts';
 
 const longPressDelay = 450;
 const moveTolerance = 8;
@@ -29,7 +30,13 @@ function fillTones(popover: HTMLElement, anchor: HTMLButtonElement) {
 	const glyphs = anchor.dataset.skins?.split(' ') ?? [];
 	const buttons = toneButtons(popover);
 
-	for (const [tone, button] of buttons.entries()) button.textContent = glyphs[tone] ?? '';
+	for (const [tone, button] of buttons.entries()) {
+		button.textContent = glyphs[tone] ?? '';
+		button.classList.toggle(
+			'ep-unsupported',
+			isUnsupported((tone > 0 ? anchor.dataset.skinVersion : undefined) ?? anchor.dataset.version),
+		);
+	}
 
 	return buttons;
 }

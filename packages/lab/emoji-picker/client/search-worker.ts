@@ -1,4 +1,4 @@
-import type { SearchCatalog, SearchEmoji } from '#emoji-picker/core/catalog-types.ts';
+import type { SearchCatalog } from '#emoji-picker/core/catalog-types.ts';
 import type { SupportProbe } from '#emoji-picker/core/support-probes.ts';
 
 import { highestSupportedVersion } from '#emoji-picker/client/support-probe.ts';
@@ -7,11 +7,9 @@ import searchDataUrl from '#emoji-picker/data/search-en.json?url';
 
 export type SearchRequest =
 	| { fontFamily: string; id: number; kind: 'probe'; probes: Array<SupportProbe> }
-	| { hexcode: string; id: number; kind: 'entry' }
 	| { id: number; kind: 'search'; query: string };
 
 export type SearchResponse =
-	| { entry: SearchEmoji | undefined; id: number; kind: 'entry' }
 	| { hexcodes: Array<string>; id: number; kind: 'search' }
 	| { id: number; kind: 'probe'; version: number }
 	| { kind: 'ready' }
@@ -22,12 +20,7 @@ async function load() {
 
 	if (!response.ok) throw new Error(`Search data answered ${String(response.status)}`);
 
-	const catalog = (await response.json()) as SearchCatalog;
-
-	return {
-		entries: new Map(catalog.emoji.map((item) => [item.hexcode, item])),
-		search: createEmojiSearch(catalog),
-	};
+	return createEmojiSearch((await response.json()) as SearchCatalog);
 }
 
 function post(response: SearchResponse) {
@@ -52,14 +45,9 @@ async function respond(request: SearchRequest) {
 		return;
 	}
 
-	const index = await ready;
+	const search = await ready;
 
-	if (request.kind === 'entry') {
-		post({ entry: index.entries.get(request.hexcode), id: request.id, kind: 'entry' });
-		return;
-	}
-
-	post({ hexcodes: index.search(request.query), id: request.id, kind: 'search' });
+	post({ hexcodes: search(request.query), id: request.id, kind: 'search' });
 }
 
 try {

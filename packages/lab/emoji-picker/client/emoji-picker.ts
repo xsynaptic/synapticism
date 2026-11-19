@@ -2,6 +2,7 @@ import type { ResultsState } from '#emoji-picker/client/search-results.ts';
 
 import { wireCategoryBar } from '#emoji-picker/client/category-bar.ts';
 import { CopyBubble } from '#emoji-picker/client/copy-bubble.ts';
+import { floatGlyph } from '#emoji-picker/client/copy-float.ts';
 import { queryDetailParts, renderDetail } from '#emoji-picker/client/detail-panel.ts';
 import { isEmojiSize, pickerStore } from '#emoji-picker/client/emoji-picker-store.ts';
 import {
@@ -13,12 +14,7 @@ import {
 	moveFocus,
 	setActiveCell,
 } from '#emoji-picker/client/grid-focus.ts';
-import {
-	ensureSearch,
-	isSearchReady,
-	lookupEntry,
-	searchEmoji,
-} from '#emoji-picker/client/search-client.ts';
+import { ensureSearch, isSearchReady, searchEmoji } from '#emoji-picker/client/search-client.ts';
 import { queryResultsView, renderResults } from '#emoji-picker/client/search-results.ts';
 import { markUnsupported, probeSupport } from '#emoji-picker/client/support-marking.ts';
 import { TonePopover } from '#emoji-picker/client/tone-popover.ts';
@@ -117,12 +113,13 @@ class EmojiPicker extends HTMLElement {
 		try {
 			await navigator.clipboard.writeText(glyph);
 		} catch {
-			this.#notify(cell, 'Copy blocked by the browser', true);
+			this.#bubble?.show(cell, 'Copy blocked by the browser');
+			this.#announce('Copy blocked by the browser');
 			return;
 		}
 
 		pickerStore.getState().addRecent(hexcode);
-		this.#notify(this.#liveCell(cell, hexcode), 'Copied', false);
+		floatGlyph(this.#liveCell(cell, hexcode));
 		this.#announce(`Copied ${glyph}`);
 	}
 
@@ -202,14 +199,6 @@ class EmojiPicker extends HTMLElement {
 		if (!this.#abort) return;
 
 		if (this.#query.trim() !== '') void this.#renderResults();
-
-		void this.#renderDetail();
-	}
-
-	#notify(cell: HTMLButtonElement, message: string, isError: boolean) {
-		this.#bubble?.show(cell, message, isError);
-
-		if (isError) this.#announce(message);
 	}
 
 	#paintTone(button: HTMLButtonElement, tone: number) {
@@ -218,19 +207,13 @@ class EmojiPicker extends HTMLElement {
 		if (glyph !== undefined && button.textContent !== glyph) button.textContent = glyph;
 	}
 
-	// Once the index is up, the panel waits for the entry so keywords never flash empty
-	async #renderDetail() {
-		const hexcode = this.#focused;
+	#renderDetail() {
 		const parts = queryDetailParts(this);
-		const cell = hexcode === undefined ? undefined : this.#cells.get(hexcode);
+		const cell = this.#focused === undefined ? undefined : this.#cells.get(this.#focused);
 
-		if (!parts || !cell || hexcode === undefined) return;
+		if (!parts || !cell) return;
 
-		const entry = isSearchReady() ? await lookupEntry(hexcode) : undefined;
-
-		if (this.#focused !== hexcode) return;
-
-		renderDetail(parts, cell, entry);
+		renderDetail(parts, cell);
 	}
 
 	// Copying from recents reorders them; the copied clone keeps focus across the re-render
@@ -292,7 +275,7 @@ class EmojiPicker extends HTMLElement {
 		if (hexcode === this.#focused) return;
 
 		this.#focused = hexcode;
-		void this.#renderDetail();
+		this.#renderDetail();
 	}
 
 	#setQuery(query: string) {
@@ -314,7 +297,7 @@ class EmojiPicker extends HTMLElement {
 			if (cellsChanged) {
 				this.#applyTones();
 				markUnsupported(this.#cells);
-				void this.#renderDetail();
+				this.#renderDetail();
 			}
 
 			if (cellsChanged || state.recents !== previous.recents) this.#renderRecents();
@@ -330,7 +313,7 @@ class EmojiPicker extends HTMLElement {
 	#wire(scroller: HTMLElement, search: HTMLInputElement, signal: AbortSignal) {
 		const bubble = this.querySelector<HTMLElement>(':scope .ep-bubble');
 
-		if (bubble) this.#bubble = new CopyBubble(bubble, this);
+		if (bubble) this.#bubble = new CopyBubble(bubble, this, signal);
 
 		this.#wireGrid(scroller, signal);
 		this.#wireKeys(signal);
@@ -406,6 +389,15 @@ class EmojiPicker extends HTMLElement {
 	}
 
 	#wireSearch(search: HTMLInputElement, signal: AbortSignal) {
+		this.querySelector(':scope .ep-search-clear')?.addEventListener(
+			'click',
+			() => {
+				this.#setQuery('');
+				search.focus();
+			},
+			{ signal },
+		);
+
 		search.addEventListener(
 			'focus',
 			() => {
