@@ -1,9 +1,9 @@
 ---
 import { postListPageSize } from '#constants.ts';
 import HomeLayout from '#layouts/home.astro';
-import { queryPostEntries } from '#lib/collections/posts/posts-utils.ts';
+import { queryPostAndProjectEntries } from '#lib/collections/collections-utils.ts';
 
-const entries = await queryPostEntries();
+const entries = await queryPostAndProjectEntries();
 
 const totalPages = Math.max(1, Math.ceil(entries.length / postListPageSize));
 ---

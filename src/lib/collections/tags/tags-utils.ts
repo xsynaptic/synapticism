@@ -2,15 +2,13 @@ import * as R from 'remeda';
 
 import type { ComputedEntry } from '#lib/collections/collections-types.ts';
 
-import { queryPostEntries } from '#lib/collections/posts/posts-utils.ts';
-import { getProjectsCollection } from '#lib/collections/projects/projects-data.ts';
+import { queryPostAndProjectEntries } from '#lib/collections/collections-utils.ts';
 import { getTagsCollection } from '#lib/collections/tags/tags-data.ts';
 import {
 	createCollectionLookupByIds,
 	filterHasEntries,
 	sortByEntryCount,
 } from '#lib/utils/collections.ts';
-import { sortByDateReverseChronological } from '#lib/utils/date.ts';
 import { getContentPath } from '#lib/utils/routing.ts';
 
 export const createTagsByIdsFunction = createCollectionLookupByIds('Tags', getTagsCollection);
@@ -30,18 +28,9 @@ export async function getTagChipItems(
 }
 
 export async function queryTagsEntryContent(entry: ComputedEntry<'tags'>) {
-	const [posts, { entries: projects }] = await Promise.all([
-		queryPostEntries(),
-		getProjectsCollection(),
-	]);
+	const entries = await queryPostAndProjectEntries();
 
-	function hasTag({ data }: { data: { tags?: Array<{ id: string }> | undefined } }) {
-		return data.tags?.some(({ id }) => id === entry.id) ?? false;
-	}
-
-	return [...posts.filter(hasTag), ...projects.filter(hasTag)].toSorted(
-		sortByDateReverseChronological,
-	);
+	return entries.filter(({ data }) => data.tags?.some(({ id }) => id === entry.id) ?? false);
 }
 
 export async function queryTagsIndex() {

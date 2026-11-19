@@ -394,7 +394,12 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 					title="An Entry title long enough to wrap and show the balance"
 					titleUrl="#header"
 				>
-					<EntrySubtitle entry={sampleSubtitlePost} minutesRead={8} slot="header-subtitle" />
+					<EntrySubtitle
+						entry={sampleSubtitlePost}
+						isCollectionShown={true}
+						minutesRead={8}
+						slot="header-subtitle"
+					/>
 				</ContentHeader>
 				<ContentHeader title="The same header with no subtitle and no self-link" />
 			</Specimen>

@@ -38,6 +38,7 @@ const isGitHubSource =
 		</Anchor>
 	</DividedItem>
 ) : undefined}
+<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
 {projectDateParts ? (
 	<DividedItem dividerContent="dot">
 		{projectDateParts.map((part, index) => (
@@ -47,9 +48,7 @@ const isGitHubSource =
 			</Fragment>
 		))}
 	</DividedItem>
-) : (
-	<ContentDate dateCreated={entry.data.dateCreated} dateUpdated={entry.data.dateUpdated} />
-)}
+) : undefined}
 {minutesRead ? (
 	<DividedItem dividerContent="dot">
 		{formatStringTemplate(t('content.minutesRead'), { minutesRead })}

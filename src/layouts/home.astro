@@ -11,7 +11,7 @@ import { buildWebSiteSchema } from '#lib/utils/structured-data.ts';
 import { formatStringTemplate } from '#lib/utils/text.ts';
 
 interface Props {
-	entries: Array<CollectionEntry<'posts'>>;
+	entries: Array<CollectionEntry<'posts' | 'projects'>>;
 	pageNumber: number;
 	totalPages: number;
 }
@@ -44,5 +44,10 @@ const pagination = getPagination({
 ---
 
 <MainSite isHomepage={true} {...mainProps}>
-	<EntryExcerptList entries={entries} isLeading={true} pagination={pagination} />
+	<EntryExcerptList
+		entries={entries}
+		isCollectionShown={true}
+		isLeading={true}
+		pagination={pagination}
+	/>
 </MainSite>

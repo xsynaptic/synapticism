@@ -71,7 +71,12 @@ const { index } = getUrlPathIndexing(Astro.url.pathname);
 			/>
 		) : undefined}
 		<ContentHeader isLeading={!heroImage} title={entry.data.title} titleUrl={url}>
-			<EntrySubtitle entry={entry} minutesRead={minutesRead} slot="header-subtitle" />
+			<EntrySubtitle
+				entry={entry}
+				isCollectionShown={true}
+				minutesRead={minutesRead}
+				slot="header-subtitle"
+			/>
 		</ContentHeader>
 		<ProseBody
 			class:list={['e-content', 'pb-4']}

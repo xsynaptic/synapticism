@@ -7,7 +7,6 @@ interface ProjectDate {
 }
 
 interface ProjectDateFields {
-	dateCreated: Date;
 	dateEnded?: Date | number | undefined;
 	dateStarted?: Date | number | undefined;
 }
@@ -27,12 +26,9 @@ function getProjectDate(value: Date | number): ProjectDate {
 	};
 }
 
-export function getProjectDateParts({
-	dateCreated,
-	dateEnded,
-	dateStarted,
-}: ProjectDateFields): Array<ProjectDate> {
-	if (dateStarted === undefined) return [getProjectDate(dateCreated)];
+// A one-off has no range; its published date already dates it
+export function getProjectDateParts({ dateEnded, dateStarted }: ProjectDateFields) {
+	if (dateStarted === undefined) return;
 
 	const start = getProjectDate(dateStarted);
 

@@ -12,10 +12,10 @@ import { render } from 'astro:content';
 import * as R from 'remeda';
 
 import { siteAuthorName, siteTimezoneOffsetHours, syndicationItemCount } from '#constants.ts';
-import { getPostsCollection } from '#lib/collections/posts/posts-data.ts';
+import { queryPostAndProjectEntries } from '#lib/collections/collections-utils.ts';
 import { createTagsByIdsFunction } from '#lib/collections/tags/tags-utils.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
-import { getCopyrightYears, sortByDateReverseChronological } from '#lib/utils/date.ts';
+import { getCopyrightYears } from '#lib/utils/date.ts';
 import { getDescriptionRenderedText } from '#lib/utils/description-data.ts';
 import { getMediaImage } from '#lib/utils/media.ts';
 import { getAbsoluteUrl, getContentPath } from '#lib/utils/routing.ts';
@@ -36,7 +36,10 @@ function getSiteDate(date: Date) {
 	return anchorDateOnly(date, { utcOffsetHours: siteTimezoneOffsetHours });
 }
 
-async function getSyndicationImage({ imageFeatured, title }: CollectionEntry<'posts'>['data']) {
+async function getSyndicationImage({
+	imageFeatured,
+	title,
+}: CollectionEntry<'posts' | 'projects'>['data']) {
 	const imageId = getImageFeaturedId(imageFeatured);
 
 	if (!imageId) return;
@@ -57,7 +60,7 @@ async function getSyndicationItem({
 	entry,
 	getTagsByIds,
 }: {
-	entry: CollectionEntry<'posts'>;
+	entry: CollectionEntry<'posts' | 'projects'>;
 	getTagsByIds: Awaited<ReturnType<typeof createTagsByIdsFunction>>;
 }) {
 	const { data } = entry;
@@ -72,7 +75,7 @@ async function getSyndicationItem({
 		dateCreated: getSiteDate(data.dateCreated),
 		tags: getTagsByIds(data.tags?.map(({ id }) => id) ?? []).map((tag) => tag.data.title),
 		title: data.title,
-		url: getAbsoluteUrl(getContentPath('posts', entry.id)),
+		url: getAbsoluteUrl(getContentPath(entry.collection, entry.id)),
 		...(contentHtml ? { contentHtml } : {}),
 		...(data.dateUpdated ? { dateUpdated: getSiteDate(data.dateUpdated) } : {}),
 		...(description ? { description } : {}),
@@ -81,12 +84,12 @@ async function getSyndicationItem({
 }
 
 export async function getSyndicationItems() {
-	const { entries: posts } = await getPostsCollection();
+	const entries = await queryPostAndProjectEntries();
 	const getTagsByIds = await createTagsByIdsFunction();
 
 	return Promise.all(
-		R.pipe(posts, R.sort(sortByDateReverseChronological), R.take(syndicationItemCount)).map(
-			(entry) => getSyndicationItem({ entry, getTagsByIds }),
+		R.pipe(entries, R.take(syndicationItemCount)).map((entry) =>
+			getSyndicationItem({ entry, getTagsByIds }),
 		),
 	);
 }
