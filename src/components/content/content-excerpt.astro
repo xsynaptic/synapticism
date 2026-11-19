@@ -9,11 +9,11 @@ import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
 	class?: string | undefined;
-	entryUrl: string;
+	href: string;
 	isLeading?: boolean;
 }
 
-const { class: className, entryUrl, isLeading = false } = Astro.props;
+const { class: className, href, isLeading = false } = Astro.props;
 
 const subtitle = await renderSlot(Astro.slots, 'excerpt-subtitle');
 const media = await renderSlot(Astro.slots, 'excerpt-media');
@@ -27,7 +27,7 @@ const hasExcerpt = excerptSplit.length > 1;
 <article class:list={[className, MicroformatClassNames.Entry]}>
 	<header class="content-column mb-2 pb-2">
 		<div class:list={[{ 'site-shell-title pt-4 md:pt-8': isLeading }]}>
-			<EntryTitle as="h2" href={entryUrl}>
+			<EntryTitle as="h2" href={href}>
 				<slot name="excerpt-title" />
 			</EntryTitle>
 		</div>
@@ -38,6 +38,6 @@ const hasExcerpt = excerptSplit.length > 1;
 		<Fragment set:html={excerptContent} />
 	</ProseBody>
 	{hasExcerpt ? (
-		<ContentContinueReading class="content-column justify-end" href={entryUrl} />
+		<ContentContinueReading class="content-column justify-end" href={href} />
 	) : undefined}
 </article>

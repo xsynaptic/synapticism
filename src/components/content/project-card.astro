@@ -30,12 +30,12 @@ const images = getImageFeaturedItems(data.imageFeatured);
 <ContentCard
 	class={className}
 	description={getDescriptionRenderedHtml(entry)}
+	href={url}
 	tagItems={await getTagChipItems(data.tags, { limit: listTagLimit })}
 	title={data.title}
-	url={url}
 >
 	{isPinned && images.length > 0 ? (
-		<ImageCarousel images={images} isPriority={isPriority} slot="card-media" />
+		<ImageCarousel href={url} images={images} isPriority={isPriority} slot="card-media" />
 	) : undefined}
 	{isPinned && images.length === 0 ? (
 		<div

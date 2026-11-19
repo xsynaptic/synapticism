@@ -2,7 +2,7 @@ import { getDateTimeFormat } from '#lib/i18n/i18n-formatters.ts';
 import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface ProjectDate {
-	attribute?: string;
+	attribute: string;
 	display: string;
 }
 
@@ -27,16 +27,16 @@ function getProjectDate(value: Date | number): ProjectDate {
 }
 
 // A one-off has no range; its published date already dates it
-export function getProjectDateParts({ dateEnded, dateStarted }: ProjectDateFields) {
+export function getProjectDateRange({ dateEnded, dateStarted }: ProjectDateFields) {
 	if (dateStarted === undefined) return;
 
 	const start = getProjectDate(dateStarted);
 
-	if (dateEnded === undefined) return [start, { display: t('content.present') }];
+	if (dateEnded === undefined) return { dates: [start], label: t('projects.dateSince') };
 
 	const end = getProjectDate(dateEnded);
 
-	if (end.display === start.display) return [start];
+	if (end.display === start.display) return { dates: [start], label: t('projects.dateActive') };
 
-	return [start, end];
+	return { dates: [start, end], label: t('projects.dateActive') };
 }

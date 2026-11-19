@@ -1,6 +1,8 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
 
+import { renderSlot } from '#lib/utils/astro.ts';
+
 interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
 	accent?: boolean | undefined;
 	href: string;
@@ -9,10 +11,11 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
 
 const { accent = false, class: className, href, underline = 'always', ...props } = Astro.props;
 
-const hasIcon = Astro.slots.has('start') || Astro.slots.has('end');
+const start = await renderSlot(Astro.slots, 'start');
+const end = await renderSlot(Astro.slots, 'end');
+const label = await renderSlot(Astro.slots);
 
-const rendered = await Astro.slots.render('default');
-const label = rendered.trim();
+const hasIcon = Boolean(start) || Boolean(end);
 ---
 
 <a
@@ -28,9 +31,9 @@ const label = rendered.trim();
 >
 	{hasIcon ? (
 		<Fragment>
-			<slot name="start" />
+			{start ? <Fragment set:html={start} /> : undefined}
 			<span class="anchor-label" set:html={label} />
-			<slot name="end" />
+			{end ? <Fragment set:html={end} /> : undefined}
 		</Fragment>
 	) : (
 		<Fragment set:html={label} />

@@ -15,7 +15,7 @@ const { class: className, count, edgeColor = 'primary', ...props } = Astro.props
 	class:list={[
 		'chip',
 		`chip-edge-${edgeColor}`,
-		'inline-flex items-center rounded-sm border bg-white px-2 py-0.5 font-mono text-xs whitespace-nowrap',
+		'inline-flex items-center rounded-sm border bg-white px-2 py-0.5 font-mono text-xs whitespace-nowrap select-none',
 		className,
 	]}
 	{...props}

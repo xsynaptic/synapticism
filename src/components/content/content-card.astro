@@ -10,12 +10,12 @@ import { renderSlot } from '#lib/utils/astro.ts';
 interface Props {
 	class?: string | undefined;
 	description: string | undefined;
+	href: string;
 	tagItems: ComponentProps<typeof ChipRow>['items'];
 	title: string;
-	url: string;
 }
 
-const { class: className, description, tagItems, title, url } = Astro.props;
+const { class: className, description, href, tagItems, title } = Astro.props;
 
 const subtitle = await renderSlot(Astro.slots, 'card-subtitle');
 ---
@@ -23,7 +23,7 @@ const subtitle = await renderSlot(Astro.slots, 'card-subtitle');
 <article class:list={['flex flex-col gap-4', MicroformatClassNames.Entry, className]}>
 	<slot name="card-media" />
 	<header>
-		<EntryTitle as="h2" href={url}>
+		<EntryTitle as="h2" href={href}>
 			{title}
 		</EntryTitle>
 		{subtitle ? <ContentSubtitle html={subtitle} /> : undefined}

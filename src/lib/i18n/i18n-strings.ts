@@ -75,7 +75,6 @@ const strings = {
 	'content.dateTime': '{date} at {time}',
 	'content.dateTimeShort': '{date} {time}',
 	'content.minutesRead': '{minutesRead} minute read',
-	'content.present': 'present',
 	'content.quotationAuthor': '― {author}',
 	'content.timeUtc': '{time} UTC',
 	'content.updated': 'Updated',
@@ -84,7 +83,9 @@ const strings = {
 	'posts.description':
 		'A technical notebook on web development, AI, and internet culture, from quick notes and annotated links to longer pieces.',
 	'posts.title': 'Posts',
+	'projects.dateActive': 'Active',
 	'projects.dateRangeSeparator': '–',
+	'projects.dateSince': 'Since',
 	'projects.description':
 		'Websites, command-line tools, and open source packages, mostly built with Astro, React, and TypeScript.',
 	'projects.homepage': 'Homepage',

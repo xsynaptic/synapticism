@@ -8,11 +8,12 @@ import { t } from '#lib/i18n/i18n-strings.ts';
 
 interface Props {
 	class?: string | undefined;
+	href: string;
 	images: Array<ImageFeaturedReference>;
 	isPriority: boolean;
 }
 
-const { class: className, images, isPriority } = Astro.props;
+const { class: className, href, images, isPriority } = Astro.props;
 
 const isCarousel = images.length > 1;
 const Wrapper = isCarousel ? 'image-carousel' : 'div';
@@ -37,7 +38,7 @@ const carouselAttributes: HTMLAttributes<'div'> = isCarousel
 	>
 		<div class="carousel-container">
 			{images.map((image, index) => (
-				<ImageCarouselItem {...image} isPriority={isPriority && index === 0} />
+				<ImageCarouselItem {...image} href={href} isPriority={isPriority && index === 0} />
 			))}
 		</div>
 		{isCarousel ? <ImageCarouselNavigation /> : undefined}

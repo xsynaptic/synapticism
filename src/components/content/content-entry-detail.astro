@@ -70,7 +70,7 @@ const { index } = getUrlPathIndexing(Astro.url.pathname);
 				template={template}
 			/>
 		) : undefined}
-		<ContentHeader isLeading={!heroImage} title={entry.data.title} titleUrl={url}>
+		<ContentHeader href={url} isLeading={!heroImage} title={entry.data.title}>
 			<EntrySubtitle
 				entry={entry}
 				isCollectionShown={true}

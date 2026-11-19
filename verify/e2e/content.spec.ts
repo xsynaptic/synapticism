@@ -30,7 +30,7 @@ test('a Post renders', { tag: '@smoke' }, async ({ page, site }) => {
 test('a List Page reaches a Project that renders', async ({ page }) => {
 	await visit(page, routes.projectsIndex);
 
-	const link = page.locator('main a').first();
+	const link = page.locator('main').getByRole('link').first();
 	const title = await link.innerText();
 
 	await link.click();

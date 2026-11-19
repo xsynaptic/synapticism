@@ -28,13 +28,18 @@ const images = getImageFeaturedItems(entry.data.imageFeatured);
 
 <ContentExcerpt
 	class={className}
-	entryUrl={getContentPath(entry.collection, entry.id)}
+	href={getContentPath(entry.collection, entry.id)}
 	isLeading={isLeading}
 >
 	<Fragment slot="excerpt-title">{entry.data.title}</Fragment>
 	<EntrySubtitle entry={entry} isCollectionShown={isCollectionShown} slot="excerpt-subtitle" />
 	{images.length > 0 ? (
-		<ImageCarousel images={images} isPriority={isPriority} slot="excerpt-media" />
+		<ImageCarousel
+			href={getContentPath(entry.collection, entry.id)}
+			images={images}
+			isPriority={isPriority}
+			slot="excerpt-media"
+		/>
 	) : undefined}
 	<Content />
 </ContentExcerpt>

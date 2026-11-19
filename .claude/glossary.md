@@ -28,7 +28,7 @@ The language of the site itself: what an author writes, how it is grouped, and h
 
 **Link**: An internal cross-reference from one Entry to another, authored in body text. A Link names its target by identifier rather than by URL, so it survives a change of address. _Avoid_: wikilink, internal link, cross-link.
 
-**Backlink**: An inbound Link, seen from the target: the set of Entries that point at this one. Only the `<Link id="...">` component produces Backlinks; ordinary Markdown links in the body do not. _Avoid_: reverse link, mention, inbound reference.
+**Backlink**: An inbound Link, seen from the target: the set of Entries that point at this one. Only a Link makes a Backlink; an ordinary link to the same address does not. _Avoid_: reverse link, mention, inbound reference.
 
 ## Imagery
 

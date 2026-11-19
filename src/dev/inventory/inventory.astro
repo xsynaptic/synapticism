@@ -390,8 +390,8 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 		<Section title="Content">
 			<Specimen bleed={true} name="content-header" source="components/content/content-header.astro">
 				<ContentHeader
+					href="#header"
 					title="An Entry title long enough to wrap and show the balance"
-					titleUrl="#header"
 				>
 					<EntrySubtitle
 						entry={sampleSubtitlePost}
@@ -482,16 +482,21 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 				name="content-excerpt"
 				source="components/content/content-excerpt.astro"
 			>
-				<ContentExcerpt entryUrl="#excerpt">
+				<ContentExcerpt href="#excerpt">
 					<Fragment slot="excerpt-title">An excerpt title, linked to its Entry</Fragment>
 					<EntrySubtitle entry={sampleSubtitlePost} slot="excerpt-subtitle" />
 					<ProseSample />
 				</ContentExcerpt>
 				{sampleCarouselImages.length > 0 ? (
-					<ContentExcerpt class="mt-12" entryUrl="#excerpt">
+					<ContentExcerpt class="mt-12" href="#excerpt">
 						<Fragment slot="excerpt-title">The same excerpt with Featured Images</Fragment>
 						<EntrySubtitle entry={sampleSubtitlePost} slot="excerpt-subtitle" />
-						<ImageCarousel images={sampleCarouselImages} isPriority={false} slot="excerpt-media" />
+						<ImageCarousel
+							href="#excerpt"
+							images={sampleCarouselImages}
+							isPriority={false}
+							slot="excerpt-media"
+						/>
 						<ProseSample />
 					</ContentExcerpt>
 				) : undefined}
@@ -499,11 +504,16 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			<Specimen name="content-card" source="components/content/content-card.astro">
 				<ContentCard
 					description={sampleCardDescription}
+					href="/inventory/#content-card"
 					tagItems={sampleCardTagItems}
 					title="A card title, linked to its Entry"
-					url="/inventory/#content-card"
 				>
-					<ImageCarousel images={sampleCarouselImages} isPriority={false} slot="card-media" />
+					<ImageCarousel
+						href="/inventory/#content-card"
+						images={sampleCarouselImages}
+						isPriority={false}
+						slot="card-media"
+					/>
 					<EntrySubtitle entry={sampleSubtitleProjectOngoing} slot="card-subtitle" />
 					<ContentContinueReading href="/inventory/#content-card" slot="card-links" />
 				</ContentCard>
@@ -513,8 +523,12 @@ const sampleOpenGraphCards = await getSampleOpenGraphCards();
 			</Specimen>
 			<Specimen name="image-carousel" source="components/image/image-carousel.astro">
 				<div class="flex flex-col gap-6">
-					<ImageCarousel images={sampleCarouselImages.slice(0, 1)} isPriority={false} />
-					<ImageCarousel images={sampleCarouselImages} isPriority={false} />
+					<ImageCarousel
+						href="#image-carousel"
+						images={sampleCarouselImages.slice(0, 1)}
+						isPriority={false}
+					/>
+					<ImageCarousel href="#image-carousel" images={sampleCarouselImages} isPriority={false} />
 				</div>
 				{sampleImageId ? undefined : (
 					<p class="mt-4 font-mono text-xs text-primary-500">{sampleImageMissingNote}</p>

@@ -9,10 +9,11 @@ import { imageColumnSizes, imageColumnWidth } from '#constants.ts';
 import { getMediaImage } from '#lib/utils/media.ts';
 
 interface Props extends ImageFeaturedReference {
+	href: string;
 	isPriority: boolean;
 }
 
-const { id, isPriority, title = '' } = Astro.props;
+const { href, id, isPriority, title = '' } = Astro.props;
 
 const image = getMediaImage(id);
 const placeholder = await getPlaceholder({ height: image.height, id, width: image.width });
@@ -22,13 +23,15 @@ const placeholder = await getPlaceholder({ height: image.height, id, width: imag
 	class="carousel-item image-featured-ratio bg-primary-100 bg-placeholder"
 	style={placeholder ? `background-image:url(${placeholder})` : undefined}
 >
-	<Image
-		alt={title}
-		class:list={['block size-full object-cover', MicroformatClassNames.Photo]}
-		layout="constrained"
-		priority={isPriority}
-		sizes={imageColumnSizes}
-		src={image}
-		width={imageColumnWidth}
-	/>
+	<a aria-hidden="true" class="block size-full" href={href} tabindex="-1">
+		<Image
+			alt={title}
+			class:list={['block size-full object-cover', MicroformatClassNames.Photo]}
+			layout="constrained"
+			priority={isPriority}
+			sizes={imageColumnSizes}
+			src={image}
+			width={imageColumnWidth}
+		/>
+	</a>
 </figure>

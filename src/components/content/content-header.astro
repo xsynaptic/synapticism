@@ -5,19 +5,19 @@ import { renderSlot } from '#lib/utils/astro.ts';
 
 interface Props {
 	class?: string | undefined;
+	href?: string | undefined;
 	isLeading?: boolean;
 	title: string;
-	titleUrl?: string | undefined;
 }
 
-const { class: className, isLeading = true, title, titleUrl } = Astro.props;
+const { class: className, href, isLeading = true, title } = Astro.props;
 
 const subtitle = await renderSlot(Astro.slots, 'header-subtitle');
 ---
 
 <div class:list={['content-column mb-2 pb-2', className]}>
 	<div class:list={['pt-4 md:pt-8', { 'site-shell-title': isLeading }]}>
-		<EntryTitle as="h1" data-pagefind-weight="3" href={titleUrl} rel="bookmark">
+		<EntryTitle as="h1" data-pagefind-weight="3" href={href} rel="bookmark">
 			{title}
 		</EntryTitle>
 	</div>
