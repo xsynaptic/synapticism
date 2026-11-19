@@ -20,8 +20,11 @@ function getParts(page: Page) {
 	};
 }
 
-function getGridCell(page: Page, label: string) {
-	return page.locator('emoji-picker .ep-group').getByRole('button', { exact: true, name: label });
+function getGridCell(page: Page, category: string, label: string) {
+	return page
+		.locator('emoji-picker')
+		.getByRole('region', { exact: true, name: category })
+		.getByRole('button', { exact: true, name: label });
 }
 
 function readClipboard(page: Page) {
@@ -41,7 +44,7 @@ test('copying an emoji adds it to recents, which survive a reload', async ({ pag
 	const { bubble, recents } = getParts(page);
 
 	await visit(page, pickerPath);
-	await getGridCell(page, 'robot').click();
+	await getGridCell(page, 'Smileys & emotion', 'robot').click();
 
 	await expect(bubble).toHaveText('Copied');
 	expect(await readClipboard(page)).toBe('🤖');
@@ -56,7 +59,7 @@ test('a mouse long-press opens the tone popover, and the chosen tone is remember
 	page,
 }) => {
 	const { recents, tones } = getParts(page);
-	const wave = getGridCell(page, 'waving hand');
+	const wave = getGridCell(page, 'People & body', 'waving hand');
 
 	await visit(page, pickerPath);
 	await wave.scrollIntoViewIfNeeded();
@@ -86,7 +89,7 @@ test('a mouse long-press opens the tone popover, and the chosen tone is remember
 
 test('a right-click opens the tone popover and Escape closes it', async ({ page }) => {
 	const { recents, tones } = getParts(page);
-	const wave = getGridCell(page, 'waving hand');
+	const wave = getGridCell(page, 'People & body', 'waving hand');
 
 	await visit(page, pickerPath);
 	await wave.click({ button: 'right' });

@@ -21,7 +21,7 @@ describe('emoji search', () => {
 	it.each([
 		['fire', 'fire'],
 		['dog', 'dog'],
-		['Thumbs  Up', 'thumbs up'],
+		['Face  With Tears Of Joy', 'face with tears of joy'],
 	])('puts the emoji whose label is "%s" first', (query, label) => {
 		expect(labelsFor(query)[0]).toBe(label);
 	});
@@ -65,9 +65,9 @@ describe('emoji search', () => {
 		expect(labelsFor('sungl')).toContain('smiling face with sunglasses');
 	});
 
-	it('keeps short terms exact, so "cap" does not drift to "cat"', () => {
+	it('keeps short terms exact, so "cst" does not drift to "cat"', () => {
 		expect(labelsFor('cap')).toContain('billed cap');
-		expect(labelsFor('cap')).not.toContain('cat');
+		expect(search('cst')).toEqual([]);
 	});
 
 	it('finds a local override addition', () => {

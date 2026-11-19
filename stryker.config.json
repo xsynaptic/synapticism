@@ -4,9 +4,6 @@
 	"testRunner": "vitest",
 	"plugins": ["@stryker-mutator/vitest-runner"],
 	"coverageAnalysis": "perTest",
-	"disableBail": true,
-	"incremental": true,
-	"incrementalFile": ".claude/test-audit-stryker.json",
 	"ignoreStatic": true,
 	"mutate": [
 		"src/**/*.ts",

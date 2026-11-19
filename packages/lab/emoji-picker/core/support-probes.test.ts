@@ -27,9 +27,10 @@ describe('supportProbes', () => {
 	});
 
 	it('prefers a single code point over a sequence of the same version', () => {
-		const probes = supportProbes(catalogOf(['🧑‍🦰', 12.1], ['🫠', 12.1]));
+		const probe = { emoji: '🫠', version: 12.1 };
 
-		expect(probes[0]?.emoji).toBe('🫠');
+		expect(supportProbes(catalogOf(['🧑‍🦰', 12.1], ['🫠', 12.1]))).toEqual([probe]);
+		expect(supportProbes(catalogOf(['🫠', 12.1], ['🧑‍🦰', 12.1]))).toEqual([probe]);
 	});
 
 	it('falls back to a sequence when the version has nothing else', () => {
