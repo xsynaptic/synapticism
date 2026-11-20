@@ -54,6 +54,7 @@ emoji-picker:has(.ep-tone-button[aria-expanded='true']) .ep-tones {
 
 .ep-detail-text {
 	display: grid;
+	grid-template-rows: repeat(2, 1.25rem);
 	row-gap: calc(var(--spacing) * 1);
 	min-width: 0;
 }
@@ -67,7 +68,6 @@ emoji-picker:has(.ep-tone-button[aria-expanded='true']) .ep-tones {
 }
 
 .ep-detail-name {
-	font-family: var(--font-mono);
 	font-size: var(--text-sm);
 	font-weight: var(--font-weight-semibold);
 	color: var(--ep-ink);
@@ -79,7 +79,6 @@ emoji-picker:has(.ep-tone-button[aria-expanded='true']) .ep-tones {
 
 .ep-detail-hint,
 .ep-detail-note {
-	font-family: var(--font-mono);
 	font-size: var(--text-xs);
 	color: var(--ep-ink-muted);
 }
@@ -90,7 +89,6 @@ emoji-picker:has(.ep-tone-button[aria-expanded='true']) .ep-tones {
 
 .ep-bubble {
 	padding: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
-	font-family: var(--font-mono);
 	font-size: var(--text-sm);
 	color: var(--color-highlight-600);
 	cursor: default;

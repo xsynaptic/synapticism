@@ -4,7 +4,12 @@ import type { EmojiPickerProps } from '#emoji-picker/emoji-picker-types.ts';
 
 import { supportProbes } from '#emoji-picker/core/support-probes.ts';
 import catalog from '#emoji-picker/data/grid-en.json';
-import { emojiSizeLabels, emojiSizes, storageKey } from '#emoji-picker/emoji-picker-constants.ts';
+import {
+	emojiSizeLabels,
+	emojiSizes,
+	recentsRows,
+	storageKey,
+} from '#emoji-picker/emoji-picker-constants.ts';
 import stylesheetUrl from '#emoji-picker/emoji-picker.css?url';
 
 type Props = Omit<EmojiPickerProps, 'href'>;
@@ -112,7 +117,11 @@ const probes = JSON.stringify(supportProbes(catalog));
 				</button>
 			) : undefined}
 		</div>
-		<nav aria-label="Emoji categories" class="ep-categories">
+		<nav
+			aria-label="Emoji categories"
+			class="ep-categories"
+			style={`--ep-tabs: ${String(groups.length + 1)}`}
+		>
 			<a aria-label="Recently used" href="#emoji-picker-recents" title="Recently used">
 				🕘
 			</a>
@@ -130,9 +139,14 @@ const probes = JSON.stringify(supportProbes(catalog));
 			hidden
 			id="emoji-picker-recents"
 		>
-			<h2 id="emoji-picker-recents-title">Recently used</h2>
+			<div class="ep-recents-head">
+				<h2 id="emoji-picker-recents-title">Recently used</h2>
+				<button class="ep-recents-clear" type="button">
+					Clear
+				</button>
+			</div>
 			<div class="ep-cells" />
-			<p class="ep-recents-empty">Emoji you copy land here.</p>
+			<p class="ep-recents-empty">Start copying emoji to populate this section.</p>
 		</section>
 		<section aria-labelledby="emoji-picker-results-title" class="ep-results" hidden>
 			<h2 class="sr-only" id="emoji-picker-results-title">
@@ -190,7 +204,7 @@ const probes = JSON.stringify(supportProbes(catalog));
 		))}
 	</div>
 </emoji-picker>
-<script define:vars={{ emojiSizes, storageKey }} is:inline>
+<script define:vars={{ emojiSizes, recentsRows, storageKey }} is:inline>
 	const picker = document.currentScript?.previousElementSibling;
 	let state;
 
@@ -206,13 +220,21 @@ const probes = JSON.stringify(supportProbes(catalog));
 		if (glyph) button.textContent = glyph;
 	}
 
+	function recentsShown(container, recents) {
+		const columns = Number(getComputedStyle(container).getPropertyValue('--ep-columns')) || 1;
+
+		return recents.slice(0, columns * recentsRows);
+	}
+
 	function paintRecents(picker, recents) {
 		const section = picker.querySelector(':scope .ep-recents');
 		const container = section?.querySelector(':scope > .ep-cells');
 
 		if (!section || !container) return;
 
-		for (const hexcode of recents) {
+		const shown = recentsShown(container, recents);
+
+		for (const hexcode of shown) {
 			const clone = picker
 				.querySelector(`:scope .ep-group [data-hexcode="${CSS.escape(hexcode)}"]`)
 				?.cloneNode(true);

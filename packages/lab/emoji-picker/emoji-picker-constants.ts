@@ -1,6 +1,9 @@
 export const storageKey = 'syn-emoji-picker';
 
-export const recentsLimit = 36;
+export const recentsRows = 4;
+
+// Four rows at the widest grid's 16 columns
+export const recentsLimit = recentsRows * 16;
 
 export const emojiSizes = ['small', 'large'] as const;
 

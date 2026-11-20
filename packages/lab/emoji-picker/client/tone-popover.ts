@@ -2,19 +2,11 @@ import { anchorCell, hidePlaced, placeWithoutAnchor } from '#emoji-picker/client
 import { isCell } from '#emoji-picker/client/grid-focus.ts';
 import { isUnsupported } from '#emoji-picker/client/support-marking.ts';
 
-const longPressDelay = 450;
-const moveTolerance = 8;
-
 interface TonePopoverOptions {
 	onChoose: (anchor: HTMLButtonElement, tone: number) => void;
 	onShow: () => void;
 	popover: HTMLElement;
 	root: HTMLElement;
-	scroller: HTMLElement;
-}
-
-function toneCell(target: unknown) {
-	return isCell(target) && target.dataset.skins !== undefined ? target : undefined;
 }
 
 function setExpanded(anchor: HTMLElement | undefined, isExpanded: boolean) {
@@ -48,66 +40,6 @@ function moveAcrossTones(popover: HTMLElement, event: KeyboardEvent) {
 
 	event.preventDefault();
 	buttons[(index + step + buttons.length) % buttons.length]?.focus();
-}
-
-// The click that follows a long-press release must not also copy
-function wireLongPress(
-	scroller: HTMLElement,
-	signal: AbortSignal,
-	onLongPress: (cell: HTMLButtonElement) => void,
-) {
-	let timer: ReturnType<typeof setTimeout> | undefined;
-	let origin = { x: 0, y: 0 };
-	let shouldSwallowClick = false;
-
-	function cancel() {
-		clearTimeout(timer);
-		timer = undefined;
-	}
-
-	scroller.addEventListener(
-		'pointerdown',
-		(event) => {
-			const cell = toneCell(event.target);
-
-			shouldSwallowClick = false;
-
-			if (!cell || event.button !== 0) return;
-
-			origin = { x: event.clientX, y: event.clientY };
-			timer = setTimeout(() => {
-				shouldSwallowClick = true;
-				onLongPress(cell);
-			}, longPressDelay);
-		},
-		{ signal },
-	);
-
-	scroller.addEventListener(
-		'pointermove',
-		(event) => {
-			if (Math.hypot(event.clientX - origin.x, event.clientY - origin.y) > moveTolerance) cancel();
-		},
-		{ passive: true, signal },
-	);
-
-	for (const type of ['pointerup', 'pointercancel', 'scroll'] as const) {
-		scroller.addEventListener(type, cancel, { passive: true, signal });
-	}
-
-	scroller.addEventListener(
-		'click',
-		(event) => {
-			if (!shouldSwallowClick) return;
-
-			shouldSwallowClick = false;
-			event.preventDefault();
-			event.stopImmediatePropagation();
-		},
-		{ capture: true, signal },
-	);
-
-	signal.addEventListener('abort', cancel);
 }
 
 interface PopoverHandlers {
@@ -169,10 +101,6 @@ export class TonePopover {
 	constructor(options: TonePopoverOptions, signal: AbortSignal) {
 		this.#options = options;
 
-		wireLongPress(options.scroller, signal, (cell) => {
-			this.#show(cell, false);
-		});
-		this.#wireContextMenu(signal);
 		wirePopoverEvents(
 			options.popover,
 			{
@@ -206,8 +134,8 @@ export class TonePopover {
 		return this.#options.popover.matches(':popover-open');
 	}
 
-	open(anchor: HTMLButtonElement) {
-		if (anchor.dataset.skins !== undefined) this.#show(anchor, true);
+	open(anchor: HTMLButtonElement, shouldFocus = true) {
+		if (anchor.dataset.skins !== undefined) this.#show(anchor, shouldFocus);
 	}
 
 	toggle(anchor: HTMLButtonElement) {
@@ -239,7 +167,7 @@ export class TonePopover {
 		this.#anchor = anchor;
 		anchorCell(root, anchor);
 
-		// Android fires contextmenu after the long-press timer has already opened it
+		// Moving to another anchor while open; a second showPopover would throw
 		if (!this.isOpen()) popover.showPopover();
 
 		setExpanded(anchor, true);
@@ -250,21 +178,5 @@ export class TonePopover {
 		const current = buttons.find((button) => button.textContent === anchor.textContent);
 
 		(current ?? buttons[0])?.focus();
-	}
-
-	#wireContextMenu(signal: AbortSignal) {
-		this.#options.scroller.addEventListener(
-			'contextmenu',
-			(event) => {
-				if (!isCell(event.target)) return;
-
-				event.preventDefault();
-
-				const cell = toneCell(event.target);
-
-				if (cell) this.#show(cell, event.button !== 2);
-			},
-			{ signal },
-		);
 	}
 }

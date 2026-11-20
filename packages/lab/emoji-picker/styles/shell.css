@@ -26,6 +26,11 @@ emoji-picker {
 	border-radius: var(--radius-md);
 }
 
+/* Prose sets its own faces on these, and form controls skip inheritance */
+emoji-picker :is(h2, code, kbd, button, input) {
+	font-family: inherit;
+}
+
 @media (width < 40rem) {
 	.prose-bleed > emoji-picker {
 		--ep-pad: var(--prose-gutter);
@@ -62,7 +67,6 @@ emoji-picker[data-size='large'] {
 	width: 100%;
 	padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
 	padding-inline-end: calc(var(--spacing) * 10);
-	font: inherit;
 	font-size: var(--text-base);
 	color: var(--ep-ink);
 	outline: none;
@@ -83,7 +87,6 @@ emoji-picker[data-size='large'] {
 	display: none;
 	place-self: center end;
 	padding-inline: calc(var(--spacing) * 1.5);
-	font-family: var(--font-mono);
 	font-size: var(--text-xs);
 	line-height: 1.6;
 	color: var(--ep-ink-muted);
@@ -203,8 +206,26 @@ emoji-picker[data-size='large'] {
 }
 
 .ep-categories {
+	position: relative;
 	display: flex;
 	transition: opacity var(--default-transition-duration) var(--default-transition-timing-function);
+}
+
+.ep-categories::after {
+	position: absolute;
+	bottom: -1px;
+	left: 0;
+	width: calc(100% / var(--ep-tabs));
+	height: 2px;
+	pointer-events: none;
+	content: '';
+	background: var(--color-accent-500);
+	translate: calc(var(--ep-tab, 0) * 100%) 0;
+	transition: translate var(--default-transition-duration) var(--default-transition-timing-function);
+}
+
+.ep-categories:not(:has([aria-current='true']))::after {
+	opacity: 0;
 }
 
 emoji-picker[data-searching] .ep-categories {
@@ -246,7 +267,6 @@ emoji-picker[data-searching] .ep-categories {
 }
 
 .ep-categories a[aria-current='true'] {
-	border-bottom-color: var(--color-accent-500);
 	opacity: 1;
 	filter: none;
 }
@@ -260,21 +280,65 @@ emoji-picker[data-searching] .ep-categories {
 	overscroll-behavior: contain;
 }
 
-.ep-scroll h2 {
+.ep-scroll h2,
+.ep-recents-head {
 	position: sticky;
 	top: 0;
 	z-index: 1;
 	height: var(--ep-heading);
-	padding-top: calc(var(--spacing) * 2);
 	margin: 0;
-	font-family: var(--font-sans);
+	background: linear-gradient(var(--ep-surface) calc(100% - var(--ep-fade)), transparent);
+}
+
+.ep-scroll h2,
+.ep-recents-clear {
+	padding-top: calc(var(--spacing) * 2);
 	font-size: var(--text-xs);
-	font-weight: var(--font-weight-semibold);
 	line-height: 1rem;
-	color: var(--ep-ink-soft);
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
-	background: linear-gradient(var(--ep-surface) calc(100% - var(--ep-fade)), transparent);
+}
+
+.ep-scroll h2 {
+	font-weight: var(--font-weight-semibold);
+	color: var(--ep-ink-soft);
+}
+
+.ep-recents-head {
+	display: flex;
+	justify-content: space-between;
+}
+
+.ep-recents-head h2 {
+	position: static;
+	background: none;
+}
+
+.ep-recents-clear {
+	padding: calc(var(--spacing) * 2);
+	margin-inline-end: calc(var(--spacing) * -2);
+	color: var(--ep-ink-muted);
+	cursor: pointer;
+	outline: none;
+	background: transparent;
+	border: 0;
+	border-radius: var(--radius-sm);
+	-webkit-tap-highlight-color: transparent;
+}
+
+.ep-recents-clear:focus-visible {
+	color: var(--ep-ink);
+	box-shadow: inset 0 0 0 2px var(--color-accent-400);
+}
+
+@media (hover: hover) {
+	.ep-recents-clear:hover {
+		color: var(--ep-ink);
+	}
+}
+
+.ep-recents:has(> .ep-cells:empty) .ep-recents-clear {
+	display: none;
 }
 
 .ep-scroll::after {
@@ -303,6 +367,15 @@ emoji-picker[data-searching] .ep-categories {
 	}
 }
 
+/* A jump otherwise flashed the landing section blank on a phone */
+.ep-group.ep-jump-target {
+	content-visibility: visible;
+}
+
+.ep-recents {
+	display: grid;
+}
+
 /* Hidden rather than removed keeps their layout, so clearing a query repaints instead of rebuilding */
 emoji-picker[data-searching] .ep-group,
 emoji-picker[data-searching] .ep-recents {
@@ -316,6 +389,16 @@ emoji-picker[data-searching] .ep-recents {
 	grid-template-columns: repeat(var(--ep-columns), minmax(0, 1fr));
 }
 
+/* The empty note sits in the first row's space, so the first copy shifts nothing */
+.ep-recents > .ep-cells,
+.ep-recents-empty {
+	grid-area: 2 / 1;
+}
+
+.ep-recents > .ep-cells {
+	min-height: calc(100cqi / var(--ep-columns));
+}
+
 .ep-results-empty,
 .ep-results-failed,
 .ep-recents-empty {
@@ -327,6 +410,7 @@ emoji-picker[data-searching] .ep-recents {
 
 .ep-recents-empty {
 	display: none;
+	padding-bottom: 0;
 }
 
 .ep-cells:empty + .ep-recents-empty {
@@ -334,7 +418,7 @@ emoji-picker[data-searching] .ep-recents {
 }
 
 emoji-picker[data-size='large'] .ep-scroll {
-	--ep-columns: 6;
+	--ep-columns: 7;
 }
 
 @container emoji-picker (width >= 26rem) {
@@ -343,7 +427,7 @@ emoji-picker[data-size='large'] .ep-scroll {
 	}
 
 	emoji-picker[data-size='large'] .ep-scroll {
-		--ep-columns: 7;
+		--ep-columns: 8;
 	}
 }
 
@@ -353,7 +437,7 @@ emoji-picker[data-size='large'] .ep-scroll {
 	}
 
 	emoji-picker[data-size='large'] .ep-scroll {
-		--ep-columns: 8;
+		--ep-columns: 9;
 	}
 }
 
@@ -363,7 +447,7 @@ emoji-picker[data-size='large'] .ep-scroll {
 	}
 
 	emoji-picker[data-size='large'] .ep-scroll {
-		--ep-columns: 9;
+		--ep-columns: 10;
 	}
 }
 
@@ -373,7 +457,7 @@ emoji-picker[data-size='large'] .ep-scroll {
 	}
 
 	emoji-picker[data-size='large'] .ep-scroll {
-		--ep-columns: 10;
+		--ep-columns: 12;
 	}
 }
 
@@ -383,6 +467,6 @@ emoji-picker[data-size='large'] .ep-scroll {
 	}
 
 	emoji-picker[data-size='large'] .ep-scroll {
-		--ep-columns: 12;
+		--ep-columns: 14;
 	}
 }

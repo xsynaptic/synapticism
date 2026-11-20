@@ -10,6 +10,12 @@ function sectionFor(root: Element, link: HTMLAnchorElement) {
 	return id === '' ? undefined : (root.querySelector(`[id="${CSS.escape(id)}"]`) ?? undefined);
 }
 
+function moveUnderline(links: Array<HTMLAnchorElement>, current: HTMLAnchorElement | undefined) {
+	if (!current) return;
+
+	current.parentElement?.style.setProperty('--ep-tab', String(links.indexOf(current)));
+}
+
 function markCurrent(root: Element, scroller: Element, links: Array<HTMLAnchorElement>) {
 	const scrollerTop = scroller.getBoundingClientRect().top;
 	let current: HTMLAnchorElement | undefined;
@@ -26,6 +32,21 @@ function markCurrent(root: Element, scroller: Element, links: Array<HTMLAnchorEl
 	}
 
 	for (const link of links) link.setAttribute('aria-current', String(link === current));
+
+	moveUnderline(links, current);
+}
+
+// By the second frame `content-visibility: auto` sees them on screen
+function holdRendered(section: Element) {
+	const sections = [section, section.nextElementSibling].filter((element) => element !== null);
+
+	for (const held of sections) held.classList.add('ep-jump-target');
+
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => {
+			for (const held of sections) held.classList.remove('ep-jump-target');
+		});
+	});
 }
 
 interface CategoryBarOptions {
@@ -52,6 +73,7 @@ export function wireCategoryBar(
 
 				event.preventDefault();
 				beforeJump();
+				holdRendered(section);
 				scroller.scrollTo({ top: sectionTop(scroller, section) });
 			},
 			{ signal },

@@ -16,8 +16,9 @@ interface PersistedState {
 	tones: Record<string, number>;
 }
 
-interface PickerState extends PersistedState {
+export interface PickerState extends PersistedState {
 	addRecent: (hexcode: string) => void;
+	clearRecents: () => void;
 	setEmojiTone: (hexcode: string, tone: number) => void;
 	setGlobalTone: (tone: number) => void;
 	setSize: (size: EmojiSize) => void;
@@ -33,6 +34,9 @@ export const pickerStore = createStore<PickerState>()(
 		(set) => ({
 			addRecent: (hexcode) => {
 				set((state) => ({ recents: addRecent(state.recents, hexcode, recentsLimit) }));
+			},
+			clearRecents: () => {
+				set({ recents: [] });
 			},
 			recents: [],
 			setEmojiTone: (hexcode, tone) => {

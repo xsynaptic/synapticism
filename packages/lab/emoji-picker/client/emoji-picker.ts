@@ -1,3 +1,5 @@
+import type { PickerState } from '#emoji-picker/client/emoji-picker-store.ts';
+import type { RecentsView } from '#emoji-picker/client/recents-view.ts';
 import type { ResultsState } from '#emoji-picker/client/search-results.ts';
 
 import { wireCategoryBar } from '#emoji-picker/client/category-bar.ts';
@@ -7,13 +9,14 @@ import { queryDetailParts, renderDetail } from '#emoji-picker/client/detail-pane
 import { isEmojiSize, pickerStore } from '#emoji-picker/client/emoji-picker-store.ts';
 import {
 	cellSelector,
-	cloneCells,
 	focusFirstCell,
 	isCell,
 	isGridKey,
 	moveFocus,
 	setActiveCell,
 } from '#emoji-picker/client/grid-focus.ts';
+import { wirePressGesture } from '#emoji-picker/client/press-gesture.ts';
+import { createRecentsView } from '#emoji-picker/client/recents-view.ts';
 import { ensureSearch, isSearchReady, searchEmoji } from '#emoji-picker/client/search-client.ts';
 import { queryResultsView, renderResults } from '#emoji-picker/client/search-results.ts';
 import { markUnsupported, probeSupport } from '#emoji-picker/client/support-marking.ts';
@@ -28,6 +31,14 @@ function isTyping(target: EventTarget | null) {
 	);
 }
 
+function haveCellsChanged(state: PickerState, previous: PickerState) {
+	return (
+		state.tone !== previous.tone ||
+		state.tones !== previous.tones ||
+		state.supportedVersion !== previous.supportedVersion
+	);
+}
+
 class EmojiPicker extends HTMLElement {
 	#abort: AbortController | undefined;
 	#announcer: HTMLElement | undefined;
@@ -35,7 +46,7 @@ class EmojiPicker extends HTMLElement {
 	#cells = new Map<string, HTMLButtonElement>();
 	#focused: string | undefined;
 	#query = '';
-	#recents: HTMLElement | undefined;
+	#recents: RecentsView | undefined;
 	#refreshCategories: (() => void) | undefined;
 	#scroller: HTMLElement | undefined;
 	#search: HTMLInputElement | undefined;
@@ -55,15 +66,23 @@ class EmojiPicker extends HTMLElement {
 		this.#abort = new AbortController();
 		this.#scroller = scroller;
 		this.#search = search;
-		this.#recents = recents;
 		this.#announcer = this.querySelector<HTMLElement>(':scope .ep-announcer') ?? undefined;
 		this.#toneButton = this.querySelector<HTMLButtonElement>(':scope .ep-tone-button') ?? undefined;
 
 		this.#indexCells();
-		recents.hidden = false;
 		this.#applySize();
 		this.#applyTones();
-		this.#renderRecents();
+		this.#recents = createRecentsView(
+			{
+				announce: (message) => {
+					this.#announce(message);
+				},
+				cellFor: (hexcode) => this.#cells.get(hexcode),
+				root: this,
+				section: recents,
+			},
+			this.#abort.signal,
+		);
 		this.#wire(scroller, search, this.#abort.signal);
 		probeSupport(this, this.#cells);
 		whenIdle(() => {
@@ -102,7 +121,7 @@ class EmojiPicker extends HTMLElement {
 		if (this.#toneButton) this.#paintTone(this.#toneButton, state.tone);
 	}
 
-	async #copy(cell: HTMLButtonElement) {
+	async #copy(cell: HTMLButtonElement, shouldPromote: boolean) {
 		const glyph = cell.textContent;
 		const hexcode = cell.dataset.hexcode;
 
@@ -118,8 +137,7 @@ class EmojiPicker extends HTMLElement {
 			return;
 		}
 
-		pickerStore.getState().addRecent(hexcode);
-		floatGlyph(this.#liveCell(cell, hexcode));
+		this.#landCopy(cell, hexcode, shouldPromote);
 		this.#announce(`Copied ${glyph}`);
 	}
 
@@ -180,13 +198,10 @@ class EmojiPicker extends HTMLElement {
 		}
 	}
 
-	#liveCell(cell: HTMLButtonElement, hexcode: string) {
-		if (cell.isConnected) return cell;
+	#landCopy(cell: HTMLButtonElement, hexcode: string, shouldPromote: boolean) {
+		if (shouldPromote) pickerStore.getState().addRecent(hexcode);
 
-		return (
-			this.#recents?.querySelector<HTMLButtonElement>(`[data-hexcode="${CSS.escape(hexcode)}"]`) ??
-			cell
-		);
+		floatGlyph(this.#recents?.liveCell(cell, hexcode) ?? cell);
 	}
 
 	// A query typed before the index lands runs when it does
@@ -214,31 +229,6 @@ class EmojiPicker extends HTMLElement {
 		if (!parts || !cell) return;
 
 		renderDetail(parts, cell);
-	}
-
-	// Copying from recents reorders them; the copied clone keeps focus across the re-render
-	#renderRecents() {
-		const container = this.#recents?.querySelector(':scope > .ep-cells');
-
-		if (!container) return;
-
-		const active = document.activeElement;
-		const focused =
-			isCell(active) && container.contains(active) ? active.dataset.hexcode : undefined;
-		const clones = cloneCells(pickerStore.getState().recents, (hexcode) =>
-			this.#cells.get(hexcode),
-		);
-
-		container.replaceChildren(...clones);
-
-		const refocus = clones.find((clone) => clone.dataset.hexcode === focused);
-
-		if (refocus) {
-			setActiveCell(this, refocus, true);
-			return;
-		}
-
-		if (!this.querySelector(`:scope ${cellSelector}[tabindex="0"]`)) focusFirstCell(this, false);
 	}
 
 	async #renderResults() {
@@ -285,14 +275,16 @@ class EmojiPicker extends HTMLElement {
 		void this.#renderResults();
 	}
 
+	#shouldPromote(cell: HTMLButtonElement) {
+		return this.#recents?.contains(cell) !== true;
+	}
+
 	#subscribe(signal: AbortSignal) {
 		const unsubscribe = pickerStore.subscribe((state, previous) => {
-			const cellsChanged =
-				state.tone !== previous.tone ||
-				state.tones !== previous.tones ||
-				state.supportedVersion !== previous.supportedVersion;
+			const cellsChanged = haveCellsChanged(state, previous);
+			const sizeChanged = state.size !== previous.size;
 
-			if (state.size !== previous.size) this.#applySize();
+			if (sizeChanged) this.#applySize();
 
 			if (cellsChanged) {
 				this.#applyTones();
@@ -300,7 +292,8 @@ class EmojiPicker extends HTMLElement {
 				this.#renderDetail();
 			}
 
-			if (cellsChanged || state.recents !== previous.recents) this.#renderRecents();
+			if (cellsChanged || sizeChanged || state.recents !== previous.recents)
+				this.#recents?.render();
 		});
 
 		signal.addEventListener('abort', unsubscribe);
@@ -340,7 +333,7 @@ class EmojiPicker extends HTMLElement {
 				const cell =
 					event.target instanceof Element ? event.target.closest(cellSelector) : undefined;
 
-				if (isCell(cell)) void this.#copy(cell);
+				if (isCell(cell)) void this.#copy(cell, this.#shouldPromote(cell));
 			},
 			{ signal },
 		);
@@ -444,20 +437,38 @@ class EmojiPicker extends HTMLElement {
 						return;
 					}
 
+					// The tone change detaches a recents anchor
+					const shouldPromote = this.#shouldPromote(anchor);
+
 					pickerStore.getState().setEmojiTone(anchor.dataset.hexcode ?? '', tone);
-					void this.#copy(anchor);
+					void this.#copy(anchor, shouldPromote);
 				},
 				onShow: () => {
 					this.#bubble?.hide();
 				},
 				popover,
 				root: this,
-				scroller,
 			},
 			signal,
 		);
 
 		this.#tones = tones;
+		wirePressGesture(
+			{
+				onCopy: (cell) => {
+					void this.#copy(cell, this.#shouldPromote(cell));
+				},
+				preview: {
+					read: () => this.#focused,
+					show: (hexcode) => {
+						this.#setFocused(hexcode);
+					},
+				},
+				scroller,
+				tones,
+			},
+			signal,
+		);
 		this.#toneButton?.addEventListener(
 			'click',
 			(event) => {

@@ -45,6 +45,11 @@
 	box-shadow: inset 0 0 0 2px var(--color-accent-400);
 }
 
+.ep-cells > button.ep-pressed,
+.ep-tones > button.ep-pressed {
+	background: var(--ep-well);
+}
+
 @media (hover: hover) {
 	.ep-cells > button:hover,
 	.ep-tones > button:hover {
@@ -76,7 +81,6 @@
 	width: calc(var(--ep-glyph) * 1.1);
 	aspect-ratio: 1;
 	margin: auto;
-	font-family: var(--font-mono);
 	font-size: calc(var(--ep-glyph) * 0.55);
 	line-height: 1;
 	color: var(--ep-ink-muted);

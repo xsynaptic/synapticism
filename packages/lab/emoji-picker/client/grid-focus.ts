@@ -26,6 +26,11 @@ function navigableContainers(root: Element) {
 		);
 }
 
+// Every cell container inherits the column count the container query sets on the scroller
+export function gridColumns(element: Element) {
+	return Number(getComputedStyle(element).getPropertyValue('--ep-columns')) || 1;
+}
+
 export function setActiveCell(root: Element, cell: HTMLButtonElement, shouldFocus: boolean) {
 	for (const active of root.querySelectorAll<HTMLButtonElement>(
 		`:scope ${cellSelector}[tabindex="0"]`,
@@ -51,9 +56,7 @@ export function moveFocus(root: Element, from: HTMLButtonElement, key: GridKey) 
 
 	if (!cells) return;
 
-	// Every cell container inherits the column count the container query sets on the scroller
-	const columns =
-		Number(getComputedStyle(from.parentElement ?? from).getPropertyValue('--ep-columns')) || 1;
+	const columns = gridColumns(from.parentElement ?? from);
 	const sizes = containers.map((container) => container.children.length);
 	const target = moveInGrid(
 		{ columns, sizes },

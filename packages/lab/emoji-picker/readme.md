@@ -1,6 +1,6 @@
 # Emoji picker
 
-An emoji browser you can search by name, keyword, slang or shortcode. Click an emoji to copy it, set a skin tone for all of them with the ✋ button, or hold or right-click one emoji to give it its own; the picker remembers your recents, tones and preferred size.
+An emoji browser you can search by name, keyword, slang or shortcode. Click an emoji to copy it, set a skin tone for all of them with the ✋ button, or hold or right-click one emoji to give it its own. Hold and drag across the grid (on a desktop, click and drag) to see each emoji before you let go to copy it. The picker remembers your recents, tones and preferred size.
 
 The grid is rendered at build time, so it shows up and scrolls before any JavaScript runs. Search loads in the background and builds its index in a web worker.
 
