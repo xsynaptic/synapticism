@@ -1,15 +1,15 @@
 import { ReactFlowProvider } from '@xyflow/react';
-import '@xyflow/react/dist/base.css';
+import reactFlowStylesheet from '@xyflow/react/dist/base.css?inline';
 import { useEffect, useRef } from 'react';
 
 import { AppToolbar } from '#glitch-graph/app/app-toolbar.tsx';
 import { PreviewPanel } from '#glitch-graph/app/preview-panel.tsx';
 import { useRunStore } from '#glitch-graph/app/run-store.ts';
 import { StageDialog } from '#glitch-graph/app/stage-dialog.tsx';
-import '#glitch-graph/glitch-graph.css';
 import defaultSourceUrl from '#glitch-graph/assets/default-source.jpg?url';
 import { useFlowStore } from '#glitch-graph/canvas/flow-store.ts';
 import { GraphCanvas } from '#glitch-graph/canvas/graph-canvas.tsx';
+import stylesheet from '#glitch-graph/glitch-graph.css?inline';
 import { useGraphStore } from '#glitch-graph/graph/graph-store.ts';
 import { PortalContainerContext } from '#glitch-graph/ui/portal-container.ts';
 
@@ -35,6 +35,7 @@ export default function GlitchGraphApp() {
 
 	return (
 		<PortalContainerContext value={portalRef}>
+			<style>{reactFlowStylesheet + stylesheet}</style>
 			<div className="gg-app" data-fullscreen={isFullscreen}>
 				<AppToolbar />
 				<div className="gg-workspace">

@@ -27,7 +27,12 @@ test.each(components.filter((component) => !component.isFull))(
 	},
 );
 
-test.each(components)('$file imports a stylesheet only with ?inline', ({ source }) => {
+const sources = globSync('**/*.{astro,ts,tsx}', {
+	cwd: import.meta.dirname,
+	exclude: ['**/node_modules/**'],
+}).map((file) => ({ file, source: readFileSync(path.join(import.meta.dirname, file), 'utf8') }));
+
+test.each(sources)('$file imports a stylesheet only with ?inline', ({ source }) => {
 	expect(source).not.toMatch(stylesheetSideEffectPattern);
 	expect(source).not.toMatch(stylesheetUrlPattern);
 });
