@@ -26,7 +26,7 @@ Add a line here only when an agent cannot see it in the repo or work it out quic
 - Tailwind v4 is the base; prototype with it. Where its syntax turns arcane, or the atomic class is not already in the CSS output, write vanilla CSS.
 - Utilities inline by default. A rule in `src/styles/main/components/<component>.css` (registered in `main.css` under `layer(components)`) only when the selector or value cannot sit on the element: content not authored here (MDX, pagefind, maplibre), structural and state selectors, pseudo-elements carrying `content`, values with no theme step.
 - A decoration applied like a utility becomes a `@utility` in `parts/utilities.css`.
-- No `<style>` blocks; they sit outside the cascade layers. `main-stylesheet.astro` is the one `is:inline` exception, guarding against FOUC.
+- No `<style>` blocks; they sit outside the cascade layers. Lab CSS is the exception: unlayered on purpose, it ships inline through `?inline`.
 - A hook class carries only what the stylesheet targets, under a descriptive prefix naming that target. Microformat prefixes (`p-`, `h-`, `u-`, `dt-`, `e-`) stay out.
 - Stylesheets read tokens as `var(--…)`; `@apply` where it replaces a media query or composes a project `@utility`.
 - Stacking order is `--z-index-*`, applied as `z-*` utilities or `var()`.

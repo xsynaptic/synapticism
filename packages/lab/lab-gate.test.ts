@@ -14,6 +14,7 @@ const components = globSync('**/*.astro', {
 const processedScriptPattern = /<script(?![^>]*(?:is:inline|define:vars))[^>]*>/;
 const clientDirectivePattern = /\sclient:[a-z]+/;
 const stylesheetSideEffectPattern = /^import\s+['"][^'"]+\.css['"]/m;
+const stylesheetUrlPattern = /from\s+['"][^'"]+\.css\?url['"]/;
 const fullImportPattern = /from\s+['"][^'"]+-full\.astro['"]/;
 const fullImportNamePattern = /import\s+(\w+)\s+from\s+['"][^'"]+-full\.astro['"]/;
 const gatedPattern = /<LabGate[\s>][\s\S]*?<\/LabGate>/g;
@@ -26,8 +27,9 @@ test.each(components.filter((component) => !component.isFull))(
 	},
 );
 
-test.each(components)('$file imports no stylesheet for its side effect', ({ source }) => {
+test.each(components)('$file imports a stylesheet only with ?inline', ({ source }) => {
 	expect(source).not.toMatch(stylesheetSideEffectPattern);
+	expect(source).not.toMatch(stylesheetUrlPattern);
 });
 
 test.each(components.filter((component) => fullImportPattern.test(component.source)))(

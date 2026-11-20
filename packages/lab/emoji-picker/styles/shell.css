@@ -14,8 +14,8 @@ emoji-picker {
 
 	position: relative;
 	display: grid;
-	visibility: visible;
 	grid-template-rows: auto minmax(0, 1fr) auto;
+	height: min(32rem, 80dvh);
 	anchor-scope: --ep-cell-anchor;
 	container: emoji-picker / inline-size;
 	overflow: hidden;

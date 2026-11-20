@@ -10,7 +10,7 @@ import {
 	recentsRows,
 	storageKey,
 } from '#emoji-picker/emoji-picker-constants.ts';
-import stylesheetUrl from '#emoji-picker/emoji-picker.css?url';
+import stylesheet from '#emoji-picker/emoji-picker.css?inline';
 
 type Props = Omit<EmojiPickerProps, 'href'>;
 
@@ -50,16 +50,8 @@ const probes = JSON.stringify(supportProbes(catalog));
 // The inline script mirrors the element's paint; keep them in step or the upgrade repaints
 ---
 
-<link href={stylesheetUrl} rel="stylesheet" />
-<emoji-picker
-	class={className}
-	data-lab
-	data-pagefind-ignore="all"
-	data-probes={probes}
-	style="
-
---lab-height: min(32rem, 80dvh)"
->
+<Fragment set:html={`<style>${stylesheet}</style>`} />
+<emoji-picker class={className} data-pagefind-ignore="all" data-probes={probes}>
 	<div class="ep-top">
 		<div class="ep-toolbar">
 			<div class="ep-search">
