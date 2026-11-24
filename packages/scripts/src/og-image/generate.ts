@@ -4,15 +4,12 @@ import { mediaDir, openGraphImageHeight, openGraphImageWidth } from '@synapticis
 import { openImageSource } from '@xsynaptic/astro-image-pipeline/node';
 import { findWorkspaceRoot } from '@xsynaptic/astro-scripts';
 import path from 'node:path';
-import { render, setGlyphCacheMaxBytes } from 'takumi-js';
+import { render } from 'takumi-js';
 import { Renderer } from 'takumi-js/node';
 
 import { openGraphBandHeight, openGraphJpegQuality } from '#og-image/constants.ts';
 import { getOpenGraphElement } from '#og-image/element.tsx';
 import { loadOpenGraphFonts } from '#og-image/fonts.ts';
-
-// The 8 MiB default evicts outlines mid-run once a corpus draws more than about a thousand glyphs
-const glyphCacheBytes = 64 * 1024 * 1024;
 
 export interface ProcessedImage {
 	data: Buffer;
@@ -22,9 +19,6 @@ export interface ProcessedImage {
 
 // Fonts and glyph outlines live on the renderer, so build one and reuse it for every card
 export async function createCardRenderer() {
-	// Read when a cache is first used, so this has to run before the first render
-	setGlyphCacheMaxBytes(glyphCacheBytes);
-
 	const fonts = await loadOpenGraphFonts();
 	const renderer = new Renderer();
 

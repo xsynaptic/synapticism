@@ -4,7 +4,7 @@ export const pressTimings = {
 	toneDelay: 450,
 } as const;
 
-export interface PressPoint {
+interface PressPoint {
 	x: number;
 	y: number;
 }
