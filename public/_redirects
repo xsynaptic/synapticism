@@ -2,6 +2,8 @@
 # synapticism.com was the spectralcodex travel blog ~5 years ago; inbound links persist
 
 # Static rules first: Cloudflare counts every rule below a wildcard as dynamic (budget: 2000 static, 100 dynamic)
+/1933-shanghai  https://spectralcodex.com/shanghai-municipal-council-slaughterhouse/  301
+/1933-shanghai/  https://spectralcodex.com/shanghai-municipal-council-slaughterhouse/  301
 /a-foggy-hike-in-yangmingshan/  https://spectralcodex.com/a-foggy-hike-in-yangmingshan/  301
 /a-nameless-community-in-xinyi-district/  https://spectralcodex.com/a-nameless-community-in-xinyi-district/  301
 /along-the-coast-of-krabi  https://spectralcodex.com/along-the-coast-of-krabi/  301
@@ -29,6 +31,8 @@
 /crossing-the-central-mountain-range-of-taiwan/  https://spectralcodex.com/crossing-the-central-mountain-range-of-taiwan/  301
 /dacun-sanheyuan  https://spectralcodex.com/dacun-sanheyuan/  301
 /dacun-sanheyuan/  https://spectralcodex.com/dacun-sanheyuan/  301
+/dadu-plateau-anti-airborne-fortifications  https://spectralcodex.com/xitun-lincuo-anti-airborne-fortifications/  301
+/dadu-plateau-anti-airborne-fortifications/  https://spectralcodex.com/xitun-lincuo-anti-airborne-fortifications/  301
 /dalin-xinxing-theater  https://spectralcodex.com/dalin-xinxing-theater/  301
 /dalin-xinxing-theater/  https://spectralcodex.com/dalin-xinxing-theater/  301
 /datong-theater  https://spectralcodex.com/datong-theater/  301
@@ -111,6 +115,8 @@
 /jishan-gatehouse/  https://spectralcodex.com/jishan-gatehouse/  301
 /jukuiju-mansion  https://spectralcodex.com/wuri-jukuiju-mansion/  301
 /jukuiju-mansion/  https://spectralcodex.com/wuri-jukuiju-mansion/  301
+/kampung-numbak  https://spectralcodex.com/kampung-numbak/  301
+/kampung-numbak/  https://spectralcodex.com/kampung-numbak/  301
 /keelung-dahua-theater/  https://spectralcodex.com/keelung-dahua-theater/  301
 /keelung-road-guest-house/  https://spectralcodex.com/keelung-road-guest-house/  301
 /linkou-lightning-building  https://spectralcodex.com/linkou-lightning-building/  301
@@ -124,11 +130,17 @@
 /lukang-mazu-temple/  https://spectralcodex.com/lukang-tianhou-temple/  301
 /lukang-yuqu-temple  https://spectralcodex.com/lukang-yuqu-temple/  301
 /lukang-yuqu-temple/  https://spectralcodex.com/lukang-yuqu-temple/  301
+/magong-penghu-tibiao-hall  https://spectralcodex.com/magong-penghu-tibiao-hall/  301
+/magong-penghu-tibiao-hall/  https://spectralcodex.com/magong-penghu-tibiao-hall/  301
 /meta/abandoned/  https://spectralcodex.com/themes/taiwan-urban-exploration/  301
 /meta/ghost-island/  https://spectralcodex.com/themes/taiwan-ghost-island/  301
 /meta/thailand-urban-exploration/  https://spectralcodex.com/themes/thailand-urban-exploration/  301
 /moving-to-tainan  https://spectralcodex.com/moving-to-tainan/  301
 /moving-to-tainan/  https://spectralcodex.com/moving-to-tainan/  301
+/nantou-misty-lotus-forest  https://spectralcodex.com/zhushan-wangyou-forest/  301
+/nantou-misty-lotus-forest/  https://spectralcodex.com/zhushan-wangyou-forest/  301
+/nanyun-gas-station  https://spectralcodex.com/linnei-nanyun-gas-station/  301
+/nanyun-gas-station/  https://spectralcodex.com/linnei-nanyun-gas-station/  301
 /nishinari-and-the-way-things-ought-to-be  https://spectralcodex.com/nishinari-and-the-way-things-ought-to-be/  301
 /nishinari-and-the-way-things-ought-to-be/  https://spectralcodex.com/nishinari-and-the-way-things-ought-to-be/  301
 /ogon-shrine  https://spectralcodex.com/ruifang-jinguashi-shinto-shrine/  301
@@ -139,6 +151,8 @@
 /paco-railway-station  https://spectralcodex.com/manila-paco-railway-station/  301
 /paco-railway-station/  https://spectralcodex.com/manila-paco-railway-station/  301
 /places/taiwan/taipei/xinyi-district/  https://spectralcodex.com/regions/xinyi/  301
+/postcards-from-badouzi  https://spectralcodex.com/postcards-from-badouzi/  301
+/postcards-from-badouzi/  https://spectralcodex.com/postcards-from-badouzi/  301
 /postcards-from-beigang  https://spectralcodex.com/postcards-from-beigang/  301
 /postcards-from-beigang/  https://spectralcodex.com/postcards-from-beigang/  301
 /postcards-from-changhua-city-2  https://spectralcodex.com/postcards-from-changhua-city-2/  301
@@ -157,6 +171,10 @@
 /qiaoyou-building/  https://spectralcodex.com/qiaoyou-building/  301
 /qingkunshen-fan-shaped-saltern  https://spectralcodex.com/jiangjun-qingkunshen-fan-shaped-saltworks/  301
 /qingkunshen-fan-shaped-saltern/  https://spectralcodex.com/jiangjun-qingkunshen-fan-shaped-saltworks/  301
+/renoir-resort-club  https://spectralcodex.com/baihe-guanziling-renoir-resort-club/  301
+/renoir-resort-club/  https://spectralcodex.com/baihe-guanziling-renoir-resort-club/  301
+/renting-an-apartment-in-changhua-city  https://spectralcodex.com/renting-an-apartment-in-changhua-city/  301
+/renting-an-apartment-in-changhua-city/  https://spectralcodex.com/renting-an-apartment-in-changhua-city/  301
 /riding-the-seawall-in-january  https://spectralcodex.com/riding-the-seawall-in-january/  301
 /riding-the-seawall-in-january/  https://spectralcodex.com/riding-the-seawall-in-january/  301
 /seodaemun-prison  https://spectralcodex.com/seoul-seodaemun-prison/  301
@@ -169,6 +187,12 @@
 /shuili-snake-kiln/  https://spectralcodex.com/shuili-snake-kiln/  301
 /shuinan-tobacco-barn  https://spectralcodex.com/beitun-shuinan-tobacco-barn/  301
 /shuinan-tobacco-barn/  https://spectralcodex.com/beitun-shuinan-tobacco-barn/  301
+/shuri-castle  https://spectralcodex.com/okinawa-shuri-castle/  301
+/shuri-castle/  https://spectralcodex.com/okinawa-shuri-castle/  301
+/sixth-line  https://spectralcodex.com/sixth-line/  301
+/sixth-line/  https://spectralcodex.com/sixth-line/  301
+/space-roller-chiang-mai  https://spectralcodex.com/chiang-mai-space-roller/  301
+/space-roller-chiang-mai/  https://spectralcodex.com/chiang-mai-space-roller/  301
 /still-images-of-a-modern-seoul  https://spectralcodex.com/still-images-of-a-modern-seoul/  301
 /still-images-of-a-modern-seoul/  https://spectralcodex.com/still-images-of-a-modern-seoul/  301
 /suhua-highway-road-trip-2018  https://spectralcodex.com/suhua-highway-road-trip-2018/  301
@@ -177,12 +201,16 @@
 /taichung-first-credit-union/  https://spectralcodex.com/taichung-first-credit-union/  301
 /taichung-shark-cemetery  https://spectralcodex.com/xitun-taichung-shark-cemetery/  301
 /taichung-shark-cemetery/  https://spectralcodex.com/xitun-taichung-shark-cemetery/  301
+/tainan-chinatown  https://spectralcodex.com/tainan-chinatown/  301
+/tainan-chinatown/  https://spectralcodex.com/tainan-chinatown/  301
 /tainan-duiyuemen  https://spectralcodex.com/tainan-duiyuemen/  301
 /tainan-duiyuemen/  https://spectralcodex.com/tainan-duiyuemen/  301
 /tainan-fahua-monastery  https://spectralcodex.com/tainan-fahua-monastery/  301
 /tainan-fahua-monastery/  https://spectralcodex.com/tainan-fahua-monastery/  301
 /tainan-working-cafes  https://spectralcodex.com/tainan-working-cafes-2014/  301
 /tainan-working-cafes/  https://spectralcodex.com/tainan-working-cafes/  301
+/taiping-old-street  https://spectralcodex.com/douliu-taiping-old-street/  301
+/taiping-old-street/  https://spectralcodex.com/douliu-taiping-old-street/  301
 /taitung-chinese-association  https://spectralcodex.com/taitung-chinese-association/  301
 /taitung-chinese-association/  https://spectralcodex.com/taitung-chinese-association/  301
 /taiwan-motor-transport-maintenance-depot  https://spectralcodex.com/shulin-taiwan-motor-transport-maintenance-depot/  301
@@ -193,6 +221,8 @@
 /tanjung-simpang-mengayau-1/  https://spectralcodex.com/tanjung-simpang-mengayau-1/  301
 /the-birdman-of-taipei-station  https://spectralcodex.com/the-birdman-of-taipei-station/  301
 /the-birdman-of-taipei-station/  https://spectralcodex.com/the-birdman-of-taipei-station/  301
+/the-chinese-temples-and-guildhalls-of-cholon  https://spectralcodex.com/the-chinese-temples-and-guildhalls-of-cholon/  301
+/the-chinese-temples-and-guildhalls-of-cholon/  https://spectralcodex.com/the-chinese-temples-and-guildhalls-of-cholon/  301
 /the-geographic-center-of-taiwan  https://spectralcodex.com/puli-taiwan-geographic-center/  301
 /the-geographic-center-of-taiwan/  https://spectralcodex.com/puli-taiwan-geographic-center/  301
 /the-mystic-island-of-pulau-besar  https://spectralcodex.com/the-mystic-island-of-pulau-besar/  301
@@ -211,6 +241,8 @@
 /tsai-ing-wen-old-house/  https://spectralcodex.com/tsai-ing-wen-old-house/  301
 /tuaran-chinese-cemetery  https://spectralcodex.com/tuaran-chinese-cemetery/  301
 /tuaran-chinese-cemetery/  https://spectralcodex.com/tuaran-chinese-cemetery/  301
+/twisted-trees-of-tofino  https://spectralcodex.com/ucluelet-shorepine-bog-trail/  301
+/twisted-trees-of-tofino/  https://spectralcodex.com/ucluelet-shorepine-bog-trail/  301
 /vancouver-in-the-wintertime-fog  https://spectralcodex.com/vancouver-in-the-wintertime-fog/  301
 /vancouver-in-the-wintertime-fog/  https://spectralcodex.com/vancouver-in-the-wintertime-fog/  301
 /visions-of-bangkok-2  https://spectralcodex.com/visions-of-bangkok-2/  301
@@ -222,12 +254,20 @@
 /white-lion-house-chiang-mai  https://spectralcodex.com/chiang-mai-white-lion-house/  301
 /white-lion-house-chiang-mai/  https://spectralcodex.com/chiang-mai-white-lion-house/  301
 /wuchang-temple/the-ruins-of-wuchang-temple-in-taiwan/  https://spectralcodex.com/jiji-wuchang-temple/  301
+/wufeng-minsheng-clinic  https://spectralcodex.com/wufeng-minsheng-clinic/  301
+/wufeng-minsheng-clinic/  https://spectralcodex.com/wufeng-minsheng-clinic/  301
 /wuri-police-station  https://spectralcodex.com/wuri-police-station/  301
 /wuri-police-station/  https://spectralcodex.com/wuri-police-station/  301
+/wushanding-mud-volcano  https://spectralcodex.com/yanchao-wushanding-mud-volcano/  301
+/wushanding-mud-volcano/  https://spectralcodex.com/yanchao-wushanding-mud-volcano/  301
 /xiluo-bridge  https://spectralcodex.com/xiluo-bridge/  301
 /xiluo-bridge/  https://spectralcodex.com/xiluo-bridge/  301
 /xiluo-theater  https://spectralcodex.com/xiluo-theater/  301
 /xiluo-theater/  https://spectralcodex.com/xiluo-theater/  301
+/xiluo-yisheng-theater  https://spectralcodex.com/xiluo-yisheng-theater/  301
+/xiluo-yisheng-theater/  https://spectralcodex.com/xiluo-yisheng-theater/  301
+/xiluo-yuandong-theater  https://spectralcodex.com/xiluo-yuandong-theater/  301
+/xiluo-yuandong-theater/  https://spectralcodex.com/xiluo-yuandong-theater/  301
 /xiluo-yuandong-theater/an-oblique-view-of-yuandong-theater/  https://spectralcodex.com/xiluo-yuandong-theater/  301
 /xinhua-old-street  https://spectralcodex.com/xinhua-old-street/  301
 /xinhua-old-street/  https://spectralcodex.com/xinhua-old-street/  301
@@ -235,12 +275,16 @@
 /xinming-theater/  https://spectralcodex.com/zhongli-xinming-theater/  301
 /xinxing-theater  https://spectralcodex.com/xinxing-theater/  301
 /xinxing-theater/  https://spectralcodex.com/xinxing-theater/  301
+/xizhou-telecom-bureau  https://spectralcodex.com/xizhou-telecom-bureau/  301
+/xizhou-telecom-bureau/  https://spectralcodex.com/xizhou-telecom-bureau/  301
 /yangliufeng-mansion  https://spectralcodex.com/changhua-yang-chuan-mansion/  301
 /yangliufeng-mansion/  https://spectralcodex.com/changhua-yang-chuan-mansion/  301
 /yifang-old-house  https://spectralcodex.com/daan-yifang-residence/  301
 /yifang-old-house/  https://spectralcodex.com/yifang-old-house/  301
 /yinhedong  https://spectralcodex.com/xindian-yinhe-cave/  301
 /yinhedong/  https://spectralcodex.com/xindian-yinhe-cave/  301
+/yonghe-theater  https://spectralcodex.com/yonghe-theater/  301
+/yonghe-theater/  https://spectralcodex.com/yonghe-theater/  301
 /yuanlin-hospital  https://spectralcodex.com/yuanlin-hospital/  301
 /yuanlin-hospital/  https://spectralcodex.com/yuanlin-hospital/  301
 /yumei-hall  https://spectralcodex.com/fenyuan-yumei-hall/  301
@@ -249,10 +293,20 @@
 /yutian-automotive-factory/  https://spectralcodex.com/dacun-yutian-automotive-factory/  301
 /zhongsen-theater  https://spectralcodex.com/taichung-zhongsen-theater/  301
 /zhongsen-theater/  https://spectralcodex.com/zhongsen-theater/  301
+/zhongwai-department-store  https://spectralcodex.com/zhongzheng-zhongwai-department-store/  301
+/zhongwai-department-store/  https://spectralcodex.com/zhongzheng-zhongwai-department-store/  301
 
-# Wildcards last; spectralcodex.com resolves the legacy paths under these itself
+# Notes became posts in October 2026
+/notes  /posts/  301
+/notes/  /posts/  301
+
+# Wildcards last
+/notes/*  /posts/:splat  301
+
+# spectralcodex.com resolves the legacy paths under these itself
 /regions/*  https://spectralcodex.com/regions/:splat  301
 /places/*  https://spectralcodex.com/places/:splat  301
 /themes/*  https://spectralcodex.com/themes/:splat  301
 /series/*  https://spectralcodex.com/series/:splat  301
 /collections/*  https://spectralcodex.com/collections/:splat  301
+/meta/*  https://spectralcodex.com/meta/:splat  301
