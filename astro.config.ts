@@ -85,7 +85,7 @@ export default defineConfig({
 		fontDevtools({ targets: ['--font-display', '--font-mono', '--font-sans'] }),
 		imagePipeline({
 			mediaPath: mediaDir,
-			placeholders: { blur: 3, pixels: 1024, quality: 25, saturation: 1.2 },
+			placeholders: { blur: 3, pixels: 1024, saturation: 1.2, webp: { quality: 25 } },
 			storePath: imageCachePath,
 		}),
 		mdx(),
